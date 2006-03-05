@@ -1,0 +1,37 @@
+./arr - data/tbl files
+./cursor - image sets for animated cursors of various types.
+./game - graphics for the HUD for each race
+./glue/battle.net - images for the battle.net stuff
+./glue/campaign - images for the screen where you choose protoss/zerg/terran campaigns (single user mode)
+./glue/chatroom - ??
+./glue/gamesel - images for the screen where you choose a saved game
+./glue/login - images for the screen where you choose your ID
+./glue/mainmenu - ??
+./glue/Modem - dialogs for dealing with modem connections
+./glue/Palmm - images/grp files for the main menu
+./glue/PalPd - background/dialog images for the protoss defeat score screen
+./glue/PalPv - background/dialog images for the protoss victory score screen
+./glue/PalRp - images for the protoss ready room screen (between campaign missions)
+./glue/PalRt - images for the terran ready room screen (between campaign missions)
+./glue/PalRz - images for the zerg ready room screen (between campaign missions)
+./glue/PalTd - background/dialog images for the terran defeat score screen
+./glue/PalTv - background/images for the terran victory score screen
+./glue/Palzd - background/images for the terran defeat score screen
+./glue/Palzv - background/images for the terran victory score screen
+./glue/ScorePd - overlays/tabs for protoss defeat score screen
+./glue/ScorePv - overlays/tabs for protoss victory score screen
+./glue/ScoreTd - overlays/tabs for terran defeat score screen
+./glue/ScoreTv - overlays/tabs for terran victory score screen
+./glue/ScoreZd - overlays/tabs for zerg defeat score screen
+./glue/ScoreZv - overlays/tabs for zerg victory score screen
+./glue/selconn - dialogs for dealing with connection selection
+./glue/title - background/fonts for the title splash
+./rez/glurdyp.bin - ready room script for protoss
+./rez/glurdyt.bin - ready room script for terran
+./rez/glurdyz.bin - ready room script for zerg
+./rez/gluScore.bin - script for score screen
+./sound/Bullet - unit firing sounds
+./sound/glue - sounds for the scoreboards and the swish in/out sounds
+./sound/protoss - protoss specific sounds
+./sound/terran - terran specific sounds
+./sound/zerg - zerg specific sounds

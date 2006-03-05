@@ -1,0 +1,25 @@
+
+tilesets are made up of 6 files.
+
+.cv5 - 
+.vf4 - mini-tile "type"
+.vx4 - mapping from tile to mini-tile id's (16 per tile)
+.grp -
+.vr4 - raster data for each mini-tile
+.wpe - 
+
+
+.vf4 file:
+----------
+1 word per mini-tile, layed out contigously in the same order as the
+.vx4 file, specifying the "type" of the mini-tile.  not sure what this
+means.
+
+.vx4 file:
+----------
+1 word per minitile, layed contiguously in the following [x,y] order:
+
+[0,0] [1,0] [2,0] [3,0], [0,1] [1,1] [2,1] [3,1], [0,2] [1,2] [2,2] [3,2], [0,3] [1,3] [2,3] [3,3]
+
+if the mini-tile id & 0x1 == 0x1, flip it horizontally.
+the actual mini-tile id is the word >> 1.

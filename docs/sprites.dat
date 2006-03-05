@@ -1,0 +1,16 @@
+http://www.campaigncreations.org/starcraft/stardraft/sprites_spec.shtml
+
+The sprites.dat has 517 entries. The first 130 are doodads and don't use all the variables. The dat file is formated like the other dat files (in variable blocks, meaning the order of the file is: the first variable for all the entries, then the second variable for all the entries, then the thrid, etc.).
+
+517 integers - images.dat entry this sprite entry uses. Pointer to images.dat.
+
+387 bytes - (minus the 130 doodad entries, so starting from the first non-ddodad, the scourge) length of the health/shields/mana bar.
+
+517 booleans* - dunno yet. Doesn't seem to do anything.
+[* a boolean variable is a byte that is either 01 - true or 00 - false]
+
+517 booleans - dunno yet. Seems to be all true, but changing some of them to false sometimes crashes the game at the start. Usually does nothing noticable though.
+
+387 bytes - selection circle graphic to use. Pointer to images.dat starting from entry 561 as 00 (561 is the first circle). I think its just an underlay (I can get the map revealer and other doodads to work fine). But I'm pretty sure the iscript entry of the image needs a death anim otherwise it won't get removed when you unselect the unit. Pretty cool variable huh? =)
+
+387 bytes - vertical offset of selection circle graphic/health bar (how far down to offset it from the graphic). Somewhere around 0x7F the selection circle gets so far down that it actually goes above the unit (i.e., it will be above the unit now instead of below it). Values very close to 0x7F will make the selection circle be (very far) below the sprite but move the health bar up above the unit. 0xFF will move it all teh way back around and centered on the sprite again. In otherwords, if it goes too far down, it will "loop back" around above the unit and then move down more.

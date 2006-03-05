@@ -1,0 +1,73 @@
+rez/glu*.bin:
+
+86 bytes per entry.
+
+offset  type     value
+0	DWORD	 "next offset"?
+4	WORD	 X1
+6	WORD	 Y1
+8	WORD	 X2
+10	WORD	 Y2
+12	WORD	 width
+14	WORD	 height
+
+20	DWORD	 text offset
+
+24      DWORD    flags
+
+28-34   ??
+
+34      BYTE     type*
+
+
+flags:
+
+???               = 0x00000001
+???               = 0x00000002
+???               = 0x00000004
+Visible           = 0x00000008
+DisplayForControl = 0x00000010
+???               = 0x00000020
+CancelButton      = 0x00000040
+???               = 0x00000080
+???               = 0x00000100
+HasHotkey         = 0x00000200
+SmallerFont       = 0x00000400
+LargerFont        = 0x00000800
+???               = 0x00001000
+AlignUnderImage   = 0x00002000
+LargestFont       = 0x00004000
+???               = 0x00008000
+???               = 0x00010000
+???               = 0x00020000
+Image             = 0x00040000
+DefaultButton     = 0x00080000
+???               = 0x00100000
+GreenText         = 0x00200000
+???               = 0x00400000
+???               = 0x00800000
+???               = 0x01000000
+???               = 0x02000000
+???               = 0x04000000
+???               = 0x08000000
+
+types:
+00 - Dialog Box
+01 - Default Button
+02 - Button
+03 - Option Button
+04 - Check Box
+05 - Image
+06 - Slider
+08 - Text Box
+09 - Label (Left align)
+10 - Label (center align)
+11 - Label (right align)
+12 - List Box
+13 - Combo Box
+14 - Button without border
+
+
+strings can have embedded 0x04/0x01.  0x04 seems to be "bold", 0x01 is
+"normal", or maybe a different color in the colormap.  at any rate, it
+is used to accentuate out the accelerator.

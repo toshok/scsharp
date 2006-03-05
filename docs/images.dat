@@ -1,0 +1,31 @@
+http://www.campaigncreations.org/starcraft/stardraft/images.shtml
+
+
+NOTE: these specifications have already been integrated into Arsenal III.
+
+The images.dat contains various information for every sprite in the game. Arsenal II, currently, can edit this file but the variables are all labled 'unknown'. Thanks to the work of several people, most notably ZERATUL, these have now been identified. They are as follows:
+
+Unknown 1 - Sets the grp used by this entree, references the images.tbl. It should be mentioned that the first entree in the images.tbl is counted as 1 and not 0 like TBLEdit.
+
+[Already ID'd variables are skipped]
+
+Unknown 4 - Unknown
+
+Unknown 6 - Sets "special effects" palettes used by this sprite.
+
+    8 - Use EMP wave effect
+    9 - Use the special palette defined in Unknown 7
+    10 - Make this graphic a shadow (translucent gray)
+
+Unknown 7 - Special palette set by Unknown 6.
+
+    1 - Orange (terran explosions, fire)
+    2 - Green (consume, irradiate)
+    3 - Blue 1 (shields)
+    4 - Blue 2 (protoss explosions, leaking psi)
+
+Unknown 8 - Sets the iscript.bin entree to be used. References a table at the end of the iscript.
+
+Unknown 9 - Sets the shield layout file to be used. Used to set the size of the shield the unit has. (pointer to an images.tbl .lo* entry)
+
+Unknown 10-14 - All set misc. layout files (lo*) to be used; a pattern as to which go where has yet to be found. 
