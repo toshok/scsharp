@@ -275,10 +275,10 @@ namespace Starcraft {
 			Console.WriteLine ("reading video chunk");
 			bs.DebugFirst ();
 
-#if false
 			while (true) {
-				ushort type_descriptor;
-				type_descriptor = (ushort)type_Tree.Decode (bs);
+				ushort type_descriptor = 0;
+				if (type_Tree != null)
+					type_descriptor = (ushort)type_Tree.Decode (bs);
 				BlockType type = (BlockType)(type_descriptor & 0x3);
 				uint chain_length = block_chain_size_table [(type_descriptor & 0xfc) >> 2];
 
@@ -323,7 +323,6 @@ namespace Starcraft {
 						return;
 				}
 			}
-#endif
 		}
 
 		byte[][] audioOut = new byte[7][];
@@ -588,6 +587,7 @@ namespace Starcraft {
 		{
 			if ((frameFlags [curFrame] & 0x01) == 0x01) {
 				ReadPaletteChunk (bs);
+				DumpPalette ();
 			}
 
 			for (int i = 1; i < 8; i ++)
@@ -716,6 +716,20 @@ namespace Starcraft {
 					if ((frameFlags[i] & (1 << (ch + 1))) != 0)
 						Console.Write ("(channel {0})", ch);
 				Console.WriteLine ();
+			}
+		}
+
+		void DumpPalette ()
+		{
+			Console.WriteLine ("GIMP Palette");
+			Console.WriteLine ("Name: palette");
+			Console.WriteLine ("Columns: 0");
+			Console.WriteLine ("#");
+			for (int i = 0; i < 256; i ++) {
+				Console.WriteLine ("{0} {1} {2} palette",
+						   palette [i*3 + 2], /*r*/
+						   palette [i*3 + 1], /*g*/
+						   palette [i*3 + 0]  /*b*/);
 			}
 		}
 	}
