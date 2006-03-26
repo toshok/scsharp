@@ -22,8 +22,8 @@ public class RunSMK {
 	{
 		FileStream fs = File.OpenRead (filename);
 
-		smk = new SMK();
-		((MPQResource)smk).ReadFromStream (fs);
+		smk = new Smk();
+		((MpqResource)smk).ReadFromStream (fs);
 
 		smk.FrameReady += SmkFrameReady;
 		smk.AnimationDone += SmkAnimationDone;

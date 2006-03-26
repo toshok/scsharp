@@ -63,7 +63,7 @@ public class RunAnimation {
 	public static void Main (string[] args) {
 		Application.Init();
 
-		MPQ mpq = new MPQDirectory (args[0]);
+		Mpq mpq = new MpqDirectory (args[0]);
 
 		RunAnimation la = new RunAnimation (mpq);
 
