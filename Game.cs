@@ -41,6 +41,7 @@ namespace Starcraft
 		{
 			CreateWindow ();
 			DisplayTitle ();
+			LoadGlobalResources ();
 			LoadMainMenu ();
 		}
 
@@ -188,6 +189,12 @@ namespace Starcraft
 			mainMenu = new MainMenu (mpq);
 			mainMenu.Ready += MainMenuReady;
 			mainMenu.Load ();
+		}
+
+		void LoadGlobalResources ()
+		{
+			new GlobalResources (mpq);
+			GlobalResources.Instance.Load ();
 		}
 
 #if notyet
