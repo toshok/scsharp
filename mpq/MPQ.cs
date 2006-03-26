@@ -21,16 +21,34 @@ namespace Starcraft {
 		protected Type GetTypeFromResourcePath (string path)
 		{
 			string ext = Path.GetExtension (path);
-			if (ext.ToLower() == ".tbl")
+			if (ext.ToLower() == ".tbl") {
 				return typeof (TBL);
-			else if (ext.ToLower () == ".grp")
+			}
+			else if (ext.ToLower () == ".grp") {
 				return typeof (GRP);
-			else if (ext.ToLower () == ".bin")
-				return typeof (BIN);
-			else if (ext.ToLower () == ".chk")
+			}
+			else if (ext.ToLower () == ".bin") {
+				if (path.ToLower().EndsWith ("aiscript.bin")) /* must come before iscript.bin */
+					return null;
+				else if (path.ToLower().EndsWith ("iscript.bin"))
+					return typeof (IScriptBin);
+				else
+					return typeof (BIN);
+			}
+			else if (ext.ToLower () == ".chk") {
 				return typeof (CHK);
-			else
-				return null;
+			}
+			else if (ext.ToLower () == ".dat") {
+				if (path.ToLower().EndsWith ("images.dat"))
+					return typeof (ImagesDat);
+				else if (path.ToLower().EndsWith ("sprites.dat"))
+					return typeof (SpritesDat);
+			}
+			else if (ext.ToLower () == ".smk") {
+				return typeof (SMK);
+			}
+
+			return null;
 		}
 
 		public object GetResource (string path)

@@ -149,40 +149,54 @@ namespace Starcraft {
 
 			int tag;
 
+			BitStream.debug = true;
+#if false
 			tag = bs.ReadBit ();
 			if (tag == 1) {
+#endif
 				Console.WriteLine (" + MMap");
 				mmap_Tree = new Dynamic16HuffmanTree ();
 				mmap_Tree.Build (bs);
 				Console.WriteLine (" + After MMap tree, read {0} bytes", bs.ReadCount);
+#if false
 			}
+#endif
+			BitStream.debug = false;
 
 			bs.ZeroReadCount ();
+#if false
 			tag = bs.ReadBit ();
 			if (tag == 1) {
+#endif
 				Console.WriteLine (" + MClr");
 				mclr_Tree = new Dynamic16HuffmanTree ();
 				mclr_Tree.Build (bs);
 				Console.WriteLine (" + After MClr tree, read {0} bytes", bs.ReadCount);
+#if false
 			}
 
 			bs.ZeroReadCount ();
 			tag = bs.ReadBit ();
 			if (tag == 1) {
+#endif
 				Console.WriteLine (" + Full");
 				full_Tree = new Dynamic16HuffmanTree ();
 				full_Tree.Build (bs);
 				Console.WriteLine (" + After Full tree, read {0} bytes", bs.ReadCount);
+#if false
 			}
 
 			bs.ZeroReadCount ();
 			tag = bs.ReadBit ();
 			if (tag == 1) {
+#endif
 				Console.WriteLine (" + Type");
 				type_Tree = new Dynamic16HuffmanTree ();
 				type_Tree.Build (bs);
 				Console.WriteLine (" + After Type tree, read {0} bytes", bs.ReadCount);
+#if false
 			}
+#endif
 
 			Console.WriteLine ("done (read {0} out of {1} bytes).", bs.ReadCount, treesSize);
 		}
@@ -282,6 +296,8 @@ namespace Starcraft {
 				BlockType type = (BlockType)(type_descriptor & 0x3);
 				uint chain_length = block_chain_size_table [(type_descriptor & 0xfc) >> 2];
 
+				Console.WriteLine ("rendering {0} blocks of type {1}", chain_length, type);
+
 				for (int i = 0; i < chain_length; i ++) {
 					switch (type) {
 					case BlockType.Mono:
@@ -314,13 +330,13 @@ namespace Starcraft {
 					case BlockType.Solid:
 						break;
 					}
-				}
-				current_block_x ++;
-				if (current_block_x == block_rez_x) {
-					current_block_x = 0;
-					current_block_y ++;
-					if (current_block_y == block_rez_y)
-						return;
+					current_block_x ++;
+					if (current_block_x == block_rez_x) {
+						current_block_x = 0;
+						current_block_y ++;
+						if (current_block_y == block_rez_y)
+							return;
+					}
 				}
 			}
 		}
@@ -587,7 +603,7 @@ namespace Starcraft {
 		{
 			if ((frameFlags [curFrame] & 0x01) == 0x01) {
 				ReadPaletteChunk (bs);
-				DumpPalette ();
+				//				DumpPalette ();
 			}
 
 			for (int i = 1; i < 8; i ++)
@@ -614,7 +630,9 @@ namespace Starcraft {
 
 			frameDataPosition = stream.Position;
 			Console.WriteLine ("frames start at 0x{0:x}", frameDataPosition);
-			Console.WriteLine ("allocating video data buffer at {0} x {1}", PaddedWidth, PaddedHeight);
+			Console.WriteLine ("allocating video data buffer at {0} x {1} ({2} x {3} = {4} blocks)",
+					   PaddedWidth, PaddedHeight,
+					   PaddedWidth / 4, PaddedHeight / 4, PaddedWidth * PaddedHeight / 4);
 
 			frameData = new byte[PaddedWidth * PaddedHeight];
 		}
@@ -739,6 +757,8 @@ namespace Starcraft {
 
 	class BitStream
 	{
+		public static bool debug;
+
 		public void DebugFirst ()
 		{
 			int num_bytes = 12;
@@ -764,12 +784,33 @@ namespace Starcraft {
 			this.current_bit = 8;
 		}
 
+
+		int nshift;
+		int nibble;
+		int nc = 0;
+
 		int GetBit ()
 		{
 			int rv = current_byte & 0x1;
 
 			current_bit --;
 			current_byte >>= 1;
+
+			if (debug) {
+				nibble |= rv << nshift;
+				nshift++;
+				if (nshift == 4) {
+					Console.Write ("{0:x}", nibble);
+					nibble = 0;
+					nshift = 0;
+					nc++;
+					if (nc == 2) {
+						Console.Write (" ");
+						nc = 0;
+					}
+				}
+			}
+
 			if (current_bit == 0) {
 				current_bit = 8;
 				if (current_byte_index + 1 > buf.Length)
@@ -785,8 +826,6 @@ namespace Starcraft {
 		{
 			int rv = GetBit ();
 
-			Console.WriteLine ("bit: {0}", rv);
-
 			return rv;
 		}
 
@@ -797,14 +836,15 @@ namespace Starcraft {
 				rv = current_byte;
 				current_byte_index++;
 				current_byte = buf[current_byte_index];
+
+				if (debug)
+					Console.Write ("{0:x}{1:x} ", rv & 0x0f, (rv & 0xf0) >> 4);
 			}
 			else {
 				rv = 0;
 				for (int i = 0; i < 8; i ++)
-					rv |= GetBit () << i;
+					rv |= ReadBit () << i;
 			}
-
-			Console.WriteLine ("byte: {0:x}", rv);
 
 			return rv;
 		}
@@ -862,12 +902,13 @@ namespace Starcraft {
 	}
 
 	class HuffmanNode {
-		public uint value;
+		public long value;
 		public HuffmanNode branch_0;
 		public HuffmanNode branch_1;
 	}
 
 	class HuffmanTree {
+
 		class HuffIter {
 			HuffmanTree tree;
 			HuffmanNode currentNode;
@@ -876,13 +917,6 @@ namespace Starcraft {
 			{
 				this.tree = tree;
 				this.currentNode = tree.Root;
-			}
-
-			public void ProcessBit (uint b, int bit)
-			{
-				currentNode = (b & (1<<bit)) == 0 ? currentNode.branch_0 : currentNode.branch_1;
-				if (currentNode == null)
-					throw new Exception ("can't advance to child nodes from a leaf node");
 			}
 
 			public void ProcessBit (BitStream bs)
@@ -900,7 +934,7 @@ namespace Starcraft {
 			public uint Value { 
 				get {
 					if (!IsLeaf) throw new Exception ("this node is not a leaf");
-					return currentNode.value;
+					return tree.ReturnNodeValue (currentNode);
 				}
 			}
 
@@ -922,56 +956,6 @@ namespace Starcraft {
 		public virtual void Build (BitStream bs)
 		{
 			Read (bs);
-
-#if false
-			/* output some foo about the tree */
-			int depth = getmaxdepth (root);
-			Console.WriteLine ("+ max depth = {0}", depth);
-			int num_leaves = 0, num_nodes = 0;
-			getcounts (root, ref num_leaves, ref num_nodes);
-			Console.WriteLine ("+ num leaves = {0}, num_nodes = {1}", num_leaves, num_nodes);
-			dumpleaves (root, "");
-#endif
-		}
-
-		protected int getmaxdepth (HuffmanNode node)
-		{
-			int max_0 = 0, max_1 = 0;
-
-			if (node.branch_0 == null && node.branch_1 == null)
-				return 1;
-
-			if (node.branch_0 != null)
-				max_0 = getmaxdepth (node.branch_0);
-			if (node.branch_1 != null)
-				max_1 = getmaxdepth (node.branch_1);
-			if (max_0 > max_1)
-				return max_0 + 1;
-			else
-				return max_1 + 1;
-		}
-
-		protected internal void getcounts (HuffmanNode node, ref int num_leaves, ref int num_nodes)
-		{
-			if (node.branch_0 == null && node.branch_1 == null) {
-				num_leaves++;
-				return;
-			}
-
-			num_nodes++;
-			getcounts (node.branch_0, ref num_leaves, ref num_nodes);
-			getcounts (node.branch_1, ref num_leaves, ref num_nodes);
-		}
-
-		protected internal void dumpleaves (HuffmanNode node, string accum)
-		{
-			if (node.branch_0 == null && node.branch_1 == null)
-				Console.WriteLine ("{0}: {1}", accum, node.value);
-
-			if (node.branch_0 != null)
-				dumpleaves (node.branch_0, accum+"0");
-			if (node.branch_1 != null)
-				dumpleaves (node.branch_1, accum+"1");
 		}
 
 		protected virtual void ReadValue (BitStream bs, HuffmanNode node)
@@ -1015,13 +999,9 @@ namespace Starcraft {
 			return iter.Value;
 		}
 
-		public uint Decode (byte b)
+		public virtual uint ReturnNodeValue (HuffmanNode node)
 		{
-			iter.Reset ();
-			for (int i = 0; i < 8 && !iter.IsLeaf; i ++)
-				iter.ProcessBit (b, i);
-
-			return iter.Value;
+			return (uint)node.value;
 		}
 	}
 
@@ -1029,13 +1009,8 @@ namespace Starcraft {
 		HuffmanTree highTree;
 		HuffmanTree lowTree;
 
-		ushort marker1;
-		ushort marker2;
-		ushort marker3;
-
-		HuffmanNode shortest1;
-		HuffmanNode shortest2;
-		HuffmanNode shortest3;
+		ushort[] markers = new ushort[3];
+		HuffmanNode[] shortest = new HuffmanNode[3];
 
 		public Dynamic16HuffmanTree ()
 		{
@@ -1043,75 +1018,92 @@ namespace Starcraft {
 
 		uint DecodeValue (BitStream bs)
 		{
-			byte lowValue, highValue;
+			uint lowValue, highValue;
 
 			lowValue = 0;
 			if (lowTree != null) {
-				Console.WriteLine (" + getting low byte");
-				lowValue = (byte)lowTree.Decode (bs);
+				lowValue = lowTree.Decode (bs);
 			}
 
 			highValue = 0;
 			if (highTree != null) {
-				Console.WriteLine (" + getting high byte");
-				highValue = (byte)highTree.Decode (bs);
+				highValue = highTree.Decode (bs);
 			}
 
-			uint rv = (uint)(lowValue | ((uint)highValue << 8));
-
-			Console.WriteLine (" + value = {0:x}", rv);
-
-			return rv;
+			return (lowValue | (highValue << 8));
 		}
 
 		protected override void ReadValue (BitStream bs, HuffmanNode node)
 		{
 			uint value = DecodeValue (bs);
 
-			if (value == marker1)
-				shortest1 = node;
-			else if (value == marker2)
-				shortest2 = node;
-			else if (value == marker3)
-				shortest3 = node;
+			Console.WriteLine ("Read Value {0:x}", value);
+
+			if (value == markers[0]) {
+				Console.WriteLine ("found marker1");
+				shortest[0] = node;
+				node.value = -1;
+			}
+			else if (value == markers[1]) {
+				Console.WriteLine ("found marker2");
+				shortest[1] = node;
+				node.value = -1;
+			}
+			else if (value == markers[2]) {
+				Console.WriteLine ("found marker3");
+				shortest[2] = node;
+				node.value = -1;
+			}
 			else 
 				node.value = value;
 		}
 
+		public override uint ReturnNodeValue (HuffmanNode node)
+		{
+			if (node.value == -1) {
+				/* it's a marker */
+				throw new Exception ();
+			}
+			else
+				return (uint)node.value;
+		}
+
 		public override void Build (BitStream bs)
 		{
+			bs.ZeroReadCount ();
+#if false
 			int tag = bs.ReadBit();
 			if (tag == 1) {
+#endif
 				lowTree = new HuffmanTree ();
 				Console.WriteLine ("building low tree");
 				lowTree.Build (bs);
+				Console.WriteLine ("low tree ends at {0:x}", bs.ReadCount);
+#if false
 			}
 
 			tag = bs.ReadBit ();
 			if (tag == 1) {
+#endif
 				highTree = new HuffmanTree ();
 				Console.WriteLine ("building high tree");
 				highTree.Build (bs);
+				Console.WriteLine ("high tree ends at {0:x}", bs.ReadCount);
+#if false
 			}
+#endif
 
-			marker1 = bs.ReadWord ();
-			marker2 = bs.ReadWord ();
-			marker3 = bs.ReadWord ();
+			markers[0] = bs.ReadWord ();
+			markers[1] = bs.ReadWord ();
+			markers[2] = bs.ReadWord ();
 
-			Console.WriteLine ("markers = {0:x}, {1:x}, {2:x}", marker1, marker2, marker3);
+			Console.WriteLine ("markers = {0:x}, {1:x}, {2:x}", markers[0], markers[1], markers[2]);
 
 			Read (bs);
 
-			Console.WriteLine ("shortest1 = {0}", shortest1);
-			Console.WriteLine ("shortest2 = {0}", shortest2);
-			Console.WriteLine ("shortest3 = {0}", shortest3);
-
-			/* output some foo about the tree */
-			int depth = getmaxdepth (Root);
-			Console.WriteLine ("+ max depth = {0}", depth);
-			int num_leaves = 0, num_nodes = 0;
-			getcounts (Root, ref num_leaves, ref num_nodes);
-			Console.WriteLine ("+ num leaves = {0}, num_nodes = {1}", num_leaves, num_nodes);
+			Console.WriteLine ("shortest1 = {0}", shortest[0]);
+			Console.WriteLine ("shortest2 = {0}", shortest[1]);
+			Console.WriteLine ("shortest3 = {0}", shortest[2]);
 		}
 	}
 }

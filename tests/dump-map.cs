@@ -33,9 +33,9 @@ public class DumpCHK {
 
 		int stride = chk.Width * 32;
 
-		Stream vx4_fs = (Stream)mpq.GetResource ("tileset\\platform.vx4");
-		Stream vr4_fs = (Stream)mpq.GetResource ("tileset\\platform.vr4");
-		Stream wpe_fs = (Stream)mpq.GetResource ("tileset\\platform.wpe");
+		Stream vx4_fs = (Stream)mpq.GetResource ("tileset\\badlands.vx4");
+		Stream vr4_fs = (Stream)mpq.GetResource ("tileset\\badlands.vr4");
+		Stream wpe_fs = (Stream)mpq.GetResource ("tileset\\badlands.wpe");
 
 		for (int map_y = 0; map_y < chk.Height; map_y++) {
 			for (int map_x = 0; map_x < chk.Width; map_x ++) {

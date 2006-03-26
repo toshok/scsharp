@@ -149,9 +149,10 @@ namespace Starcraft {
 					     -1, -1,
 					     RgbDither.None, 0, 0);
 
-			foreach (TextElement te in texts)
-				da.GdkWindow.DrawLayout (text_gc,
-							 te.x, te.y, te.layout);
+			if (texts != null)
+				foreach (TextElement te in texts)
+					da.GdkWindow.DrawLayout (text_gc,
+								 te.x, te.y, te.layout);
 		}
 
 	}
