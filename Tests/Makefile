@@ -14,20 +14,15 @@ animate_grp_exe_FILES = animate-grp.cs
 animate_grp_exe_REFS= -r:../Starcraft/Starcraft.dll -pkg:gtk-sharp-2.0
 
 run_animation_exe_FILES = run-animation.cs
-run_animation_exe_REFS= -r:../Starcraft/Starcraft.dll -pkg:gtk-sharp-2.0
+run_animation_exe_REFS= -r:../Starcraft/Starcraft.dll -r:../Starcraft/Starcraft.Gui.dll -pkg:gtk-sharp-2.0
 
 run_smk_exe_FILES = TGA.cs run-smk.cs
-run_smk_exe_REFS= -r:../Starcraft/Starcraft.dll -pkg:gtk-sharp-2.0
+run_smk_exe_REFS= -r:../Starcraft/Starcraft.dll -r:../Starcraft/Starcraft.Gui.dll -pkg:gtk-sharp-2.0
 
 dump_tbl_exe_FILES = dump-tbl.cs
 dump_tbl_exe_REFS= -r:../Starcraft/Starcraft.dll
 
-all: dump-map.exe dump-grp.exe dump-tileset.exe animate-grp.exe dump-tbl.exe font-info
-
-# these are excluded at present because they depend on stuff in starcraft.exe..
-# we should maybe split those into a separate dll?  Starcraft.Gui.dll maybe?
-#
-# run-animation.exe run-smk.exe
+all: dump-map.exe dump-grp.exe dump-tileset.exe animate-grp.exe dump-tbl.exe font-info run-animation.exe run-smk.exe
 
 dump-grp.exe: $(dump_grp_exe_FILES)
 	$(MCS) $(MCSFLAGS) -target:exe -out:$@ $(dump_grp_exe_FILES) $(dump_grp_exe_REFS)

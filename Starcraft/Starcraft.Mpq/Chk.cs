@@ -2,9 +2,6 @@ using System;
 using System.IO;
 using System.Text;
 
-using Gtk;
-using Gdk;
-
 namespace Starcraft {
 
 	public class Chk : MpqResource {

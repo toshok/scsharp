@@ -1,37 +1,37 @@
 MCSFLAGS= -debug
 MCS= gmcs
 
-LIBRARY=Starcraft.dll
-LIBRARY_REFS= -pkg:gtk-sharp-2.0
+LIBRARY1=Starcraft.dll
+LIBRARY1_REFS=
 
-PROGRAM=starcraft.exe
-PROGRAM_REFS= -r:Starcraft.dll -pkg:gtk-sharp-2.0
+LIBRARY2=Starcraft.Gui.dll
+LIBRARY2_REFS= -r:Starcraft.dll -pkg:gtk-sharp-2.0
 
-all: $(PROGRAM)
+all: $(LIBRARY2)
 
-$(PROGRAM): $(LIBRARY)
-	$(MCS) $(MCSFLAGS) -target:exe -out:$@ @$(PROGRAM_SOURCES) $(PROGRAM_REFS)
+$(LIBRARY2): $(LIBRARY1)
+	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_REFS)
 
-$(LIBRARY):
-	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY_SOURCES) $(LIBRARY_REFS)
+$(LIBRARY1):
+	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY1_SOURCES) $(LIBRARY1_REFS)
 
 
 clean:
-	$(RM) -f $(PROGRAM) $(LIBRARY) $(PROGRAM).mdb $(LIBRARY).mdb
+	$(RM) -f $(LIBRARY2) $(LIBRARY1) $(LIBRARY2).mdb $(LIBRARY1).mdb
 
-LIBRARY_SOURCES=$(LIBRARY).sources
-PROGRAM_SOURCES=$(PROGRAM).sources
+LIBRARY1_SOURCES=$(LIBRARY1).sources
+LIBRARY2_SOURCES=$(LIBRARY2).sources
 
-program_frag=.deps/$(PROGRAM).makefrag
-library_frag=.deps/$(LIBRARY).makefrag
+library2_frag=.deps/$(LIBRARY2).makefrag
+library1_frag=.deps/$(LIBRARY1).makefrag
 
-$(program_frag): $(PROGRAM_SOURCES)
+$(library2_frag): $(LIBRARY2_SOURCES)
 	@echo Creating $@ ...
-	@sed 's,^,$(PROGRAM): ,' $< > $@
+	@sed 's,^,$(LIBRARY2): ,' $< > $@
 
-$(library_frag): $(LIBRARY_SOURCES)
+$(library1_frag): $(LIBRARY1_SOURCES)
 	@echo Creating $@ ...
-	@sed 's,^,$(LIBRARY): ,' $< > $@
+	@sed 's,^,$(LIBRARY1): ,' $< > $@
 
--include $(program_frag)
--include $(library_frag)
+-include $(library2_frag)
+-include $(library1_frag)

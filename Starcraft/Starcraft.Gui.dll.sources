@@ -10,7 +10,6 @@ Starcraft.Gui/Race.cs
 Starcraft.Gui/ScoreScreen.cs
 Starcraft.Gui/Sprite.cs
 Starcraft.Gui/SpriteManager.cs
-Starcraft.Gui/starcraft.cs
 Starcraft.Gui/SwooshPainter.cs
 Starcraft.Gui/UIPainter.cs
 Starcraft.Gui/UIScreen.cs
