@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Starcraft {
 
-	public class IScriptBin : MPQResource
+	public class IScriptBin : MpqResource
 	{
 		byte[] buf;
 		Dictionary<ushort,ushort> entries;
@@ -19,7 +19,7 @@ namespace Starcraft {
 			entries = new Dictionary<ushort,ushort>();
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			buf = new byte [stream.Length];
 			stream.Read (buf, 0, buf.Length);

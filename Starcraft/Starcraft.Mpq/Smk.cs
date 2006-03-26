@@ -14,7 +14,7 @@ using Gdk;
 
 namespace Starcraft {
 
-	public class SMK : MPQResource {
+	public class Smk : MpqResource {
 
 		[Flags]
 		enum ARFlags {
@@ -30,7 +30,7 @@ namespace Starcraft {
 
 		Stream stream;
 
-		/* SMK header info */
+		/* Smk header info */
 		uint width;
 		uint height;
 		uint frames;
@@ -54,7 +54,7 @@ namespace Starcraft {
 		Dynamic16HuffmanTree type_Tree;
 
 
-		public SMK ()
+		public Smk ()
 		{
 			palette = new byte[256 * 3];
 		}
@@ -616,7 +616,7 @@ namespace Starcraft {
 			ReadVideoChunk(bs);
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 
@@ -681,8 +681,8 @@ namespace Starcraft {
 			curFrame++;
 		}
 
-		public event SMKFrameReady FrameReady;
-		public event SMKAnimationDone AnimationDone;
+		public event SmkFrameReady FrameReady;
+		public event SmkAnimationDone AnimationDone;
 
 
 		void DumpHeader ()
@@ -752,8 +752,8 @@ namespace Starcraft {
 		}
 	}
 
-	public delegate void SMKFrameReady (byte[] pixelData, byte[] palette, byte[][] audioBuffers);
-	public delegate void SMKAnimationDone ();
+	public delegate void SmkFrameReady (byte[] pixelData, byte[] palette, byte[][] audioBuffers);
+	public delegate void SmkAnimationDone ();
 
 	class BitStream
 	{

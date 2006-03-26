@@ -13,11 +13,11 @@ namespace Starcraft {
 		ushort iscript_entry;
 
 		string grp_path;
-		GRP grp;
-		MPQ mpq;
+		Grp grp;
+		Mpq mpq;
 		IScriptRunner runner;
 
-		public Sprite (MPQ mpq, int sprite_entry)
+		public Sprite (Mpq mpq, int sprite_entry)
 		{
 			this.mpq = mpq;
 			this.sprite_entry = sprite_entry;
@@ -30,7 +30,7 @@ namespace Starcraft {
 			grp_path = GlobalResources.Instance.ImagesTbl.Strings[grp_index-1];
 			Console.WriteLine ("grp_path = {0}", grp_path);
 
-			grp = (GRP)mpq.GetResource ("unit\\" + grp_path);
+			grp = (Grp)mpq.GetResource ("unit\\" + grp_path);
 
 			iscript_entry = GlobalResources.Instance.ImagesDat.GetIScriptIndex (images_entry);
 			Console.WriteLine ("iscript_entry = {0}", iscript_entry);

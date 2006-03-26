@@ -9,21 +9,21 @@ namespace Starcraft
 {
 	public class GlobalResources
 	{
-		MPQ mpq;
+		Mpq mpq;
 
 		IScriptBin iscriptBin;
 		ImagesDat imagesDat;
 		SpritesDat spritesDat;
 
-		TBL imagesTbl;
-		TBL spritesTbl;
+		Tbl imagesTbl;
+		Tbl spritesTbl;
 
 		static GlobalResources instance;
 		public static GlobalResources Instance {
 			get { return instance; }
 		}
 
-		public GlobalResources (MPQ mpq)
+		public GlobalResources (Mpq mpq)
 		{
 			if (instance != null)
 				throw new Exception ("There can only be one GlobalResources");
@@ -37,7 +37,7 @@ namespace Starcraft
 			ThreadPool.QueueUserWorkItem (ResourceLoader);
 		}
 
-		public TBL ImagesTbl {
+		public Tbl ImagesTbl {
 			get { return imagesTbl; }
 		}
 
@@ -45,7 +45,7 @@ namespace Starcraft
 			get { return imagesDat; }
 		}
 
-		public TBL SpritesTbl {
+		public Tbl SpritesTbl {
 			get { return spritesTbl; }
 		}
 
@@ -60,12 +60,12 @@ namespace Starcraft
 		void ResourceLoader (object state)
 		{
 			Console.WriteLine ("loading images.tbl");
-			imagesTbl = (TBL)mpq.GetResource (Builtins.ImagesTbl);
+			imagesTbl = (Tbl)mpq.GetResource (Builtins.ImagesTbl);
 			Console.WriteLine ("loading images.dat");
 			imagesDat = (ImagesDat)mpq.GetResource (Builtins.ImagesDat);
 
 			Console.WriteLine ("loading sprites.tbl");
-			spritesTbl = (TBL)mpq.GetResource (Builtins.SpritesTbl);
+			spritesTbl = (Tbl)mpq.GetResource (Builtins.SpritesTbl);
 			Console.WriteLine ("loading sprites.dat");
 			spritesDat = (SpritesDat)mpq.GetResource (Builtins.SpritesDat);
 

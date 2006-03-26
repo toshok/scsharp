@@ -5,16 +5,16 @@ using System.Text;
 using System.Collections.Generic;
 
 namespace Starcraft {
-	public class TBL : MPQResource {
+	public class Tbl : MpqResource {
 		Stream stream;
 		int num_strings;
 		string[] strings;
 
-		public TBL ()
+		public Tbl ()
 		{
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 			ReadStrings();

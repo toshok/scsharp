@@ -7,9 +7,9 @@ namespace Starcraft {
 
 	public class UIPainter
 	{
-		BIN ui;
+		Bin ui;
 
-		public UIPainter (BIN ui)
+		public UIPainter (Bin ui)
 		{
 			this.ui = ui;
 		}

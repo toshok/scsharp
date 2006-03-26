@@ -10,9 +10,9 @@ namespace Starcraft {
 		static List<Sprite> sprites = new List<Sprite>();
 		static Painter painter;
 
-		static MPQ our_mpq;
+		static Mpq our_mpq;
 
-		public static Sprite CreateSprite (MPQ mpq, int sprite_number)
+		public static Sprite CreateSprite (Mpq mpq, int sprite_number)
 		{
 			our_mpq = mpq;
 			return CreateSprite (sprite_number);

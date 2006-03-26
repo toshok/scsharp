@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Starcraft {
 
-	public class SpritesDat : MPQResource
+	public class SpritesDat : MpqResource
 	{
 		const int NUM_SPRITES = 517;
 		const int NUM_DOODADS = 130;
@@ -40,7 +40,7 @@ namespace Starcraft {
 				offset_to_variable_block [i] = offset_to_variable_block[i-1] + size_of_variable_block[i-1];
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			int size = 0;
 			for (int i = 0; i < NUM_FIELDS; i ++)

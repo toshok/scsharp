@@ -91,7 +91,7 @@ namespace Starcraft {
 		byte[] buf;
 		ushort script_start; /* the pc of the script that started us off */
 		ushort pc;
-		GRP grp;
+		Grp grp;
 		ushort script_entry_offset;
 
 		int facing = 0;
@@ -106,7 +106,7 @@ namespace Starcraft {
 			Console.WriteLine (fmt, args);
 		}
 
-		public IScriptRunner (GRP grp, ushort script_entry_offset)
+		public IScriptRunner (Grp grp, ushort script_entry_offset)
 		{
 			this.grp = grp;
 			this.buf = GlobalResources.Instance.IScriptBin.Contents;

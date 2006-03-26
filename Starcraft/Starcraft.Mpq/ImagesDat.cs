@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Starcraft {
 
-	public class ImagesDat : MPQResource
+	public class ImagesDat : MpqResource
 	{
 		const uint grpindex_offset = 0x00;
 		const uint iscript_offset = 0x1d7e;
@@ -21,7 +21,7 @@ namespace Starcraft {
 		{
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			buf = new byte [NUM_RECORDS * NUM_FIELDS * 4];
 			stream.Read (buf, 0, buf.Length);

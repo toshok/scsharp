@@ -13,13 +13,13 @@ namespace Starcraft
 		Painter painter;
 		CursorAnimator cursor;
 		Gdk.Pixbuf background;
-		BIN ui;
-		MPQ mpq;
+		Bin ui;
+		Mpq mpq;
 		bool translucent;
 
 		Gdk.Pixbuf pMainPb;
 
-		public ScoreScreen (MPQ mpq)
+		public ScoreScreen (Mpq mpq)
 		{
 			this.mpq = mpq;
 		}
@@ -75,12 +75,12 @@ namespace Starcraft
 		void ResourceLoader (object state)
 		{
 			Console.WriteLine ("loading arrow cursor");
-			cursor = new CursorAnimator ((GRP)mpq.GetResource (String.Format (Builtins.Palv_ArrowGrp, Util.RaceChar[(int)Game.Instance.Race])));
+			cursor = new CursorAnimator ((Grp)mpq.GetResource (String.Format (Builtins.Palv_ArrowGrp, Util.RaceChar[(int)Game.Instance.Race])));
 			cursor.SetHotSpot (64, 64);
 			Console.WriteLine ("loading score background");
 			background = new Gdk.Pixbuf ((Stream)mpq.GetResource (String.Format (Builtins.Palv_BackgroundPcx, Util.RaceChar[(int)Game.Instance.Race])));
 			Console.WriteLine ("loading score screen ui elements");
-			ui = (BIN)mpq.GetResource (Builtins.rez_GluScoreBin);
+			ui = (Bin)mpq.GetResource (Builtins.rez_GluScoreBin);
 
 			if (ui.Elements[1].type != UIElementType.Image)
 				throw new Exception ();

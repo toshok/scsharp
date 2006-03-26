@@ -116,16 +116,16 @@ namespace Starcraft {
 		}
 	}
 
-	public class BIN : MPQResource {
+	public class Bin : MpqResource {
 		Stream stream;
 		List<UIElement> elements;
 
-		public BIN ()
+		public Bin ()
 		{
 			elements = new List<UIElement> ();
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 			ReadElements ();

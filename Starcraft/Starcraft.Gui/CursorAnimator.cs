@@ -3,7 +3,7 @@ using Gdk;
 
 namespace Starcraft {
 	public class CursorAnimator {
-		GRP grp;
+		Grp grp;
 
 		DateTime last;
 		TimeSpan delta_to_change = TimeSpan.FromMilliseconds (200);
@@ -15,7 +15,7 @@ namespace Starcraft {
 		uint hot_x;
 		uint hot_y;
 
-		public CursorAnimator (GRP grp)
+		public CursorAnimator (Grp grp)
 		{
 			this.grp = grp;
 			this.x = 100;

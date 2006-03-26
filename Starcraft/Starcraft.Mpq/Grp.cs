@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 
 namespace Starcraft {
-	public class GRP : MPQResource {
+	public class Grp : MpqResource {
 		// file header info
 		ushort frame_count;
 		ushort width;
@@ -23,13 +23,13 @@ namespace Starcraft {
 		List<FrameTabEntry> entries;
 		Dictionary<int,byte[,]> frame_cache;
 
-		public GRP ()
+		public Grp ()
 		{
 			entries = new List<FrameTabEntry> ();
 			frame_cache = new Dictionary<int,byte[,]> ();
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 

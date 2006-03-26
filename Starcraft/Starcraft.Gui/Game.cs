@@ -13,8 +13,8 @@ namespace Starcraft
 
 		Race race;
 
-		MPQ scenario;
-		MPQ mpq;
+		Mpq scenario;
+		Mpq mpq;
 		Painter painter;
 
 		Gtk.Window window;
@@ -28,7 +28,7 @@ namespace Starcraft
 			get { return instance; }
 		}
 
-		public Game (MPQ mpq)
+		public Game (Mpq mpq)
 		{
 			this.mpq = mpq;
 
@@ -45,7 +45,7 @@ namespace Starcraft
 			LoadMainMenu ();
 		}
 
-		public void SetScenario (MPQ scenario)
+		public void SetScenario (Mpq scenario)
 		{
 			this.scenario = scenario;
 		}

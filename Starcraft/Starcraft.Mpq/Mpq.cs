@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace Starcraft {
 
-	public interface MPQResource
+	public interface MpqResource
 	{
 		void ReadFromStream (Stream stream);
 	}
 
-	public abstract class MPQ
+	public abstract class Mpq
 	{
-		protected MPQ () { }
+		protected Mpq () { }
 
 		protected abstract Stream GetStreamForResource (string path);
 
@@ -22,10 +22,10 @@ namespace Starcraft {
 		{
 			string ext = Path.GetExtension (path);
 			if (ext.ToLower() == ".tbl") {
-				return typeof (TBL);
+				return typeof (Tbl);
 			}
 			else if (ext.ToLower () == ".grp") {
-				return typeof (GRP);
+				return typeof (Grp);
 			}
 			else if (ext.ToLower () == ".bin") {
 				if (path.ToLower().EndsWith ("aiscript.bin")) /* must come before iscript.bin */
@@ -33,10 +33,10 @@ namespace Starcraft {
 				else if (path.ToLower().EndsWith ("iscript.bin"))
 					return typeof (IScriptBin);
 				else
-					return typeof (BIN);
+					return typeof (Bin);
 			}
 			else if (ext.ToLower () == ".chk") {
-				return typeof (CHK);
+				return typeof (Chk);
 			}
 			else if (ext.ToLower () == ".dat") {
 				if (path.ToLower().EndsWith ("images.dat"))
@@ -45,7 +45,7 @@ namespace Starcraft {
 					return typeof (SpritesDat);
 			}
 			else if (ext.ToLower () == ".smk") {
-				return typeof (SMK);
+				return typeof (Smk);
 			}
 
 			return null;
@@ -58,7 +58,7 @@ namespace Starcraft {
 			if (t == null)
 				return stream;
 
-			MPQResource res = Activator.CreateInstance (t) as MPQResource;
+			MpqResource res = Activator.CreateInstance (t) as MpqResource;
 
 			if (res == null) return null;
 
@@ -68,12 +68,12 @@ namespace Starcraft {
 		}
 	}
 
-	public class MPQDirectory : MPQ
+	public class MpqDirectory : Mpq
 	{
 		Dictionary<string,string> file_hash;
 		string mpq_dir_path;
 
-		public MPQDirectory (string path)
+		public MpqDirectory (string path)
 		{
 			mpq_dir_path = path;
 			file_hash = new Dictionary<string,string> ();
@@ -119,9 +119,9 @@ namespace Starcraft {
 		}
 	}
 
-	public class MPQArchive : MPQ
+	public class MpqArchive : Mpq
 	{
-		public MPQArchive (string path)
+		public MpqArchive (string path)
 		{
 		}
 

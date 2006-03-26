@@ -7,13 +7,13 @@ using Gdk;
 
 namespace Starcraft {
 
-	public class CHK : MPQResource {
+	public class Chk : MpqResource {
 
-		public CHK ()
+		public Chk ()
 		{
 		}
 
-		void MPQResource.ReadFromStream (Stream stream)
+		void MpqResource.ReadFromStream (Stream stream)
 		{
 			long stream_length = stream.Length;
 			byte[] section_name_buf = new byte[4];
@@ -72,7 +72,7 @@ namespace Starcraft {
 				Console.WriteLine ("mapTile[0,0] = {0}", mapTiles[0,0]);
 			}
 			else
-				Console.WriteLine ("Unhandled CHK section type {0}, length {1}", section_name, section_data.Length);
+				Console.WriteLine ("Unhandled Chk section type {0}, length {1}", section_name, section_data.Length);
 		}
 
 		ushort scenarioType;

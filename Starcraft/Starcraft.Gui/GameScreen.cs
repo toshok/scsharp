@@ -8,13 +8,13 @@ using Gdk;
 namespace Starcraft {
 
 	public class GameScreen : UIScreen {
-		MPQ mpq;
-		MPQ scenario_mpq;
+		Mpq mpq;
+		Mpq scenario_mpq;
 
 		Gdk.Pixbuf hud;
-		CHK scenario;
+		Chk scenario;
 
-		public GameScreen (MPQ mpq, MPQ scenario_mpq)
+		public GameScreen (Mpq mpq, Mpq scenario_mpq)
 		{
 			this.mpq = mpq;
 			this.scenario_mpq = scenario_mpq;
@@ -39,7 +39,7 @@ namespace Starcraft {
 			hud = new Gdk.Pixbuf ((Stream)mpq.GetResource (String.Format (Builtins.Game_ConsolePcx, Util.RaceCharLower[(int)Game.Instance.Race])));
 
 			Console.WriteLine ("loading scenario.chk");
-			scenario = (CHK) scenario_mpq.GetResource ("scenario.chk");
+			scenario = (Chk) scenario_mpq.GetResource ("scenario.chk");
 
 			// notify we're ready to roll
 			(new ThreadNotify (new ReadyEvent (FinishedLoading))).WakeupMain ();

@@ -9,10 +9,10 @@ namespace Starcraft
 {
 	public class MainMenu : UIScreen
 	{
-		MPQ mpq;
-		BIN ui;
+		Mpq mpq;
+		Bin ui;
 
-		public MainMenu (MPQ mpq)
+		public MainMenu (Mpq mpq)
 		{
 			this.mpq = mpq;
 		}
@@ -28,12 +28,12 @@ namespace Starcraft
 		void ResourceLoader (object state)
 		{
 			Console.WriteLine ("loading arrow cursor");
-			cursor = new CursorAnimator ((GRP)mpq.GetResource (Builtins.Palmm_ArrowGrp));
+			cursor = new CursorAnimator ((Grp)mpq.GetResource (Builtins.Palmm_ArrowGrp));
 			cursor.SetHotSpot (64, 64);
 			Console.WriteLine ("loading main menu background");
 			background = new Gdk.Pixbuf ((Stream)mpq.GetResource (Builtins.Palmm_BackgroundPcx));
 			Console.WriteLine ("loading main menu ui elements");
-			ui = (BIN)mpq.GetResource (Builtins.rez_GluMainBin);
+			ui = (Bin)mpq.GetResource (Builtins.rez_GluMainBin);
 
 			/* resolve external entities */
 			foreach (UIElement e in ui.Elements) {

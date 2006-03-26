@@ -6,12 +6,12 @@ using Gtk;
 
 public class Driver
 {
-	static MPQ GetMPQ (string path)
+	static Mpq GetMpq (string path)
 	{
 		if (Directory.Exists (path))
-			return new MPQDirectory (path);
+			return new MpqDirectory (path);
 		else if (File.Exists (path))
-			return new MPQArchive (path);
+			return new MpqArchive (path);
 		else
 			throw new Exception (); // XX
 	}
@@ -20,11 +20,11 @@ public class Driver
 	{
 		Application.Init();
 
-		Game g = new Game (GetMPQ (args[0])); // XXX
+		Game g = new Game (GetMpq (args[0])); // XXX
 
 		g.Startup();
 
-		g.SetScenario (GetMPQ (args[1])); // XXX
+		g.SetScenario (GetMpq (args[1])); // XXX
 
 		Application.Run ();
 	}
