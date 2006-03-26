@@ -1,0 +1,108 @@
+AAA section - The info in this section will always be the same. It is
+the variant of the map tile. However, not all tiles for all tilesets
+have all variants. If an invalid variant is used, it will appear as a
+Black Plaque Tile (solid black square) in the game, and in the editor.
+
+B section - This bit indicates (when applicable) that the tile has a
+decoration on it
+
+C section - Odd or even block # (this is nessesary because of
+Starcraft's isometric tile system)
+
+D section - For solid tiles, this is the tile identity. For border
+tiles, this is the border's configuration. I'm still working on this
+section
+
+E section - For solid tiles, this is unused, and MUST be set to
+0s. For border tiles, this is the border identity. I'm still working
+on this section
+
+F section - These 2 bits are unused, and MUST be set to 0s or StarEdit
+will crash
+
+FFEE EEED DDDC BAAA
+0000 0000 0110 0100 = 0x0064
+0000 0000 0111 0100 = 0x0074
+0000 0111 0110 0100 = 0x0764
+0000 0111 0111 0100 = 0x0774
+0000 0111 0100 0001 = 0x0741
+0000 0111 0101 0001 = 0x0751
+0000 0000 0010 0001 = 0x0021
+0000 0000 0011 0001 = 0x0031
+0000 0000 0010 0011 = 0x0023
+0000 0000 0011 0011 = 0x0033
+0000 0000 0010 0010 = 0x0022
+0000 0000 0011 0010 = 0x0032
+0000 0000 0010 1000 = 0x0028
+0000 0000 0011 1000 = 0x0038
+0000 0000 0010 0000 = 0x0020
+0000 0000 0011 0000 = 0x0030
+
+0x0064 0x0074 0x0764 0x0774 0x0741 0x0751 0x0021 0x0031 0x0023 0x0033 0x0022 0x0032 0x0028 0x0038 0x0022 0x0032 0x0020 0x0030 0x0026 0x0036 0x0024 0x0034 0x0025 0x0035 0x0026 0x0036 0x0024 0x0034 0x0023 0x0033 0x0020 0x0030
+0x0763 0x0773 0x0744 0x0754 0x0023 0x0033 0x0020 0x0030 0x0028 0x0038 0x0021 0x0031 0x0026 0x0036 0x0027 0x0037 0x0025 0x0035 0x0022 0x0032 0x0025 0x0035 0x0026 0x0036 0x0023 0x0033 0x0024 0x0034 0x0022 0x0032 0x0021 0x0031
+0x0743 0x0753 0x0023 0x0033 0x0021 0x0031 0x0028 0x0038 0x0024 0x0034 0x0022 0x0032 0x0026 0x0036 0x0025 0x0035 0x0025 0x0035 0x0022 0x0032 0x0027 0x0037 0x0027 0x0037 0x0025 0x0035 0x0021 0x0031 0x0022 0x0032 0x0027 0x0037
+
+mega tile ids =
+
+?    ?    1815 1820   1822    1827    ?
+1814 1819 1825 1830
+1824 1829
+
+map looks like this (W = water, B = border, D = dirt)
+
+wwbbbbd...
+bbbbd...
+bbd...
+d...
+
+
+FFEE EEED DDDC BAAA
+0000 0111 0101 0100 = 0x0754     - D = 10, E = 3, C = 1, A = 4  = 1830
+0000 0111 0101 0011 = 0x0753     - D = 10, E = 3, C = 1, A = 3  = 1829
+0000 0111 0101 0010 = 0x0752     - D = 10, E = 3, C = 1, A = 2  = 1828
+0000 0111 0101 0001 = 0x0751     - D = 10, E = 3, C = 1, A = 1  = 1827
+0000 0111 0101 0000 = 0x0750     - D = 10, E = 3, C = 1, A = 0  = 1826
+0000 0111 0100 0100 = 0x0744     - D = 10, E = 3, C = 0, A = 4  = 1825
+0000 0111 0100 0011 = 0x0743     - D = 10, E = 3, C = 0, A = 3  = 1824
+0000 0111 0100 0010 = 0x0742     - D = 10, E = 3, C = 0, A = 2  = 1823
+0000 0111 0100 0001 = 0x0741     - D = 10, E = 3, C = 0, A = 1  = 1822
+0000 0111 0100 0000 = 0x0740     - D = 10, E = 3, C = 0, A = 0  = 1821
+
+0000 0111 0111 0100 = 0x0774     - D = 11, E = 3, C = 1, A = 4  = 1820
+0000 0111 0111 0011 = 0x0773     - D = 11, E = 3, C = 1, A = 3  = 1819
+0000 0111 0111 0010 = 0x0772     - D = 11, E = 3, C = 1, A = 2  = 1818
+0000 0111 0111 0001 = 0x0771     - D = 11, E = 3, C = 1, A = 1  = 1817
+0000 0111 0111 0000 = 0x0770     - D = 11, E = 3, C = 1, A = 0  = 1816
+0000 0111 0110 0100 = 0x0764     - D = 11, E = 3, C = 0, A = 4  = 1815
+0000 0111 0110 0011 = 0x0763     - D = 11, E = 3, C = 0, A = 3  = 1814
+0000 0111 0110 0010 = 0x0762     - D = 11, E = 3, C = 0, A = 2  = 1813
+0000 0111 0110 0001 = 0x0761     - D = 11, E = 3, C = 0, A = 1  = 1812
+0000 0111 0110 0000 = 0x0760     - D = 11, E = 3, C = 0, A = 0  = 1811
+
+
+0000 0111 0001 0011 = 0x713 = 1811
+
+ 	Badlands
+1 	Dirt 		
+2 	High Dirt 
+3 	Water 		
+4 	Grass 		
+5 	High Grass 	
+6 	Rocky Ground 	
+7 	Dirt?? 		
+8 	Asphalt 	
+9 	Structure 	
+A 	Mud 		
+B 	- 		
+C 	- 		
+D 	- 		
+E 	- 		
+F 	- 		
+
+
+notes:
+	odd flag = +5 to megatile id
+	megatile 1811 (0x713) seems like the first water/dirt border
+
+EEEE
+0011 - water above, dirt below
