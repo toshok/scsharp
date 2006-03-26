@@ -1,3 +1,7 @@
+
+all:
+	$(MAKE) -C Starcraft all
+
 MCSFLAGS= -debug
 MCS= gmcs
 
