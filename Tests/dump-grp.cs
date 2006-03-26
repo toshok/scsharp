@@ -13,9 +13,9 @@ public class DumpGRP {
 
 		FileStream fs = File.OpenRead (filename);
 
-		GRP grp = new GRP ();
+		Grp grp = new Grp ();
 
-		((MPQResource)grp).ReadFromStream (fs);
+		((MpqResource)grp).ReadFromStream (fs);
 
 		for (int i = 0; i < grp.FrameCount; i ++) {
 			BMP.WriteBMP (String.Format ("output{0:0000}.bmp", i),

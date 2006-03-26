@@ -14,7 +14,7 @@ public class RunSMK {
 	Gtk.Window window;
 	Gtk.DrawingArea drawing_area;
 
-	SMK smk;
+	Smk smk;
 
 	Gdk.Pixbuf current_frame;
 

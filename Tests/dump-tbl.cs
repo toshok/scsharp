@@ -11,9 +11,9 @@ public class DumpTBL {
 
 		FileStream fs = File.OpenRead (filename);
 
-		TBL tbl = new TBL ();
+		Tbl tbl = new Tbl ();
 
-		((MPQResource)tbl).ReadFromStream (fs);
+		((MpqResource)tbl).ReadFromStream (fs);
 
 		Console.WriteLine ("dumping {0}", filename);
 		for (int i = 0; i < tbl.Strings.Length; i ++)

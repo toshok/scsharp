@@ -12,7 +12,7 @@ public class AnimateGRP {
 	static Gtk.Window window;
 	static Gtk.Widget drawing_area;
 
-	static GRP grp;
+	static Grp grp;
 
 	const int WALK_CYCLE_START = 136;
 	const int WALK_CYCLE_END = 255;
@@ -126,9 +126,9 @@ public class AnimateGRP {
 
 		FileStream fs = File.OpenRead (filename);
 
-		grp = new GRP ();
+		grp = new Grp ();
 
-		((MPQResource)grp).ReadFromStream (fs);
+		((MpqResource)grp).ReadFromStream (fs);
 
 		CreateWindow ();
 		drawing_area.ExposeEvent += OnExposed;

@@ -6,12 +6,12 @@ using Starcraft;
 
 public class DumpCHK {
 
-	static MPQ GetMPQ (string path)
+	static Mpq GetMPQ (string path)
 	{
 		if (Directory.Exists (path))
-			return new MPQDirectory (path);
+			return new MpqDirectory (path);
 		else if (File.Exists (path))
-			return new MPQArchive (path);
+			return new MpqArchive (path);
 		else
 			throw new Exception (); // XX
 	}
@@ -22,10 +22,10 @@ public class DumpCHK {
 
 		Console.WriteLine ("Map name {0}", mappath);
 
-		MPQ mpq = GetMPQ (mpqpath);
-		MPQ map = GetMPQ (mappath);
+		Mpq mpq = GetMPQ (mpqpath);
+		Mpq map = GetMPQ (mappath);
 
-		CHK chk = (CHK)map.GetResource ("scenario.chk");
+		Chk chk = (Chk)map.GetResource ("scenario.chk");
 
 		ushort[,] mapTiles = chk.MapTiles;
 

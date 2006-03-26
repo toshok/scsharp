@@ -17,10 +17,10 @@ public class RunAnimation {
 	int sprite_number = 146;
 	int animation_type = 11;
 
-	MPQ mpq;
+	Mpq mpq;
 	Sprite sprite;
 
-	public RunAnimation (MPQ mpq)
+	public RunAnimation (Mpq mpq)
 	{
 		this.mpq = mpq;
 
