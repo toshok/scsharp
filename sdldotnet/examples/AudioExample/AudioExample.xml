@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AudioExample</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.AudioExample.AudioExample">
+            <summary>
+            A simple SDL.NET example which demonstrates audio in SDL.NET.
+            Click plays sound, space changes music and the arrow keys change volume.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.AudioExample.AudioExample.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.AudioExample.AudioExample.Run">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.AudioExample.AudioExample.Main">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.AudioExample.AudioExample.Dispose">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.AudioExample.AudioExample.Close">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.AudioExample.AudioExample.Finalize">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.AudioExample.AudioExample.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+    </members>
+</doc>

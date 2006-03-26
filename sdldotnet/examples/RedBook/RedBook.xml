@@ -1,0 +1,4597 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RedBook</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.RedBook.JitterPoint">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.JitterPoint.#ctor(System.Single,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.JitterPoint.X">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.JitterPoint.Y">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.Jitter">
+            <summary>
+                <para>
+                    Contains jitter point arrays for 2, 3, 4, 8, 15, 24 and 66 jitters.  The arrays
+                    are named j2, j3, etc. Each element in the array has the form, for example,
+                    j8[0].x and j8[0].y.
+                </para>
+                <para>
+                    Values are floating point in the range [-0.5 &lt; x &lt; 0.5],
+                    [-0.5 &lt; y &lt; 0.5], and have a gaussian distribution around the origin.
+                </para>
+                <para>
+                    Use these to do model jittering for scene anti-aliasing and view volume jittering
+                    for depth of field effects.  Use in conjunction with the accwindow() routine.
+                </para>
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/jitter.h
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+            </remarks>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.MaxSamples">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.J2">
+            <summary>
+                <para>
+                    2 jitter points.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.J3">
+            <summary>
+                <para>
+                    3 jitter points.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.J4">
+            <summary>
+                <para>
+                    4 jitter points.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.J8">
+            <summary>
+                <para>
+                    8 jitter points.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.J15">
+            <summary>
+                <para>
+                    15 jitter points.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.J24">
+            <summary>
+                <para>
+                    24 jitter points.
+                </para>
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.Jitter.J66">
+            <summary>
+                <para>
+                    66 jitter points.
+                </para>
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBook">
+            <summary>
+            Summary description for RedBook.
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.RedBook.RedBook.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBook.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBook.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBook.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBook.Main">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAAIndex">
+            <summary>
+                This program draws shows how to draw anti-aliased lines in color index mode.  It
+                draws two diagonal lines to form an X; when 'r' is typed in the window, the
+                lines are rotated in opposite directions.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/aaindex.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h">height of windoww</param>
+            <param name="w">width of window</param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAIndex.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAAIndex.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAAPoly">
+            <summary>
+                This program draws filled polygons with antialiased edges.  The special
+                GL_SRC_ALPHA_SATURATE blending function is used.  Pressing the 't' key turns the
+                antialiasing on and off.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/aaindex.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h">height of windoww</param>
+            <param name="w">width of window</param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAAPoly.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAAPoly.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAARgb">
+            <summary>
+                This program draws shows how to draw anti-aliased lines.  It draws two diagonal
+                lines to form an X; when 'r' is typed in the window, the lines are rotated in
+                opposite directions.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/aargb.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>	
+            	<para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAARgb.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAARgb.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAccAnti">
+            <summary>
+                Use the accumulation buffer to do full-scene antialiasing on a scene with
+                orthographic parallel projection.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/accanti.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccAnti.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAccAnti.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAccPersp">
+            <summary>
+                Use the accumulation buffer to do full-scene antialiasing on a scene with
+                perspective projection, using the special routines accFrustum() and
+                accPerspective().
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/accanti.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.AccFrustum(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+                <para>
+                    The first 6 arguments are identical to the glFrustum() call.
+                </para>
+                <para>
+                    pixdx and pixdy are anti-alias jitter in pixels.  Set both equal to 0.0 for
+                    no anti-alias jitter.  eyedx and eyedy are depth-of field jitter in pixels.
+                    Set both equal to 0.0 for no depth of field effects.
+                </para>
+                <para>
+                    focus is distance from eye to plane in focus.  focus must be greater than,
+                    but not equal to 0.0.
+                </para>
+                <para>
+                    Note that accFrustum() calls glTranslatef().  You will probably want to
+                    insure that your ModelView matrix has been initialized to identity before
+                    calling AccFrustum().
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.AccPerspective(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+                <para>
+                    The first 4 arguments are identical to the gluPerspective() call.
+                </para>
+                <para>
+                    pixdx and pixdy are anti-alias jitter in pixels.  Set both equal to 0.0 for
+                    no anti-alias jitter.  eyedx and eyedy are depth-of field jitter in pixels.
+                    Set both equal to 0.0 for no depth of field effects.
+                </para>
+                <para>
+                    focus is distance from eye to plane in focus.  focus must be greater than,
+                    but not equal to 0.0.
+                </para>
+                <para>
+                    Note that AccPerspective() calls AccFrustum().
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAccPersp.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAccPersp.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAlpha">
+            <summary>
+                This program draws several overlapping filled polygons to demonstrate the effect
+                order has on alpha blending results.  Use the 't' key to toggle the order of
+                drawing polygons.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/accanti.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.DrawLeftTriangle">
+            <summary>
+                <para>
+                    Draws yellow triangle on left hand side of screen.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.DrawRightTriangle">
+            <summary>
+                <para>
+                    Draws cyan triangle on right hand side of screen.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAlpha.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAlpha3D">
+            <summary>
+                This program demonstrates how to intermix opaque and alpha blended polygons in
+                the same scene, by using glDepthMask.  Press the 'a' key to animate moving the
+                transparent object through the opaque object.  Press the 'r' key to reset the
+                scene.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/accanti.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAlpha3D.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAlpha3D.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookAnti">
+            <summary>
+                This program draws antialiased lines in RGBA mode.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookAnti.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookAnti.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookBezCurve">
+            <summary>
+                This program uses evaluators to draw a Bezier curve.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/bezcurve.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezCurve.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookBezCurve.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookBezMesh">
+            <summary>
+                This program uses evaluators to draw a Bezier curve.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/bezcurve.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezMesh.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookBezMesh.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookBezSurf">
+            <summary>
+                This program renders a wireframe Bezier surface, using two-dimensional
+                evaluators.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/bezcurve.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookBezSurf.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookBezSurf.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookChecker">
+            <summary>
+                This program texture maps a checkerboard image onto two rectangles.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/bezcurve.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookChecker.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookChecker.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookCheckerOld">
+            <summary>
+                This program texture maps a checkerboard image 
+                onto two rectangles. 
+                This program
+                clamps the texture, if the texture coordinates 
+                fall outside 0.0 and 1.0.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCheckerOld.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookCheckerOld.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookClip">
+            <summary>
+                This program demonstrates arbitrary clipping planes.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/clip.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookClip.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookClip.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookColorMat">
+            <summary>
+                After initialization, the program will be in ColorMaterial mode.  Pressing the
+                mouse buttons will change the diffuse reflection values.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/clip.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookColorMat.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookColorMat.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookCube">
+            <summary>
+                This program demonstrates a single modeling transformation, glScalef() and a
+                single viewing transformation, gluLookAt().  A wireframe cube is rendered.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/clip.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookCube.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookCube.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookDepthCue">
+            <summary>
+                This program draws a wireframe model, which uses intensity (brightness) to give
+                clues to distance.  Fog is used to achieve this effect.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDepthCue.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookDepthCue.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookDof">
+            <summary>
+                This program demonstrates use of the accumulation buffer to create an
+                out-of-focus depth-of-field effect.  The teapots are drawn several times into the
+                accumulation buffer.  The viewing volume is jittered, except at the focal point,
+                where the viewing volume is at the same position, each time.  In this case, the
+                gold teapot remains in focus.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/accanti.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.AccFrustum(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+                <para>
+                     * The first 6 arguments are identical to the Gl.glFrustum() call.
+                </para>
+                <para>
+                    pixdx and pixdy are anti-alias jitter in pixels.  Set both equal to 0.0 for
+                    no anti-alias jitter.  eyedx and eyedy are depth-of field jitter in pixels.
+                    Set both equal to 0.0 for no depth of field effects.
+                </para>
+                <para>
+                    focus is distance from eye to plane in focus.  focus must be greater than,
+                    but not equal to 0.0.
+                </para>
+                <para>
+                    Note that AccFrustum() calls Gl.glTranslatef().  You will probably want to
+                    insure that your ModelView matrix has been initialized to identity before
+                    calling AccFrustum().
+                </para>
+            </summary>
+            <param name="left"></param>
+            <param name="right"></param>
+            <param name="bottom"></param>
+            <param name="top"></param>
+            <param name="near"></param>
+            <param name="far"></param>
+            <param name="pixdx"></param>
+            <param name="pixdy"></param>
+            <param name="eyedx"></param>
+            <param name="eyedy"></param>
+            <param name="focus"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.AccPerspective(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+                <para>
+                    Note that AccPerspective() calls AccFrustum().
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDof.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookDof.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookDouble">
+            <summary>
+                This is a simple double buffered program.  Pressing the primary mouse button rotates
+                the rectangle.  Pressing the secondary mouse button stops the rotation.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDouble.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookDouble.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookDrawF">
+            <summary>
+                Draws the bitmapped letter F on the screen (several times).  This demonstrates
+                use of the Gl.glBitmap() call.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookDrawF.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookDrawF.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookFeedback">
+            <summary>
+                This program demonstrates use of OpenGL feedback.  First,a lighting environment
+                is set up and a few lines are drawn.  Then feedback mode is entered, and the
+                same lines are drawn.  The results in the feedback buffer are printed.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.DrawGeometry(System.Int32)">
+            <summary>
+                <para>
+                    Draw a few lines and two points, one of which will be clipped.  If in
+                    feedback mode, a passthrough token is issued between the each primitive.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.Print3dColorVertex(System.Int32,System.Int32,System.Single[])">
+            <summary>
+                <para>
+                    Write contents of one vertex to console.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.PrintBuffer(System.Int32,System.Single[])">
+            <summary>
+                <para>
+                    Write the contents of the entire buffer.  (Parse tokens!)
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.Init">
+            <summary>
+                <para>
+                    Initialize antialiasing for RGBA mode, including alpha blending, hint, and
+                    line width.  Print out implementation specific info on line width granularity
+                    and width.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFeedback.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookFeedback.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookFog">
+            <summary>
+                This program draws 5 red spheres, each at a different z distance from the eye,
+                in different types of fog.  Pressing the f key chooses between 3 types of 
+                fog:  exponential, exponential squared, and linear.  In this program, there is
+                a fixed density value, as well as fixed start and end values for the linear fog.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/accanti.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFog.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookFog.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookFogIndex">
+            <summary>
+                This program draws 5 wireframe spheres, each at a different z distance from the
+                eye, in linear fog.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/accanti.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndex.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookFogIndex.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookFogIndexOld">
+            <summary>
+                This program demonstrates fog in color index mode.  Three cones are drawn at
+                different z values in a linear fog.  32 contiguous colors (from 16 to 47) are
+                loaded with a color ramp.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookFogIndexOld.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookFogOld">
+            <summary>
+                This program draws 5 red teapots, each at a different z distance from the eye,
+                in different types of fog.  Pressing the left mouse button chooses between 3
+                types of fog:  exponential, exponential squared, and linear.  In this program,
+                there is a fixed density value, as well as fixed start and end values for the
+                linear fog.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFogOld.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookFogOld.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookFont">
+            <summary>
+                Draws some text in a bitmapped font.  Uses Gl.glBitmap() and other pixel
+                routines.  Also demonstrates use of display lists.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookFont.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookFont.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookHello">
+            <summary>
+                This is a simple, introductory OpenGL program.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookHello.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookHello.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookImage">
+            <summary>
+                This program demonstrates drawing pixels and shows the effect of
+                Gl.glDrawPixels(), Gl.glCopyPixels(), and Gl.glPixelZoom().  Interaction:
+                moving the mouse while pressing the mouse button will copy the image in the
+                lower-left corner of the window to the mouse position, using the current pixel
+                zoom factors.  There is no attempt to prevent you from drawing over the original
+                image.  If you press the 'r' key, the original image and zoom factors are reset.
+                If you press the 'z' or 'Z' keys, you change the zoom factors.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookImage.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookImage.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookLight">
+            <summary>
+                This program demonstrates the use of the OpenGL lighting model.  A sphere is
+                drawn using a grey material characteristic.  A single light source illuminates
+                the object.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLight.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookLight.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookLines">
+            <summary>
+                This program demonstrates geometric primitives and their attributes.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookLines.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookLines.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookList">
+            <summary>
+                This program demonstrates how to make and execute a display list.  Note that
+                attributes, such as current color and matrix, are changed.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookList.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookList.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookMaterial">
+            <summary>
+                This program demonstrates the use of the GL lighting model.  Several objects are
+                drawn using different material characteristics.  A single light source
+                illuminates the objects.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMaterial.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMaterial.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMaterial.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMaterial.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMaterial.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMaterial.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMaterial.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookMaterial.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookMipMap">
+            <summary>
+                This program demonstrates using mipmaps for texture maps.  To overtly show the
+                effect of mipmaps, each mipmap reduction level has a solidly colored, contrasting
+                texture image.  Thus, the quadrilateral which is drawn is drawn with several
+                different colors.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMipMap.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMipMap.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMipMap.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMipMap.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMipMap.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMipMap.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMipMap.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookMipMap.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookModel">
+            <summary>
+                This program demonstrates modeling transformations.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookModel.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookModel.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookModel.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookModel.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookModel.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookModel.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookModel.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookModel.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookMoveLight">
+            <summary>
+                <para>
+                    This program demonstrates when to issue lighting and transformation commands to
+                    render a model with a light which is moved by a modeling transformation (rotate
+                    or translate).  The light position is reset after the modeling transformation is
+                    called.  The eye position does not change.
+                </para>
+                <para>
+                    A sphere is drawn using a grey material characteristic.  A single light source
+                    illuminates the object.
+                </para>
+                <para>
+                    Interaction:  pressing the left mouse button alters the modeling transformation
+                    (x rotation) by 30 degrees.  The scene is then redrawn with the light in a new
+                    position.
+                </para>
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMoveLight.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMoveLight.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMoveLight.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMoveLight.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMoveLight.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMoveLight.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookMoveLight.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookMoveLight.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookNurbs">
+            <summary>
+                This program shows a NURBS (Non-uniform rational B-splines) surface, shaped like
+                a heart.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookNurbs.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookNurbs.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookNurbs.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookNurbs.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookNurbs.Init">
+            <summary>
+                <para>
+                    Initialize depth buffer, light source, material property, and lighting model.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookNurbs.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookNurbs.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookPickDepth">
+            <summary>
+                Picking is demonstrated in this program.  In rendering mode, three overlapping
+                rectangles are drawn.  When the left mouse button is pressed, selection mode is
+                entered with the picking matrix.  Rectangles which are drawn under the cursor
+                position are "picked."  Pay special attention to the depth value range, which is
+                returned.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/pickdepth.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickDepth.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickDepth.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickDepth.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickDepth.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickDepth.ProcessHits(System.Int32,System.Int32[])">
+            <summary>
+                <para>
+                    Prints out the contents of the selection array.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickDepth.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickDepth.MouseButtonDown(System.Object,SdlDotNet.MouseButtonEventArgs)">
+            <summary>
+                <para>
+                    Sets up selection mode, name stack, and projection matrix for picking.  Then
+                    the objects are drawn.
+                </para>
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookPickDepth.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookPickSquare">
+            <summary>
+                Use of multiple names and picking are demonstrated.  A 3x3 grid of squares is
+                drawn.  When the left mouse button is pressed, all squares under the cursor
+                position have their color changed.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/pickdepth.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.DrawSquares(System.Int32)">
+            <summary>
+                <para>
+                    The nine squares are drawn.  In selection mode, each square is given two
+                    names:  one for the row and the other for the column on the grid.  The color
+                    of each square is determined by its position on the grid, and the value in
+                    the board[][] array.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.Init">
+            <summary>
+                <para>
+                    Clear color value for every square on the board.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.ProcessHits(System.Int32,System.Int32[])">
+            <summary>
+                <para>
+                    Prints out the contents of the selection array.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.MouseButtonDown(System.Object,SdlDotNet.MouseButtonEventArgs)">
+            <summary>
+                <para>
+                    Sets up selection mode, name stack, and projection matrix for picking.  Then
+                    the objects are drawn.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPickSquare.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookPickSquare.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookPlane">
+            <summary>
+                This program shows couple quads, with differing materials and lighting.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlane.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlane.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlane.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlane.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlane.Init">
+            <summary>
+                <para>
+                    Initialize light source, material property, and lighting model.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlane.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookPlane.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookPlanet">
+            <summary>
+                This program shows how to composite modeling transformations to draw translated
+                and rotated models.  Interaction:  pressing the d and y keys (day and year)
+                alters the rotation of the planet around the sun.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/planet.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlanet.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlanet.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlanet.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlanet.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPlanet.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookPlanet.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookPolyOff">
+            <summary>
+                This program demonstrates polygon offset to draw a shaded polygon and its
+                wireframe counterpart without ugly visual artifacts ("stitching").
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/planet.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolyOff.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolyOff.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolyOff.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolyOff.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolyOff.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookPolyOff.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookPolys">
+            <summary>
+                This program demonstrates polygon stippling.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/planet.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolys.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolys.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolys.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolys.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookPolys.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookPolys.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookQuadric">
+            <summary>
+                This program demonstrates the use of some of the Glu.gluQuadric* routines.
+                Quadric objects are created with some quadric properties and the callback routine
+                to handle errors.  Note that the cylinder has no top or bottom and the circle
+                has a hole in it.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/planet.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookQuadric.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookQuadric.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookQuadric.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookQuadric.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookQuadric.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookQuadric.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookRobot">
+            <summary>
+                This program shows how to composite modeling transformations to draw translated
+                and rotated hierarchical models.  Interaction:  pressing the s and e keys
+                (shoulder and elbow) alters the rotation of the robot arm.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/planet.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookRobot.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookRobot.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookRobot.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookRobot.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookRobot.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookRobot.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookScene">
+            <summary>
+                This program demonstrates the use of the GL lighting model.  Objects are drawn
+                using a grey material characteristic.  A single light source illuminates the
+                objects.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/planet.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookScene.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookScene.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookScene.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookScene.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookScene.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookScene.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookSceneBlueAmbient">
+            <summary>
+                This program demonstrates use of a blue ambient light source.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneBlueAmbient.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneBlueAmbient.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneBlueAmbient.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneBlueAmbient.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneBlueAmbient.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookSceneBlueAmbient.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookSceneColorLight">
+            <summary>
+                This program demonstrates the use of a colored (magenta, in this example) light
+                source.  Objects are drawn using a grey material characteristic.  A single light
+                source illuminates the objects.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneColorLight.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneColorLight.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneColorLight.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneColorLight.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneColorLight.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookSceneColorLight.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookSceneFlat">
+            <summary>
+                This program draws lighted objects with flat shading.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneFlat.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneFlat.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneFlat.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneFlat.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSceneFlat.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookSceneFlat.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookSelect">
+            <summary>
+                This is an illustration of the selection mode and name stack, which detects
+                whether objects which collide with a viewing volume.  First, four triangles and
+                a rectangular box representing a viewing volume are drawn (drawScene routine).
+                The green triangle and yellow triangles appear to lie within the viewing volume,
+                but the red triangle appears to lie outside it.  Then the selection mode is
+                entered (SelectObjects routine).  Drawing to the screen ceases.  To see if any
+                collisions occur, the four triangles are called.  In this example, the green
+                triangle causes one hit with the name 1, and the yellow triangles cause one hit
+                with the name 3.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/select.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.DrawScene">
+            <summary>
+                <para>
+                    Draws 4 triangles and a wire frame which represents the viewing volume.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.DrawTriangle(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+                <para>
+                    Draw a triangle with vertices at (x1, y1), (x2, y2), and (x3, y3) at z units
+                    away from the origin
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.DrawViewVolume(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+                <para>
+                    Draws a rectangular box with these outer x, y, and z values.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.ProcessHits(System.Int32,System.Int32[])">
+            <summary>
+                <para>
+                    ProcessHits prints out the contents of the selection array.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.SelectObjects">
+            <summary>
+                <para>
+                    SelectObjects "draws" the triangles in selection mode, assigning names for
+                    the triangles.  Note that the third and fourth triangles share one name, so
+                    that if either or both triangles intersects the viewing/clipping volume,
+                    only one hit will be registered.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSelect.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookSelect.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookSmooth">
+            <summary>
+                This program demonstrates smooth shading.  A smooth shaded polygon is drawn in a
+                2-D projection.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSmooth.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSmooth.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSmooth.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSmooth.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSmooth.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookSmooth.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookStencil">
+            <summary>
+                This program demonstrates use of the stencil buffer for masking nonrectangular
+                regions.  Whenever the window is redrawn, a value of 1 is drawn into a
+                diamond-shaped region in the stencil buffer.  Elsewhere in the stencil buffer,
+                the value is 0.  Then a blue sphere is drawn where the stencil value is 1,
+                and yellow torii are drawn where the stencil value is not 1.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStencil.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStencil.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStencil.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStencil.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStencil.Display">
+            <summary>
+                <para>
+                    Draw a sphere in a diamond-shaped section in the middle of a window with 2
+                    torii.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStencil.Reshape(System.Int32,System.Int32)">
+            <summary>
+                <para>
+                    Whenever the window is reshaped, redefine the coordinate system and redraw
+                    the stencil area.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStencil.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookStencil.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookStroke">
+            <summary>
+                This program demonstrates some characters of a stroke (vector) font.  The
+                characters are represented by display lists, which are given numbers which
+                correspond to the ASCII values of the characters.  Use of Gl.glCallLists()
+                is demonstrated.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/stroke.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStroke.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStroke.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStroke.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStroke.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStroke.DrawLetter(SdlDotNet.Examples.RedBook.RedBookStroke.CharPoint[])">
+            <summary>
+                <para>
+                    Interprets the instructions from the array for that letter and renders
+                    the letter with line segments.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStroke.Init">
+            <summary>
+                <para>
+                    Create a display list for each of 6 characters.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookStroke.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookStroke.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookSurface">
+            <summary>
+                This program draws a NURBS surface in the shape of a symmetrical hill.  The 'c'
+                keyboard key allows you to toggle the visibility of the control points
+                themselves.  Note that some of the control points are hidden by the surface
+                itself.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/stroke.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurface.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurface.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurface.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurface.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurface.Init">
+            <summary>
+                <para>
+                    Initialize material property and depth buffer.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurface.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookSurface.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookSurfaceOld">
+            <summary>
+                This program draws a NURBS surface in the shape of a symmetrical hill.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurfaceOld.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurfaceOld.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurfaceOld.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurfaceOld.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurfaceOld.Init">
+            <summary>
+                <para>
+                    Initialize material property and depth buffer.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookSurfaceOld.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookSurfaceOld.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTeaAmbient">
+            <summary>
+                This program renders three lighted, shaded teapots, with different ambient values.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Mark J. Kilgard
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeaAmbient.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeaAmbient.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeaAmbient.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeaAmbient.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeaAmbient.Init">
+            <summary>
+                <para>
+                    Initialize light source and lighting model.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeaAmbient.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTeaAmbient.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTeapots">
+            <summary>
+                This program demonstrates lots of material properties.  A single light source
+                illuminates the objects.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/teapots.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.Init">
+            <summary>
+            Initialize depth buffer, projection matrix, light source, and lighting model.
+            Do not specify a material property here.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.RenderTeapot(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+                <para>
+                    Move object into position.  Use 3rd through 12th parameters to specify the
+                    material property.  Draw a teapot.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.Display">
+            <summary>
+                <para>
+                    First column:  emerald, jade, obsidian, pearl, ruby, turquoise.
+                </para>
+                <para>
+                    2nd column:  brass, bronze, chrome, copper, gold, silver.
+                </para>
+                <para>
+                    3rd column:  black, cyan, green, red, white, yellow plastic.
+                </para>
+                <para>
+                    4th column:  black, cyan, green, red, white, yellow rubber.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTeapots.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTeapots.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTess">
+            <summary>
+                <para>
+                    This program demonstrates polygon tessellation.  Two tesselated objects are
+                    drawn.  The first is a rectangle with a triangular hole.  The second is a
+                    smooth shaded, self-intersecting star.
+                </para>
+                <para>
+                    Note the exterior rectangle is drawn with its vertices in counter-clockwise
+                    order, but its interior clockwise.  Note the Combine callback is needed for
+                    the self-intersecting star.  Also note that removing the TessProperty for
+                    the star will make the interior unshaded (WINDING_ODD).
+                </para>
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/teapots.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTess.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTess.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTess.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTess.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTess.Combine(System.Double[],System.Double[],System.Single[],System.Double[])">
+            <summary>
+                <para>
+                    The Combine callback is used to create a new vertex when edges intersect.
+                    coordinate location is trivial to calculate, but weight[4] may be used to
+                    average color, normal, or texture coordinate data.  In this program, color
+                    is weighted.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTess.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTess.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTessWind">
+            <summary>
+                This program demonstrates the winding rule polygon tessellation property.  Four
+                tessellated objects are drawn, each with very different contours.  When the w key
+                is pressed, the objects are drawn with a different winding rule.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/teapots.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTessWind.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTessWind.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTessWind.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTessWind.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTessWind.MakeNewLists">
+            <summary>
+                <para>
+                    Make four display lists, each with a different tessellated object.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTessWind.Combine(System.Double[],System.Double[],System.Single[],System.Double[])">
+            <summary>
+                <para>
+                    The Combine callback is used to create a new vertex when edges intersect.
+                    coordinate location is trivial to calculate, but weight[4] may be used to
+                    average color, normal, or texture coordinate data.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTessWind.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTessWind.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTexBind">
+            <summary>
+                This program demonstrates using Gl.glBindTexture() by creating and managing two
+                textures.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/teapots.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexBind.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexBind.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexBind.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexBind.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexBind.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTexBind.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTexGen">
+            <summary>
+                This program draws a texture mapped teapot with automatically generated texture
+                coordinates.  The texture is rendered as stripes on the teapot.  Initially, the
+                object is drawn with texture coordinates based upon the object coordinates of the
+                vertex and distance from the plane x = 0.  Pressing the 'e' key changes the
+                coordinate generation to eye coordinates of the vertex.  Pressing the 'o' key
+                switches it back to the object coordinates.  Pressing the 's' key changes the
+                plane to a slanted one (x + y + z = 0).  Pressing the 'x' key switches it back to
+                x = 0.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/teapots.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexGen.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexGen.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexGen.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexGen.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexGen.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTexGen.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTexProx">
+            <summary>
+                The brief program illustrates use of texture proxies.  This program only prints
+                out some messages about whether certain size textures are supported and then exits.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/teapots.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexProx.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexProx.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexProx.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexProx.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexProx.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTexProx.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTexSub">
+            <summary>
+                This program texture maps a checkerboard image onto two rectangles.  This
+                program clamps the texture, if the texture coordinates fall outside 0.0 and 1.0.
+                If the s key is pressed, a texture subimage is used to alter the original
+                texture.  If the r key is pressed, the original texture is restored.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/teapots.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexSub.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexSub.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexSub.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexSub.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTexSub.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTexSub.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTextureSurf">
+            <summary>
+                This program uses evaluators to generate a curved surface and automatically
+                generated texture coordinates.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/stroke.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTextureSurf.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTextureSurf.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTextureSurf.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTextureSurf.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTextureSurf.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTextureSurf.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTorus">
+            <summary>
+                This program demonstrates the creation of a display list.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/stroke.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.Init">
+            <summary>
+                <para>
+                    Create display list with torus and initialize state.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.DrawTorus(System.Int32,System.Int32)">
+            <summary>
+                <para>
+                    Draw a torus.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.Display">
+            <summary>
+                <para>
+                    Clear window and draw torus.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.Reshape(System.Int32,System.Int32)">
+            <summary>
+                <para>
+                    Handle window resize.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTorus.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTorus.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookTrim">
+            <summary>
+                This program draws a NURBS surface in the shape of a symmetrical hill, using both
+                a NURBS curve and pwl (piecewise linear) curve to trim part of the surface.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/stroke.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTrim.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTrim.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTrim.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTrim.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTrim.Init">
+            <summary>
+                <para>
+                    Initialize material property and depth buffer.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTrim.InitSurface">
+            <summary>
+                <para>
+                    Initializes the control points of the surface to a small hill.  The control
+                    points range from -3 to +3 in x, y, and z.
+                </para>
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookTrim.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookTrim.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookUnproject">
+            <summary>
+                When the left mouse button is pressed, this program reads the mouse position and
+                determines two 3D points from which it was transformed.  Very little is
+                displayed.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/stroke.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookUnproject.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookUnproject.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookUnproject.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookUnproject.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookUnproject.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookUnproject.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookVarray">
+            <summary>
+                This program demonstrates vertex arrays.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/stroke.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: David Hudson
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookVarray.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookVarray.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookVarray.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookVarray.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookVarray.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookVarray.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.RedBook.RedBookWrap">
+            <summary>
+                This program texture maps a checkerboard image onto two rectangles.  This program
+                demonstrates the wrapping modes, if the texture coordinates fall outside 0.0 and
+                1.0.  Interaction: Pressing the 's' and 'S' keys switch the wrapping between
+                clamping and repeating for the s parameter.  The 't' and 'T' keys control the
+                wrapping for the t parameter.
+            </summary>
+            <remarks>
+                <para>
+                    Original Author:    Silicon Graphics, Inc.
+                    http://www.opengl.org/developers/code/examples/redbook/wrap.c
+                </para>
+                <para>
+                    C# Implementation:  Randy Ridge
+                    http://www.taoframework.com
+                </para>
+                <para>
+            		SDL.NET implementation: Rob Loach
+            		http://cs-sdl.sourceforge.net
+                </para>
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.#ctor">
+            <summary>
+            Basic constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.Initialize">
+            <summary>
+            Initializes methods common to all RedBook lessons
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.MakeCheckImage">
+            <summary>
+            Makes the checkbox images
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.WindowAttributes">
+            <summary>
+            Sets Window icon and caption
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.Reshape">
+            <summary>
+            Resizes window
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.Reshape(System.Int32,System.Int32)">
+            <summary>
+            Resizes window
+            </summary>
+            <param name="h"></param>
+            <param name="w"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.Init">
+            <summary>
+            Initializes the OpenGL system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.Display">
+            <summary>
+            Renders the scene
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.RedBook.RedBookWrap.Run">
+            <summary>
+            Starts demo
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.RedBook.RedBookWrap.Title">
+            <summary>
+            Lesson title
+            </summary>
+        </member>
+    </members>
+</doc>

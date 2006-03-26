@@ -1,0 +1,17 @@
+DONE - I need to create a class that displays numbers. 
+DONE - I should look into how the text is displayed in SDL.NET 
+I need to map out the game start up features. 
+I need to learn remoting.   As an alternative, perhaps I should create my own socket based mechanism for two player play.  This will make it easier to port to Mono. 
+Check to see if this would run on mono. 
+Study the main game loop problem.  I am sure there are more efficient ways I might be able to speed up the game feel. 
+DONE - I need to implement levels constructs. 
+I need to implement two player game constructs. 
+DONE - I need to implement the end of game detection. 
+Add another block type 
+DONE - Add Sound 
+Add Music 
+DONE Add Font Support 
+Need to speed up the performance of the application 
+Memory Usage is growing too fast 
+Game play feels like it could be more optimal.
+

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SnowDemo</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.SnowDemo.SnowDemo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.SnowDemo.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.SnowDemo.Run">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.SnowDemo.Dispose">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.SnowDemo.Close">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.SnowDemo.Finalize">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.SnowDemo.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="T:SdlDotNet.Examples.SnowDemo.Snowflake">
+            <summary>
+            Snowflake Sprite Class
+            </summary>
+            <remarks>
+            A snowflakes is simply a 5x5 pixel white Surface. 
+            It will start out at a random speed and sideways movement.
+            </remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.Snowflake.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.Snowflake.Update(SdlDotNet.TickEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.Snowflake.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="T:SdlDotNet.Examples.SnowDemo.TextItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.TextItem.#ctor(System.String,SdlDotNet.Font,System.Int32,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="font"></param>
+            <param name="positionY"></param>
+            <param name="phrase"></param>
+            <param name="startTime"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.TextItem.Update(SdlDotNet.TickEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.SnowDemo.TextItem.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.SnowDemo.TextItem.StartTime">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.SnowDemo.TextItem.EndTime">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

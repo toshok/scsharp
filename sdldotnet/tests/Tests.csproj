@@ -1,0 +1,169 @@
+<VisualStudioProject>
+    <CSHARP
+				ProjectType = "Local"
+				ProductVersion = "7.10.3077"
+				SchemaVersion = "2.0"
+				ProjectGuid = "{887E56B8-BCCC-4870-A91A-CCCE4E895115}"
+		>
+				<Build>
+            <Settings
+				  ApplicationIcon = ""
+				  AssemblyKeyContainerName = ""
+				  AssemblyName = "SdlDotNet.Tests"
+				  AssemblyOriginatorKeyFile = ""
+				  DefaultClientScript = "JScript"
+				  DefaultHTMLPageLayout = "Grid"
+				  DefaultTargetSchema = "IE50"
+				  DelaySign = "false"
+				  OutputType = "Library"
+				  PreBuildEvent = ""
+				  PostBuildEvent = ""
+				  RunPostBuildEvent = "OnBuildSuccess"
+				  RootNamespace = "SdlDotNet.Tests"
+				  StartupObject = ""
+		     >
+				  <Config
+				      Name = "Release"
+				      AllowUnsafeBlocks = "false"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "TRACE"
+				      DocumentationFile = "SdlDotNet.Tests.xml"
+				      DebugSymbols = "false"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1595"
+				      Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "1"
+                />
+				  <Config
+				      Name = "Debug"
+				      AllowUnsafeBlocks = "false"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "DEBUG;TRACE"
+				      DocumentationFile = "SdlDotNet.Tests.xml"
+				      DebugSymbols = "true"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1595"
+				      Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                />
+                <Reference
+                    Name = "SdlDotNet"
+                    AssemblyName = "SdlDotNet"
+                    Project = "{D1B5FCB6-4C2C-4FE1-8B5C-33879A37F0BF}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Tao.Sdl"
+                    AssemblyName = "Tao.Sdl"
+                    HintPath = "..\\lib\Tao.Sdl.dll"
+                />
+                <Reference
+                    Name = "GuiExample"
+                    AssemblyName = "GuiExample"
+                    Project = "{715843EA-25E6-496E-82AA-AF89D4675DE7}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\\lib\nunit.framework.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DrawableTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlGuiTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlSpriteTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlTestGfx.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlTestImage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlTestMixer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlTestTtf.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlTestVideo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SdlWMTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SmpegTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UtilityTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>

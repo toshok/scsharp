@@ -1,0 +1,42 @@
+<Project name="SimpleGame" standardNamespace="SdlDotNet.Examples.SimpleGame" description="" newfilesearch="None" enableviewstate="True" version="1.1" projecttype="C#">
+  <Contents>
+    <File name=".\App.ico" subtype="Code" buildaction="EmbedAsResource" dependson="" data="" />
+    <File name=".\AssemblyInfo.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Entity.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\EntityMoveEventArgs.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\EntityMoveRequestEventArgs.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\EntityPlaceEventArgs.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\EntitySprite.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\EventManager.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Game.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\GameMain.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\GameStatusEventArgs.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\GameView.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\InputController.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\LogFile.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Map.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\MapBuiltEventArgs.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Names.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Player.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Sector.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\SectorSprite.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+  </Contents>
+  <References>
+    <Reference type="Gac" refto="System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" localcopy="True" />
+    <Reference type="Gac" refto="System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" localcopy="True" />
+    <Reference type="Project" refto="SdlDotNet" localcopy="True" />
+  </References>
+  <DeploymentInformation target="" script="" strategy="File" />
+  <Configurations active="Debug">
+    <Configuration runwithwarnings="True" name="Release">
+      <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="1" nowarn="1595" includedebuginformation="False" optimize="True" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="SdlDotNet.Examples.SimpleGame.GameMain" target="WinExe" definesymbols="TRACE" generatexmldocumentation="True" win32Icon=".\App.ico" noconfig="False" nostdlib="False" />
+      <Execution commandlineparameters="" consolepause="True" />
+      <Output directory=".\bin\Release" assembly="SimpleGame" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+    </Configuration>
+    <Configuration runwithwarnings="True" name="Debug">
+      <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="1595" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="SdlDotNet.Examples.SimpleGame.GameMain" target="WinExe" definesymbols="DEBUG;TRACE" generatexmldocumentation="True" win32Icon=".\App.ico" noconfig="False" nostdlib="False" />
+      <Execution commandlineparameters="" consolepause="True" />
+      <Output directory=".\bin\Debug" assembly="SimpleGame" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+    </Configuration>
+  </Configurations>
+</Project>

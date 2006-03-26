@@ -1,0 +1,887 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GuiExample</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiComponent">
+            <summary>
+            Base class to manage all graphical GUI elements.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.#ctor(SdlDotNet.Examples.GuiExample.GuiManager)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="positionZ"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="position"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Rectangle)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="rectangle"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Rectangle,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="rectangle"></param>
+            <param name="positionZ"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="positionZ"></param>
+            <param name="coordinates"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.Render">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.Update(SdlDotNet.MouseButtonEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.Update(SdlDotNet.MouseMotionEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.Update(SdlDotNet.TickEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="F:SdlDotNet.Examples.GuiExample.GuiComponent.manager">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiComponent.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiComponent.GuiManager">
+            <summary>
+            Contains the manager for this component.
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiException.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiException.#ctor(System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiManager">
+            <summary>
+            This class manages and controls the various GUI elements inside
+            the SDL GUI system. It controls both the appearance (theme) of
+            the control and also some basic functionality. Almost all of the
+            GUI elements take this as a constructor. This class is intended
+            to be extended, the default implement uses just rectangles and
+            no graphics for its rendering.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiManager.#ctor(SdlDotNet.Sprites.SpriteCollection,SdlDotNet.Font,System.Drawing.Size)">
+            <summary>
+            Constructs the GUI manager with the minimum required to keep
+            the entire system running properly. The sprite manager is used
+            to control the actual window elements while the baseFont is
+            used for any requests for fonts. Specific fonts may assigned,
+            the base system will always fall back to the baseFont.
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.GuiExample.GuiManager.baseFont">
+            <summary>
+            Contains the fall-back font for the system
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiManager.GetTextSize(SdlDotNet.Font,System.String)">
+            <summary>
+            Renders a given text with the given font and returns the size
+            of the surface rendered.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiManager.GetPadding(SdlDotNet.Examples.GuiExample.GuiWindow)">
+            <summary>
+            
+            </summary>
+            <param name="window"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiManager.DrawRect(SdlDotNet.Surface,System.Drawing.Rectangle,System.Drawing.Color)">
+            <summary>
+            This is one of the core drawing functions to draw a rectangle
+            in a specified color on the given args.Surface.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiManager.GetTitleHeight(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="title"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiManager.GetTitleWidth(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="title"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.BaseFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.MenuFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.TitleFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.TickerPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.MenuBarPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.MenuItemPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.MenuItemInnerPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.MenuPopupPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.MenuSpacerPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.MenuTitlePadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.FrameColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.TraceColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.BackgroundColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.BoundsTraceColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.OuterBoundsTraceColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.InnerBoundsTraceColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.TitleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.DragZOrder">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.Size">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiManager.SpriteManager">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiMenuBar">
+            <summary>
+            A fairly complicated class that creates a menu bar that
+            stretches across the top of a region. This bar handles menus in
+            addition to normal sprites, allowing for a fairly complicated
+            menubar system. The region itself determines where a menu may appear.
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.HorizontalPacker">
+            <summary>
+            Class to manager internal sprites, such as window
+            components. This uses a sprite manager at its core, but does
+            have some additional functionality.
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.Packer">
+            <summary>
+            This class handles one or more sprites packed into a line. The
+            sprites may be added to the beginning or the end of the line, as
+            the program desires.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.#ctor(SdlDotNet.Examples.GuiExample.GuiManager)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="point"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="point"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Rectangle)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="rectangle"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.SelectSprite(System.Drawing.Point,System.Int32@)">
+            <summary>
+            
+            </summary>
+            <param name="point"></param>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.AddHead(SdlDotNet.Sprites.Sprite)">
+            <summary>
+            
+            </summary>
+            <param name="sprite"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.AddTail(SdlDotNet.Sprites.Sprite)">
+            <summary>
+            
+            </summary>
+            <param name="sprite"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Packer.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Packer.HeadSprites">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Packer.TailSprites">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Packer.MarginPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Packer.InnerPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.HorizontalPacker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.HorizontalPacker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="point"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.HorizontalPacker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Rectangle)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="rectangle"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.HorizontalPacker.Render">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.HorizontalPacker.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuBar.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="gui"></param>
+            <param name="point"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuBar.AddLeft(SdlDotNet.Sprites.SpriteContainer)">
+            <summary>
+            
+            </summary>
+            <param name="spriteContainer"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuBar.AddRight(SdlDotNet.Sprites.SpriteContainer)">
+            <summary>
+            
+            </summary>
+            <param name="spriteContainer"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuBar.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuBar.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuBar.InnerPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuBar.MarginPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiMenuItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.#ctor(SdlDotNet.Examples.GuiExample.GuiManager)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="text"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.AddLeft(SdlDotNet.Sprites.Sprite)">
+            <summary>
+            
+            </summary>
+            <param name="sprite"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.AddRight(SdlDotNet.Sprites.Sprite)">
+            <summary>
+            
+            </summary>
+            <param name="sprite"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.Render">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.OnMenuSelected(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuItem.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="E:SdlDotNet.Examples.GuiExample.GuiMenuItem.ItemSelectedEvent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuItem.IsSelected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuItem.InnerPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuItem.MarginPadding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.MenuItemEventHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiMenuPopup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.VerticalPacker">
+            <summary>
+            Class to manager internal sprites, such as window
+            components. This uses a sprite manager at its core, but does
+            have some additional functionality.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.VerticalPacker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.VerticalPacker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="point"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.VerticalPacker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="positionZ"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.VerticalPacker.Render">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.VerticalPacker.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.#ctor(SdlDotNet.Examples.GuiExample.GuiManager)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.ShowMenu">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.HideMenu">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.Add(SdlDotNet.Sprites.Sprite)">
+            <summary>
+            
+            </summary>
+            <param name="menuItem"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.Update(SdlDotNet.MouseButtonEventArgs)">
+            <summary>
+            Menus are a special case of a sprite. If the mouse is
+            selected, then it shows the entire sprite, regardless of the
+            packing size.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.Render">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.Update(SdlDotNet.MouseMotionEventArgs)">
+            <summary>
+            Uses the mouse motion to determine what menu item is actually
+            selected and hilight it. If the menu is not selected, it does
+            nothing.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuPopup.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuPopup.MenuTitle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiMenuTitle">
+            <summary>
+            Despite its name, the menubar title is actually the part in the
+            menubarbar that gives the name.
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.IMenuPopupController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.IMenuPopupController.IsSelected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuTitle.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,SdlDotNet.Examples.GuiExample.GuiMenuBar,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="title"></param>
+            <param name="menuBar"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuTitle.Add(SdlDotNet.Sprites.Sprite)">
+            <summary>
+            
+            </summary>
+            <param name="menuItem"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuTitle.Update(SdlDotNet.MouseButtonEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuTitle.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiMenuTitle.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuTitle.IsSelected">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuTitle.MenuBar">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiMenuTitle.Popup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiTicker">
+            <summary>
+            A rather simple component, the ticker scrolls text left or right
+            across the screen according to the given rate. It may have an
+            option to hide itself if there is nothing in the ticker,
+            otherwise it stays on the screen.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiTicker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Point,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="gui"></param>
+            <param name="point"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiTicker.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,SdlDotNet.Vector,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="gui"></param>
+            <param name="coordinates"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiTicker.Add(SdlDotNet.Sprites.Sprite)">
+            <summary>
+            
+            </summary>
+            <param name="sprite"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiTicker.Update(SdlDotNet.TickEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiTicker.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiTicker.IsAutoHide">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiTicker.IsHidden">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiTicker.Delta">
+            <summary>
+            Delta is the number of pixels that the ticker should move per
+            second. This should be independant of actual frame rate.
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.GuiWindow">
+            <summary>
+            Handles a simple window element, which displays its contents in
+            a frame.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiWindow.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Rectangle,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="rectangle"></param>
+            <param name="coordinateZ"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiWindow.#ctor(SdlDotNet.Examples.GuiExample.GuiManager,System.Drawing.Rectangle)">
+            <summary>
+            
+            </summary>
+            <param name="manager"></param>
+            <param name="rectangle"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiWindow.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.GuiWindow.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing">If ture, dispose unmanaged resources</param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiWindow.Title">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiWindow.TitleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.GuiWindow.TitleBackgroundColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.MenuItemEventArgs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.MenuItemEventArgs.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="index"></param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.MenuItemEventArgs.Index">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.GuiExample.Padding">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Padding.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Padding.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="eachItem"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Padding.#ctor(System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="sides"></param>
+            <param name="height"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.GuiExample.Padding.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="left"></param>
+            <param name="top"></param>
+            <param name="right"></param>
+            <param name="bottom"></param>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Padding.Horizontal">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Padding.Vertical">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Padding.Left">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Padding.Right">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Padding.Top">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SdlDotNet.Examples.GuiExample.Padding.Bottom">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

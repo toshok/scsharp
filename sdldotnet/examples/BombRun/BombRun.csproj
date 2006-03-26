@@ -1,0 +1,123 @@
+<VisualStudioProject>
+    <CSHARP
+				ProjectType = "Local"
+				ProductVersion = "7.10.3077"
+				SchemaVersion = "2.0"
+				ProjectGuid = "{47B4F965-4FB4-430B-9E84-7FDBEA28AFF1}"
+		>
+				<Build>
+            <Settings
+				  ApplicationIcon = "App.ico"
+				  AssemblyKeyContainerName = ""
+				  AssemblyName = "BombRun"
+				  AssemblyOriginatorKeyFile = ""
+				  DefaultClientScript = "JScript"
+				  DefaultHTMLPageLayout = "Grid"
+				  DefaultTargetSchema = "IE50"
+				  DelaySign = "false"
+				  OutputType = "WinExe"
+				  PreBuildEvent = ""
+				  PostBuildEvent = ""
+				  RunPostBuildEvent = "OnBuildSuccess"
+				  RootNamespace = "SdlDotNet.Examples.BombRun"
+				  StartupObject = "SdlDotNet.Examples.BombRun.BombRun"
+		     >
+				  <Config
+				      Name = "Release"
+				      AllowUnsafeBlocks = "false"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "TRACE"
+				      DocumentationFile = "BombRun.xml"
+				      DebugSymbols = "false"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1595"
+				      Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "1"
+                />
+				  <Config
+				      Name = "Debug"
+				      AllowUnsafeBlocks = "false"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "DEBUG;TRACE"
+				      DocumentationFile = "BombRun.xml"
+				      DebugSymbols = "true"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1595"
+				      Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                />
+                <Reference
+                    Name = "SdlDotNet"
+                    AssemblyName = "SdlDotNet"
+                    Project = "{D1B5FCB6-4C2C-4FE1-8B5C-33879A37F0BF}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "App.ico"
+                    SubType = "Code"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Bomb.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BombRun.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Bullet.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FireEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Player.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>

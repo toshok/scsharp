@@ -1,0 +1,329 @@
+<?xml version="1.0" ?>
+<project name="SdlDotNet" default="build">
+    <!--
+    Targets:
+    build (default): builds all library assemblies for default framework (typically .NET)
+    examples: builds all examples.
+    buildrelease: builds release versions of libraries and examples.
+    doc: creates docs.
+    package: creates release zip file for .NET and Mono.
+
+    you can combine targets easily. If .NET is your default framework but you want to compile 
+    against Mono (mcs) you can use the command:
+    'nant mono build'
+    This sets mono parameters and then runs the build.
+    -->
+    <echo message="Using '${nant.settings.currentframework}' Framework"/>
+
+    <!-- global project settings -->
+    <property name="project.name" value="SdlDotNet" />
+    <property name="project.version" value="4.0.3" />
+    <property name="release.version" value="1" />
+    <property name="project.html-help.dir" value="C:\Program Files\HTML Help Workshop" />
+    <property name="src.dir" value="src" />
+    <property name="examples.dir" value="examples" />
+    <property name="extras.dir" value="extras" />
+    <property name="tests.dir" value="tests" />
+    <property name="bin.dir" value="bin" />
+    <property name="obj.dir" value="obj" />
+    <property name="lib.dir" value="lib" />
+    <property name="doc.dir" value="doc" />
+    <property name="doc.html.dir" value="doc/html" />
+    <property name="doc.chm.dir" value="doc/chm" />
+    <property name="doc.tutorials.dir" value="doc/tutorials" />
+    <property name="project.main.dir" value="${nant.project.basedir}" />
+    <property name="native.sdl" value="Tao.Sdl"/>
+    <property name="nunit.assembly" value="nunit.framework"/>
+    <property name="log.assembly" value="log4net"/>
+    <property name="Particles" value="Particles" />
+    <property name="Gui" value="Gui" />
+
+    <!-- default configuration -->
+    <property name="project.config" value="Debug" /> <!-- Debug|Release -->
+
+    <!-- named project configurations (used by self-test and self-doc tasks) -->
+    <target name="Debug" description="Perform a 'debug' build">
+	<property name="project.config" value="Debug" />
+	<property name="build.debug" value="true" />
+    </target>
+
+    <target name="Release" description="Perform a 'release' build">
+	<property name="project.config" value="Release" />
+	<property name="build.debug" value="false" />
+    </target>
+
+    <!-- build tasks -->
+    <target name="init" description="Initializes build properties">
+	<call target="${project.config}" />
+	<sysinfo />
+	<echo message = "Platform ${sys.os.platform}"/>
+	<property name="build.dir" value="${bin.dir}/${project.config}"/>
+    </target>
+
+    <target name="clean" description="Deletes every build configuration">
+	<echo message="Deleting all builds from all configurations" />
+	<delete dir="${nant.project.basedir}/${bin.dir}" failonerror="false" />
+	<delete dir="${nant.project.basedir}/${obj.dir}" failonerror="false" />
+	<foreach item="File" property="filename">
+	    <in>
+		<items>
+		    <include name="${src.dir}/**/*.build" />
+		    <include name="${examples.dir}/**/*.build" />
+		    <include name="${extras.dir}/**/*.build" />
+		    <include name="${tests.dir}/**/*.build" />
+		</items>
+	    </in>
+	    <do>
+		<echo message="${filename}" />
+		<nant buildfile="${filename}" target="clean" />
+	    </do>
+	</foreach>
+    </target>
+
+
+    <target name="build" depends="init" description="Builds current configuration">
+	<!-- build SDLDotNet assembly -->
+	<nant buildfile="${src.dir}/${nant.project.name}.dll.build" target="build" />
+    </target>
+
+    <target name="setrelease" description="Sets Release configuration">
+	<!-- build SDLDotNet assembly -->
+	<property name="project.config" value="Release" /> <!-- Debug|Release -->
+	<call target="${project.config}" />
+    </target>
+
+    <target name="examples" depends="build, extras" description="Build examples">
+	<echo message="Building examples" />
+	<foreach item="File" property="filename">
+	    <in>
+		<items>
+		    <include name="${examples.dir}/**/*.build" />
+		</items>
+	    </in>
+	    <do>
+		<echo message="${filename}" />
+		<nant buildfile="${filename}" target="build" />
+	    </do>
+	</foreach>
+    </target>
+
+    <target name="extras" depends="build" description="Build examples">
+	<echo message="Building extras" />
+	<foreach item="File" property="filename">
+	    <in>
+		<items>
+		    <include name="${extras.dir}/**/*.build" />
+		    <exclude name="${extras.dir}/**/SdlDotNet.Gui.build" />
+		</items>
+	    </in>
+	    <do>
+		<echo message="${filename}" />
+		<nant buildfile="${filename}" target="build" />
+	    </do>
+	</foreach>
+    </target>
+
+    <target name="tests" depends="build" description="Build tests">
+	<echo message="Building tests" />
+	<foreach item="File" property="filename">
+	    <in>
+		<items>
+		    <include name="${tests.dir}/**/*.build" />
+		</items>
+	    </in>
+	    <do>
+		<echo message="${filename}" />
+		<nant buildfile="${filename}" target="build" />
+	    </do>
+	</foreach>
+    </target>
+
+    <target name="buildrelease" depends="clean, setrelease, examples, tests" description="Build all Release assemblies">
+	<echo message="Building all Release assemblies" />
+    </target>
+
+    <target name="doc" depends="extras">
+	<nant buildfile="${src.dir}/${project.name}.dll.build" target="doc" />	
+	<foreach item="File" property="filename">
+	    <in>
+		<items>
+		    <include name="${extras.dir}/**/*.build" />
+		    <exclude name="${extras.dir}/**/SdlDotNet.Gui.build" />
+		</items>
+	    </in>
+	    <do>
+		<echo message="${filename}" />
+		<nant buildfile="${filename}" target="doc" />
+	    </do>
+	</foreach>
+    </target>
+
+    <target name="package" depends="buildrelease, doc, copyfiles, zip" description="Package">
+    </target>
+
+    <target name="packagedebug" depends="clean, examples, copyfiles, zip" description="Package Debug">
+    </target>
+
+    <!-- copy project files -->
+    <target name="copyfiles">
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}">
+	    <fileset>
+		<include name="src/**.cs" />
+		<include name="src/**.build" />
+		<include name="src/*.snk" />
+		<include name="src/*.csproj" />
+		<include name="src/*.prjx" />
+		<include name="src/*.mdp" />
+		<include name="src/**.bmp" />
+		<include name="src/**.resx" />
+		<include name="examples/**" />
+		<include name="examples/**" />
+		<exclude name="examples/**/*.snk" />
+		<exclude name="examples/**/${obj.dir}/**" />
+		<exclude name="${examples.dir}/**/${bin.dir}/**" />
+		<include name="extras/**" />
+		<exclude name="extras/Gui/**" />
+		<exclude name="extras/PhysFs/**" />
+		<exclude name="extras/**/*.snk" />
+		<exclude name="extras/**/*j.user" />
+		<exclude name="extras/**/${obj.dir}/**" />
+		<exclude name="${extras.dir}/**/${bin.dir}/**" />
+		<include name="tests/**" />
+		<exclude name="tests/**/*j.user" />
+		<exclude name="tests/**/${obj.dir}/**" />
+		<include name="lib/**" />
+		<include name="scripts/**" />
+		<include name="tools/**" />
+		<include name="*" />
+
+		<!--Start "Exclude VS.Net stuff" -->
+		<exclude name="**.suo" />
+		<!-- <exclude name="*.sln" /> -->
+		<!-- <exclude name="*.cmbx" /> -->
+		<exclude name="**j.user" />
+		<!-- <exclude name="**/*.csproj" />  -->
+		<!-- <exclude name="**/*.prjx" />  -->
+		<exclude name="obj/*" />
+		<exclude name="${src.dir}/${bin.dir}/*" />
+		<exclude name="**/doc/**" />
+		<exclude name="**/Debug/**" />
+		<!--End "Exclude VS.Net stuff"-->
+		<exclude name="**.swp" />
+		<exclude name="**.bak" />
+		<exclude name="**.project" />
+		<exclude name="ChangeLog" />
+		<exclude name="cvs2cl.pl" />
+	    </fileset>
+	</copy>
+
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${doc.html.dir}/${nant.project.name}">
+	    <fileset basedir="${src.dir}/${bin.dir}/${project.config}/doc">
+		<include name="*" />
+		<exclude name="*.chm"/>
+	    </fileset>
+	</copy>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${doc.chm.dir}">
+	    <fileset basedir="${src.dir}/${bin.dir}/${project.config}/doc">
+		<include name="*.chm"/>
+	    </fileset>
+	</copy>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${doc.html.dir}/${nant.project.name}.Particles">
+	    <fileset basedir="${extras.dir}/Particles/${bin.dir}/${project.config}/doc">
+		<include name="*" />
+		<exclude name="*.chm"/>
+	    </fileset>
+	</copy>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${doc.chm.dir}">
+	    <fileset basedir="${extras.dir}/Particles/${bin.dir}/${project.config}/doc">
+		<include name="*.chm"/>
+	    </fileset>
+	</copy>
+	<!-- <copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${doc.html.dir}/${nant.project.name}.Gui">
+	    <fileset basedir="${extras.dir}/Gui/${bin.dir}/${project.config}/doc">
+		<include name="*" />
+		<exclude name="*.chm"/>
+	    </fileset>
+	</copy>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${doc.chm.dir}">
+	    <fileset basedir="${extras.dir}/Gui/${bin.dir}/${project.config}/doc">
+		<include name="*.chm"/>
+	    </fileset>
+	</copy> -->
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${bin.dir}/assemblies">
+	    <fileset basedir="${src.dir}/${bin.dir}/${project.config}">
+		<include name="*.dll"/>
+	    </fileset>
+	</copy>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${bin.dir}/assemblies">
+	    <fileset basedir="${project.main.dir}/${lib.dir}">
+		<include name="${native.sdl}.dll"/>
+	    </fileset>
+	</copy>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${bin.dir}/assemblies">
+	    <fileset basedir="${extras.dir}/${Particles}/${bin.dir}/${project.config}">
+		<include name="*.dll"/>
+	    </fileset>
+	</copy>
+	<!--<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${bin.dir}/assemblies">
+	    <fileset basedir="${extras.dir}/${Gui}/${bin.dir}/${project.config}">
+		<include name="*.dll"/>
+	    </fileset>
+	</copy>-->
+	<if test="${platform::is-win32()}">
+	    <copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${bin.dir}/win32deps">
+		<fileset basedir="${project.main.dir}/${lib.dir}/win32deps">
+		    <include name="**"/>
+		</fileset>
+	    </copy>
+	</if>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${bin.dir}/${examples.dir}" flatten="true">
+	    <fileset>
+		<include name="examples/**/*.exe" />
+		<include name="examples/**/*.dll" />
+	    </fileset>
+	</copy>
+	<copy todir="${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}/${bin.dir}/${examples.dir}/Data" flatten="true">
+	    <fileset>
+		<include name="examples/**/Data/**" />
+	    </fileset>
+	</copy>
+    </target>
+
+    <!-- create zip file -->
+    <target name="zip" description="zip/gzip files">
+	<property name="project.zip-path" value="${nant.project.basedir}/${bin.dir}/${string::to-lower(nant.project.name)}-${project.version}-${release.version}"/>
+	<if test="${platform::is-unix()}">
+	    <tar destfile="${project.zip-path}.tar.gz" compression="GZip">
+		<fileset basedir="${bin.dir}">
+		    <include name="${project.zip-path}/bin/**" />
+		    <include name="${project.zip-path}/doc/**" />
+		    <include name="${project.zip-path}/lib/**" />
+		    <include name="${project.zip-path}/src/**" />
+		    <include name="${project.zip-path}/examples/**" />
+		    <include name="${project.zip-path}/extras/**" />
+		    <include name="${project.zip-path}/tests/**" />
+		    <include name="${project.zip-path}/scripts/**" />
+		    <include name="${project.zip-path}/tools/**" />
+		    <include name="${project.zip-path}/*" />	
+		</fileset>
+	    </tar>
+	</if>
+	<if test="${platform::is-win32()}">
+	    <zip zipfile="${project.zip-path}.zip">
+		<fileset basedir="${bin.dir}">
+		    <include name="${project.zip-path}/bin/**" />
+		    <include name="${project.zip-path}/doc/**" />
+		    <include name="${project.zip-path}/lib/**" />
+		    <include name="${project.zip-path}/src/**" />
+		    <include name="${project.zip-path}/examples/**" />
+		    <include name="${project.zip-path}/extras/**" />
+		    <include name="${project.zip-path}/tests/**" />
+		    <include name="${project.zip-path}/scripts/**" />
+		    <include name="${project.zip-path}/tools/**" />
+		    <include name="${project.zip-path}/*" />	
+		</fileset>
+	    </zip>
+	</if>
+	<echo message="Created '${project.config}' packages at ${project.zip-path}" />
+    </target>
+</project>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gears</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.Gears.Gears">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.Gears.Gears.Run">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

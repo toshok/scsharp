@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<project name="SdlDotNet" default="build">
+    <target name="build">
+	<echo message="Build Directory is ${nant.project.basedir}/${build.dir}" />
+	<!-- prepare build directory -->
+	<mkdir dir="${nant.project.basedir}/${build.dir}"/>
+	<copy todir="${nant.project.basedir}/${build.dir}">
+	    <fileset basedir="${project.main.dir}/${lib.dir}">
+		<include name="${native.sdl}.dll"/>
+	    </fileset>
+	</copy>
+	<!-- build SDL.NET -->
+	<csc target="library" warnaserror="true" unsafe="true" debug="${build.debug}" output="${nant.project.basedir}/${build.dir}/${nant.project.name}.dll" doc="${nant.project.basedir}/${build.dir}/${nant.project.name}.xml">
+	    <sources failonempty="true">
+		<include name="**.cs" />
+	    </sources>
+	    <references basedir="${nant.project.basedir}/${build.dir}">
+		<include name="${nant.settings.currentframework.frameworkassemblydirectory}/System.Drawing.dll"/>
+		<include name="${nant.settings.currentframework.frameworkassemblydirectory}/System.Windows.Forms.dll"/>
+		<include name="${native.sdl}.dll"/>
+	    </references>
+	    <resources>
+		<include name="*.resx"/>
+		<include name="SurfaceControl.bmp"/>
+	    </resources>
+	</csc>
+    </target>
+    <target name="clean">
+	<delete dir="${bin.dir}" failonerror="false" />
+	<delete dir="${obj.dir}" failonerror="false" />
+    </target>
+    <target name="doc" description="Creates documentation.">
+	<property name="doc.target" value="" />
+	<if test="${platform::is-unix()}">
+	    <property name="doc.target" value="Web" />
+	</if>
+	<ndoc failonerror="true" verbose="true">
+	    <assemblies basedir="${nant.project.basedir}/${build.dir}">
+		<include name="${nant.project.name}.dll" />
+	    </assemblies>
+	    <summaries basedir="${nant.project.basedir}/${build.dir}">
+		<include name="${nant.project.name}.xml"/>
+	    </summaries>
+	    <referencepaths basedir="${nant.project.basedir}">
+		<include name="${build.dir}" />
+	    </referencepaths>
+	    <documenters>
+		<documenter name="MSDN">
+		    <property name="OutputDirectory" value="${nant.project.basedir}/${build.dir}/doc/" />
+		    <property name="OutputTarget" value="${doc.target}" />
+		    <property name="HtmlHelpName" value="${nant.project.name}" />
+		    <!--<property name="HtmlHelpCompilerFilename" value="${project.html-help.dir}\hhc.exe" />-->
+		    <property name="IncludeFavorites" value="False" />
+		    <property name="Title" value="${nant.project.name} SDK Documentation - v.${project.version}" />
+		    <property name="SplitTOCs" value="False" />
+		    <property name="DefaulTOC" value="" />
+		    <property name="ShowVisualBasic" value="True" />
+		    <property name="AutoDocumentConstructors" value="True" />
+		    <property name="ShowMissingSummaries" value="${build.debug}" />
+		    <property name="ShowMissingRemarks" value="${build.debug}" />
+		    <property name="ShowMissingParams" value="${build.debug}" />
+		    <property name="ShowMissingReturns" value="${build.debug}" />
+		    <property name="ShowMissingValues" value="${build.debug}" />
+		    <property name="DocumentInternals" value="False" />
+		    <property name="DocumentPrivates" value="False" />
+		    <property name="DocumentProtected" value="True" />
+		    <property name="DocumentEmptyNamespaces" value="${build.debug}" />
+		    <property name="IncludeAssemblyVersion" value="True" />
+		    <property name="CopyrightText" value="Copyright (C) 2004-2005 David Hudson" />
+		    <property name="CopyrightHref" value="http://cs-sdl.sourceforge.net" />
+		</documenter>
+	    </documenters>
+	</ndoc>
+    </target> 
+</project>

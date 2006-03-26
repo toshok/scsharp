@@ -1,0 +1,3 @@
+<configuration>
+    <dllmap dll="physfs.dll" target="libphysfs-1.0.so.1" />
+</configuration>

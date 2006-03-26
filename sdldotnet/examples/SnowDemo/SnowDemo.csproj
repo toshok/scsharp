@@ -1,0 +1,113 @@
+<VisualStudioProject>
+    <CSHARP
+				ProjectType = "Local"
+				ProductVersion = "7.10.3077"
+				SchemaVersion = "2.0"
+				ProjectGuid = "{95CD7325-2D90-4AEB-AC94-8019BA052FE0}"
+		>
+				<Build>
+            <Settings
+				  ApplicationIcon = "App.ico"
+				  AssemblyKeyContainerName = ""
+				  AssemblyName = "SnowDemo"
+				  AssemblyOriginatorKeyFile = ""
+				  DefaultClientScript = "JScript"
+				  DefaultHTMLPageLayout = "Grid"
+				  DefaultTargetSchema = "IE50"
+				  DelaySign = "false"
+				  OutputType = "WinExe"
+				  PreBuildEvent = ""
+				  PostBuildEvent = ""
+				  RunPostBuildEvent = "OnBuildSuccess"
+				  RootNamespace = "SdlDotNet.Examples.SnowDemo"
+				  StartupObject = "SdlDotNet.Examples.SnowDemo.SnowDemo"
+		     >
+				  <Config
+				      Name = "Release"
+				      AllowUnsafeBlocks = "false"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "TRACE"
+				      DocumentationFile = "SnowDemo.xml"
+				      DebugSymbols = "false"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1595"
+				      Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "1"
+                />
+				  <Config
+				      Name = "Debug"
+				      AllowUnsafeBlocks = "false"
+				      BaseAddress = "285212672"
+				      CheckForOverflowUnderflow = "false"
+				      ConfigurationOverrideFile = ""
+				      DefineConstants = "DEBUG;TRACE"
+				      DocumentationFile = "SnowDemo.xml"
+				      DebugSymbols = "true"
+				      FileAlignment = "4096"
+				      IncrementalBuild = "false"
+				      NoStdLib = "false"
+				      NoWarn = "1595"
+				      Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                />
+                <Reference
+                    Name = "SdlDotNet"
+                    AssemblyName = "SdlDotNet"
+                    Project = "{D1B5FCB6-4C2C-4FE1-8B5C-33879A37F0BF}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "App.ico"
+                    SubType = "Code"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SnowDemo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Snowflake.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextItem.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>

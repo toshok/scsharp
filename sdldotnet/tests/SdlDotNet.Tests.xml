@@ -1,0 +1,1515 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SdlDotNet.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Tests.DrawableTest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.DrawableTest.TestImageLoad">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlGuiTest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlGuiTest.Setup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlGuiTest.TestWindowBounds">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlSpriteTest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlTest">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitMixer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitSubSystemVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitSubSystemAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitSubSystemTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitSubSystemCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitSubSystemJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.InitSubSystemEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.SdlQuit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.QuitSubSystemVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.QuitSubSystemAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.QuitSubSystemTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.QuitSubSystemCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.QuitSubSystemJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.QuitSubSystemEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.WasInitEverything">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.WasInitVideo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.WasInitAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.WasInitCDRom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.WasInitJoystick">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.WasInitTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.GetAppState">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.AudioDriverName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.OpenAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.LoadWAV">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.LoadWAV_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.Endian">
+            <summary>
+            Endian Test
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.FRAMES_TO_MSF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.MSF_TO_FRAMES">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDNumDrives">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDOpen">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDPlay">
+            <summary>
+            There is a problem with the SDL C-function. 
+            Many cds will not start with a low 'start' setting. 
+            I will only use SDL_CDPlayTracks.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDPlayTracks">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDPause">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDResume">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDStop">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CD_INDRIVE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.TrackAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDEject">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CDClose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.HasMMX">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.HasMMXExt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.Has3DNow">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.HasAltiVec">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.HasRDTSC">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.HasSSE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.HasSSE2">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.SetGetError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.ClearError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.PutEnv">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.GetEnv">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.GetTicks">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.Delay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.SetTimer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.SetTimerCancel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.LinkedVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.CompiledVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.VersionAtLeast127">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTest.VersionAtLeast128">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlTestGfx">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.InitSdl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.Quit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.pixelColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.pixelRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.hlineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.hlineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.vlineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.vlineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.rectangleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.rectangleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.boxColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.boxRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.lineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.lineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aalineColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aalineRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.CircleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.CircleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aaCircleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aaCircleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.filledCircleColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.filledCircleRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.EllipseColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.EllipseRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aaEllipseColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aaEllipseRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledEllipseColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledEllipseRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.PieColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.PieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledPieColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.TrigonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.TrigonPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aaTrigonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aaTrigonPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledTrigonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledTrigonPieRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.polygonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.polygonRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aapolygonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.aapolygonRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledPolygonColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.FilledPolygonRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.bezierColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.bezierRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.charColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.charRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.stringColor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.stringRGBA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.gfxPrimitivesFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.rotozoomSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.rotozoomSurfaceSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.zoomSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.zoomSurfaceSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestGfx.ImageFilterAdd">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlTestImage">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.VideoSetup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isBMP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isJPG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isGIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isPNG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isPNM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isPCX">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isXPM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isXCF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.isTIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadGIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadJPG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadPNG">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadPCX">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadTGA">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadPNM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadBMP">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadXPM">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadXCF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadTIF">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.ReadXPMFromArray">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.SetGetError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.Load_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestImage.LoadTyped_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlTestMixer">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.LinkedVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.InitAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.QuitAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.OpenAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.AllocateChannels">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.QuerySpec">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.LoadWav_RW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.LoadWav">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.LoadMusWav">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.LoadMusMp3">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.LoadMusOgg">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetGetError">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.QuickLoad_Wav">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.QuickLoad_Raw">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FreeChunk">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FreeMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GetMusicType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetPostMix">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.HookMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.HookMusicFinished">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GetMusicHookData">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.ChannelFinished">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.RegisterEffect">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.UnregisterEffect">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.UnregisterAllEffects">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetPanning">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetDistance">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetReverseStereo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.ReserveChannels">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GroupChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GroupChannels">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GroupAvailable">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GroupCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GroupOldest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GroupNewer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.PlayChannelTimed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.PlayChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.PlayMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadeInMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadeInMusicPos">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadeInChannelTimed">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadeInChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.Volume">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.VolumeChunk">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.VolumeMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.HaltChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.HaltGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.HaltMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.ExpireChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadeOutChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadeOutGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadeOutMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadingMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.FadingChannel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.Pause">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.Resume">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.Paused">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.PauseMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.ResumeMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.RewindMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.PausedMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetMusicPosition">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.Playing">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.PlayingMusic">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetPlayingCMD">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GetChunk">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.SetSynchroValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.GetSynchroValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestMixer.CloseAudio">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlTestTtf">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.VideoSetup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.LinkedVersion">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.TTF_Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.TTF_Quit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.OpenFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.OpenFontIndex">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.OpenFontRW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.OpenFontIndexRW">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.CloseFont">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.SetGetFontStyle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontHeight">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontAscent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontDescent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontLineSkip">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontFaces">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontFaceIsFixedWidth">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontFaceFamilyName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.FontFaceStyleName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.GlyphMetrics">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.SizeText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.SizeUTF8">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.SizeUNICODE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderText_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderUTF8_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderUNICODE_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderGlyph_Solid">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderText_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderUTF8_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderUNICODE_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderGlyph_Shaded">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderText_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderUTF8_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderUNICODE_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestTtf.RenderGlyph_Blended">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlTestVideo">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.VideoSetup(System.Int32)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.DriverName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.GetVideoInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SetGammaRamp">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.ListModes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.GetColor8">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.GetColor16">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.GetColor24">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.GetColor32">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.CreateRGBSurfaceFrom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.LockUnlockSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SetColorKey">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SetAlpha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SetClipRect">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.ConvertSurface">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.DisplayFormat">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.DisplayFormatAlpha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SDL_CreateLockUnlockFreeYUVOverlay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SDL_DisplayYUVOverlay">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SDL_GL">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SurfaceStretchWidth">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlTestVideo.SurfaceStretchHeight">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SdlWMTest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SdlWMTest.TestGetInfo">
+            <summary>
+            Tests to ensure that WindowManager correctly returns the info struct.
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.SmpegTest">
+            <summary>
+            SDL Tests.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SmpegTest.Init">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SmpegTest.InitSdl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SmpegTest.Quit">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SmpegTest.SMPEG_new">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SmpegTest.SMPEG_new_rwops">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.SmpegTest.SMPEG_play">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Tests.UtilityTest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.UtilityTest.TestDefaultsPoint">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Tests.UtilityTest.TestDefaultsVector">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

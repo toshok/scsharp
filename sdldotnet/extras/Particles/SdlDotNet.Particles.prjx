@@ -1,0 +1,44 @@
+<Project name="SdlDotNet.Particles" standardNamespace="SdlDotNet.Particles" description="" newfilesearch="None" enableviewstate="True" version="1.1" projecttype="C#">
+  <Contents>
+    <File name=".\AssemblyInfo.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\ParticleSystem.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\ParticleSystemCollection.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Emitters\ParticleCircleEmitter.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Emitters\ParticleEmitter.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Emitters\ParticlePixelEmitter.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Emitters\ParticleRectangleEmitter.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Emitters\ParticleSpriteEmitter.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Emitters\ParticleSurfaceEmitter.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Manipulators\IParticleManipulator.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Manipulators\ParticleBoundary.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Manipulators\ParticleFriction.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Manipulators\ParticleGravity.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Manipulators\ParticleManipulatorCollection.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Manipulators\ParticleVortex.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Particle\BaseParticle.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Particle\ParticleCircle.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Particle\ParticleCollection.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Particle\ParticlePixel.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Particle\ParticleRectangle.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Particle\ParticleSprite.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\Particle\ParticleSurface.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+  </Contents>
+  <References>
+    <Reference type="Gac" refto="System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" localcopy="True" />
+    <Reference type="Gac" refto="System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" localcopy="True" />
+    <Reference type="Project" refto="SdlDotNet" localcopy="True" />
+  </References>
+  <DeploymentInformation target="" script="" strategy="File" />
+  <Configurations active="Debug">
+    <Configuration runwithwarnings="True" name="Release">
+      <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="1" nowarn="1595" includedebuginformation="False" optimize="True" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" target="Library" definesymbols="TRACE" generatexmldocumentation="True" win32Icon=".\" noconfig="False" nostdlib="False" />
+      <Execution commandlineparameters="" consolepause="True" />
+      <Output directory=".\bin\Release" assembly="SdlDotNet.Particles" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+    </Configuration>
+    <Configuration runwithwarnings="True" name="Debug">
+      <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="" warninglevel="4" nowarn="1595" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" target="Library" definesymbols="DEBUG;TRACE" generatexmldocumentation="True" win32Icon=".\" noconfig="False" nostdlib="False" />
+      <Execution commandlineparameters="" consolepause="True" />
+      <Output directory=".\bin\Debug" assembly="SdlDotNet.Particles" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+    </Configuration>
+  </Configurations>
+</Project>

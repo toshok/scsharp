@@ -1,0 +1,80 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>SoundDictionary Class</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">SdlDotNet SDK Documentation - v.4.0.3</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">SoundDictionary Class</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p> Encapulates a Dictionary of Sound objects in a Sound Dictionary. </p>
+      <p>For a list of all members of this type, see <a href="SdlDotNet.SoundDictionaryMembers.html">SoundDictionary Members</a>.</p>
+      <p>
+        <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemObjectClassTopic.htm">System.Object</a>
+        <br />   <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemCollectionsDictionaryBaseClassTopic.htm">System.Collections.DictionaryBase</a><br />      <b>SdlDotNet.SoundDictionary</b></p>
+      <div class="syntax">
+        <span class="lang">[Visual Basic]</span>
+        <br />Public Class SoundDictionary<div>    Inherits <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemCollectionsDictionaryBaseClassTopic.htm">DictionaryBase</a></div></div>
+      <div class="syntax">
+        <span class="lang">[C#]</span>
+        <div>public class SoundDictionary<b> : <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemCollectionsDictionaryBaseClassTopic.htm">DictionaryBase</a></b></div>
+      </div>
+      <H4 class="dtH4">Thread Safety</H4>
+      <P>Public static (<b>Shared</b> in Visual Basic) members of this type are 
+				safe for multithreaded operations. Instance members are <b>not</b> guaranteed to be 
+				thread-safe.</P>
+      <h4 class="dtH4">Remarks</h4>
+      <p> Every sound object within the Dictionary is indexed by a string key. </p>
+      <h4 class="dtH4">Example</h4>
+      <p>
+            <pre class="code">SoundDictionary sounds = new SoundDictionary();
+sounds.Add("boom", Mixer.Sound("explosion.wav"));
+sounds.Add("boing.wav");
+sounds.Add("baseName", ".ogg");
+
+sounds["boing.wav"].Play();
+sounds["boom"].Play();
+sounds["baseName-01.ogg"].Play(); 
+</pre>
+            </p>
+      <h4 class="dtH4">Requirements</h4>
+      <p>
+        <b>Namespace: </b>
+        <a href="SdlDotNet.html">SdlDotNet</a>
+      </p>
+      <p>
+        <b>Assembly: </b>SdlDotNet (in SdlDotNet.dll)
+					</p>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="SdlDotNet.SoundDictionaryMembers.html">SoundDictionary Members</a> | <a href="SdlDotNet.html">SdlDotNet Namespace</a> | <a href="SdlDotNet.Sound.html">Sound</a></p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="SoundDictionary class, about SoundDictionary class">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a href="http://cs-sdl.sourceforge.net">Copyright (C) 2004-2005 David Hudson</a>
+        </p>
+        <p>Generated from assembly SdlDotNet [4.0.3.0]</p>
+      </div>
+    </div>
+  </body>
+</html>

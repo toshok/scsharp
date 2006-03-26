@@ -1,0 +1,120 @@
+<html dir="LTR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-1252" />
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
+    <title>VideoModes Enumeration</title>
+    <xml>
+    </xml>
+    <link rel="stylesheet" type="text/css" href="MSDN.css" />
+  </head>
+  <body id="bodyID" class="dtBODY">
+    <div id="nsbanner">
+      <div id="bannerrow1">
+        <table class="bannerparthead" cellspacing="0">
+          <tr id="hdr">
+            <td class="runninghead">SdlDotNet SDK Documentation - v.4.0.3</td>
+            <td class="product">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="TitleRow">
+        <h1 class="dtH1">VideoModes Enumeration</h1>
+      </div>
+    </div>
+    <div id="nstext">
+      <p>
+            
+            </p>
+      <p>This enumeration has a <a href="ms-help://MS.NETFrameworkSDKv1.1/cpref/html/frlrfSystemFlagsAttributeClassTopic.htm">
+						FlagsAttribute</a>
+						attribute that allows a bitwise combination of its member values.</p>
+      <div class="syntax">
+        <span class="lang">[Visual Basic]</span>
+        <br />Public Enum VideoModes</div>
+      <div class="syntax">
+        <span class="lang">[C#]</span>
+        <div>public enum VideoModes</div>
+      </div>
+      <h4 class="dtH4">Members</h4>
+      <div class="tablediv">
+        <table class="dtTABLE" cellspacing="0">
+          <tr valign="top">
+            <th width="40%">Member Name</th>
+            <th width="40%">Description</th>
+            <th width="20%">Value</th>
+          </tr>
+<tr valign="top"><td><b>None</b></td><td> Create the video surface in system memory </td><td>0</td></tr>
+<tr valign="top"><td><b>HardwareSurface</b></td><td> Create the video surface in video memory </td><td>1</td></tr>
+<tr valign="top"><td><b>AsynchronousBlit</b></td><td> Enables the use of asynchronous updates of the display surface. This will usually slow down blitting on single CPU machines, but may provide a speed increase on SMP systems. </td><td>4</td></tr>
+<tr valign="top"><td><b>HardwarePalette</b></td><td> Give SDL.NET exclusive palette access. </td><td>536870912</td></tr>
+<tr valign="top"><td><b>DoubleBuffering</b></td><td> Enable hardware double buffering; only valid with <a href="SdlDotNet.VideoModes.html">HardwareSurface</a>. Calling Surface.Flip() will flip the buffers and update the screen. All drawing will take place on the surface that is not displayed at the moment. If double buffering could not be enabled then <a href="SdlDotNet.Surface.Flip.html">Flip</a> will just perform a <a href="SdlDotNet.Surface.Update_overload_2.html">Update</a> on the entire screen. </td><td>1073741824</td></tr>
+<tr valign="top"><td><b>Fullscreen</b></td><td> SDL.NET will attempt to use a fullscreen mode. If a hardware resolution change is not possible (for whatever reason), the next higher resolution will be used and the display window centered on a black background. </td><td>-2147483648</td></tr>
+<tr valign="top"><td><b>OpenGL</b></td><td> Create an OpenGL rendering context. You should have previously set OpenGL video attributes with SDL_GL_SetAttribute. </td><td>2</td></tr>
+<tr valign="top"><td><b>Resizable</b></td><td> Create a resizable window. When the window is resized by the user a <a href="SdlDotNet.Events.VideoResize.html">VideoResize</a> event is generated and Video.SetVideoMode can be called again with the new size. </td><td>16</td></tr>
+<tr valign="top"><td><b>NoFrame</b></td><td> If possible, NoFrame causes SDL to create a window with no title bar or frame decoration. Fullscreen modes automatically have this flag set. </td><td>32</td></tr></table>
+      </div>
+      <h4 class="dtH4">Requirements</h4>
+      <p>
+        <b>Namespace: </b>
+        <a href="SdlDotNet.html">SdlDotNet</a>
+      </p>
+      <p>
+        <b>Assembly: </b>SdlDotNet (in SdlDotNet.dll)
+					</p>
+      <h4 class="dtH4">See Also</h4>
+      <p>
+        <a href="SdlDotNet.html">SdlDotNet Namespace</a>
+      </p>
+      <object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="true" style="display: none;">
+        <param name="Keyword" value="VideoModes enumeration">
+        </param>
+        <param name="Keyword" value="SdlDotNet.VideoModes enumeration">
+        </param>
+        <param name="Keyword" value="None enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.None enumeration member">
+        </param>
+        <param name="Keyword" value="HardwareSurface enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.HardwareSurface enumeration member">
+        </param>
+        <param name="Keyword" value="AsynchronousBlit enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.AsynchronousBlit enumeration member">
+        </param>
+        <param name="Keyword" value="HardwarePalette enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.HardwarePalette enumeration member">
+        </param>
+        <param name="Keyword" value="DoubleBuffering enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.DoubleBuffering enumeration member">
+        </param>
+        <param name="Keyword" value="Fullscreen enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.Fullscreen enumeration member">
+        </param>
+        <param name="Keyword" value="OpenGL enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.OpenGL enumeration member">
+        </param>
+        <param name="Keyword" value="Resizable enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.Resizable enumeration member">
+        </param>
+        <param name="Keyword" value="NoFrame enumeration member">
+        </param>
+        <param name="Keyword" value="VideoModes.NoFrame enumeration member">
+        </param>
+      </object>
+      <hr />
+      <div id="footer">
+        <p>
+          <a href="http://cs-sdl.sourceforge.net">Copyright (C) 2004-2005 David Hudson</a>
+        </p>
+        <p>Generated from assembly SdlDotNet [4.0.3.0]</p>
+      </div>
+    </div>
+  </body>
+</html>

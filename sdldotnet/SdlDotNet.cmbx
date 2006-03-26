@@ -1,0 +1,88 @@
+<Combine fileversion="1.0" name="SdlDotNet" description="">
+  <StartMode startupentry="Triad" single="True">
+    <Execute entry="Triad" type="None" />
+    <Execute entry="MoviePlayer" type="None" />
+    <Execute entry="SdlDotNet" type="None" />
+    <Execute entry="SpriteGuiDemos" type="None" />
+    <Execute entry="ParticlesExample" type="None" />
+    <Execute entry="CDPlayer" type="None" />
+    <Execute entry="Rectangles" type="None" />
+    <Execute entry="GuiExample" type="None" />
+    <Execute entry="Gears" type="None" />
+    <Execute entry="Tests" type="None" />
+    <Execute entry="SdlDotNet.Particles" type="None" />
+    <Execute entry="BombRun" type="None" />
+    <Execute entry="RedBook" type="None" />
+    <Execute entry="NeHe" type="None" />
+    <Execute entry="SnowDemo" type="None" />
+    <Execute entry="PhysFsTest" type="None" />
+    <Execute entry="AudioExample" type="None" />
+    <Execute entry="SimpleGame" type="None" />
+    <Execute entry="BounceSprites" type="None" />
+  </StartMode>
+  <Entries>
+    <Entry filename=".\examples\Triad\Triad.prjx" />
+    <Entry filename=".\examples\MoviePlayer\MoviePlayer.prjx" />
+    <Entry filename=".\src\SdlDotNet.prjx" />
+    <Entry filename=".\examples\SpriteGuiDemos\SpriteGuiDemos.prjx" />
+    <Entry filename=".\examples\ParticlesExample\ParticlesExample.prjx" />
+    <Entry filename=".\examples\CDPlayer\CDPlayer.prjx" />
+    <Entry filename=".\examples\Rectangles\Rectangles.prjx" />
+    <Entry filename=".\examples\GuiExample\GuiExample.prjx" />
+    <Entry filename=".\examples\Gears\Gears.prjx" />
+    <Entry filename=".\tests\Tests.prjx" />
+    <Entry filename=".\extras\Particles\SdlDotNet.Particles.prjx" />
+    <Entry filename=".\examples\BombRun\BombRun.prjx" />
+    <Entry filename=".\examples\RedBook\RedBook.prjx" />
+    <Entry filename=".\examples\NeHe\NeHe.prjx" />
+    <Entry filename=".\examples\SnowDemo\SnowDemo.prjx" />
+    <Entry filename=".\examples\PhysFsTest\PhysFsTest.prjx" />
+    <Entry filename=".\examples\AudioExample\AudioExample.prjx" />
+    <Entry filename=".\examples\SimpleGame\SimpleGame.prjx" />
+    <Entry filename=".\examples\BounceSprites\BounceSprites.prjx" />
+  </Entries>
+  <Configurations active="Release">
+    <Configuration name="Release">
+      <Entry name="Triad" configurationname="Release" build="True" />
+      <Entry name="MoviePlayer" configurationname="Release" build="True" />
+      <Entry name="SdlDotNet" configurationname="Release" build="True" />
+      <Entry name="SpriteGuiDemos" configurationname="Release" build="True" />
+      <Entry name="ParticlesExample" configurationname="Release" build="True" />
+      <Entry name="CDPlayer" configurationname="Release" build="True" />
+      <Entry name="Rectangles" configurationname="Release" build="True" />
+      <Entry name="GuiExample" configurationname="Release" build="True" />
+      <Entry name="Gears" configurationname="Release" build="True" />
+      <Entry name="Tests" configurationname="Release" build="True" />
+      <Entry name="SdlDotNet.Particles" configurationname="Release" build="True" />
+      <Entry name="BombRun" configurationname="Release" build="True" />
+      <Entry name="RedBook" configurationname="Release" build="True" />
+      <Entry name="NeHe" configurationname="Release" build="True" />
+      <Entry name="SnowDemo" configurationname="Release" build="True" />
+      <Entry name="PhysFsTest" configurationname="Release" build="True" />
+      <Entry name="AudioExample" configurationname="Release" build="True" />
+      <Entry name="SimpleGame" configurationname="Release" build="True" />
+      <Entry name="BounceSprites" configurationname="Release" build="True" />
+    </Configuration>
+    <Configuration name="Debug">
+      <Entry name="Triad" configurationname="Debug" build="True" />
+      <Entry name="MoviePlayer" configurationname="Debug" build="True" />
+      <Entry name="SdlDotNet" configurationname="Debug" build="True" />
+      <Entry name="SpriteGuiDemos" configurationname="Debug" build="True" />
+      <Entry name="ParticlesExample" configurationname="Debug" build="True" />
+      <Entry name="CDPlayer" configurationname="Debug" build="True" />
+      <Entry name="Rectangles" configurationname="Debug" build="True" />
+      <Entry name="GuiExample" configurationname="Debug" build="True" />
+      <Entry name="Gears" configurationname="Debug" build="True" />
+      <Entry name="Tests" configurationname="Debug" build="True" />
+      <Entry name="SdlDotNet.Particles" configurationname="Debug" build="True" />
+      <Entry name="BombRun" configurationname="Debug" build="True" />
+      <Entry name="RedBook" configurationname="Debug" build="True" />
+      <Entry name="NeHe" configurationname="Debug" build="True" />
+      <Entry name="SnowDemo" configurationname="Debug" build="True" />
+      <Entry name="PhysFsTest" configurationname="Debug" build="True" />
+      <Entry name="AudioExample" configurationname="Debug" build="True" />
+      <Entry name="SimpleGame" configurationname="Debug" build="True" />
+      <Entry name="BounceSprites" configurationname="Debug" build="True" />
+    </Configuration>
+  </Configurations>
+</Combine>

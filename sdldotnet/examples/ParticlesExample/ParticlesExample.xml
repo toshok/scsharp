@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParticlesExample</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.ParticlesExample.ParticlesExample">
+            <summary>
+            An example program using particles.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.Run">
+            <summary>
+            Run the application
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.Main">
+            <summary>
+            Main entery point
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.Tick(System.Object,SdlDotNet.TickEventArgs)">
+            <summary>
+            An update tick
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.Dispose">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.Close">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.Finalize">
+            <summary>
+            Destroy object
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.ParticlesExample.ParticlesExample.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+    </members>
+</doc>

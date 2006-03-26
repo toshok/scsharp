@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CDPlayer</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.CDPlayer.BounceSprite">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.BounceSprite.#ctor(SdlDotNet.SurfaceCollection,System.Drawing.Point)">
+            <summary>
+            
+            </summary>
+            <param name="surfaces"></param>
+            <param name="coordinates"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.BounceSprite.Update(SdlDotNet.TickEventArgs)">
+            <summary>
+            Every tick will update the animation frame
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.BounceSprite.Update(SdlDotNet.MouseButtonEventArgs)">
+            <summary>
+            If the mouse click hits a sprite, 
+            then the sprite will be marked as 'being dragged'
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.BounceSprite.Update(SdlDotNet.VideoResizeEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.BounceSprite.Update(SdlDotNet.KeyboardEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.BounceSprite.Update(SdlDotNet.MouseMotionEventArgs)">
+            <summary>
+            If the sprite is picked up, this moved the sprite to follow
+            the mouse.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.BounceSprite.Dispose(System.Boolean)">
+            <summary>
+            Destroys the surface object and frees its memory
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="P:SdlDotNet.Examples.CDPlayer.BounceSprite.Bounds">
+            <summary>
+            Boundaries for sprites
+            </summary>
+        </member>
+        <member name="T:SdlDotNet.Examples.CDPlayer.CDPlayer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:SdlDotNet.Examples.CDPlayer.CDPlayer.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.CDPlayer.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.CDPlayer.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.CDPlayer.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.CDPlayer.Main">
+            <summary>
+            Entry point for App.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.CDPlayer.OnResize(System.EventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.CDPlayer.OnKeyDown(System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:SdlDotNet.Examples.CDPlayer.CDPlayer.OnKeyUp(System.Windows.Forms.KeyEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="e"></param>
+        </member>
+    </members>
+</doc>

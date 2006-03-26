@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PhysFsTest</name>
+    </assembly>
+    <members>
+        <member name="T:SdlDotNet.Examples.PhysFsTest.PhysFsTest">
+            <summary>
+            Summary description for PhysFsTest.
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.PhysFsTest.PhysFsTest.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.PhysFsTest.PhysFsTest.Run">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.PhysFsTest.PhysFsTest.Main">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SdlDotNet.Examples.PhysFsTest.PhysFsTest.Dispose">
+            <summary>
+            Closes and destroys this object
+            </summary>
+            <remarks>Destroys managed and unmanaged objects</remarks>
+        </member>
+        <member name="M:SdlDotNet.Examples.PhysFsTest.PhysFsTest.Dispose(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="disposing"></param>
+        </member>
+    </members>
+</doc>

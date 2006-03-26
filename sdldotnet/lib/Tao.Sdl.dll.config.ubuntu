@@ -1,0 +1,9 @@
+<configuration>
+	<dllmap dll="SDL.dll" target="libSDL-1.2.so.0" />
+	<dllmap dll="SDL_image.dll" target="libSDL_image-1.2.so.0" />
+	<dllmap dll="SDL_mixer.dll" target="libSDL_mixer-1.2.so.0" />
+	<dllmap dll="SDL_ttf.dll" target="libSDL_ttf-2.0.so.0" />
+	<dllmap dll="SDL_net.dll" target="libSDL_net-1.2.so.0" />
+	<dllmap dll="smpeg.dll" target="libsmpeg-0.4.so.0" />
+	<dllmap dll="SDL_gfx.dll" target="libSDL_gfx.so.0" />
+</configuration>
