@@ -33,7 +33,7 @@ namespace Starcraft {
 		// write a LE word
 		public static void WriteWord (Stream fs, ushort word)
 		{
-			fs.WriteByte ((byte)(word & 0x08));
+			fs.WriteByte ((byte)(word & 0xff));
 			fs.WriteByte ((byte)((word >> 8) & 0xff));
 		}
 
