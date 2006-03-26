@@ -50,6 +50,7 @@ namespace Starcraft {
 
 				entries.Add (entry);
 			}
+			Console.WriteLine ("entries.Count = {0}", entries.Count);
 		}
 
 		public byte[,] GetFrame (int frame)
@@ -61,6 +62,8 @@ namespace Starcraft {
 
 			if (frame_cache.ContainsKey (frame))
 				return frame_cache[frame];
+
+			Console.WriteLine ("frame == {0}", frame);
 
 			stream.Seek (entries[frame].pFrameData, SeekOrigin.Begin);
 
@@ -104,7 +107,7 @@ namespace Starcraft {
 			byte[] line_data = new byte[line_length];
 			stream.Read (line_data, 0, line_length);
 
-			int x = width - xOffset;
+			int x = width - xOffset - 1;
 			int i = 0;
 
 			//		Console.WriteLine ("decoding line {0}, {1} bytes", line, line_length);
@@ -131,7 +134,7 @@ namespace Starcraft {
 							grid[line,x--] = line_data[i++];
 					}
 				}
-			} catch { Console.WriteLine ("EXCEPTION on line {0}", i); }
+			} catch (Exception e) { Console.WriteLine ("EXCEPTION on line {0}, x = {2}, i = {3}, line length = {2} (line data length = {4}):", line, x, line_length, i, line_data.Length); }
 		}
 	}
 
