@@ -6,7 +6,6 @@ Starcraft.Gui/GlobalResources.cs
 Starcraft.Gui/IScriptRunner.cs
 Starcraft.Gui/MainMenu.cs
 Starcraft.Gui/Painter.cs
-Starcraft.Gui/Palette.cs
 Starcraft.Gui/Race.cs
 Starcraft.Gui/ScoreScreen.cs
 Starcraft.Gui/Sprite.cs

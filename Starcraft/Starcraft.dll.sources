@@ -7,4 +7,5 @@ Starcraft.Mpq/Mpq.cs
 Starcraft.Mpq/Smk.cs
 Starcraft.Mpq/SpritesDat.cs
 Starcraft.Mpq/Tbl.cs
+Starcraft.Util/Palette.cs
 Starcraft.Util/Util.cs
