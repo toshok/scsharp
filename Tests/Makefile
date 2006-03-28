@@ -14,7 +14,7 @@ animate_grp_exe_FILES = animate-grp.cs
 animate_grp_exe_REFS= -r:../Starcraft/Starcraft.dll -pkg:gtk-sharp-2.0
 
 run_animation_exe_FILES = run-animation.cs
-run_animation_exe_REFS= -r:../Starcraft/Starcraft.dll -r:../Starcraft/Starcraft.Gui.dll -pkg:gtk-sharp-2.0
+run_animation_exe_REFS= -r:../Starcraft/Starcraft.dll -r:../Starcraft/Starcraft.Gui.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll
 
 run_smk_exe_FILES = TGA.cs run-smk.cs
 run_smk_exe_REFS= -r:../Starcraft/Starcraft.dll -r:../Starcraft/Starcraft.Gui.dll -pkg:gtk-sharp-2.0

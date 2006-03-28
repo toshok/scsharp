@@ -2,8 +2,7 @@ using System;
 using System.IO;
 using System.Threading;
 
-using Gtk;
-using Gdk;
+using SdlDotNet;
 
 namespace Starcraft
 {
@@ -14,8 +13,10 @@ namespace Starcraft
 		IScriptBin iscriptBin;
 		ImagesDat imagesDat;
 		SpritesDat spritesDat;
+		SfxDataDat sfxDataDat;
 
 		Tbl imagesTbl;
+		Tbl sfxDataTbl;
 		Tbl spritesTbl;
 
 		static GlobalResources instance;
@@ -41,39 +42,61 @@ namespace Starcraft
 			get { return imagesTbl; }
 		}
 
-		public ImagesDat ImagesDat {
-			get { return imagesDat; }
+		public Tbl SfxDataTbl {
+			get { return sfxDataTbl; }
 		}
 
 		public Tbl SpritesTbl {
 			get { return spritesTbl; }
 		}
 
-		public IScriptBin IScriptBin {
-			get { return iscriptBin; }
+		public ImagesDat ImagesDat {
+			get { return imagesDat; }
 		}
 
 		public SpritesDat SpritesDat {
 			get { return spritesDat; }
 		}
 
+		public SfxDataDat SfxDataDat {
+			get { return sfxDataDat; }
+		}
+
+		public IScriptBin IScriptBin {
+			get { return iscriptBin; }
+		}
+
 		void ResourceLoader (object state)
 		{
-			Console.WriteLine ("loading images.tbl");
-			imagesTbl = (Tbl)mpq.GetResource (Builtins.ImagesTbl);
-			Console.WriteLine ("loading images.dat");
-			imagesDat = (ImagesDat)mpq.GetResource (Builtins.ImagesDat);
+			try {
+				Console.WriteLine ("loading images.tbl");
+				imagesTbl = (Tbl)mpq.GetResource (Builtins.ImagesTbl);
 
-			Console.WriteLine ("loading sprites.tbl");
-			spritesTbl = (Tbl)mpq.GetResource (Builtins.SpritesTbl);
-			Console.WriteLine ("loading sprites.dat");
-			spritesDat = (SpritesDat)mpq.GetResource (Builtins.SpritesDat);
+				Console.WriteLine ("loading sfxdata.tbl");
+				sfxDataTbl = (Tbl)mpq.GetResource (Builtins.SfxDataTbl);
 
-			Console.WriteLine ("loading iscript.bin");
-			iscriptBin = (IScriptBin)mpq.GetResource (Builtins.IScriptBin);
+				Console.WriteLine ("loading sprites.tbl");
+				spritesTbl = (Tbl)mpq.GetResource (Builtins.SpritesTbl);
 
-			// notify we're ready to roll
-			(new ThreadNotify (new ReadyEvent (FinishedLoading))).WakeupMain ();
+				Console.WriteLine ("loading images.dat");
+				imagesDat = (ImagesDat)mpq.GetResource (Builtins.ImagesDat);
+
+				Console.WriteLine ("loading sfxdata.dat");
+				sfxDataDat = (SfxDataDat)mpq.GetResource (Builtins.SfxDataDat);
+
+				Console.WriteLine ("loading sprites.dat");
+				spritesDat = (SpritesDat)mpq.GetResource (Builtins.SpritesDat);
+
+				Console.WriteLine ("loading iscript.bin");
+				iscriptBin = (IScriptBin)mpq.GetResource (Builtins.IScriptBin);
+
+				// notify we're ready to roll
+				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
+			}
+			catch (Exception e) {
+				Console.WriteLine ("Global Resource loader failed: {0}", e);
+				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (Events.QuitApplication)));
+			}
 		}
 
 		void FinishedLoading ()

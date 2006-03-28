@@ -64,7 +64,7 @@ namespace Starcraft {
 		public ushort width;
 		public ushort height;
 
-		public char hotkey;
+		public byte hotkey;
 		public string text;
 		public uint text_offset;
 
@@ -93,19 +93,21 @@ namespace Starcraft {
 				text = Encoding.ASCII.GetString (buf, (int)text_offset, (int)text_length);
 
 				if ((flags & UIElementFlags.HasHotkey) == UIElementFlags.HasHotkey) {
-					hotkey = text[0];
+					hotkey = Encoding.ASCII.GetBytes (new char[] {text[0]})[0];
 					text = text.Substring (1);
 				}
 			}
 			else
 				text = "";
 
+#if false
 			Console.WriteLine ("flags = {0:x}", flags);
 
 			Console.WriteLine ("flags1 = {0}", buf[position+24]);
 			Console.WriteLine ("flags2 = {0}", buf[position+24 + 1]);
 			Console.WriteLine ("flags3 = {0}", buf[position+24 + 2]);
 			Console.WriteLine ("flags4 = {0}", buf[position+24 + 3]);
+#endif
 		}
 
 		public void DumpFlags ()
@@ -113,6 +115,11 @@ namespace Starcraft {
 			foreach (UIElementFlags f in Enum.GetValues (typeof (UIElementFlags)))
 				if ((flags & f) == f)
 					Console.WriteLine (f);
+		}
+
+		public override string ToString ()
+		{
+			return String.Format ("{0} ({1})", type, text);
 		}
 	}
 

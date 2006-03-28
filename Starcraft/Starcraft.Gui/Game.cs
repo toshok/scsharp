@@ -2,23 +2,34 @@ using System;
 using System.IO;
 using System.Threading;
 
-using Gtk;
-using Gdk;
+using SdlDotNet;
+using System.Drawing;
 
 namespace Starcraft
 {
+	public enum UIScreenType {
+		/* not including title */
+		MainMenu,
+		Login,
+		Connection,
+
+		ScreenCount
+	}
+
 	public class Game
 	{
-		const uint GAME_ANIMATION_TICK = 50; // number of milliseconds between animation updates
+		UIScreenType currentScreenType;
+		UIScreen[] screens;
+		
+		const int GAME_ANIMATION_TICK = 50; // number of milliseconds between animation updates
+
+		bool isBroodWar;
 
 		Race race;
 
 		Mpq scenario;
 		Mpq mpq;
 		Painter painter;
-
-		Gtk.Window window;
-		Gtk.DrawingArea da;
 
 		uint cached_cursor_x;
 		uint cached_cursor_y;
@@ -28,54 +39,162 @@ namespace Starcraft
 			get { return instance; }
 		}
 
-		public Game (Mpq mpq)
+		public Game (string starcraftDir)
 		{
-			this.mpq = mpq;
-
 			instance = this;
 
 			race = Race.Protoss;
+
+			screens = new UIScreen[(int)UIScreenType.ScreenCount];
+
+			mpq = new MpqContainer ();
+
+			Mpq broodatMpq = null, stardatMpq = null;
+
+			foreach (string path in Directory.GetFileSystemEntries (starcraftDir, "*.mpq")) {
+				if (path.ToLower().EndsWith ("broodat.mpq")) {
+					Console.WriteLine (path);
+					broodatMpq = GetMpq (path);
+				}
+				else if (path.ToLower().EndsWith ("stardat.mpq")) {
+					Console.WriteLine (path);
+					stardatMpq = GetMpq (path);
+				}
+			}
+
+			if (broodatMpq == null && stardatMpq == null) {
+				throw new Exception ("Could not locate broodat.mpq and/or stardat.mpq.");
+			}
+
+			if (broodatMpq != null) {
+				isBroodWar = true;
+				((MpqContainer)mpq).Add (broodatMpq);
+			}
+
+			if (stardatMpq != null)
+				((MpqContainer)mpq).Add (stardatMpq);
+
+		}
+
+		Mpq GetMpq (string path)
+		{
+			if (Directory.Exists (path))
+				return new MpqDirectory (path);
+			else if (File.Exists (path))
+				return new MpqArchive (path);
+			else
+				return null;
+		}
+
+		public bool IsBroodWar {
+			get { return isBroodWar; }
 		}
 
 		public void Startup ()
 		{
+			/* create our window and hook up to the events we care about */
 			CreateWindow ();
+
+			Events.UserEvent += UserEvent;
+			Events.MouseMotion += PointerMotion;
+			Events.MouseButtonDown += MouseButtonDown;
+			Events.MouseButtonUp += MouseButtonUp;
+			Events.KeyboardUp += KeyboardUp;
+			Events.KeyboardDown += KeyboardDown;
+
 			DisplayTitle ();
-			LoadGlobalResources ();
-			LoadMainMenu ();
+
+			/* start everything up */
+			Events.Run ();
 		}
 
-		public void SetScenario (Mpq scenario)
+		void DisplayTitle ()
 		{
-			this.scenario = scenario;
+			/* create the title screen, and make sure we
+			   don't start loading anything else until
+			   it's on the screen */
+			UIScreen screen = new TitleScreen (mpq);
+			screen.Ready += TitleScreenReady;
+			SwitchToScreen (screen);
 		}
 
 		void CreateWindow ()
 		{
-			window = new Gtk.Window ("Starcraft");
-			window.SetDefaultSize (640, 480);
+			Video.WindowIcon ();
+			Video.WindowCaption = "Starcraft";
+			Video.SetVideoModeWindow (640, 480);
 
-			da = new DrawingArea ();
-			window.Add (da);
+			painter = new Painter (GAME_ANIMATION_TICK);
 
-			painter = new Painter (da, GAME_ANIMATION_TICK);
-
-			da.AddEvents ((int)(EventMask.PointerMotionMask |
-					    EventMask.ButtonPressMask |
-					    EventMask.ButtonReleaseMask | 
-					    EventMask.ButtonMotionMask));
-			da.MotionNotifyEvent += PointerMotion;
-
-			window.ShowAll ();
 		}
-		
-		void PointerMotion (object o, MotionNotifyEventArgs args)
+
+		void UserEvent (object sender, UserEventArgs args)
 		{
-			cached_cursor_x = (uint)args.Event.X;
-			cached_cursor_y = (uint)args.Event.Y;
+			ReadyDelegate d = (ReadyDelegate)args.UserEvent;
+			d ();
+		}
+
+		void PointerMotion (object o, MouseMotionEventArgs args)
+		{
+			cached_cursor_x = (uint)args.X;
+			cached_cursor_y = (uint)args.Y;
 			
+			if (swooshing)
+				return;
+
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
+
+			if (currentScreen != null)
+				currentScreen.PointerMotion (args);
+		}
+
+		void MouseButtonDown (object o, MouseButtonEventArgs args)
+		{
+			cached_cursor_x = (uint)args.X;
+			cached_cursor_y = (uint)args.Y;
+			
+			if (swooshing)
+				return;
+
+			if (cursor != null)
+				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
+
+			if (currentScreen != null)
+				currentScreen.MouseButtonDown (args);
+		}
+
+		void MouseButtonUp (object o, MouseButtonEventArgs args)
+		{
+			cached_cursor_x = (uint)args.X;
+			cached_cursor_y = (uint)args.Y;
+			
+			if (swooshing)
+				return;
+
+			if (cursor != null)
+				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
+
+			if (currentScreen != null)
+				currentScreen.MouseButtonUp (args);
+		}
+
+		void KeyboardUp (object o, KeyboardEventArgs args)
+		{
+			if (swooshing)
+				return;
+
+			if (currentScreen != null)
+				currentScreen.KeyboardUp (args);
+		}
+
+		void KeyboardDown (object o, KeyboardEventArgs args)
+		{
+			if (swooshing)
+				return;
+
+			if (currentScreen != null)
+				currentScreen.KeyboardDown (args);
 		}
 
 		public Painter Painter {
@@ -86,7 +205,6 @@ namespace Starcraft
 			get { return race; }
 		}
 
-		Gdk.Pixbuf splash;
 		CursorAnimator cursor;
 
 		public CursorAnimator Cursor {
@@ -95,55 +213,26 @@ namespace Starcraft
 				if (cursor != null)
 					painter.Remove (Layer.Cursor, cursor.Paint);
 				cursor = value;
-				if (cursor != null) {
+				if (cursor == null) {
+					Mouse.ShowCursor = true;
+				}
+				else {
 					painter.Add (Layer.Cursor, cursor.Paint);
 					cursor.SetPosition (cached_cursor_x, cached_cursor_y);
-					HideSystemCursor ();
+					Mouse.ShowCursor = false;
 				}
 			}
 		}
 
-		void DisplayTitle ()
-		{
-			splash = new Gdk.Pixbuf ((Stream)mpq.GetResource (Builtins.TitlePcx));
-			painter.Add (Layer.Background, SplashPainter);
-		}
-
-		void HideSystemCursor()
-		{
-			Gdk.Pixbuf empty = new Gdk.Pixbuf (Gdk.Colorspace.Rgb, true, 8, 1, 1);
-			empty.Fill (0x00000000);
-			Gdk.Cursor cempty = new Gdk.Cursor (da.GdkWindow.Display, empty, 0, 0);
-
-			da.GdkWindow.Cursor = cempty;
-		}
-
-		void SplashPainter (Gdk.Pixbuf pb, DateTime dt)
-		{
-			splash.Composite (pb, 0, 0, splash.Width, splash.Height,
-					  0, 0, 1, 1, InterpType.Nearest, 0xff);
-		}
-
+		bool swooshing;
 		UIScreen currentScreen;
 		UIScreen newScreen;
-
-		UIScreen gamescreen;
-		void GameScreenReady ()
-		{
-			gamescreen.Ready -= GameScreenReady;
-			SetGameScreen (gamescreen);
-		}
 
 		void NewScreen_DoneSwooshing ()
 		{
 			currentScreen.DoneSwooshing -= NewScreen_DoneSwooshing;
-			Console.WriteLine ("done swooshing!");
-
-			if (gamescreen == null) {
-				gamescreen = new GameScreen (mpq, scenario);
-				gamescreen.Ready += GameScreenReady;
-				gamescreen.Load ();
-			}
+			Console.WriteLine ("done swooshing in");
+			swooshing = false;
 		}
 
 		void OldScreen_DoneSwooshing ()
@@ -166,6 +255,7 @@ namespace Starcraft
 		public void SetGameScreen (UIScreen screen)
 		{
 			newScreen = screen;
+			swooshing = true;
 			if (currentScreen != null) {
 				currentScreen.DoneSwooshing += OldScreen_DoneSwooshing;
 				currentScreen.SwooshOut ();
@@ -174,66 +264,55 @@ namespace Starcraft
 				OldScreen_DoneSwooshing ();
 		}
 
-		UIScreen mainMenu;
-		void MainMenuReady ()
+		UIScreen screenToSwitchTo;
+		public void SwitchToScreen (UIScreen screen)
 		{
-			mainMenu.Ready -= MainMenuReady;
-
-			painter.Remove (Layer.Background, SplashPainter);
-			SetGameScreen (mainMenu);
-			mainMenu = null;
+			screen.Ready += SwitchReady;
+			screenToSwitchTo = screen;
+			screenToSwitchTo.Load ();
+			return;
 		}
 
-		void LoadMainMenu ()
+		public void SwitchToScreen (UIScreenType screenType)
 		{
-			mainMenu = new MainMenu (mpq);
-			mainMenu.Ready += MainMenuReady;
-			mainMenu.Load ();
+			int index = (int)screenType;
+			if (screens[index] == null) {
+				switch (screenType) {
+				case UIScreenType.MainMenu:
+					screens[index] = new MainMenu (mpq);
+					break;
+				case UIScreenType.Login:
+					screens[index] = new LoginScreen (mpq);
+					break;
+				case UIScreenType.Connection:
+					screens[index] = new ConnectionScreen (mpq);
+					break;
+				default:
+					throw new Exception ();
+				}
+			}
+
+			SwitchToScreen (screens[(int)screenType]);
 		}
 
-		void LoadGlobalResources ()
+		void SwitchReady ()
 		{
+			screenToSwitchTo.Ready -= SwitchReady;
+			SetGameScreen (screenToSwitchTo);
+			screenToSwitchTo = null;
+		}
+
+		void GlobalResourcesLoaded ()
+		{
+			SwitchToScreen (UIScreenType.MainMenu);
+		}
+
+		void TitleScreenReady ()
+		{
+			Console.WriteLine ("Loading global resources");
 			new GlobalResources (mpq);
+			GlobalResources.Instance.Ready += GlobalResourcesLoaded;
 			GlobalResources.Instance.Load ();
 		}
-
-#if notyet
-		void HudPainter (Gdk.Pixbuf pb, DateTime dt)
-		{
-			hud.Composite (pb, 0, 0, hud.Width, hud.Height,
-				       0, 0, 1, 1, InterpType.Nearest, 0xff);
-		}
-
-		void HudReady ()
-		{
-			painter.Add (Layer.HUD, HudPainter);
-		}
-
-		void LoadProtossHud ()
-		{
-			ThreadPool.QueueUserWorkItem (HudResourceLoaderThread);
-		}
-
-		void HudResourceLoaderThread (object state)
-		{
-			Console.WriteLine ("loading protoss hud");
-
-			Gdk.Pixbuf foo = new Gdk.Pixbuf ((Stream)mpq.GetResource (Builtins.Game_PConsolePcx));
-			hud = new Gdk.Pixbuf (Colorspace.Rgb, true, 8,
-					      foo.Width, foo.Height);
-
-			hud.Fill (0x00000000);
-			hud.AddAlpha (true, 0, 0, 0);
-
-			foo.AddAlpha (true, 0, 0, 0);
-			foo.Composite (hud, 0, 0, foo.Width, foo.Height, 0, 0, 1, 1, InterpType.Nearest, 0xff);
-
-			foo.Dispose ();
-
-			Thread.Sleep (10000);
-
-			(new ThreadNotify (new ReadyEvent (HudReady))).WakeupMain ();
-		}
-#endif
 	}
 }

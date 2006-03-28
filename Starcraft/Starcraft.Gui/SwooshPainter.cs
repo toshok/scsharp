@@ -1,13 +1,14 @@
 
 using System;
 using System.Collections.Generic;
-using Gtk;
-using Gdk;
+
+using SdlDotNet;
 
 namespace Starcraft {
 
 	public delegate void DoneSwooshingDelegate ();
 
+#if false
 	public class SwooshPainter {
 		public enum Direction {
 			FromLeft,
@@ -117,5 +118,6 @@ namespace Starcraft {
 
 		public event DoneSwooshingDelegate DoneSwooshing;
 	}
+#endif
 
 }

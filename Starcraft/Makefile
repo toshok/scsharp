@@ -5,12 +5,12 @@ LIBRARY1=Starcraft.dll
 LIBRARY1_REFS=
 
 LIBRARY2=Starcraft.Gui.dll
-LIBRARY2_REFS= -r:Starcraft.dll -pkg:gtk-sharp-2.0
+LIBRARY2_REFS= -r:Starcraft.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll
 
 all: $(LIBRARY2)
 
 $(LIBRARY2): $(LIBRARY1)
-	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_REFS)
+	$(MCS) $(MCSFLAGS) -unsafe -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_REFS)
 
 $(LIBRARY1):
 	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY1_SOURCES) $(LIBRARY1_REFS)

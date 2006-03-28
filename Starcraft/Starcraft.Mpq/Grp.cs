@@ -37,9 +37,6 @@ namespace Starcraft {
 			width = Util.ReadWord (stream);
 			height = Util.ReadWord (stream);
 
-			Console.WriteLine ("there are {0} frames in this animation", frame_count);
-			Console.WriteLine ("dimensions = {0} x {1}", width, height);
-
 			for (int i = 0; i < frame_count; i ++) {
 				FrameTabEntry entry = new FrameTabEntry ();
 				entry.xOffset = Util.ReadByte (stream);
@@ -50,7 +47,6 @@ namespace Starcraft {
 
 				entries.Add (entry);
 			}
-			Console.WriteLine ("entries.Count = {0}", entries.Count);
 		}
 
 		public byte[,] GetFrame (int frame)
@@ -62,8 +58,6 @@ namespace Starcraft {
 
 			if (frame_cache.ContainsKey (frame))
 				return frame_cache[frame];
-
-			Console.WriteLine ("frame == {0}", frame);
 
 			stream.Seek (entries[frame].pFrameData, SeekOrigin.Begin);
 

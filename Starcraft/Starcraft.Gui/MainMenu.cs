@@ -2,57 +2,78 @@ using System;
 using System.IO;
 using System.Threading;
 
-using Gtk;
-using Gdk;
+using SdlDotNet;
+using System.Drawing;
 
 namespace Starcraft
 {
 	public class MainMenu : UIScreen
 	{
-		Mpq mpq;
-		Bin ui;
-
-		public MainMenu (Mpq mpq)
+		public MainMenu (Mpq mpq) : base (mpq)
 		{
-			this.mpq = mpq;
-		}
-
-		public override void Load ()
-		{
-			ThreadPool.QueueUserWorkItem (ResourceLoader);
 		}
 
 		CursorAnimator cursor;
-		Gdk.Pixbuf background;
+		Surface background;
+		Bin mainBin;
+		UIPainter mainPainter;
 
-		void ResourceLoader (object state)
+		const int VERSION_ELEMENT_INDEX = 10;
+
+		protected override void ResourceLoader (object state)
 		{
-			Console.WriteLine ("loading arrow cursor");
-			cursor = new CursorAnimator ((Grp)mpq.GetResource (Builtins.Palmm_ArrowGrp));
-			cursor.SetHotSpot (64, 64);
-			Console.WriteLine ("loading main menu background");
-			background = new Gdk.Pixbuf ((Stream)mpq.GetResource (Builtins.Palmm_BackgroundPcx));
-			Console.WriteLine ("loading main menu ui elements");
-			ui = (Bin)mpq.GetResource (Builtins.rez_GluMainBin);
+			try {
+				Console.WriteLine ("loading arrow cursor");
+				cursor = new CursorAnimator ((Grp)mpq.GetResource (Builtins.Palmm_ArrowGrp));
+				cursor.SetHotSpot (64, 64);
+				Console.WriteLine ("loading main menu background");
+				background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (Builtins.Palmm_BackgroundPcx));
+				Console.WriteLine ("loading main menu ui elements");
+				mainBin = (Bin)mpq.GetResource (Builtins.rez_GluMainBin);
 
-			/* resolve external entities */
-			foreach (UIElement e in ui.Elements) {
-				if (e.type == UIElementType.Image)
-					e.resolvedData = new Gdk.Pixbuf ((Stream)mpq.GetResource (e.text));
+				mainBin.Elements[VERSION_ELEMENT_INDEX].text = "v0.0000000001";
+
+				mainPainter = new UIPainter (mainBin, mpq);
+
+				// notify we're ready to roll
+				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 			}
-
-			// notify we're ready to roll
-			(new ThreadNotify (new ReadyEvent (FinishedLoading))).WakeupMain ();
+			catch (Exception e) {
+				Console.WriteLine ("Main menu resource loader failed: {0}", e);
+				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (Events.QuitApplication)));
+			}
 		}
 
-		void FinishedLoading ()
+		protected override void FinishedLoading ()
 		{
 			Background = background;
 			Cursor = cursor;
-			UIPainter = new UIPainter (ui);
+			UI = mainBin;
+			UIPainter = mainPainter;
 
-			// emit the Ready event
-			RaiseReadyEvent ();
+			base.FinishedLoading ();
+		}
+
+		public override void ActivateElement (UIElement e)
+		{
+			switch ((Key)e.hotkey) {
+			case Key.S:
+				GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+				Game.Instance.SwitchToScreen (UIScreenType.Login);
+				break;
+			case Key.M:
+				GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+				Game.Instance.SwitchToScreen (UIScreenType.Connection);
+				break;
+			case Key.R:
+				Game.Instance.SwitchToScreen (new CreditsScreen (mpq));
+				break;
+			case Key.X:
+				Events.QuitApplication();
+				break;
+			default:
+				break;
+			}
 		}
 	}
 }

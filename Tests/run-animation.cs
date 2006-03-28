@@ -4,46 +4,44 @@ using System.IO;
 
 using Starcraft;
 
-using Gtk;
-using Gdk;
-using GLib;
+using SdlDotNet;
+using SdlDotNet.Sprites;
 
 public class RunAnimation {
-
-	Painter painter;
-	Gtk.Window window;
-	Gtk.DrawingArea drawing_area;
 
 	int sprite_number = 146;
 	int animation_type = 11;
 
 	Mpq mpq;
-	Sprite sprite;
+	Starcraft.Sprite sprite;
+	Painter painter;
 
 	public RunAnimation (Mpq mpq)
 	{
 		this.mpq = mpq;
 
 		GlobalResources globals = new GlobalResources (mpq);
-		globals.Ready += GlobalsReady;
+		//		globals.Ready += GlobalsReady;
 
 		globals.Load ();
 		
 		CreateWindow ();
+
+		Timer.DelaySeconds (5);
+
+		GlobalsReady ();
 	}
 
 	void CreateWindow ()
 	{
-		window = new Gtk.Window ("animation viewer");
+		Video.WindowIcon ();
+		Video.WindowCaption = "animation viewer";
+		Video.SetVideoModeWindow (320, 200);
 
-		drawing_area = new Gtk.DrawingArea ();
+		Mouse.ShowCursor = false;
 
-		painter = new Painter (drawing_area, 30);
-
+		painter = new Painter (100);
 		SpriteManager.AddToPainter (painter);
-
-		window.Add (drawing_area);
-		window.ShowAll ();
 	}
 
         bool die ()
@@ -54,19 +52,26 @@ public class RunAnimation {
 
 	void GlobalsReady ()
 	{
+		Console.WriteLine ("GlobalsReady");
 		sprite = SpriteManager.CreateSprite (mpq, sprite_number);
 		sprite.RunAnimation (animation_type);
 
-		GLib.Timeout.Add (10000, die);
+		//		Timer.DelaySeconds (3);
+
+		//		GLib.Timeout.Add (10000, die);
+	}
+
+	void Quit (object sender, QuitEventArgs e)
+	{
+		Events.QuitApplication();
 	}
 
 	public static void Main (string[] args) {
-		Application.Init();
-
 		Mpq mpq = new MpqDirectory (args[0]);
 
 		RunAnimation la = new RunAnimation (mpq);
 
-		Application.Run ();
+		Events.Quit += Quit;
+		Events.Run ();
 	}
 }

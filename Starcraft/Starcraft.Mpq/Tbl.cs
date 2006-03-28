@@ -59,8 +59,8 @@ namespace Starcraft {
 			}
 		}
 
-		public string[] Strings {
-			get { return strings; }
+		public string this [int index] {
+			get { return strings[index]; }
 		}
 	}
 }

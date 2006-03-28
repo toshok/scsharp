@@ -5,6 +5,7 @@ Starcraft.Mpq/ImagesDat.cs
 Starcraft.Mpq/IScriptBin.cs
 Starcraft.Mpq/Mpq.cs
 Starcraft.Mpq/Smk.cs
+Starcraft.Mpq/SfxDataDat.cs
 Starcraft.Mpq/SpritesDat.cs
 Starcraft.Mpq/Tbl.cs
 Starcraft.Util/Palette.cs

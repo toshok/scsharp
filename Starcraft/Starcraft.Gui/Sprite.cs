@@ -1,4 +1,6 @@
 
+using SdlDotNet;
+
 using System;
 using System.IO;
 using System.Text;
@@ -27,7 +29,7 @@ namespace Starcraft {
 
 			ushort grp_index = GlobalResources.Instance.ImagesDat.GetGrpIndex (images_entry);
 			Console.WriteLine ("grp_index = {0}", grp_index);
-			grp_path = GlobalResources.Instance.ImagesTbl.Strings[grp_index-1];
+			grp_path = GlobalResources.Instance.ImagesTbl[grp_index-1];
 			Console.WriteLine ("grp_path = {0}", grp_path);
 
 			grp = (Grp)mpq.GetResource ("unit\\" + grp_path);
@@ -55,9 +57,9 @@ namespace Starcraft {
 			runner.RemoveFromPainter (painter);
 		}
 
-		public bool Tick (DateTime now)
+		public bool Tick (Surface surf, DateTime now)
 		{
-			return runner.Tick (now);
+			return runner.Tick (surf, now);
 		}
 	}
 

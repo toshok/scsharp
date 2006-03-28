@@ -2,53 +2,44 @@ using System;
 using System.IO;
 using System.Threading;
 
-using Gtk;
-using Gdk;
+using SdlDotNet;
+using System.Drawing;
 
 namespace Starcraft {
 
 	public class GameScreen : UIScreen {
-		Mpq mpq;
 		Mpq scenario_mpq;
 
-		Gdk.Pixbuf hud;
+		Surface hud;
 		Chk scenario;
 
-		public GameScreen (Mpq mpq, Mpq scenario_mpq)
+		public GameScreen (Mpq mpq, Mpq scenario_mpq) : base (mpq)
 		{
-			this.mpq = mpq;
 			this.scenario_mpq = scenario_mpq;
-		}
-
-		public override void Load ()
-		{
-			ThreadPool.QueueUserWorkItem (ResourceLoader);
 		}
 
 		public override void AddToPainter (Painter painter)
 		{
 			painter.Add (Layer.Hud,
-				     delegate (Gdk.Pixbuf pb, DateTime dt) {
-					hud.Composite (pb, 0, 0, hud.Width, hud.Height,
-						      0, 0, 1, 1, InterpType.Nearest, 0xff); });
+				     delegate (Surface surf, DateTime dt) {
+					surf.Blit (hud); } );
 		}
 
-		void ResourceLoader (object state)
+		protected override void ResourceLoader (object state)
 		{
-			Console.WriteLine ("loading hud");
-			hud = new Gdk.Pixbuf ((Stream)mpq.GetResource (String.Format (Builtins.Game_ConsolePcx, Util.RaceCharLower[(int)Game.Instance.Race])));
+			hud = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (String.Format (Builtins.Game_ConsolePcx, Util.RaceCharLower[(int)Game.Instance.Race])));
 
 			Console.WriteLine ("loading scenario.chk");
 			scenario = (Chk) scenario_mpq.GetResource ("scenario.chk");
 
+			
 			// notify we're ready to roll
-			(new ThreadNotify (new ReadyEvent (FinishedLoading))).WakeupMain ();
+			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
-		void FinishedLoading ()
+		protected override void FinishedLoading ()
 		{
-			// emit the Ready event
-			RaiseReadyEvent ();
+			base.FinishedLoading ();
 		}
 	}
 }

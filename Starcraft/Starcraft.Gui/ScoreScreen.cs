@@ -67,12 +67,7 @@ namespace Starcraft
 			base.RemoveFromPainter (painter);
 		}
 
-		public override void Load ()
-		{
-			ThreadPool.QueueUserWorkItem (ResourceLoader);
-		}
-
-		void ResourceLoader (object state)
+		protected override void ResourceLoader (object state)
 		{
 			Console.WriteLine ("loading arrow cursor");
 			cursor = new CursorAnimator ((Grp)mpq.GetResource (String.Format (Builtins.Palv_ArrowGrp, Util.RaceChar[(int)Game.Instance.Race])));
@@ -92,7 +87,7 @@ namespace Starcraft
 					//XXX
 					if (e.text != null && e.text != "") {
 						Console.WriteLine ("loading image {0}", e.text);
-						e.resolvedData = new Gdk.Pixbuf ((Stream)mpq.GetResource (e.text));
+						e.resolvedData = new Surface (Bitmap.FromStream ((Stream)mpq.GetResource (e.text)));
 					}
 				}
 			}
@@ -103,19 +98,16 @@ namespace Starcraft
 				translucent = true;
 			pMainPb = (Gdk.Pixbuf)ui.Elements[1].resolvedData;
 
-			Thread.Sleep (5000);
-
 			// notify we're ready to roll
-			(new ThreadNotify (new ReadyEvent (FinishedLoading))).WakeupMain ();
+			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
-		void FinishedLoading ()
+		protected override void FinishedLoading ()
 		{
 			Background = background;
 			UIPainter = new UIPainter (ui);
 
-			// emit the Ready event
-			RaiseReadyEvent ();
+			base.FinishedLoading ();
 		}
 	}
 }

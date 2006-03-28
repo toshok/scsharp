@@ -6,15 +6,14 @@ http://www.stormcoast-fortress.net/cntt/tutorials/camsys/tilesetdependent/?PHPSE
 */
 
 
+using SdlDotNet;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-
-using Gtk;
-using Gdk;
-using GLib;
 
 namespace Starcraft {
 
@@ -148,14 +147,14 @@ namespace Starcraft {
 		}
 
 		Painter painter;
-		Gdk.Pixbuf sprite_pixbuf;
-		byte[] pixbuf_data;
+		Surface sprite_surface;
 		
-		void PaintSprite (Gdk.Pixbuf pb, DateTime now)
+		void PaintSprite (Surface surf, DateTime now)
 		{
-			if (sprite_pixbuf != null)
-				sprite_pixbuf.Composite (pb, 0, 0, sprite_pixbuf.Width, sprite_pixbuf.Width,
-							 0, 0, 1, 1, InterpType.Nearest, 0xff);
+			if (sprite_surface != null) {
+				Console.WriteLine ("blitting");
+				surf.Blit (sprite_surface /* XXX position */);
+			}
 		}
 
 		public void AddToPainter (Painter painter)
@@ -170,45 +169,22 @@ namespace Starcraft {
 			this.painter = null;
 		}
 
-		byte[] CreatePixbufData (byte[,] grid, ushort width, ushort height, byte[] palette)
+		void DoPlayFrame (Surface painter_surface, int frame_num)
 		{
-			byte[] rv = new byte[width * height * 3];
-			int i = 0;
-			int x, y;
+			if (sprite_surface != null)
+				sprite_surface.Dispose();
 
-			for (y = height - 1; y >= 0; y --) {
-				for (x = width - 1; x >= 0; x--) {
-					rv[i++] = palette[ grid[y,x] * 3 ];
-					rv[i++] = palette[ grid[y,x] * 3 + 1];
-					rv[i++] = palette[ grid[y,x] * 3 + 2];
-				}
-			}
-
-			return rv;
-		}
-
-		void DoPlayFrame (int frame_num)
-		{
-			pixbuf_data = CreatePixbufData (grp.GetFrame (frame_num),
-							grp.Width, grp.Height,
-							Palette.default_palette);
-
-			if (sprite_pixbuf != null)
-				sprite_pixbuf.Dispose();
-
-			sprite_pixbuf = new Gdk.Pixbuf (pixbuf_data,
-							Colorspace.Rgb,
-							false,
-							8,
-							grp.Width, grp.Height,
-							grp.Width * 3,
-							null);
+			sprite_surface = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (frame_num),
+									  grp.Width, grp.Height,
+									  Palette.default_palette,
+									  false);
 		}
 
 		int waiting;
 
-		public bool Tick (DateTime now)
+		public bool Tick (Surface surf, DateTime now)
 		{
+			Console.WriteLine ("in IScriptRunner.Tick");
 			ushort warg1;
 			ushort warg2;
 			//			ushort warg3;
@@ -229,7 +205,7 @@ namespace Starcraft {
 			case PlayFrame:
 				warg1 = ReadWord (ref pc);
 				TraceLine ("PlayFrame: {0}", warg1);
-				DoPlayFrame (warg1 + facing % 16);
+				DoPlayFrame (surf, warg1 + facing % 16);
 				break;
 			case PlayTilesetFrame:
 				warg1 = ReadWord (ref pc);
@@ -306,7 +282,7 @@ namespace Starcraft {
 				break;
 			case PlaySound:
 				warg1 = ReadWord (ref pc);
-				TraceLine ("Play sound: {0}", warg1);
+				TraceLine ("Play sound: {0} ({1})", warg1 - 1, GlobalResources.Instance.SfxDataTbl[GlobalResources.Instance.SfxDataDat.GetFileIndex ((uint)(warg1 - 1))]);
 				break;
 			case PlayRandomSoundRange:
 				warg1 = ReadWord (ref pc);
@@ -316,7 +292,7 @@ namespace Starcraft {
 			case PlaySpecificFrame:
 				barg1 = ReadByte (ref pc);
 				TraceLine ("PlaySpecificFrame: {0}", barg1);
-				DoPlayFrame (barg1);
+				DoPlayFrame (surf, barg1);
 				break;
 			case PlaceIndependentUnderlay:
 				warg1 = ReadWord (ref pc);

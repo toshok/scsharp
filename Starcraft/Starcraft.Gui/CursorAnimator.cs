@@ -1,5 +1,8 @@
 using System;
-using Gdk;
+using SdlDotNet;
+
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Starcraft {
 	public class CursorAnimator {
@@ -34,7 +37,15 @@ namespace Starcraft {
 			this.y = y;
 		}
 
-		public void Paint (Gdk.Pixbuf pb, DateTime now)
+		public uint HotX {
+			get { return hot_x; }
+		}
+
+		public uint HotY {
+			get { return hot_y; }
+		}
+
+		public void Paint (Surface surf, DateTime now)
 		{
 			delta_to_change -= now - last;
 			if (delta_to_change < TimeSpan.Zero) {
@@ -45,67 +56,16 @@ namespace Starcraft {
 
 			int draw_x = (int)(x - hot_x);
 			int draw_y = (int)(y - hot_y);
-			int draw_width = grp.Width;
-			int draw_height = grp.Height;
 
 			if (current_frame == grp.FrameCount)
 				current_frame = 0;
 
-			byte[] pixbuf_data = Util.CreatePixbufData (grp.GetFrame (current_frame),
-								    grp.Width, grp.Height,
-								    Palette.default_palette,
-								    true);
-			Gdk.Pixbuf frame = new Gdk.Pixbuf (pixbuf_data,
-							   Colorspace.Rgb,
-							   true,
-							   8,
-							   grp.Width, grp.Height,
-							   grp.Width * 4,
-							   null);
+			Surface frame = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (current_frame),
+									 grp.Width, grp.Height,
+									 Palette.default_palette,
+									 false);
 
-			frame.AddAlpha (true, 0, 0, 0);
-
-
-			if (draw_x < 0 || draw_x + grp.Width > pb.Width ||
-			    draw_y < 0 || draw_y + grp.Height > pb.Height) {
-
-				int sub_x, sub_y, sub_width, sub_height;
-
-				sub_x = 0;
-				sub_y = 0;
-				sub_width = grp.Width;
-				sub_height = grp.Height;
-
-				if (draw_x < 0) {
-					sub_x = -1 * draw_x;
-					sub_width -= sub_x;
-					draw_x = 0;
-				}
-				if (draw_y < 0) {
-					sub_y = -1 * draw_y;
-					sub_height -= sub_y;
-					draw_y = 0;
-				}
-
-				if (draw_x + grp.Width > pb.Width)
-					sub_width = pb.Width - draw_x;
-
-				if (draw_y + grp.Width > pb.Height)
-					sub_height = pb.Height - draw_y;
-
-				Gdk.Pixbuf sub = new Gdk.Pixbuf (frame, sub_x, sub_y, sub_width, sub_height);
-				sub.AddAlpha (true, 0, 0, 0);
-
-				frame.Dispose();
-				frame = sub;
-				draw_width = sub_width;
-				draw_height = sub_height;
-			}
-
-			frame.Composite (pb, (int)draw_x, (int)draw_y, draw_width, draw_height,
-					 (int)draw_x, (int)draw_y, 1, 1, InterpType.Nearest, 0xff);
-
-			frame.Dispose();
+			surf.Blit (frame, new Point (draw_x, draw_y));
 		}
 	}
 }

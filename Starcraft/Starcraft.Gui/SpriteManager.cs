@@ -1,4 +1,6 @@
 
+using SdlDotNet;
+
 using System;
 using System.IO;
 using System.Text;
@@ -36,12 +38,12 @@ namespace Starcraft {
 			sprites.Remove (sprite);
 		}
 
-		static void SpriteManagerTick (Gdk.Pixbuf pb, DateTime now)
+		static void SpriteManagerPainterTick (Surface surf, DateTime now)
 		{
 			IEnumerator<Sprite> e = sprites.GetEnumerator();
 			
 			while (e.MoveNext ()) {
-				if (e.Current.Tick (now) == false) {
+				if (e.Current.Tick (surf, now) == false) {
 					Console.WriteLine ("removing sprite!!!!");
 					RemoveSprite (e.Current);
 				}
@@ -50,7 +52,7 @@ namespace Starcraft {
 
 		public static void AddToPainter (Painter p)
 		{
-			p.Add (Layer.Background, SpriteManagerTick);
+			p.Add (Layer.Background, SpriteManagerPainterTick);
 
 			painter = p;
 			foreach (Sprite s in sprites)
@@ -59,7 +61,7 @@ namespace Starcraft {
 
 		public static void RemoveFromPainter (Painter p)
 		{
-			p.Remove (Layer.Background, SpriteManagerTick);
+			p.Remove (Layer.Background, SpriteManagerPainterTick);
 
 			foreach (Sprite s in sprites)
 				s.RemoveFromPainter (p);

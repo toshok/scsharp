@@ -2,7 +2,7 @@ MCSFLAGS= -debug
 MCS= gmcs
 
 PROGRAM=starcraft.exe
-PROGRAM_REFS= -r:../Starcraft/Starcraft.Gui.dll -r:../Starcraft/Starcraft.dll -pkg:gtk-sharp-2.0
+PROGRAM_REFS= -r:../Starcraft/Starcraft.Gui.dll -r:../Starcraft/Starcraft.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
 
 all: $(PROGRAM)
 
