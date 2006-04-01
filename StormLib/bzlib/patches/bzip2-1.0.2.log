@@ -1,0 +1,33 @@
+Hmm...  Looks like a unified diff to me...
+The text leading up to this was:
+--------------------------
+|diff -ipuwr -x config.log -x config.status -x config.cache -x '*.Po' -x '*.pot' -x '*.bak' -x '*.orig' -x '*.rej' -x '*.new' -x '*~' -x '*.o' -x '*.exe' -x patches bzip2-1.0.2-orig/Makefile bzip2-1.0.2/Makefile
+|--- bzip2-1.0.2-orig/Makefile	2002-01-25 23:34:54.000000000 +0100
+|+++ bzip2-1.0.2/Makefile	2004-06-09 22:29:48.796875000 +0200
+--------------------------
+Patching file Makefile using Plan A...
+Hunk #1 succeeded at 1.
+Hunk #2 FAILED at 8.
+Hunk #3 succeeded at 31 (offset -1 lines).
+Hunk #4 succeeded at 56 (offset -1 lines).
+Hunk #5 succeeded at 82 (offset -1 lines).
+Hunk #6 succeeded at 126 with fuzz 2 (offset -2 lines).
+Hunk #7 succeeded at 158 with fuzz 2 (offset 2 lines).
+Hunk #8 succeeded at 194 with fuzz 2 (offset 2 lines).
+1 out of 8 hunks FAILED -- saving rejects to file Makefile.rej
+Hmm...  The next patch looks like a unified diff to me...
+The text leading up to this was:
+--------------------------
+|diff -ipuwr -x config.log -x config.status -x config.cache -x '*.Po' -x '*.pot' -x '*.bak' -x '*.orig' -x '*.rej' -x '*.new' -x '*~' -x '*.o' -x '*.exe' -x patches bzip2-1.0.2-orig/bzip2.c bzip2-1.0.2/bzip2.c
+|--- bzip2-1.0.2-orig/bzip2.c	2002-01-25 01:38:36.000000000 +0100
+|+++ bzip2-1.0.2/bzip2.c	2004-03-11 15:15:14.953125000 +0100
+--------------------------
+Patching file bzip2.c using Plan A...
+Hunk #1 succeeded at 127.
+Hunk #2 succeeded at 223.
+Hunk #3 succeeded at 247.
+Hunk #4 succeeded at 1145 (offset 4 lines).
+Hunk #5 succeeded at 1153 (offset 4 lines).
+Hunk #6 succeeded at 1165 (offset 4 lines).
+Hunk #7 succeeded at 1178 (offset 4 lines).
+done

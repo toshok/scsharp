@@ -1,0 +1,38 @@
+; h:\mingw\3.3.1\bin\dlltool.exe --export-all-symbols --output-def=bzip2.def blocksort.o huffman.o crctable.o randtable.o compress.o decompress.o bzlib.o bzip-dllversion.o bzip2-dll-res.o
+EXPORTS
+	BZ2_blockSort @ 1 ; 
+	BZ2_bsInitWrite @ 2 ; 
+	BZ2_bzBuffToBuffCompress@28 @ 3 ; 
+	BZ2_bzBuffToBuffDecompress@24 @ 4 ; 
+	BZ2_bzCompress@8 @ 5 ; 
+	BZ2_bzCompressEnd@4 @ 6 ; 
+	BZ2_bzCompressInit@16 @ 7 ; 
+	BZ2_bzDecompress@4 @ 8 ; 
+	BZ2_bzDecompressEnd@4 @ 9 ; 
+	BZ2_bzDecompressInit@12 @ 10 ; 
+	BZ2_bzRead@16 @ 11 ; 
+	BZ2_bzReadClose@8 @ 12 ; 
+	BZ2_bzReadGetUnused@16 @ 13 ; 
+	BZ2_bzReadOpen@24 @ 14 ; 
+	BZ2_bzWrite@16 @ 15 ; 
+	BZ2_bzWriteClose64@28 @ 16 ; 
+	BZ2_bzWriteClose@20 @ 17 ; 
+	BZ2_bzWriteOpen@20 @ 18 ; 
+	BZ2_bz__AssertH__fail @ 19 ; 
+	BZ2_bzclose@4 @ 20 ; 
+	BZ2_bzdopen@8 @ 21 ; 
+	BZ2_bzerror@8 @ 22 ; 
+	BZ2_bzflush@4 @ 23 ; 
+	BZ2_bzlibVersion@0 @ 24 ; 
+	BZ2_bzopen@8 @ 25 ; 
+	BZ2_bzread@12 @ 26 ; 
+	BZ2_bzwrite@12 @ 27 ; 
+	BZ2_compressBlock @ 28 ; 
+	BZ2_crc32Table @ 29 DATA ; 
+	BZ2_decompress @ 30 ; 
+	BZ2_hbAssignCodes @ 31 ; 
+	BZ2_hbCreateDecodeTables @ 32 ; 
+	BZ2_hbMakeCodeLengths @ 33 ; 
+	BZ2_indexIntoF @ 34 ; 
+	BZ2_rNums @ 35 DATA ; 
+	DllGetVersion @ 36 ; 
