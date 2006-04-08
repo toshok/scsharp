@@ -10,6 +10,9 @@ namespace Starcraft
 {
 	public class CreditsScreen : UIScreen
 	{
+		Fnt fnt;
+		byte[] pal;
+
 		public CreditsScreen (Mpq mpq) : base (mpq)
 		{
 		}
@@ -28,17 +31,21 @@ namespace Starcraft
 			List<string> lines;
 			Surface surface;
 			Surface newBackground;
+			Fnt fnt;
+			byte[] pal;
 
 			int width;
 			int height;
 
 			bool delay; /* should we stop processing for some amount of time after this page */
 
-			public CreditsPage (PageLocation loc)
+			public CreditsPage (PageLocation loc, Fnt font, byte[] palette)
 			{
 				location = loc;
 				lines = new List<string> ();
 				delay = true;
+				fnt = font;
+				pal = palette;
 			}
 
 			public CreditsPage (Stream background)
@@ -54,13 +61,13 @@ namespace Starcraft
 
 			int MeasureWidth ()
 			{
-				SdlDotNet.Font font = GuiUtil.LargeFont;
+
 				int width = 0;
 
 				foreach (string l in lines) {
-					Size s = font.SizeText (l);
-					if (width < s.Width)
-						width = s.Width;
+					int s = fnt.SizeText (l);
+					if (width < s)
+						width = s;
 				}
 
 				return width;
@@ -68,8 +75,7 @@ namespace Starcraft
 
 			int MeasureHeight ()
 			{
-				SdlDotNet.Font font = GuiUtil.LargeFont;
-				return font.LineSize * lines.Count;
+				return fnt.LineSize * lines.Count;
 			}
 
 			public void Layout ()
@@ -88,50 +94,47 @@ namespace Starcraft
 
 			public void Paint (Surface surf)
 			{
-				SdlDotNet.Font font = GuiUtil.LargeFont;
 				int x, y;
-
-				Color c = Color.FromArgb (0, 0, 255, 0);
 
 				switch (location) {
 				case PageLocation.Top:
 					y = 10;
 					foreach (string l in lines) {
-						Surface s = font.Render (l, c);
+						Surface s = GuiUtil.ComposeText (l, fnt, pal);
 						surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
-						y += font.LineSize;
+						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Bottom:
-					y = surf.Height - 10 - font.LineSize * lines.Count;
+					y = surf.Height - 10 - fnt.LineSize * lines.Count;
 					foreach (string l in lines) {
-						Surface s = font.Render (l, c);
+						Surface s = GuiUtil.ComposeText (l, fnt, pal);
 						surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
-						y += font.LineSize;
+						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Left:
-					y = (surf.Height - font.LineSize * lines.Count) / 2;
+					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (string l in lines) {
-						Surface s = font.Render (l, c);
+						Surface s = GuiUtil.ComposeText (l, fnt, pal);
 						surf.Blit (s, new Point (60, y));
-						y += font.LineSize;
+						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Right:
-					y = (surf.Height - font.LineSize * lines.Count) / 2;
+					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (string l in lines) {
-						Surface s = font.Render (l, c);
+						Surface s = GuiUtil.ComposeText (l, fnt, pal);
 						surf.Blit (s, new Point (surf.Width - s.Width - 60, y));
-						y += font.LineSize;
+						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Center:
-					y = (surf.Height - font.LineSize * lines.Count) / 2;
+					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (string l in lines) {
-						Surface s = font.Render (l, c);
+						Surface s = GuiUtil.ComposeText (l, fnt, pal);
 						surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
-						y += font.LineSize;
+						y += fnt.LineSize;
 					}
 					break;
 				}
@@ -140,12 +143,22 @@ namespace Starcraft
 
 		List<CreditsPage> pages;
 
-		protected override void ResourceLoader (object state)
+		protected override void ResourceLoader ()
 		{
 			pages = new List<CreditsPage> ();
 
 			try {
 				StreamReader sr;
+
+				Console.WriteLine ("loading font palette");
+				Stream palStream = (Stream)mpq.GetResource ("glue\\Palmm\\tFont.pcx");
+				Pcx pcx = new Pcx ();
+				pcx.ReadFromStream (palStream, false);
+				
+				pal = pcx.RgbData;
+
+				Console.WriteLine ("loading font");
+				fnt = GuiUtil.GetLargeFont (mpq);
 
 				if (Game.Instance.IsBroodWar) {
 					/* broodwar credits */
@@ -289,19 +302,19 @@ namespace Starcraft
 						currentPage = null;
 					}
 					else if (l.StartsWith ("</SCREENCENTER>")) {
-						currentPage = new CreditsPage (PageLocation.Center);
+						currentPage = new CreditsPage (PageLocation.Center, fnt, pal);
 					}
 					else if (l.StartsWith ("</SCREENLEFT>")) {
-						currentPage = new CreditsPage (PageLocation.Left);
+						currentPage = new CreditsPage (PageLocation.Left, fnt, pal);
 					}
 					else if (l.StartsWith ("</SCREENRIGHT>")) {
-						currentPage = new CreditsPage (PageLocation.Right);
+						currentPage = new CreditsPage (PageLocation.Right, fnt, pal);
 					}
 					else if (l.StartsWith ("</SCREENTOP>")) {
-						currentPage = new CreditsPage (PageLocation.Top);
+						currentPage = new CreditsPage (PageLocation.Top, fnt, pal);
 					}
 					else if (l.StartsWith ("</SCREENBOTTOM>")) {
-						currentPage = new CreditsPage (PageLocation.Bottom);
+						currentPage = new CreditsPage (PageLocation.Bottom, fnt, pal);
 					}
 					else if (l.StartsWith ("</BACKGROUND ")) {
 						string bg = l.Substring ("</BACKGROUND ".Length);

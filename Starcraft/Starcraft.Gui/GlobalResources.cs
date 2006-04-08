@@ -18,6 +18,7 @@ namespace Starcraft
 		Tbl imagesTbl;
 		Tbl sfxDataTbl;
 		Tbl spritesTbl;
+		Tbl gluAllTbl;
 
 		static GlobalResources instance;
 		public static GlobalResources Instance {
@@ -50,6 +51,10 @@ namespace Starcraft
 			get { return spritesTbl; }
 		}
 
+		public Tbl GluAllTbl {
+			get { return gluAllTbl; }
+		}
+
 		public ImagesDat ImagesDat {
 			get { return imagesDat; }
 		}
@@ -77,6 +82,9 @@ namespace Starcraft
 
 				Console.WriteLine ("loading sprites.tbl");
 				spritesTbl = (Tbl)mpq.GetResource (Builtins.SpritesTbl);
+
+				Console.WriteLine ("loading gluAll.tbl");
+				gluAllTbl = (Tbl)mpq.GetResource (Builtins.rez_GluAllTbl);
 
 				Console.WriteLine ("loading images.dat");
 				imagesDat = (ImagesDat)mpq.GetResource (Builtins.ImagesDat);

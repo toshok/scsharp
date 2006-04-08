@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using System.Drawing;
@@ -17,35 +19,88 @@ namespace Starcraft {
 
 	public static class GuiUtil {
 
-		static SdlDotNet.Font[] fonts;
+		static Fnt largeFont;
+		static Fnt mediumFont;
+		static Fnt smallFont;
 
-		static GuiUtil()
+		public static Fnt GetLargeFont (Mpq mpq)
 		{
-			/* XXX this should be done at game
-			 * initialization time.  also, it should not
-			 * use a .ttf but the bitmap representation
-			 * that's included in the .mpq. */
-
-			fonts = new SdlDotNet.Font[3];
-			fonts[0] = new SdlDotNet.Font ("FreeSans.ttf", 9);
-			fonts[1] = new SdlDotNet.Font ("FreeSans.ttf", 12);
-			fonts[2] = new SdlDotNet.Font ("FreeSans.ttf", 14);
+			if (largeFont == null)
+				largeFont = (Fnt)mpq.GetResource ("files\\font\\font16x.fnt");
+			return largeFont;
 		}
 
-		public static SdlDotNet.Font LargeFont {
-			get { return fonts[2]; }
-		}
-
-		public static SdlDotNet.Font MediumFont {
-			get { return fonts[1]; }
-		}
-
-		public static SdlDotNet.Font SmallFont {
-			get { return fonts[0]; }
-		}
-
-		public static Surface ComposeText (string text, int fontSize, Color foreground)
+		public static Fnt GetMediumFont (Mpq mpq)
 		{
+			if (mediumFont == null)
+				mediumFont = (Fnt)mpq.GetResource ("files\\font\\font14.fnt");
+			return mediumFont;
+		}
+
+		public static Fnt GetSmallFont (Mpq mpq)
+		{
+			if (smallFont == null)
+				smallFont = (Fnt)mpq.GetResource ("files\\font\\font12.fnt");
+			return smallFont;
+		}
+
+		public static Surface RenderGlyph (Fnt font, Glyph g, byte[] palette)
+		{
+			if (g.UserData == null)
+				g.UserData = CreateSurfaceFromBitmap (g.Bitmap, (ushort)g.Width, (ushort)g.Height,
+								      palette, true);
+
+			return (Surface)g.UserData;
+		}
+
+		public static Surface ComposeText (string text, Fnt font, byte[] palette)
+		{
+			return ComposeText (text, font, palette, -1, -1);
+		}
+
+		public static Surface ComposeText (string text, Fnt font, byte[] palette, int width, int height)
+		{
+			int i;
+			/* create a run of text, for now ignoring any control codes in the string */
+			StringBuilder run = new StringBuilder ();
+			for (i = 0; i < text.Length; i ++)
+				if (!Char.IsControl (text[i]))
+					run.Append (text[i]);
+
+			string rs = run.ToString ();
+			if (width == -1)
+				width = font.SizeText (rs);
+			if (height == -1)
+				height = font.LineSize;
+
+			byte[] r = Encoding.ASCII.GetBytes (rs);
+			int x = 0, y = 0;
+			Surface surf = new Surface (width, height);
+			surf.TransparentColor = Color.Black;
+			for (i = 0; i < r.Length; i ++) {
+				int glyph_width;
+
+				if (r[i] == 32) /* space */
+					glyph_width = font.LineSize;
+				else
+					glyph_width = font[r[i] - 1].Width;
+
+				if (x + glyph_width > width) {
+					x = 0;
+					y += font.LineSize;
+				}
+					
+				if (r[i] != 32) {
+					Glyph g = font[r[i] - 1];
+					Surface gs = RenderGlyph (font, g, palette);
+					surf.Blit (gs, new Point (x, y));
+				}
+
+				x += glyph_width;
+			}
+						    
+			return surf;
+#if false
 			StringBuilder run;
 			int i;
 			List<Surface> runSurfaces = new List<Surface> ();
@@ -54,9 +109,9 @@ namespace Starcraft {
 			Color c = foreground;
 			SdlDotNet.Font font = fonts[fontSize];
 
-			font.Bold = true;
-			maxHeight = font.SizeText (text).Height;
-			font.Bold = false;
+			//			font.Bold = true;
+			maxHeight = font.Maxeight; /* XXX should be just the height of the string? */
+			//			font.Bold = false;
 
 			i = 0;
 			run = new StringBuilder ();
@@ -96,6 +151,7 @@ namespace Starcraft {
 			}
 
 			return composedSurf;
+#endif
 		}
 
 		public static byte[] GetBitmapData (byte[,] grid, ushort width, ushort height, byte[] palette, bool with_alpha)
@@ -106,6 +162,8 @@ namespace Starcraft {
 
 			for (y = height - 1; y >= 0; y --) {
 				for (x = width - 1; x >= 0; x--) {
+					if (with_alpha)
+						i++;
 					buf[i++] = palette[ grid[y,x] * 3 ];
 					buf[i++] = palette[ grid[y,x] * 3 + 1];
 					buf[i++] = palette[ grid[y,x] * 3 + 2];
@@ -113,10 +171,10 @@ namespace Starcraft {
 						if (buf[i - 3] == 0
 						    && buf[i - 2] == 0
 						    && buf[i - 1] == 0) {
-							buf[i++] = 0;
+							buf[i-4] = 0x00;
 						}
 						else
-							buf[i++] = 255;
+							buf[i-4] = 0xff;
 					}
 				}
 			}
@@ -124,55 +182,91 @@ namespace Starcraft {
 			return buf;
 		}
 
-		public static Surface CreateSurfaceFromBitmap (byte[,] grid, ushort width, ushort height, byte[] palette, bool with_alpha)
+		public static Surface CreateSurfaceFromRGBAData (byte[] data, ushort width, ushort height, int depth, int stride)
 		{
 			/* beware, kind of a gross hack below */
-			byte[] buf = GetBitmapData (grid, width, height, palette, with_alpha);
-
 			Surface surf;
 
-			unsafe {
-				fixed (void *p = &buf[0]) {
- 
-					IntPtr handle = Sdl.SDL_CreateRGBSurfaceFrom ((IntPtr)p,
-										      width, height, 24,
-										      width * (3 + (with_alpha ? 1 : 0)),
-										      /* XXX this needs addressing in Tao.Sdl - these arguments should be uints */
-										      unchecked ((int)0xff000000),
-										      (int)0x00ff0000,
-										      (int)0x0000ff00,
-										      (int)0x000000ff);
+			IntPtr blob = Marshal.AllocCoTaskMem (data.Length);
+			Marshal.Copy (data, 0, blob, data.Length);
 
-					surf = (Surface)Activator.CreateInstance (typeof (Surface),
-										  BindingFlags.NonPublic | BindingFlags.Instance,
-										  null,
-										  new object[] {handle},
-										  null);
-				}
-			}
+			IntPtr handle = Sdl.SDL_CreateRGBSurfaceFrom (blob,
+								      width, height, depth,
+								      stride,
+								      /* XXX this needs addressing in Tao.Sdl - these arguments should be uints */
+								      unchecked ((int)0xff000000),
+								      (int)0x00ff0000,
+								      (int)0x0000ff00,
+								      (int)0x000000ff);
+
+			surf = (Surface)Activator.CreateInstance (typeof (Surface),
+								  BindingFlags.NonPublic | BindingFlags.Instance,
+								  null,
+								  new object[] {handle},
+								  null);
 
 			return surf;
 		}
 
+		public static Surface CreateSurfaceFromBitmap (byte[,] grid, ushort width, ushort height, byte[] palette, bool with_alpha)
+		{
+			byte[] buf = GetBitmapData (grid, width, height, palette, with_alpha);
+
+			return CreateSurfaceFromRGBAData (buf, width, height, with_alpha ? 32 : 24, width * (3 + (with_alpha ? 1 : 0)));
+		}
+
 		public static byte[] ReadStream (Stream stream)
 		{
-			byte[] buf = new byte [stream.Length];
-			stream.Read (buf, 0, buf.Length);
-			return buf;
+			if (stream is MemoryStream) {
+				return ((MemoryStream)stream).ToArray();
+			}
+			else {
+				byte[] buf = new byte [stream.Length];
+				stream.Read (buf, 0, buf.Length);
+				return buf;
+			}
+		}
+
+		public static Surface SurfaceFromStream (Stream stream, bool applyTranslucency)
+		{
+			if (applyTranslucency) {
+				Pcx pcx = new Pcx();
+				pcx.ReadFromStream (stream, applyTranslucency);
+				return CreateSurfaceFromRGBAData (pcx.RgbaData, pcx.Width, pcx.Height, pcx.Depth, pcx.Stride);
+			}
+			else {
+				byte[] buf = GuiUtil.ReadStream (stream);
+				return new Surface (buf);
+			}
 		}
 
 		public static Surface SurfaceFromStream (Stream stream)
 		{
-			byte[] buf = ReadStream (stream);
-			return new Surface (buf);
+			return GuiUtil.SurfaceFromStream (stream, false);
+		}
+
+		public static Sound SoundFromStream (Stream stream)
+		{
+			byte[] buf = GuiUtil.ReadStream (stream);
+			return Mixer.Sound (buf);
 		}
 
 		public static void PlaySound (Mpq mpq, string resourcePath)
 		{
-			byte[] buf = GuiUtil.ReadStream ((Stream)mpq.GetResource (resourcePath));
-			Sound s = Mixer.Sound (buf);
+			Stream stream = (Stream)mpq.GetResource (resourcePath);
+			if (stream == null)
+				return;
+			Sound s = GuiUtil.SoundFromStream (stream);
 			s.Play();
 		}
-	}
 
+		public static void PlayMusic (Mpq mpq, string resourcePath, int numLoops)
+		{
+			Stream stream = (Stream)mpq.GetResource (resourcePath);
+			if (stream == null)
+				return;
+			Sound s = GuiUtil.SoundFromStream (stream);
+			s.Play (true);
+		}
+	}
 }

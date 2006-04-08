@@ -16,6 +16,7 @@ namespace Starcraft {
 		Health,
 		Hud,
 		UI,
+		UI_dynamic,
 		Tooltip,
 		Cursor,
 
@@ -32,16 +33,17 @@ namespace Starcraft {
 
 		DateTime now; /* the time of the last animation tick */
 
-		Surface surf;
+		Surface paintingSurface;
+		Surface backbuffer;
 
-
-		public Painter (int millis)
+		public Painter (Surface paintingSurface, int millis)
 		{
 			this.millis = millis;
+			this.paintingSurface = paintingSurface;
 
 			/* create an initialize our video surface */
-			surf = Video.Screen.CreateCompatibleSurface (Video.Screen.Size);
-			surf.Fill (new Rectangle (new Point (0, 0), surf.Size), Color.Black);
+			backbuffer = paintingSurface.CreateCompatibleSurface (paintingSurface.Size);
+			backbuffer.Fill (new Rectangle (new Point (0, 0), backbuffer.Size), Color.Black);
 			
 			/* init our list of painter delegates */
 			layers = new List<PainterDelegate>[(int)Layer.Count];
@@ -82,20 +84,20 @@ namespace Starcraft {
 
 			now = DateTime.Now;
 
-                        surf.Fill(new Rectangle(new Point(0, 0), surf.Size), Color.Black);
+                        backbuffer.Fill(new Rectangle(new Point(0, 0), backbuffer.Size), Color.Black);
 			
 			for (Layer i = Layer.Background; i < Layer.Count; i ++)
 				DrawLayer (layers[(int)i]);
 
-			Video.Screen.Blit (surf);
+			paintingSurface.Blit (backbuffer);
 
-			Video.Screen.Flip ();
+			paintingSurface.Flip ();
 		}
 
 		void DrawLayer (List<PainterDelegate> painters)
 		{
 			foreach (PainterDelegate p in painters)
-				p (surf, now);
+				p (backbuffer, now);
 		}
 	}
 }

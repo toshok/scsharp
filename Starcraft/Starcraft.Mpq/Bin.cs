@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Starcraft {
 	[Flags]
-	public enum UIElementFlags {
+	public enum ElementFlags {
 		//???             = 0x00000001,
 		//???             = 0x00000002,
 		//???             = 0x00000004,
@@ -37,7 +37,7 @@ namespace Starcraft {
 		Unused08000000    = 0x08000000
 	}
 
-	public enum UIElementType {
+	public enum ElementType {
 		DialogBox = 0,
 		DefaultButton = 1,
 		Button = 2,
@@ -54,7 +54,7 @@ namespace Starcraft {
 		ButtonWithoutBorder = 14
 	}
 
-	public class UIElement
+	public class BinElement
 	{
 		public ushort x1;
 		public ushort y1;
@@ -68,12 +68,12 @@ namespace Starcraft {
 		public string text;
 		public uint text_offset;
 
-		public UIElementFlags flags;
-		public UIElementType type;
+		public ElementFlags flags;
+		public ElementType type;
 
 		public object resolvedData;
 
-		public UIElement (byte[] buf, int position, uint stream_length)
+		public BinElement (byte[] buf, int position, uint stream_length)
 		{
 			x1 = Util.ReadWord (buf, position + 4);
 			y1 = Util.ReadWord (buf, position + 6);
@@ -83,8 +83,8 @@ namespace Starcraft {
 			height = Util.ReadWord (buf, position + 14);
 			text_offset = Util.ReadDWord (buf, position + 20);
 
-			flags = (UIElementFlags)Util.ReadDWord (buf, position + 24);
-			type = (UIElementType)buf[position + 34];
+			flags = (ElementFlags)Util.ReadDWord (buf, position + 24);
+			type = (ElementType)buf[position + 34];
 
 			if (text_offset < stream_length) {
 				uint text_length = 0;
@@ -92,47 +92,50 @@ namespace Starcraft {
 
 				text = Encoding.ASCII.GetString (buf, (int)text_offset, (int)text_length);
 
-				if ((flags & UIElementFlags.HasHotkey) == UIElementFlags.HasHotkey) {
+				if ((flags & ElementFlags.HasHotkey) == ElementFlags.HasHotkey) {
 					hotkey = Encoding.ASCII.GetBytes (new char[] {text[0]})[0];
 					text = text.Substring (1);
 				}
 			}
 			else
 				text = "";
-
-#if false
-			Console.WriteLine ("flags = {0:x}", flags);
-
-			Console.WriteLine ("flags1 = {0}", buf[position+24]);
-			Console.WriteLine ("flags2 = {0}", buf[position+24 + 1]);
-			Console.WriteLine ("flags3 = {0}", buf[position+24 + 2]);
-			Console.WriteLine ("flags4 = {0}", buf[position+24 + 3]);
-#endif
 		}
 
 		public void DumpFlags ()
 		{
-			foreach (UIElementFlags f in Enum.GetValues (typeof (UIElementFlags)))
-				if ((flags & f) == f)
-					Console.WriteLine (f);
+			Console.Write ("Flags: ");
+			foreach (ElementFlags f in Enum.GetValues (typeof (ElementFlags)))
+				if ((flags & f) == f) {
+					Console.Write (f);
+					Console.Write (" ");
+				}
+			Console.WriteLine ();
 		}
 
 		public override string ToString ()
 		{
 			return String.Format ("{0} ({1})", type, text);
 		}
+
+		public string Text {
+			get { return text; }
+			set {
+				text = value;
+				resolvedData = null;
+			}
+		}
 	}
 
 	public class Bin : MpqResource {
 		Stream stream;
-		List<UIElement> elements;
+		List<BinElement> elements;
 
 		public Bin ()
 		{
-			elements = new List<UIElement> ();
+			elements = new List<BinElement> ();
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 			ReadElements ();
@@ -148,18 +151,19 @@ namespace Starcraft {
 
 			position = 0;
 			do {
-				UIElement element = new UIElement (buf, position, (uint)stream.Length);
+				BinElement element = new BinElement (buf, position, (uint)stream.Length);
 
 				elements.Add (element);
 
 				position += 86;
-			} while (position < elements[0].text_offset);
+			} while (position < ((BinElement)elements[0]).text_offset);
 		}
 
-		UIElement[] arr;
-		public UIElement[] Elements {
+		BinElement[] arr;
+		public BinElement[] Elements {
 			get {
-				if (arr == null) arr = elements.ToArray();
+				if (arr == null)
+					arr = elements.ToArray();
 				return arr;
 			}
 		}

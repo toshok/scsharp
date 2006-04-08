@@ -10,7 +10,7 @@ namespace Starcraft {
 		{
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			long stream_length = stream.Length;
 			byte[] section_name_buf = new byte[4];

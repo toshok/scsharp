@@ -9,56 +9,41 @@ namespace Starcraft
 {
 	public class LoginScreen : UIScreen
 	{
-		public LoginScreen (Mpq mpq) : base (mpq)
+		public LoginScreen (Mpq mpq) : base (mpq, "glue\\PalNl", Builtins.rez_GluLoginBin)
 		{
 		}
 
-		CursorAnimator cursor;
-		Surface background;
-		Bin loginBin;
-		UIPainter loginPainter;
+		const int OK_ELEMENT_INDEX = 4;
+		const int CANCEL_ELEMENT_INDEX = 5;
+		const int NEW_ELEMENT_INDEX = 6;
+		const int DELETE_ELEMENT_INDEX = 7;
 
-		protected override void ResourceLoader (object state)
+		protected override void ResourceLoader ()
 		{
-			try {
-				cursor = new CursorAnimator ((Grp)mpq.GetResource (Builtins.PalNl_ArrowGrp));
-				cursor.SetHotSpot (64, 64);
-				Console.WriteLine ("loading login screen background");
-				background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (Builtins.PalNl_BackgroundPcx));
-				Console.WriteLine ("loading login screen ui elements");
-				loginBin = (Bin)mpq.GetResource (Builtins.rez_GluLoginBin);
+			base.ResourceLoader ();
 
-				loginPainter = new UIPainter (loginBin, mpq);
+			Elements[OK_ELEMENT_INDEX].Activate +=
+				delegate () {
+					Console.WriteLine ("switch to the race selection screen, yay!");
+				};
 
-				// notify we're ready to roll
-				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
-			}
-			catch (Exception e) {
-				Console.WriteLine ("Login screen resource loader failed: {0}", e);
-				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (Events.QuitApplication)));
-			}
-		}
+			Elements[CANCEL_ELEMENT_INDEX].Activate +=
+				delegate () {
+					Game.Instance.SwitchToScreen (UIScreenType.MainMenu);
+				};
 
-		protected override void FinishedLoading ()
-		{
-			Background = background;
-			Cursor = cursor;
-			UI = loginBin;
-			UIPainter = loginPainter;
+			Elements[NEW_ELEMENT_INDEX].Activate +=
+				delegate () {
+					Console.WriteLine ("create character for registry!");
+				};
 
-			base.FinishedLoading ();
-		}
+			Elements[DELETE_ELEMENT_INDEX].Activate +=
+				delegate () {
+					Console.WriteLine ("delete character from registry!");
+				};
 
-		public override void ActivateElement (UIElement e)
-		{
-			switch ((Key)e.hotkey)
-			{
-			case Key.C:
-				Game.Instance.SwitchToScreen (UIScreenType.MainMenu);
-				break;
-			default:
-				break;
-			}
+			// notify we're ready to roll
+			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 	}
 }

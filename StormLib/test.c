@@ -1,5 +1,5 @@
 
-#include "Storm.h"
+#include "StormLib.h"
 
 int main (int argc, char **argv)
 {
@@ -7,6 +7,7 @@ int main (int argc, char **argv)
 
   char *mpq_filename = argv[1];
   char *file_path = argv[2];
+  char *output_path = argv[3];
 
   if (!SFileOpenArchive (mpq_filename, 0, 0, &mpq))
 	printf ("FAILED TO OPEN FILE\n");
@@ -17,17 +18,22 @@ int main (int argc, char **argv)
   if(hFile != NULL)
     {
         DWORD dwTransferred;
-        static char Buffer1[0x100000];
-        static char Buffer2[0x100000];
-        int nOutlength = sizeof(Buffer2);
+        static char *buffer;
         DWORD fileSize;
 
-        SFileGetFileSize (hFile, &fileSize);
-        printf ("fileSize = %d\n", fileSize);
+        fileSize = SFileGetFileInfo (hFile, SFILE_INFO_FILE_SIZE);
+
+	buffer = (char*)malloc (fileSize);
  
-        SFileReadFile(hFile, Buffer1, sizeof(Buffer1), &dwTransferred, NULL);
+        SFileReadFile(hFile, buffer, fileSize, &dwTransferred, NULL);
 
         printf ("Read file %s, size %d\n", file_path, dwTransferred);
+
+	FILE *fp = fopen (output_path, "w");
+	fwrite (buffer, fileSize, 1, fp);
+	fclose (fp);
+
+	SFileCloseFile (hFile);
     }
 
     SFileCloseArchive(mpq);

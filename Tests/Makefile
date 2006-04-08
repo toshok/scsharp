@@ -22,7 +22,10 @@ run_smk_exe_REFS= -r:../Starcraft/Starcraft.dll -r:../Starcraft/Starcraft.Gui.dl
 dump_tbl_exe_FILES = dump-tbl.cs
 dump_tbl_exe_REFS= -r:../Starcraft/Starcraft.dll
 
-all: dump-map.exe dump-grp.exe dump-tileset.exe animate-grp.exe dump-tbl.exe font-info run-animation.exe run-smk.exe
+font_foo_exe_FILES = font-foo.cs
+font_foo_exe_REFS= -r:../Starcraft/Starcraft.dll -r:../Starcraft/Starcraft.Gui.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
+
+all: dump-map.exe dump-grp.exe dump-tileset.exe animate-grp.exe dump-tbl.exe font-info run-animation.exe run-smk.exe font-foo.exe
 
 dump-grp.exe: $(dump_grp_exe_FILES)
 	$(MCS) $(MCSFLAGS) -target:exe -out:$@ $(dump_grp_exe_FILES) $(dump_grp_exe_REFS)
@@ -44,6 +47,9 @@ run-smk.exe: $(run_smk_exe_FILES)
 
 dump-tbl.exe: $(dump_tbl_exe_FILES)
 	$(MCS) $(MCSFLAGS) -target:exe -out:$@ $(dump_tbl_exe_FILES) $(dump_tbl_exe_REFS)
+
+font-foo.exe: $(font_foo_exe_FILES)
+	$(MCS) $(MCSFLAGS) -target:exe -out:$@ $(font_foo_exe_FILES) $(font_foo_exe_REFS)
 
 starcraft.exe: $(starcraft_exe_FILES)
 	$(MCS) $(MCSFLAGS) -target:exe -out:$@ $(starcraft_exe_FILES) $(starcraft_exe_REFS)

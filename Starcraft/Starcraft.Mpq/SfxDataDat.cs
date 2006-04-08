@@ -20,7 +20,7 @@ namespace Starcraft {
 		{
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			buf = new byte [NUM_RECORDS * NUM_FIELDS * 4];
 			stream.Read (buf, 0, buf.Length);

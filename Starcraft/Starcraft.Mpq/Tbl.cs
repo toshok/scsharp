@@ -14,7 +14,7 @@ namespace Starcraft {
 		{
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 			ReadStrings();
@@ -61,6 +61,10 @@ namespace Starcraft {
 
 		public string this [int index] {
 			get { return strings[index]; }
+		}
+
+		public string[] Strings {
+			get { return strings; }
 		}
 	}
 }

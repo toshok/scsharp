@@ -1,5 +1,6 @@
 Starcraft.Mpq/Bin.cs
 Starcraft.Mpq/Chk.cs
+Starcraft.Mpq/Fnt.cs
 Starcraft.Mpq/Grp.cs
 Starcraft.Mpq/ImagesDat.cs
 Starcraft.Mpq/IScriptBin.cs

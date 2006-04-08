@@ -23,6 +23,9 @@ namespace Starcraft {
 			if (ext.ToLower() == ".tbl") {
 				return typeof (Tbl);
 			}
+			else if (ext.ToLower () == ".fnt") {
+				return typeof (Fnt);
+			}
 			else if (ext.ToLower () == ".grp") {
 				return typeof (Grp);
 			}

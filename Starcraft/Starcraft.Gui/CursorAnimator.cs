@@ -18,11 +18,14 @@ namespace Starcraft {
 		uint hot_x;
 		uint hot_y;
 
-		public CursorAnimator (Grp grp)
+		byte[] palette;
+
+		public CursorAnimator (Grp grp, byte[] palette)
 		{
 			this.grp = grp;
 			this.x = 100;
 			this.y = 100;
+			this.palette = palette;
 		}
 
 		public void SetHotSpot (uint hot_x, uint hot_y)
@@ -62,7 +65,7 @@ namespace Starcraft {
 
 			Surface frame = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (current_frame),
 									 grp.Width, grp.Height,
-									 Palette.default_palette,
+									 palette,
 									 false);
 
 			surf.Blit (frame, new Point (draw_x, draw_y));

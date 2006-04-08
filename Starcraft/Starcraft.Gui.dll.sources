@@ -10,11 +10,13 @@ Starcraft.Gui/IScriptRunner.cs
 Starcraft.Gui/LoginScreen.cs
 Starcraft.Gui/MainMenu.cs
 Starcraft.Gui/Painter.cs
+Starcraft.Gui/Pcx.cs
 Starcraft.Gui/Race.cs
 Starcraft.Gui/Sprite.cs
 Starcraft.Gui/SpriteManager.cs
 Starcraft.Gui/SwooshPainter.cs
 Starcraft.Gui/TitleScreen.cs
+Starcraft.Gui/UIElement.cs
 Starcraft.Gui/UIPainter.cs
 Starcraft.Gui/UIScreen.cs
 

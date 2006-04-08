@@ -25,7 +25,7 @@ namespace Starcraft {
 					surf.Blit (hud); } );
 		}
 
-		protected override void ResourceLoader (object state)
+		protected override void ResourceLoader ()
 		{
 			hud = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (String.Format (Builtins.Game_ConsolePcx, Util.RaceCharLower[(int)Game.Instance.Race])));
 

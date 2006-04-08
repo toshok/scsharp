@@ -10,8 +10,15 @@ public class Driver
 {
 	public static void Main (string[] args)
 	{
-		Game g = new Game (ConfigurationManager.AppSettings["StarcraftDirectory"]);
+		bool fullscreen = false;
 
-		g.Startup();
+		Game g = new Game (ConfigurationManager.AppSettings["StarcraftDirectory"],
+				   ConfigurationManager.AppSettings["CDDirectory"]);
+
+		if (args.Length > 0)
+			if (args[0] == "/fullscreen")
+				fullscreen = true;
+
+		g.Startup(fullscreen);
 	}
 }

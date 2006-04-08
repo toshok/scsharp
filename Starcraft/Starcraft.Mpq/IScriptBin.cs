@@ -19,7 +19,7 @@ namespace Starcraft {
 			entries = new Dictionary<ushort,ushort>();
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			buf = new byte [stream.Length];
 			stream.Read (buf, 0, buf.Length);

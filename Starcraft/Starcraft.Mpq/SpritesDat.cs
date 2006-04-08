@@ -40,7 +40,7 @@ namespace Starcraft {
 				offset_to_variable_block [i] = offset_to_variable_block[i-1] + size_of_variable_block[i-1];
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			int size = 0;
 			for (int i = 0; i < NUM_FIELDS; i ++)

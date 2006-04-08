@@ -5,6 +5,8 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
+using System.Text;
+
 namespace Starcraft
 {
 	public enum UIScreenType {
@@ -39,7 +41,7 @@ namespace Starcraft
 			get { return instance; }
 		}
 
-		public Game (string starcraftDir)
+		public Game (string starcraftDir, string cdDir)
 		{
 			instance = this;
 
@@ -49,21 +51,34 @@ namespace Starcraft
 
 			mpq = new MpqContainer ();
 
-			Mpq broodatMpq = null, stardatMpq = null;
+			Mpq broodatMpq = null, stardatMpq = null, indexExe = null;
 
-			foreach (string path in Directory.GetFileSystemEntries (starcraftDir, "*.mpq")) {
-				if (path.ToLower().EndsWith ("broodat.mpq")) {
-					Console.WriteLine (path);
-					broodatMpq = GetMpq (path);
-				}
-				else if (path.ToLower().EndsWith ("stardat.mpq")) {
-					Console.WriteLine (path);
-					stardatMpq = GetMpq (path);
+			try {
+				foreach (string path in Directory.GetFileSystemEntries (starcraftDir, "*.mpq")) {
+					if (path.ToLower().EndsWith ("broodat.mpq")) {
+						Console.WriteLine (path);
+						broodatMpq = GetMpq (path);
+					}
+					else if (path.ToLower().EndsWith ("stardat.mpq")) {
+						Console.WriteLine (path);
+						stardatMpq = GetMpq (path);
+					}
 				}
 			}
+			catch {
+				throw new Exception ("Could not locate broodat.mpq and/or stardat.mpq.  Please update your StarcraftDirectory setting in the .config file");
+			}
 
-			if (broodatMpq == null && stardatMpq == null) {
-				throw new Exception ("Could not locate broodat.mpq and/or stardat.mpq.");
+			try {
+				foreach (string path in Directory.GetFileSystemEntries (cdDir, "*.exe")) {
+					if (path.ToLower().EndsWith ("install.exe")) {
+						Console.WriteLine (path);
+						indexExe = GetMpq (path);
+					}
+				}
+			}
+			catch {
+				throw new Exception ("Could not locate the cd data.  Please update your CDDirectory setting in the .config file");
 			}
 
 			if (broodatMpq != null) {
@@ -74,6 +89,8 @@ namespace Starcraft
 			if (stardatMpq != null)
 				((MpqContainer)mpq).Add (stardatMpq);
 
+			if (indexExe != null)
+				((MpqContainer)mpq).Add (indexExe);
 		}
 
 		Mpq GetMpq (string path)
@@ -90,10 +107,10 @@ namespace Starcraft
 			get { return isBroodWar; }
 		}
 
-		public void Startup ()
+		public void Startup (bool fullscreen)
 		{
 			/* create our window and hook up to the events we care about */
-			CreateWindow ();
+			CreateWindow (fullscreen);
 
 			Events.UserEvent += UserEvent;
 			Events.MouseMotion += PointerMotion;
@@ -108,6 +125,11 @@ namespace Starcraft
 			Events.Run ();
 		}
 
+		public void Quit ()
+		{
+			Events.QuitApplication ();
+		}
+
 		void DisplayTitle ()
 		{
 			/* create the title screen, and make sure we
@@ -118,14 +140,21 @@ namespace Starcraft
 			SwitchToScreen (screen);
 		}
 
-		void CreateWindow ()
+		public const int SCREEN_RES_X = 640;
+		public const int SCREEN_RES_Y = 480;
+
+		void CreateWindow (bool fullscreen)
 		{
 			Video.WindowIcon ();
 			Video.WindowCaption = "Starcraft";
-			Video.SetVideoModeWindow (640, 480);
+			Surface surf;
 
-			painter = new Painter (GAME_ANIMATION_TICK);
+			if (fullscreen)
+				surf = Video.SetVideoMode (SCREEN_RES_X, SCREEN_RES_Y);
+			else
+				surf = Video.SetVideoModeWindow (SCREEN_RES_X, SCREEN_RES_Y);
 
+			painter = new Painter (surf, GAME_ANIMATION_TICK);
 		}
 
 		void UserEvent (object sender, UserEventArgs args)
@@ -139,9 +168,6 @@ namespace Starcraft
 			cached_cursor_x = (uint)args.X;
 			cached_cursor_y = (uint)args.Y;
 			
-			if (swooshing)
-				return;
-
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 
@@ -154,9 +180,6 @@ namespace Starcraft
 			cached_cursor_x = (uint)args.X;
 			cached_cursor_y = (uint)args.Y;
 			
-			if (swooshing)
-				return;
-
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 
@@ -169,9 +192,6 @@ namespace Starcraft
 			cached_cursor_x = (uint)args.X;
 			cached_cursor_y = (uint)args.Y;
 			
-			if (swooshing)
-				return;
-
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 
@@ -181,18 +201,12 @@ namespace Starcraft
 
 		void KeyboardUp (object o, KeyboardEventArgs args)
 		{
-			if (swooshing)
-				return;
-
 			if (currentScreen != null)
 				currentScreen.KeyboardUp (args);
 		}
 
 		void KeyboardDown (object o, KeyboardEventArgs args)
 		{
-			if (swooshing)
-				return;
-
 			if (currentScreen != null)
 				currentScreen.KeyboardDown (args);
 		}
@@ -224,44 +238,15 @@ namespace Starcraft
 			}
 		}
 
-		bool swooshing;
 		UIScreen currentScreen;
-		UIScreen newScreen;
-
-		void NewScreen_DoneSwooshing ()
-		{
-			currentScreen.DoneSwooshing -= NewScreen_DoneSwooshing;
-			Console.WriteLine ("done swooshing in");
-			swooshing = false;
-		}
-
-		void OldScreen_DoneSwooshing ()
-		{
-			if (currentScreen != null) {
-				currentScreen.DoneSwooshing -= OldScreen_DoneSwooshing;
-				currentScreen.RemoveFromPainter (painter);
-			}
-
-			currentScreen = newScreen;
-			newScreen = null;
-
-			if (currentScreen != null) {
-				currentScreen.AddToPainter (painter);
-				currentScreen.DoneSwooshing += NewScreen_DoneSwooshing;
-				currentScreen.SwooshIn ();
-			}
-		}
 
 		public void SetGameScreen (UIScreen screen)
 		{
-			newScreen = screen;
-			swooshing = true;
-			if (currentScreen != null) {
-				currentScreen.DoneSwooshing += OldScreen_DoneSwooshing;
-				currentScreen.SwooshOut ();
-			}
-			else
-				OldScreen_DoneSwooshing ();
+			if (currentScreen != null)
+				currentScreen.RemoveFromPainter (painter);
+			currentScreen = screen;
+			if (currentScreen != null)
+				currentScreen.AddToPainter (painter);
 		}
 
 		UIScreen screenToSwitchTo;

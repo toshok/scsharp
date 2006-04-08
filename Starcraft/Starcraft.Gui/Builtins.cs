@@ -9,6 +9,9 @@ namespace Starcraft {
 		public static string TitlePcx = "glue\\title\\title-beta.pcx";
 #endif
 
+		/* UI strings */
+		public static string rez_GluAllTbl = "rez\\gluAll.tbl";
+
 		/* Main menu */
 		public static string Palmm_BackgroundPcx = "glue\\palmm\\Backgnd.pcx";
 		public static string Palmm_ArrowGrp = "glue\\palmm\\arrow.grp";
@@ -73,5 +76,8 @@ namespace Starcraft {
 		/* credits */
 		public static string RezCrdtexpTxt = "rez\\crdt_exp.txt";
 		public static string RezCrdtlistTxt = "rez\\crdt_lst.txt";
+
+		/* music */
+		public static string music_titleWav = "music\\title.wav";
 	}
 }

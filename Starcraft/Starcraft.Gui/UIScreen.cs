@@ -1,7 +1,7 @@
-
 using System;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
 using SdlDotNet;
 
@@ -9,11 +9,32 @@ namespace Starcraft
 {
 	public abstract class UIScreen
 	{
-		Surface background;
-		CursorAnimator cursor;
-		UIPainter ui_painter;
-		Bin ui;
+		protected Surface Background;
+		protected CursorAnimator Cursor;
+		protected UIPainter UIPainter;
+		protected Bin Bin;
 		protected Mpq mpq;
+		protected string prefix;
+		protected string binFile;
+
+		protected string background_path;
+		protected string fontpal_path;
+		protected string effectpal_path;
+		protected string arrowgrp_path;
+
+		protected List<UIElement> Elements;
+
+		protected UIScreen (Mpq mpq, string prefix, string binFile)
+		{
+			this.mpq = mpq;
+			this.prefix = prefix; 
+			this.binFile = binFile;
+
+			background_path = prefix + "\\Backgnd.pcx";
+			fontpal_path = prefix + "\\tFont.pcx";
+			effectpal_path = prefix + "\\tEffect.pcx";
+			arrowgrp_path = prefix + "\\arrow.grp";
+		}
 
 		protected UIScreen (Mpq mpq)
 		{
@@ -46,41 +67,41 @@ namespace Starcraft
 
 		public virtual void AddToPainter (Painter painter)
 		{
-			if (background != null)
+			if (Background != null)
 				painter.Add (Layer.Background, BackgroundPainter);
 
-			if (ui_painter != null)
-				painter.Add (Layer.UI, ui_painter.Paint);
+			if (UIPainter != null)
+				painter.Add (Layer.UI, UIPainter.Paint);
 
-			if (cursor != null)
-				Game.Instance.Cursor = cursor;
+			if (Cursor != null)
+				Game.Instance.Cursor = Cursor;
 		}
 
 		public virtual void RemoveFromPainter (Painter painter)
 		{
-			if (background != null)
+			if (Background != null)
 				painter.Remove (Layer.Background, BackgroundPainter);
-			if (ui_painter != null)
-				painter.Remove (Layer.UI, ui_painter.Paint);
-			if (cursor != null)
+			if (UIPainter != null)
+				painter.Remove (Layer.UI, UIPainter.Paint);
+			if (Cursor != null)
 				Game.Instance.Cursor = null;
 		}
 
 		UIElement XYToElement (int x, int y, bool onlyUI)
 		{
-			if (UI == null)
+			if (Elements == null)
 				return null;
 
-			foreach (UIElement e in UI.Elements) {
-				if (e.type == UIElementType.DialogBox)
+			foreach (UIElement e in Elements) {
+				if (e.Type == ElementType.DialogBox)
 					continue;
 
 				if (onlyUI &&
-				    e.type == UIElementType.Image)
+				    e.Type == ElementType.Image)
 					continue;
 
-				if (x >= e.x1 && x < e.x1 + e.width &&
-				    y >= e.y1 && y < e.y1 + e.height)
+				if (x >= e.X1 && x < e.X1 + e.Width &&
+				    y >= e.Y1 && y < e.Y1 + e.Height)
 					return e;
 			}
 			return null;
@@ -130,29 +151,36 @@ namespace Starcraft
 
 		public virtual void MouseOverElement (UIElement element)
 		{
-			if (element.type == UIElementType.Button
-			    || element.type == UIElementType.ButtonWithoutBorder
-			    || element.type == UIElementType.DefaultButton) {
+			if (element.Type == ElementType.Button
+			    || element.Type == ElementType.ButtonWithoutBorder
+			    || element.Type == ElementType.DefaultButton) {
 
-				GuiUtil.PlaySound (mpq, Builtins.MouseoverWav);
+				if ((element.Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
+					/* highlight the text */
+					GuiUtil.PlaySound (mpq, Builtins.MouseoverWav);
+				}
 			}
 		}
 
 		public virtual void ActivateElement (UIElement element)
 		{
-		}
-
-		public virtual void KeyboardDown (KeyboardEventArgs args)
-		{
+			element.OnActivate ();
 		}
 
 		public virtual void KeyboardUp (KeyboardEventArgs args)
 		{
-			foreach (UIElement e in UI.Elements) {
-				if ( (args.Key == (Key)e.hotkey)
+		}
+
+		public virtual void KeyboardDown (KeyboardEventArgs args)
+		{
+			foreach (UIElement e in Elements) {
+				if ( (args.Key == e.Hotkey)
+				     ||
+				     (args.Key == Key.Return
+				      && (e.Flags & ElementFlags.DefaultButton) == ElementFlags.DefaultButton)
 				     ||
 				     (args.Key == Key.Escape
-				      && (e.flags & UIElementFlags.CancelButton) == UIElementFlags.CancelButton)) {
+				      && (e.Flags & ElementFlags.CancelButton) == ElementFlags.CancelButton)) {
 					ActivateElement (e);
 					return;
 				}
@@ -180,39 +208,63 @@ namespace Starcraft
 				DoneSwooshing ();
 		}
 
-		protected Surface Background {
-			get { return background; }
-			set { background = value; }
-		}
-
-		protected CursorAnimator Cursor {
-			get { return cursor; }
-			set { cursor = value; }
-		}
-
-		protected Bin UI {
-			get { return ui; }
-			set { ui = value; }
-		}
-
-		protected UIPainter UIPainter {
-			get { return ui_painter; }
-			set { ui_painter = value; }
-		}
-
 		protected void BackgroundPainter (Surface surf, DateTime dt)
 		{
-			surf.Blit (background);
+			surf.Blit (Background);
 		}
 
-		protected abstract void ResourceLoader (object state);
+		protected virtual void ResourceLoader ()
+		{
+			Stream s;
+			Pcx fontpal = null;
+			Pcx effectpal = null;
+
+			Console.WriteLine ("loading font palette");
+			s = (Stream)mpq.GetResource (fontpal_path);
+			if (s != null) {
+				fontpal = new Pcx ();
+				fontpal.ReadFromStream (s, false);
+			}
+			Console.WriteLine ("loading cursor palette");
+			s = (Stream)mpq.GetResource (effectpal_path);
+			if (s != null) {
+				effectpal = new Pcx ();
+				effectpal.ReadFromStream (s, false);
+			}
+			if (effectpal != null) {
+				Console.WriteLine ("loading arrow cursor");
+				Grp arrowgrp = (Grp)mpq.GetResource (arrowgrp_path);
+				if (arrowgrp != null) {
+					Cursor = new CursorAnimator (arrowgrp, effectpal.Palette);
+					Cursor.SetHotSpot (64, 64);
+				}
+			}
+
+			Console.WriteLine ("loading main menu background");
+			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path));
+
+			Console.WriteLine ("loading main menu ui elements");
+			Bin = (Bin)mpq.GetResource (binFile);
+
+			if (Bin != null) {
+				/* convert all the BinElements to UIElements for our subclasses to use */
+				Elements = new List<UIElement> ();
+				foreach (BinElement el in Bin.Elements)
+					Elements.Add (new UIElement (mpq, el, fontpal.RgbData));
+				UIPainter = new UIPainter (Elements);
+			}
+		}
 
 		public void Load ()
 		{
 			if (loaded)
 				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (RaiseReadyEvent)));
 			else
-				ThreadPool.QueueUserWorkItem (ResourceLoader);
+#if MULTI_THREADED
+				ThreadPool.QueueUserWorkItem (delegate (object state) { ResourceLoader (); });
+#else
+				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (ResourceLoader)));
+#endif
 		}
 
 		protected virtual void FinishedLoading ()

@@ -29,7 +29,7 @@ namespace Starcraft {
 			frame_cache = new Dictionary<int,byte[,]> ();
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 

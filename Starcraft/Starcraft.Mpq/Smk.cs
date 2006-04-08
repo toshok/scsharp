@@ -613,7 +613,7 @@ namespace Starcraft {
 			ReadVideoChunk(bs);
 		}
 
-		void MpqResource.ReadFromStream (Stream stream)
+		public void ReadFromStream (Stream stream)
 		{
 			this.stream = stream;
 
@@ -752,7 +752,7 @@ namespace Starcraft {
 	public delegate void SmkFrameReady (byte[] pixelData, byte[] palette, byte[][] audioBuffers);
 	public delegate void SmkAnimationDone ();
 
-	class BitStream
+	public class BitStream
 	{
 		public static bool debug;
 

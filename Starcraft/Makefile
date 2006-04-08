@@ -10,7 +10,7 @@ LIBRARY2_REFS= -r:Starcraft.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:
 all: $(LIBRARY2)
 
 $(LIBRARY2): $(LIBRARY1)
-	$(MCS) $(MCSFLAGS) -unsafe -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_REFS)
+	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_REFS)
 
 $(LIBRARY1):
 	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY1_SOURCES) $(LIBRARY1_REFS)
