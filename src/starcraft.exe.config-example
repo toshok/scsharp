@@ -1,0 +1,11 @@
+<configuration>
+  <appSettings>
+    <!-- this should be the path to a directory containing the
+	 StarDat.mpq and BrooDat.mpq files -->
+    <add key="StarcraftDirectory" value="/windows/Program Files/StarCraft" />
+
+    <!-- this should be the path to a directory containing the
+	 install.exe file from the Brood Wars CD -->
+    <add key="CDDirectory" value="/media/BroodWars" />
+  </appSettings>
+</configuration>
