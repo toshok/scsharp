@@ -40,7 +40,7 @@ namespace Starcraft {
 		public static Fnt GetSmallFont (Mpq mpq)
 		{
 			if (smallFont == null)
-				smallFont = (Fnt)mpq.GetResource ("files\\font\\font12.fnt");
+				smallFont = (Fnt)mpq.GetResource ("files\\font\\font8.fnt");
 			return smallFont;
 		}
 
@@ -68,37 +68,76 @@ namespace Starcraft {
 					run.Append (text[i]);
 
 			string rs = run.ToString ();
-			if (width == -1)
-				width = font.SizeText (rs);
-			if (height == -1)
-				height = font.LineSize;
-
 			byte[] r = Encoding.ASCII.GetBytes (rs);
-			int x = 0, y = 0;
-			Surface surf = new Surface (width, height);
+
+			int x, y;
+			int text_height, text_width;
+
+			if (width == -1 && height == -1) {
+				text_width = font.SizeText (rs);
+				text_height = font.LineSize;
+			}
+			else {
+				Console.WriteLine ("composing text in a rectangle of max dimensions {0}x{1}", width, height);
+
+				/* measure the text first, wrapping at width */
+				text_width = text_height = 0;
+				x = y = 0;
+
+				for (i = 0; i < r.Length; i ++) {
+					int glyph_width;
+					Glyph g = null;
+
+					if (r[i] == 32) /* space */
+						glyph_width = font.SpaceSize;
+					else
+						glyph_width = font[r[i]-1].Width;
+
+					if (x + glyph_width > width) {
+						if (x > text_width)
+							text_width = x;
+						x = 0;
+						text_height += font.LineSize;
+					}
+					
+					x += glyph_width;
+				}
+				if (x > text_width)
+					text_width = x;
+				text_height += font.LineSize;
+			}
+			Console.WriteLine ("text = {0}x{1}", text_width, text_height);
+
+			Surface surf = new Surface (text_width, text_height);
 			surf.TransparentColor = Color.Black;
+
+			/* the draw it */
+			x = y = 0;
 			for (i = 0; i < r.Length; i ++) {
 				int glyph_width;
+				Glyph g = null;
 
-				if (r[i] == 32) /* space */
-					glyph_width = font.LineSize;
-				else
-					glyph_width = font[r[i] - 1].Width;
+				if (r[i] == 32) {
+					glyph_width = font.SpaceSize;
+				}
+				else {
+					g = font[r[i]-1];
+					glyph_width = g.Width;
+				}
+
+				if (r[i] != 32) {
+					Surface gs = RenderGlyph (font, g, palette);
+					surf.Blit (gs, new Point (x, y + g.YOffset));
+				}
 
 				if (x + glyph_width > width) {
 					x = 0;
 					y += font.LineSize;
 				}
 					
-				if (r[i] != 32) {
-					Glyph g = font[r[i] - 1];
-					Surface gs = RenderGlyph (font, g, palette);
-					surf.Blit (gs, new Point (x, y));
-				}
-
 				x += glyph_width;
 			}
-						    
+
 			return surf;
 #if false
 			StringBuilder run;

@@ -85,6 +85,22 @@ namespace Starcraft {
 			}
 		}
 
+		public void Paint (Surface surf, DateTime now)
+		{
+			if (Surface == null)
+				return;
+
+			int x, y;
+			x = X1;
+			y = Y1;
+
+			if (Type == ElementType.LabelRightAlign)
+				x += Width - surface.Width;
+			else if (Type == ElementType.LabelCenterAlign)
+				x += (Width - surface.Width) / 2;
+
+			surf.Blit (surface, new Point (x, y));
+		}
 		
 	}
 

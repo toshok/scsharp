@@ -65,8 +65,8 @@ namespace Starcraft
 					}
 				}
 			}
-			catch {
-				throw new Exception ("Could not locate broodat.mpq and/or stardat.mpq.  Please update your StarcraftDirectory setting in the .config file");
+			catch (Exception e) {
+				throw new Exception ("Could not locate broodat.mpq and/or stardat.mpq.  Please update your StarcraftDirectory setting in the .config file", e);
 			}
 
 			try {

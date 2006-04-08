@@ -14,15 +14,6 @@ namespace Starcraft {
 			this.height = height;
 			this.xoffset = xoffset;
 			this.yoffset = yoffset;
-
-#if false
-			Console.WriteLine ("======");
-			Console.WriteLine (" + width = {0}", width);
-			Console.WriteLine (" + height = {0}", height);
-			Console.WriteLine (" + xoffset = {0}", xoffset);
-			Console.WriteLine (" + yoffset = {0}", yoffset);
-			Console.WriteLine ("======");
-#endif
 		}
 
 		int width;
@@ -85,8 +76,6 @@ namespace Starcraft {
 			maxWidth = Util.ReadByte (stream);
 			maxHeight = Util.ReadByte (stream);
 			uint unknown = Util.ReadDWord (stream);
-
-			Console.WriteLine ("font runs from {0} to {1} ({2} glyphs)", lowIndex, highIndex, highIndex - lowIndex);
 		}
 
 		Dictionary<uint,uint> offsets;
@@ -100,8 +89,6 @@ namespace Starcraft {
 
 		Glyph GetGlyph (int c)
 		{
-			//			Console.WriteLine ("Getting Glyph {0}", c);
-
 			if (glyphs.ContainsKey (c))
 				return glyphs[c];
 
@@ -112,7 +99,7 @@ namespace Starcraft {
 			byte letterXOffset = Util.ReadByte (stream);
 			byte letterYOffset = Util.ReadByte (stream);
 
-			byte[,] bitmap = new byte[letterHeight + letterYOffset, letterWidth];
+			byte[,] bitmap = new byte[letterHeight, letterWidth];
 
 			int x, y;
 			x = letterWidth - 1;
@@ -133,7 +120,7 @@ namespace Starcraft {
 					}
 				}
 
-				bitmap[y+letterYOffset,x] = (byte)(cmap_entry + 21); // 14 = magic number
+				bitmap[y,x] = (byte)(cmap_entry + 4); // 14 = magic number
 				x--;
 				if (x < 0) {
 					x = letterWidth - 1;
@@ -167,8 +154,12 @@ namespace Starcraft {
 			int w = 0;
 
 			foreach (byte b in Encoding.ASCII.GetBytes (s))
-				w += this[b].Width;
+				w += this[b-1].Width;
 			return w;
+		}
+
+		public int SpaceSize {
+			get { return this[109-1].Width; /* 109 = ascii for 'm' */ }
 		}
 
 		public int LineSize {

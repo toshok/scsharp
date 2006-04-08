@@ -22,22 +22,7 @@ namespace Starcraft {
 		public void Paint (Surface surf, DateTime now)
 		{
 			foreach (UIElement e in elements) {
-				Surface elementSurface = e.Surface;
-
-				if (elementSurface == null)
-					continue;
-
-				int x, y;
-				x = e.X1;
-				y = e.Y1;
-
-				if (e.Type == ElementType.LabelRightAlign)
-					x += e.Width - elementSurface.Width;
-				else if (e.Type == ElementType.LabelCenterAlign)
-					x += (e.Width - elementSurface.Width) / 2;
-
-				surf.Blit (elementSurface, new Point (x, y));
-				
+				e.Paint (surf, now);
 #if SHOW_ELEMENT_BORDERS
 				surf.DrawBox (new Rectangle (new Point (x,y), new Size (e.Width - 1, e.Height - 1)), Color.Green);
 #endif

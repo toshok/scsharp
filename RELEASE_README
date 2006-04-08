@@ -1,0 +1,23 @@
+Things you need to do to make this work:
+
+1) You need mono version 1.1.14 or newer.
+
+2) Make your "Program Files\Starcraft" directory available on your
+   linux box.  Either copy it or mount your windows volume.
+
+3) Do the same with the "install.exe" file from the Broodwars CD.
+   This release requires that file be present.  It can live on the CD,
+   or you can copy it to the local filesystem.
+
+4) Edit the starcraft.exe.config file and point it at the directories
+   from 1) and 2).
+
+5) Make sure you have the following SDL packages installed (these
+   versions should work, as well as newer ones.):
+
+	SDL-1.2.9        (http://www.libsdl.org/download-1.2.php)
+	SDL_mixer-1.2.6  (http://www.libsdl.org/projects/SDL_mixer/release/)
+	SDL_image-1.2.4  (http://www.libsdl.org/projects/SDL_image/release/)
+
+that's it.  after those steps, running "mono starcraft.exe" should do
+it.
