@@ -7,13 +7,15 @@ LIBRARY1_REFS=
 LIBRARY2=Starcraft.Gui.dll
 LIBRARY2_REFS= -r:Starcraft.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll
 
+LIBRARY2_RES=/resource:Starcraft.Gui/credits.txt,credits.txt
+
 all: $(LIBRARY2)
 
 $(LIBRARY2): $(LIBRARY1)
-	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_REFS)
+	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_RES) $(LIBRARY2_REFS)
 
 $(LIBRARY1):
-	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY1_SOURCES) $(LIBRARY1_REFS)
+	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY1_SOURCES) $(LIBRARY1_RES) $(LIBRARY1_REFS)
 
 
 clean:

@@ -21,7 +21,6 @@ namespace Starcraft {
 		int xoffset;
 		int yoffset;
 		byte[,] bitmap;
-		object userData;
 
 		public byte[,] Bitmap {
 			get { return bitmap; }
@@ -41,11 +40,6 @@ namespace Starcraft {
 
 		public int YOffset {
 			get { return yoffset; }
-		}
-
-		public object UserData {
-			get { return userData; }
-			set { userData = value; }
 		}
 	}
 
@@ -120,7 +114,7 @@ namespace Starcraft {
 					}
 				}
 
-				bitmap[y,x] = (byte)(cmap_entry + 4); // 14 = magic number
+				bitmap[y,x] = (byte)cmap_entry;
 				x--;
 				if (x < 0) {
 					x = letterWidth - 1;
@@ -153,8 +147,12 @@ namespace Starcraft {
 			/* XXX ascii only */
 			int w = 0;
 
-			foreach (byte b in Encoding.ASCII.GetBytes (s))
-				w += this[b-1].Width;
+			foreach (byte b in Encoding.ASCII.GetBytes (s)) {
+				if (b == 32)
+					w += SpaceSize;
+				else
+					w += this[b-1].Width;
+			}
 			return w;
 		}
 

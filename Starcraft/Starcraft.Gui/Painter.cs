@@ -16,7 +16,8 @@ namespace Starcraft {
 		Health,
 		Hud,
 		UI,
-		UI_dynamic,
+		DialogBackground,
+		DialogUI,
 		Tooltip,
 		Cursor,
 

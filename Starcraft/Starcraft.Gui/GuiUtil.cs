@@ -44,22 +44,29 @@ namespace Starcraft {
 			return smallFont;
 		}
 
-		public static Surface RenderGlyph (Fnt font, Glyph g, byte[] palette)
+		public static Surface RenderGlyph (Fnt font, Glyph g, byte[] palette, int offset)
 		{
-			if (g.UserData == null)
-				g.UserData = CreateSurfaceFromBitmap (g.Bitmap, (ushort)g.Width, (ushort)g.Height,
-								      palette, true);
+			byte[,] bm2 = new byte[g.Height,g.Width];
+			for (int y = 0; y < g.Height; y++) {
+				for (int x = 0; x < g.Width; x++)
+					bm2[y,x] = (byte)(g.Bitmap[y,x] + offset);
+			}
 
-			return (Surface)g.UserData;
+			return CreateSurfaceFromBitmap (bm2, (ushort)g.Width, (ushort)g.Height,
+							palette, true);
 		}
 
 		public static Surface ComposeText (string text, Fnt font, byte[] palette)
 		{
-			return ComposeText (text, font, palette, -1, -1);
+			return ComposeText (text, font, palette, -1, -1, 4);
 		}
 
-		public static Surface ComposeText (string text, Fnt font, byte[] palette, int width, int height)
+		public static Surface ComposeText (string text, Fnt font, byte[] palette, int width, int height,
+						   int offset)
 		{
+			if (font == null)
+				Console.WriteLine ("aiiiieeee");
+
 			int i;
 			/* create a run of text, for now ignoring any control codes in the string */
 			StringBuilder run = new StringBuilder ();
@@ -78,15 +85,12 @@ namespace Starcraft {
 				text_height = font.LineSize;
 			}
 			else {
-				Console.WriteLine ("composing text in a rectangle of max dimensions {0}x{1}", width, height);
-
 				/* measure the text first, wrapping at width */
 				text_width = text_height = 0;
 				x = y = 0;
 
 				for (i = 0; i < r.Length; i ++) {
 					int glyph_width;
-					Glyph g = null;
 
 					if (r[i] == 32) /* space */
 						glyph_width = font.SpaceSize;
@@ -106,7 +110,6 @@ namespace Starcraft {
 					text_width = x;
 				text_height += font.LineSize;
 			}
-			Console.WriteLine ("text = {0}x{1}", text_width, text_height);
 
 			Surface surf = new Surface (text_width, text_height);
 			surf.TransparentColor = Color.Black;
@@ -123,14 +126,12 @@ namespace Starcraft {
 				else {
 					g = font[r[i]-1];
 					glyph_width = g.Width;
-				}
 
-				if (r[i] != 32) {
-					Surface gs = RenderGlyph (font, g, palette);
+					Surface gs = RenderGlyph (font, g, palette, offset);
 					surf.Blit (gs, new Point (x, y + g.YOffset));
 				}
 
-				if (x + glyph_width > width) {
+				if (x + glyph_width > text_width) {
 					x = 0;
 					y += font.LineSize;
 				}

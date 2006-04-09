@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Collections.Generic;
@@ -24,16 +25,21 @@ namespace Starcraft
 
 		protected List<UIElement> Elements;
 
+		Painter painter;
+		UIDialog dialog; /* the currently popped up dialog */
+
 		protected UIScreen (Mpq mpq, string prefix, string binFile)
 		{
 			this.mpq = mpq;
 			this.prefix = prefix; 
 			this.binFile = binFile;
 
-			background_path = prefix + "\\Backgnd.pcx";
-			fontpal_path = prefix + "\\tFont.pcx";
-			effectpal_path = prefix + "\\tEffect.pcx";
-			arrowgrp_path = prefix + "\\arrow.grp";
+			if (prefix != null) {
+				background_path = prefix + "\\Backgnd.pcx";
+				fontpal_path = prefix + "\\tFont.pcx";
+				effectpal_path = prefix + "\\tEffect.pcx";
+				arrowgrp_path = prefix + "\\arrow.grp";
+			}
 		}
 
 		protected UIScreen (Mpq mpq)
@@ -67,6 +73,8 @@ namespace Starcraft
 
 		public virtual void AddToPainter (Painter painter)
 		{
+			this.painter = painter;
+
 			if (Background != null)
 				painter.Add (Layer.Background, BackgroundPainter);
 
@@ -85,6 +93,8 @@ namespace Starcraft
 				painter.Remove (Layer.UI, UIPainter.Paint);
 			if (Cursor != null)
 				Game.Instance.Cursor = null;
+
+			this.painter = null;
 		}
 
 		UIElement XYToElement (int x, int y, bool onlyUI)
@@ -108,6 +118,27 @@ namespace Starcraft
 		}
 
 		UIElement mouseDownElement;
+		UIElement mouseOverElement;
+		public virtual void MouseOverElement (UIElement element)
+		{
+			if (element.Type == ElementType.Button
+			    || element.Type == ElementType.ButtonWithoutBorder
+			    || element.Type == ElementType.DefaultButton) {
+
+				if ((element.Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
+					/* highlight the text */
+					GuiUtil.PlaySound (mpq, Builtins.MouseoverWav);
+				}
+			}
+		}
+
+		public virtual void ActivateElement (UIElement element)
+		{
+			Console.WriteLine ("activating element {0}", Elements.IndexOf (element));
+			element.OnActivate ();
+		}
+
+		// SDL Event handling
 		public virtual void MouseButtonDown (MouseButtonEventArgs args)
 		{
 			if (args.Button != MouseButton.PrimaryButton)
@@ -115,6 +146,14 @@ namespace Starcraft
 
 			mouseDownElement = XYToElement (args.X, args.Y, true);
 			Console.WriteLine ("mouseDownElement = {0}", mouseDownElement);
+		}
+
+		public void HandleMouseButtonDown (MouseButtonEventArgs args)
+		{
+			if (dialog != null)
+				dialog.HandleMouseButtonDown (args);
+			else
+				MouseButtonDown (args);
 		}
 
 		public virtual void MouseButtonUp (MouseButtonEventArgs args)
@@ -137,7 +176,14 @@ namespace Starcraft
 
 		}
 
-		UIElement mouseOverElement;
+		public void HandleMouseButtonUp (MouseButtonEventArgs args)
+		{
+			if (dialog != null)
+				dialog.HandleMouseButtonUp (args);
+			else
+				MouseButtonUp (args);
+		}
+
 		public virtual void PointerMotion (MouseMotionEventArgs args)
 		{
 			UIElement newMouseOverElement = XYToElement (args.X, args.Y, true);
@@ -149,26 +195,24 @@ namespace Starcraft
 			mouseOverElement = newMouseOverElement;
 		}
 
-		public virtual void MouseOverElement (UIElement element)
+		public void HandlePointerMotion (MouseMotionEventArgs args)
 		{
-			if (element.Type == ElementType.Button
-			    || element.Type == ElementType.ButtonWithoutBorder
-			    || element.Type == ElementType.DefaultButton) {
-
-				if ((element.Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
-					/* highlight the text */
-					GuiUtil.PlaySound (mpq, Builtins.MouseoverWav);
-				}
-			}
-		}
-
-		public virtual void ActivateElement (UIElement element)
-		{
-			element.OnActivate ();
+			if (dialog != null)
+				dialog.HandlePointerMotion (args);
+			else
+				PointerMotion (args);
 		}
 
 		public virtual void KeyboardUp (KeyboardEventArgs args)
 		{
+		}
+
+		public void HandleKeyboardUp (KeyboardEventArgs args)
+		{
+			if (dialog != null)
+				dialog.HandleKeyboardUp (args);
+			else
+				KeyboardUp (args);
 		}
 
 		public virtual void KeyboardDown (KeyboardEventArgs args)
@@ -185,6 +229,14 @@ namespace Starcraft
 					return;
 				}
 			}
+		}
+
+		public void HandleKeyboardDown (KeyboardEventArgs args)
+		{
+			if (dialog != null)
+				dialog.HandleKeyboardDown (args);
+			else
+				KeyboardDown (args);
 		}
 
 		protected virtual void ScreenDisplayed ()
@@ -210,7 +262,10 @@ namespace Starcraft
 
 		protected void BackgroundPainter (Surface surf, DateTime dt)
 		{
-			surf.Blit (Background);
+			surf.Blit (Background,
+				   new Point ((surf.Width - Background.Width) / 2,
+					      (surf.Height - Background.Height) / 2));
+
 		}
 
 		protected virtual void ResourceLoader ()
@@ -219,39 +274,47 @@ namespace Starcraft
 			Pcx fontpal = null;
 			Pcx effectpal = null;
 
-			Console.WriteLine ("loading font palette");
-			s = (Stream)mpq.GetResource (fontpal_path);
-			if (s != null) {
-				fontpal = new Pcx ();
-				fontpal.ReadFromStream (s, false);
+			if (fontpal_path != null) {
+				Console.WriteLine ("loading font palette");
+				s = (Stream)mpq.GetResource (fontpal_path);
+				if (s != null) {
+					fontpal = new Pcx ();
+					fontpal.ReadFromStream (s, false);
+				}
 			}
-			Console.WriteLine ("loading cursor palette");
-			s = (Stream)mpq.GetResource (effectpal_path);
-			if (s != null) {
-				effectpal = new Pcx ();
-				effectpal.ReadFromStream (s, false);
-			}
-			if (effectpal != null) {
-				Console.WriteLine ("loading arrow cursor");
-				Grp arrowgrp = (Grp)mpq.GetResource (arrowgrp_path);
-				if (arrowgrp != null) {
-					Cursor = new CursorAnimator (arrowgrp, effectpal.Palette);
-					Cursor.SetHotSpot (64, 64);
+			if (effectpal_path != null) {
+				Console.WriteLine ("loading cursor palette");
+				s = (Stream)mpq.GetResource (effectpal_path);
+				if (s != null) {
+					effectpal = new Pcx ();
+					effectpal.ReadFromStream (s, false);
+				}
+				if (effectpal != null && arrowgrp_path != null) {
+					Console.WriteLine ("loading arrow cursor");
+					Grp arrowgrp = (Grp)mpq.GetResource (arrowgrp_path);
+					if (arrowgrp != null) {
+						Cursor = new CursorAnimator (arrowgrp, effectpal.Palette);
+						Cursor.SetHotSpot (64, 64);
+					}
 				}
 			}
 
-			Console.WriteLine ("loading main menu background");
-			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path));
+			if (background_path != null) {
+				Console.WriteLine ("loading background");
+				Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path));
+			}
 
-			Console.WriteLine ("loading main menu ui elements");
-			Bin = (Bin)mpq.GetResource (binFile);
+			if (binFile != null) {
+				Console.WriteLine ("loading ui elements");
+				Bin = (Bin)mpq.GetResource (binFile);
 
-			if (Bin != null) {
-				/* convert all the BinElements to UIElements for our subclasses to use */
-				Elements = new List<UIElement> ();
-				foreach (BinElement el in Bin.Elements)
-					Elements.Add (new UIElement (mpq, el, fontpal.RgbData));
-				UIPainter = new UIPainter (Elements);
+				if (Bin != null) {
+					/* convert all the BinElements to UIElements for our subclasses to use */
+					Elements = new List<UIElement> ();
+					foreach (BinElement el in Bin.Elements)
+						Elements.Add (new UIElement (mpq, el, fontpal.RgbData));
+					UIPainter = new UIPainter (Elements);
+				}
 			}
 		}
 
@@ -271,6 +334,27 @@ namespace Starcraft
 		{
 			loaded = true;
 			RaiseReadyEvent ();
+		}
+
+		protected void ShowDialog (UIDialog dialog)
+		{
+			Console.WriteLine ("showing {0}", dialog);
+
+			if (this.dialog != null)
+				throw new Exception ("only one active dialog is allowed");
+			this.dialog = dialog;
+
+			dialog.Load ();
+			dialog.Ready += delegate () { dialog.AddToPainter (painter); };
+		}
+
+		protected void DismissDialog ()
+		{
+			if (dialog == null)
+				return;
+
+			dialog.RemoveFromPainter (painter);
+			dialog = null;
 		}
 	}
 

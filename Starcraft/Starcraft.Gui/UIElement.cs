@@ -15,17 +15,25 @@ namespace Starcraft {
 		Surface surface;
 		Mpq mpq;
 		byte[] palette;
+		bool sensitive;
 
 		public UIElement (Mpq mpq, BinElement el, byte[] palette)
 		{
 			this.mpq = mpq;
 			this.el = el;
 			this.palette = palette;
+			this.sensitive = true;
 		}
 
 		public string Text {
 			get { return el.text; }
 			set { el.text = value;
+			      surface = null; }
+		}
+
+		public bool Sensitive {
+			get { return sensitive; }
+			set { sensitive = value;
 			      surface = null; }
 		}
 
@@ -41,8 +49,14 @@ namespace Starcraft {
 		public ElementFlags Flags { get { return el.flags; } }
 		public ElementType Type { get { return el.type; } }
 
-		public ushort X1 { get { return el.x1; } }
-		public ushort Y1 { get { return el.y1; } }
+		public ushort X1 {
+			get { return el.x1; }
+			set { el.x1 = value; }
+		}
+		public ushort Y1 {
+			get { return el.y1; }
+			set { el.y1 = value; }
+		}
 		public ushort Width { get { return el.width; } }
 		public ushort Height { get { return el.height; } }
 
@@ -70,7 +84,7 @@ namespace Starcraft {
 			case ElementType.LabelLeftAlign:
 			case ElementType.LabelCenterAlign:
 			case ElementType.LabelRightAlign:
-				Fnt fnt = null;
+				Fnt fnt = GuiUtil.GetLargeFont (mpq); /* XXX */
 				if ((Flags & ElementFlags.FontSmall) == ElementFlags.FontSmall)
 					fnt = GuiUtil.GetSmallFont (mpq);
 				else if ((Flags & ElementFlags.FontMedium) == ElementFlags.FontMedium)
@@ -78,7 +92,8 @@ namespace Starcraft {
 				else if ((Flags & ElementFlags.FontLarge) == ElementFlags.FontLarge)
 					fnt = GuiUtil.GetLargeFont (mpq);
 
-				surface = GuiUtil.ComposeText (Text, fnt, palette, Width, Height);
+				surface = GuiUtil.ComposeText (Text, fnt, palette, Width, Height,
+							       sensitive ? 4 : 24);
 				break;
 			default:
 				break;

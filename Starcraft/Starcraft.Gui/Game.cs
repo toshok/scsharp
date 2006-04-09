@@ -172,7 +172,7 @@ namespace Starcraft
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 
 			if (currentScreen != null)
-				currentScreen.PointerMotion (args);
+				currentScreen.HandlePointerMotion (args);
 		}
 
 		void MouseButtonDown (object o, MouseButtonEventArgs args)
@@ -184,7 +184,7 @@ namespace Starcraft
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 
 			if (currentScreen != null)
-				currentScreen.MouseButtonDown (args);
+				currentScreen.HandleMouseButtonDown (args);
 		}
 
 		void MouseButtonUp (object o, MouseButtonEventArgs args)
@@ -196,19 +196,19 @@ namespace Starcraft
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 
 			if (currentScreen != null)
-				currentScreen.MouseButtonUp (args);
+				currentScreen.HandleMouseButtonUp (args);
 		}
 
 		void KeyboardUp (object o, KeyboardEventArgs args)
 		{
 			if (currentScreen != null)
-				currentScreen.KeyboardUp (args);
+				currentScreen.HandleKeyboardUp (args);
 		}
 
 		void KeyboardDown (object o, KeyboardEventArgs args)
 		{
 			if (currentScreen != null)
-				currentScreen.KeyboardDown (args);
+				currentScreen.HandleKeyboardDown (args);
 		}
 
 		public Painter Painter {

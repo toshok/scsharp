@@ -3,6 +3,7 @@ Starcraft.Gui/ConnectionScreen.cs
 Starcraft.Gui/CreditsScreen.cs
 Starcraft.Gui/CursorAnimator.cs
 Starcraft.Gui/Game.cs
+Starcraft.Gui/GameModeDialog.cs
 Starcraft.Gui/GameScreen.cs
 Starcraft.Gui/GlobalResources.cs
 Starcraft.Gui/GuiUtil.cs
@@ -16,6 +17,7 @@ Starcraft.Gui/Sprite.cs
 Starcraft.Gui/SpriteManager.cs
 Starcraft.Gui/SwooshPainter.cs
 Starcraft.Gui/TitleScreen.cs
+Starcraft.Gui/UIDialog.cs
 Starcraft.Gui/UIElement.cs
 Starcraft.Gui/UIPainter.cs
 Starcraft.Gui/UIScreen.cs

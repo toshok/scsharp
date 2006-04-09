@@ -22,11 +22,10 @@ namespace Starcraft
 		const int title_startidx = 95;
 		const int description_startidx = 99;
 
+		int selectedConnectionType;
+
 		string[] titles;
 		string[] descriptions;
-
-		Surface[] titleSurfaces;
-		Surface[] helpSurfaces;
 
 		protected override void ResourceLoader ()
 		{
@@ -40,8 +39,7 @@ namespace Starcraft
 				descriptions[i] = GlobalResources.Instance.GluAllTbl[ description_startidx + i ];
 			}
 
-			Elements[TITLE_ELEMENT_INDEX].Text = titles[1];
-			Elements[DESCRIPTION_ELEMENT_INDEX].Text = descriptions[1];
+			SelectConnectionType (0);
 
 			Elements[OK_ELEMENT_INDEX].Activate +=
 				delegate () {
@@ -57,13 +55,22 @@ namespace Starcraft
 			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
+		void SelectConnectionType (int t)
+		{
+			selectedConnectionType = t;
+			Elements[TITLE_ELEMENT_INDEX].Text = titles[selectedConnectionType];
+			Elements[DESCRIPTION_ELEMENT_INDEX].Text = descriptions[selectedConnectionType];
+		}
+
 		public override void KeyboardDown (KeyboardEventArgs args)
 		{
 			if (args.Key == Key.DownArrow) {
-				Console.WriteLine ("select next connection type");
+				if (selectedConnectionType < 3)
+					SelectConnectionType (selectedConnectionType + 1);
 			}
 			else if (args.Key == Key.UpArrow) {
-				Console.WriteLine ("select previous connection type");
+				if (selectedConnectionType > 0)
+					SelectConnectionType (selectedConnectionType - 1);
 			}
 			else
 				base.KeyboardDown (args);

@@ -27,14 +27,28 @@ namespace Starcraft
 
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
-					GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
-					Game.Instance.SwitchToScreen (UIScreenType.Login);
+					GameModeDialog d = new GameModeDialog (mpq);
+					d.Canceled += delegate () { DismissDialog (); };
+					d.Activated += delegate (bool expansion) {
+						Console.WriteLine ("dude, you're getting a {0}", expansion ? "expansion" : "original");
+						DismissDialog ();
+						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+						Game.Instance.SwitchToScreen (UIScreenType.Login);
+					};
+					ShowDialog (d);
 				};
 
 			Elements[MULTIPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
-					GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
-					Game.Instance.SwitchToScreen (UIScreenType.Connection);
+					GameModeDialog d = new GameModeDialog (mpq);
+					d.Canceled += delegate () { DismissDialog (); };
+					d.Activated += delegate (bool expansion) {
+						Console.WriteLine ("dude, you're getting a {0}", expansion ? "expansion" : "original");
+						DismissDialog ();
+						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+						Game.Instance.SwitchToScreen (UIScreenType.Connection);
+					};
+					ShowDialog (d);
 				};
 
 			Elements[CREDITS_ELEMENT_INDEX].Activate += 

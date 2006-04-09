@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 
 using SdlDotNet;
@@ -29,13 +30,10 @@ namespace Starcraft
 		{
 			PageLocation location;
 			List<string> lines;
-			Surface surface;
+			List<Surface> lineSurfaces;
 			Surface newBackground;
 			Fnt fnt;
 			byte[] pal;
-
-			int width;
-			int height;
 
 			bool delay; /* should we stop processing for some amount of time after this page */
 
@@ -59,29 +57,15 @@ namespace Starcraft
 				lines.Add (line);
 			}
 
-			int MeasureWidth ()
-			{
-
-				int width = 0;
-
-				foreach (string l in lines) {
-					int s = fnt.SizeText (l);
-					if (width < s)
-						width = s;
-				}
-
-				return width;
-			}
-
-			int MeasureHeight ()
-			{
-				return fnt.LineSize * lines.Count;
-			}
-
 			public void Layout ()
 			{
-				width = MeasureWidth ();
-				height = MeasureHeight ();
+				lineSurfaces = new List<Surface> ();
+				foreach (string l in lines) {
+					if (l.Trim() == "")
+						lineSurfaces.Add (null);
+					else
+						lineSurfaces.Add (GuiUtil.ComposeText (l, fnt, pal));
+				}
 			}
 
 			public Surface Background {
@@ -94,46 +78,46 @@ namespace Starcraft
 
 			public void Paint (Surface surf)
 			{
-				int x, y;
+				int y;
 
 				switch (location) {
 				case PageLocation.Top:
 					y = 10;
-					foreach (string l in lines) {
-						Surface s = GuiUtil.ComposeText (l, fnt, pal);
-						surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
+					foreach (Surface s in lineSurfaces) {
+						if (s != null)
+							surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Bottom:
 					y = surf.Height - 10 - fnt.LineSize * lines.Count;
-					foreach (string l in lines) {
-						Surface s = GuiUtil.ComposeText (l, fnt, pal);
-						surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
+					foreach (Surface s in lineSurfaces) {
+						if (s != null)
+							surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Left:
 					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
-					foreach (string l in lines) {
-						Surface s = GuiUtil.ComposeText (l, fnt, pal);
-						surf.Blit (s, new Point (60, y));
+					foreach (Surface s in lineSurfaces) {
+						if (s != null)
+							surf.Blit (s, new Point (60, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Right:
 					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
-					foreach (string l in lines) {
-						Surface s = GuiUtil.ComposeText (l, fnt, pal);
-						surf.Blit (s, new Point (surf.Width - s.Width - 60, y));
+					foreach (Surface s in lineSurfaces) {
+						if (s != null)
+							surf.Blit (s, new Point (surf.Width - s.Width - 60, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Center:
 					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
-					foreach (string l in lines) {
-						Surface s = GuiUtil.ComposeText (l, fnt, pal);
-						surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
+					foreach (Surface s in lineSurfaces) {
+						if (s != null)
+							surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
 						y += fnt.LineSize;
 					}
 					break;
@@ -159,6 +143,9 @@ namespace Starcraft
 
 				Console.WriteLine ("loading font");
 				fnt = GuiUtil.GetLargeFont (mpq);
+
+				sr = new StreamReader (Assembly.GetExecutingAssembly().GetManifestResourceStream ("credits.txt"));
+				Parse (sr);
 
 				if (Game.Instance.IsBroodWar) {
 					/* broodwar credits */

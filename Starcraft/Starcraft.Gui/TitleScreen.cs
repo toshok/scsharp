@@ -19,6 +19,13 @@ namespace Starcraft
 			base.ResourceLoader ();
 			Cursor = null; /* clear out the cursor */
 
+			Elements[1].Text = "Copyright © 2006 Chris Toshok.  All rights reserved.";
+			Elements[2].Text = "Game assets Copyright © 1998 Blizzard Entertainment. All rights reserved.";
+			Elements[3].Text = "";
+
+			for (int i = 0; i < Elements.Count; i ++)
+				Console.WriteLine ("{0}.Text = {1}", i, Elements[i].Text);
+
 			// notify we're ready to roll
 			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}

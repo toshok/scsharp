@@ -45,8 +45,6 @@ namespace Starcraft {
 			/*videoHeight =*/ Util.ReadWord (stream);
 			stream.Position += 54;
 
-			Console.WriteLine ("image = {0} bpp, {1} planes", bpp, numplanes);
-
 			if (bpp != 8 || numplanes != 1)
 				throw new Exception ("unsupported .pcx image type");
 
@@ -91,7 +89,7 @@ namespace Starcraft {
 					data[idx + 1] = palette [value * 3 + 2];
 					if (with_alpha) {
 						if (value == 254)
-							data[idx + 0] = 0x90;
+							data[idx + 0] = 0xe0;
 						else if (value == 0)
 							data[idx + 0] = 0x00;
 						else

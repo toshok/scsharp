@@ -17,6 +17,8 @@ namespace Starcraft {
 		public static string Palmm_ArrowGrp = "glue\\palmm\\arrow.grp";
 		public static string rez_GluMainBin = "rez\\gluMain.bin";
 
+		public static string rez_GluGameModeBin = "rez\\gluGameMode.bin";
+
 		/* Login screen */
 		public static string PalNl_BackgroundPcx = "glue\\palnl\\Backgnd.pcx";
 		public static string PalNl_ArrowGrp = "glue\\palnl\\arrow.grp";
