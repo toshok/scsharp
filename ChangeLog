@@ -1,5 +1,9 @@
 2006-04-10  Chris Toshok  <toshok@ximian.com>
 
+	* Makefile (VERSION): bump to 0.0000002.
+
+2006-04-10  Chris Toshok  <toshok@ximian.com>
+
 	* Starcraft/Starcraft.Gui/OkCancelDialog.cs: use 254,0 for
 	translucent,transparent.
 

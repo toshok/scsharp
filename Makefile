@@ -1,4 +1,4 @@
-VERSION=0.0000001
+VERSION=0.0000002
 RELEASEDIR=scsharp-linux-$(VERSION)
 
 SUBDIRS = Starcraft src
