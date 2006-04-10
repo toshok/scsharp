@@ -23,7 +23,10 @@ namespace Starcraft {
 		public static string PalNl_BackgroundPcx = "glue\\palnl\\Backgnd.pcx";
 		public static string PalNl_ArrowGrp = "glue\\palnl\\arrow.grp";
 		public static string rez_GluLoginBin = "rez\\gluLogin.bin";
-		
+		public static string rez_GluPEditBin = "rez\\gluPEdit.bin";
+		public static string rez_GluPOkBin = "rez\\gluPOk.bin";
+		public static string rez_GluPOkCancelBin = "rez\\gluPOkCancel.bin";
+
 		/* Connection screen */
 		public static string rez_GluConnBin = "rez\\gluConn.bin";
 

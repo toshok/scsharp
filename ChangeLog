@@ -1,0 +1,82 @@
+2006-04-10  Chris Toshok  <toshok@ximian.com>
+
+	* Starcraft/Starcraft.Gui/ConnectionScreen.cs: populate the
+	ListBox element with our choices, and handle the cursor moving
+	properly.  Ifdef this for the time being to only display
+	Battle.net.
+
+	* Starcraft/Starcraft.Gui/GameModeDialog.cs: insert the title
+	string in the dialog, and change Canceled/Activated to
+	Cancel/Activate.
+
+	* Starcraft/Starcraft.Gui/UIDialog.cs: keep track of the parent
+	UIScreen that popped us up.
+	(ShowDialog): overload this so we can remove ourselves from the
+	painter before showing the new dialog.  In a better world we'd
+	just show the new popup at a higher layer.
+	(DismissDialog): overload to add ourselves back to the painter.
+
+	* Starcraft/Starcraft.Gui/GuiUtil.cs: add another ComposeText
+	overload.
+
+	* Starcraft/Starcraft.Gui/MainMenu.cs: pop up Ok dialogs with
+	messages about missing functionality (no cinematics and no
+	campaign editor.)
+
+	* Starcraft/Starcraft.Gui/LoginScreen.cs (ResourceLoader): for the
+	ok button pop up a dialog saying what we should do in this case.
+	Also add functionality for the new button (pops up an entry
+	dialog) and delete button (pops up an ok/cancel dialog).
+	(KeyboardDown): forward on UpArrow/DownArrow to the list box
+	element.
+	(NameAlreadyExists): pop up an OkDialog.
+
+	* Starcraft/Starcraft.Gui/UIPainter.cs: clean up warnings, and
+	make it compile with -define:SHOW_ELEMENT_BORDERS.
+
+	* Starcraft/Starcraft.Gui/CreditsScreen.cs: clean up some
+	warnings.
+
+	* Starcraft/Starcraft.Gui/Builtins.cs: add some more strings for
+	the login screen dialogs.
+
+	* Starcraft/Starcraft.Gui/UIElement.cs (Mpq): add getter.
+	(Text): use ClearSurface.
+	(Sensitive): same.
+	(Palette): new getter/setter.
+	(Font): new getter/setter.
+	(ClearSurface): new protected method.
+	(CreateSurface): provider base class implementation that handles
+	the types we don't provider subclasses for.
+
+	* Starcraft/Starcraft.Gui/UIScreen.cs (HandleKeyboardUp): return
+	immediately for keypresses corresponding to modifier keys.
+	(HandleKeyboardDown): same.
+	(ActivateElement): if the element isn't sensitive, don't activate
+	it.
+	(ResourceLoader): create different UIElement subclasses depending
+	on the BinElement's type.
+
+	* Starcraft/Starcraft.Gui/TextBoxElement.cs: new UIElement,
+	allowing text editing.  No flashing cursor displayed yet.
+
+	* Starcraft/Starcraft.Gui/OkCancelDialog.cs: a question dialog,
+	containing a message and Ok/Cancel buttons.
+
+	* Starcraft/Starcraft.Gui/OkDialog.cs: a simple message dialog,
+	containing a message and Ok button.
+
+	* Starcraft/Starcraft.Gui/EntryDialog.cs: new Dialog containing a
+	title, text entry, and Ok/Cancel buttons.
+
+	* Starcraft/Starcraft.Gui/ImageElement.cs: new UIElement
+	displaying an image.
+
+	* Starcraft/Starcraft.Gui/ListBoxElement.cs: new UIElement,
+	displaying a list. doesn't do scrolling yet.
+
+2006-04-09  Chris Toshok  <toshok@ximian.com>
+
+	* Starcraft/Starcraft.Gui/GameModeDialog.cs (ResourceLoader): add
+	title text.
+

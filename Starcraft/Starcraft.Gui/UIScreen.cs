@@ -25,8 +25,8 @@ namespace Starcraft
 
 		protected List<UIElement> Elements;
 
-		Painter painter;
-		UIDialog dialog; /* the currently popped up dialog */
+		protected Painter painter;
+		protected UIDialog dialog; /* the currently popped up dialog */
 
 		protected UIScreen (Mpq mpq, string prefix, string binFile)
 		{
@@ -134,6 +134,9 @@ namespace Starcraft
 
 		public virtual void ActivateElement (UIElement element)
 		{
+			if (!element.Sensitive)
+				return;
+
 			Console.WriteLine ("activating element {0}", Elements.IndexOf (element));
 			element.OnActivate ();
 		}
@@ -209,6 +212,10 @@ namespace Starcraft
 
 		public void HandleKeyboardUp (KeyboardEventArgs args)
 		{
+			/* just return if the modifier keys are released */
+			if (args.Key >= Key.NumLock && args.Key <= Key.Compose)
+				return;
+
 			if (dialog != null)
 				dialog.HandleKeyboardUp (args);
 			else
@@ -233,6 +240,10 @@ namespace Starcraft
 
 		public void HandleKeyboardDown (KeyboardEventArgs args)
 		{
+			/* just return if the modifier keys are pressed */
+			if (args.Key >= Key.NumLock && args.Key <= Key.Compose)
+				return;
+				
 			if (dialog != null)
 				dialog.HandleKeyboardDown (args);
 			else
@@ -311,8 +322,39 @@ namespace Starcraft
 				if (Bin != null) {
 					/* convert all the BinElements to UIElements for our subclasses to use */
 					Elements = new List<UIElement> ();
-					foreach (BinElement el in Bin.Elements)
-						Elements.Add (new UIElement (mpq, el, fontpal.RgbData));
+					foreach (BinElement el in Bin.Elements) {
+						UIElement ui_el = null;
+						switch (el.type) {
+						case ElementType.Image:
+							ui_el = new ImageElement (mpq, el, fontpal.RgbData);
+							break;
+						case ElementType.TextBox:
+							ui_el = new TextBoxElement (mpq, el, fontpal.RgbData);
+							break;
+						case ElementType.ListBox:
+							ui_el = new ListBoxElement (mpq, el, fontpal.RgbData);
+							break;
+						case ElementType.Button:
+						case ElementType.DefaultButton:
+						case ElementType.LabelLeftAlign:
+						case ElementType.LabelCenterAlign:
+						case ElementType.LabelRightAlign:
+						case ElementType.ButtonWithoutBorder:
+						case ElementType.Slider:
+						case ElementType.ComboBox:
+						case ElementType.DialogBox:
+						case ElementType.OptionButton:
+						case ElementType.CheckBox:
+							ui_el = new UIElement (mpq, el, fontpal.RgbData);
+							break;
+						default:
+							Console.WriteLine ("unhandled case {0}", el.type);
+							ui_el = new UIElement (mpq, el, fontpal.RgbData);
+							break;
+						}
+
+						Elements.Add (ui_el);
+					}
 					UIPainter = new UIPainter (Elements);
 				}
 			}
@@ -336,7 +378,7 @@ namespace Starcraft
 			RaiseReadyEvent ();
 		}
 
-		protected void ShowDialog (UIDialog dialog)
+		public virtual void ShowDialog (UIDialog dialog)
 		{
 			Console.WriteLine ("showing {0}", dialog);
 
@@ -348,7 +390,7 @@ namespace Starcraft
 			dialog.Ready += delegate () { dialog.AddToPainter (painter); };
 		}
 
-		protected void DismissDialog ()
+		public virtual void DismissDialog ()
 		{
 			if (dialog == null)
 				return;

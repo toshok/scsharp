@@ -61,6 +61,11 @@ namespace Starcraft {
 			return ComposeText (text, font, palette, -1, -1, 4);
 		}
 
+		public static Surface ComposeText (string text, Fnt font, byte[] palette, int offset)
+		{
+			return ComposeText (text, font, palette, -1, -1, offset);
+		}
+
 		public static Surface ComposeText (string text, Fnt font, byte[] palette, int width, int height,
 						   int offset)
 		{

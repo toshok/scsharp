@@ -16,6 +16,7 @@ namespace Starcraft {
 		Mpq mpq;
 		byte[] palette;
 		bool sensitive;
+		Fnt fnt;
 
 		public UIElement (Mpq mpq, BinElement el, byte[] palette)
 		{
@@ -25,25 +26,52 @@ namespace Starcraft {
 			this.sensitive = true;
 		}
 
+		public Mpq Mpq {
+			get { return mpq; }
+		}
+
 		public string Text {
 			get { return el.text; }
 			set { el.text = value;
-			      surface = null; }
+			      ClearSurface (); }
 		}
 
 		public bool Sensitive {
 			get { return sensitive; }
 			set { sensitive = value;
-			      surface = null; }
+			      ClearSurface (); }
+		}
+
+		public byte[] Palette {
+			get { return palette; }
+			set { palette = value;
+			      ClearSurface (); }
 		}
 
 		public Surface Surface {
 			get {
 				if (surface == null)
-					CreateSurface ();
+					surface = CreateSurface ();
 
 				return surface;
 			}
+		}
+
+		public Fnt Font {
+			get { 
+				if (fnt == null) {
+					fnt = GuiUtil.GetMediumFont (mpq); /* XXX */
+					if ((Flags & ElementFlags.FontSmall) == ElementFlags.FontSmall)
+						fnt = GuiUtil.GetSmallFont (mpq);
+					else if ((Flags & ElementFlags.FontMedium) == ElementFlags.FontMedium)
+						fnt = GuiUtil.GetMediumFont (mpq);
+					else if ((Flags & ElementFlags.FontLarge) == ElementFlags.FontLarge)
+						fnt = GuiUtil.GetLargeFont (mpq);
+				}
+				return fnt;
+			}
+			set { fnt = value;
+			      ClearSurface (); }
 		}
 
 		public ElementFlags Flags { get { return el.flags; } }
@@ -70,33 +98,24 @@ namespace Starcraft {
 				Activate ();
 		}
 
-		void CreateSurface ()
+		protected void ClearSurface ()
+		{
+			surface = null;
+		}
+
+		protected virtual Surface CreateSurface ()
 		{
 			switch (Type) {
-			case ElementType.Image:
-				surface = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (Text),
-								     (Flags & ElementFlags.ApplyTranslucency) == ElementFlags.ApplyTranslucency);
-				surface.TransparentColor = Color.Black; /* XXX */
-				break;
 			case ElementType.DefaultButton:
 			case ElementType.Button:
 			case ElementType.ButtonWithoutBorder:
 			case ElementType.LabelLeftAlign:
 			case ElementType.LabelCenterAlign:
 			case ElementType.LabelRightAlign:
-				Fnt fnt = GuiUtil.GetLargeFont (mpq); /* XXX */
-				if ((Flags & ElementFlags.FontSmall) == ElementFlags.FontSmall)
-					fnt = GuiUtil.GetSmallFont (mpq);
-				else if ((Flags & ElementFlags.FontMedium) == ElementFlags.FontMedium)
-					fnt = GuiUtil.GetMediumFont (mpq);
-				else if ((Flags & ElementFlags.FontLarge) == ElementFlags.FontLarge)
-					fnt = GuiUtil.GetLargeFont (mpq);
-
-				surface = GuiUtil.ComposeText (Text, fnt, palette, Width, Height,
-							       sensitive ? 4 : 24);
-				break;
+				return GuiUtil.ComposeText (Text, Font, palette, Width, Height,
+							    sensitive ? 4 : 24);
 			default:
-				break;
+				return null;
 			}
 		}
 

@@ -10,12 +10,18 @@ namespace Starcraft
 	/* this should probably subclass from UIElement instead...  look into that */
 	public abstract class UIDialog : UIScreen
 	{
-		protected UIDialog (Mpq mpq, string prefix, string binFile) : base (mpq, prefix, binFile)
+		UIScreen parent;
+
+		protected UIDialog (UIScreen parent, Mpq mpq, string prefix, string binFile)
+			: base (mpq, prefix, binFile)
 		{
+			this.parent = parent;
 		}
 
 		public override void AddToPainter (Painter painter)
 		{
+			this.painter = painter;
+
 			Console.WriteLine ("adding UIDialog to the painter");
 			if (Background != null)
 				painter.Add (Layer.DialogBackground, BackgroundPainter);
@@ -32,6 +38,8 @@ namespace Starcraft
 
 			if (UIPainter != null)
 				painter.Remove (Layer.DialogUI, UIPainter.Paint);
+
+			this.painter = null;
 		}
 
 		protected override void ResourceLoader ()
@@ -47,6 +55,37 @@ namespace Starcraft
 				el.X1 += (ushort)baseX;
 				el.Y1 += (ushort)baseY;
 			}
+		}
+
+		public UIScreen Parent {
+			get { return parent; }
+		}
+
+		Painter rememberedPainter;
+		public override void ShowDialog (UIDialog dialog)
+		{
+			Console.WriteLine ("showing {0}", dialog);
+
+			if (this.dialog != null)
+				throw new Exception ("only one active dialog is allowed");
+			this.dialog = dialog;
+
+			dialog.Load ();
+			dialog.Ready += delegate () { 
+				dialog.AddToPainter (painter);
+				rememberedPainter = painter;
+				RemoveFromPainter (painter);
+			};
+		}
+
+		public override void DismissDialog ()
+		{
+			if (dialog == null)
+				return;
+
+			dialog.RemoveFromPainter (rememberedPainter);
+			dialog = null;
+			AddToPainter (rememberedPainter);
 		}
 	}
 

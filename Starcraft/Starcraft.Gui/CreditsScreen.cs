@@ -198,11 +198,11 @@ namespace Starcraft
 		int millisDelay;
 		int totalElapsed;
 
-		Painter painter;
+		Painter p;
 
 		public override void AddToPainter (Painter painter)
 		{
-			this.painter = painter;
+			p = painter;
 			/* we add a special entry to the background
 			 * painter layer just so we can find out when
 			 * we're first painted */
@@ -222,8 +222,8 @@ namespace Starcraft
 
 		void FirstPainted (Surface surf, DateTime now)
 		{
-			painter.Remove (Layer.Background, FirstPainted);
-			painter = null;
+			p.Remove (Layer.Background, FirstPainted);
+			p = null;
 
 			/* set ourselves up to invalidate at a regular interval*/
                         Events.Tick += FlipPage;
