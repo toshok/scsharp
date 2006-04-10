@@ -27,6 +27,10 @@ namespace Starcraft {
 		public static string rez_GluPOkBin = "rez\\gluPOk.bin";
 		public static string rez_GluPOkCancelBin = "rez\\gluPOkCancel.bin";
 
+		/* Ready room */
+		public static string rez_GluRdyPBin = "rez\\glurdyp.bin";
+		public static string rez_GluRdyTBin = "rez\\glurdyt.bin";
+
 		/* Connection screen */
 		public static string rez_GluConnBin = "rez\\gluConn.bin";
 
