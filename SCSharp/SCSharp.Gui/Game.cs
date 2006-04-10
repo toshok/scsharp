@@ -7,7 +7,7 @@ using System.Drawing;
 
 using System.Text;
 
-namespace Starcraft
+namespace SCSharp
 {
 	public enum UIScreenType {
 		/* not including title */

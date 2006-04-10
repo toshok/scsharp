@@ -4,7 +4,7 @@ using SdlDotNet;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace Starcraft {
+namespace SCSharp {
 	public class CursorAnimator {
 		Grp grp;
 

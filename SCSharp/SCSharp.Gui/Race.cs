@@ -1,4 +1,4 @@
-namespace Starcraft
+namespace SCSharp
 {
 	public enum Race {
 		Protoss,

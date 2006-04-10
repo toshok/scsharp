@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Starcraft {
+namespace SCSharp {
 
 	public static class SpriteManager {
 		static List<Sprite> sprites = new List<Sprite>();

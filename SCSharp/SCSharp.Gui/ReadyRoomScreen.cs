@@ -5,7 +5,7 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
-namespace Starcraft
+namespace SCSharp
 {
 	public class ReadyRoomScreen : UIScreen
 	{

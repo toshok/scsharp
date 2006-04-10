@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Starcraft {
+namespace SCSharp {
 	public class CursorAnimator {
 	}
 }

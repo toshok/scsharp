@@ -5,7 +5,7 @@ using SdlDotNet;
 using SdlDotNet.Sprites;
 using System.Drawing;
 
-namespace Starcraft {
+namespace SCSharp {
 
 	public enum Layer {
 		Background,

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using SdlDotNet;
 
-namespace Starcraft {
+namespace SCSharp {
 
 	public delegate void DoneSwooshingDelegate ();
 

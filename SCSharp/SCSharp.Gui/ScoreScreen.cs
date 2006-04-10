@@ -5,7 +5,7 @@ using System.Threading;
 using Gtk;
 using Gdk;
 
-namespace Starcraft
+namespace SCSharp
 {
 	public class ScoreScreen : UIScreen
 	{

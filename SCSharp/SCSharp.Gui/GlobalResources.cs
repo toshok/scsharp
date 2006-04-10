@@ -4,7 +4,7 @@ using System.Threading;
 
 using SdlDotNet;
 
-namespace Starcraft
+namespace SCSharp
 {
 	public class GlobalResources
 	{

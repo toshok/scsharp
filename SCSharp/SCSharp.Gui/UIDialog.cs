@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 using SdlDotNet;
 
-namespace Starcraft
+namespace SCSharp
 {
 	/* this should probably subclass from UIElement instead...  look into that */
 	public abstract class UIDialog : UIScreen

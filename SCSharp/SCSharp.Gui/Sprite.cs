@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Starcraft {
+namespace SCSharp {
 
 	public class Sprite {
 		int sprite_entry;
