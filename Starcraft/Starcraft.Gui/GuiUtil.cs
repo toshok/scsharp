@@ -272,22 +272,22 @@ namespace Starcraft {
 			}
 		}
 
-		public static Surface SurfaceFromStream (Stream stream, bool applyTranslucency)
+
+		public static Surface SurfaceFromStream (Stream stream, int translucentIndex, int transparentIndex)
 		{
-			if (applyTranslucency) {
-				Pcx pcx = new Pcx();
-				pcx.ReadFromStream (stream, applyTranslucency);
-				return CreateSurfaceFromRGBAData (pcx.RgbaData, pcx.Width, pcx.Height, pcx.Depth, pcx.Stride);
-			}
-			else {
-				byte[] buf = GuiUtil.ReadStream (stream);
-				return new Surface (buf);
-			}
+			Pcx pcx = new Pcx();
+			pcx.ReadFromStream (stream, translucentIndex, transparentIndex);
+			return CreateSurfaceFromRGBAData (pcx.RgbaData, pcx.Width, pcx.Height, pcx.Depth, pcx.Stride);
+		}
+
+		public static Surface SurfaceFromStream (Stream stream, bool applyTrans)
+		{
+			return SurfaceFromStream (stream, applyTrans ? 252 : -1, applyTrans ? 0 : -1);
 		}
 
 		public static Surface SurfaceFromStream (Stream stream)
 		{
-			return GuiUtil.SurfaceFromStream (stream, false);
+			return GuiUtil.SurfaceFromStream (stream, -1, -1);
 		}
 
 		public static Sound SoundFromStream (Stream stream)

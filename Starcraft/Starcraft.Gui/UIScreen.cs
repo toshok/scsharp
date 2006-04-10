@@ -290,7 +290,7 @@ namespace Starcraft
 				s = (Stream)mpq.GetResource (fontpal_path);
 				if (s != null) {
 					fontpal = new Pcx ();
-					fontpal.ReadFromStream (s, false);
+					fontpal.ReadFromStream (s, -1, -1);
 				}
 			}
 			if (effectpal_path != null) {
@@ -298,7 +298,7 @@ namespace Starcraft
 				s = (Stream)mpq.GetResource (effectpal_path);
 				if (s != null) {
 					effectpal = new Pcx ();
-					effectpal.ReadFromStream (s, false);
+					effectpal.ReadFromStream (s, -1, -1);
 				}
 				if (effectpal != null && arrowgrp_path != null) {
 					Console.WriteLine ("loading arrow cursor");
@@ -312,7 +312,8 @@ namespace Starcraft
 
 			if (background_path != null) {
 				Console.WriteLine ("loading background");
-				Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path));
+				Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path),
+									252, 0);
 			}
 
 			if (binFile != null) {

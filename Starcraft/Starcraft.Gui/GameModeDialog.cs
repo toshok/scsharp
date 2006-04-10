@@ -12,7 +12,7 @@ namespace Starcraft
 		public GameModeDialog (UIScreen parent, Mpq mpq)
 			: base (parent, mpq, "glue\\Palmm", Builtins.rez_GluGameModeBin)
 		{
-			background_path = "glue\\Palmm\\retail_ex.pcx";
+			background_path = null;
 		}
 
 		const int ORIGINAL_ELEMENT_INDEX = 1;
@@ -22,6 +22,9 @@ namespace Starcraft
 
 		protected override void ResourceLoader ()
 		{
+			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource ("glue\\Palmm\\retail_ex.pcx"),
+								42, 0);
+
 			base.ResourceLoader ();
 
 			for (int i = 0; i < Elements.Count; i ++) {

@@ -19,9 +19,9 @@ namespace Starcraft {
 
 		bool with_alpha;
 
-		public void ReadFromStream (Stream stream, bool applyTranslucency)
+		public void ReadFromStream (Stream stream, int translucentIndex, int transparentIndex)
 		{
-			with_alpha = applyTranslucency;
+			with_alpha = translucentIndex != -1 || transparentIndex != -1;
 
 			byte magic = Util.ReadByte (stream);
 			if (magic != 0x0A)
@@ -88,9 +88,9 @@ namespace Starcraft {
 					data[idx + 2] = palette [value * 3 + 1];
 					data[idx + 1] = palette [value * 3 + 2];
 					if (with_alpha) {
-						if (value == 254)
-							data[idx + 0] = 0xe0;
-						else if (value == 0)
+						if (value == translucentIndex)
+							data[idx + 0] = 0xd0;
+						else if (value == transparentIndex)
 							data[idx + 0] = 0x00;
 						else
 							data[idx + 0] = 0xff;

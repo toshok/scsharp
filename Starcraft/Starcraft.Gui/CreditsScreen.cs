@@ -137,7 +137,7 @@ namespace Starcraft
 				Console.WriteLine ("loading font palette");
 				Stream palStream = (Stream)mpq.GetResource ("glue\\Palmm\\tFont.pcx");
 				Pcx pcx = new Pcx ();
-				pcx.ReadFromStream (palStream, false);
+				pcx.ReadFromStream (palStream, -1, -1);
 				
 				pal = pcx.RgbData;
 

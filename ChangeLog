@@ -1,3 +1,28 @@
+2006-04-10  Chris Toshok  <toshok@ximian.com>
+
+	* Starcraft/Starcraft.Gui/GameModeDialog.cs (.ctor): set
+	background_path to null, as we'll load it in ResourceLoader.
+	(ResourceLoader): manually load the background, using its specific
+	translucent/transparent indices.
+	
+	* Starcraft/Starcraft.Gui/GuiUtil.cs (SurfaceFromStream): always
+	use our managed Pcx loader.
+	(SurfaceFromStream): for the Stream,bool overload, pass in 252,0
+	for translucent,transparent, respectively.
+	(SurfaceFromStream): for the Stream overload, pass -1,-1.
+	
+	* Starcraft/Starcraft.Gui/UIScreen.cs (ResourceLoader): pass -1,-1
+	to the Pcx.ReadFromStream calls.
+
+	* Starcraft/Starcraft.Gui/CreditsScreen.cs (ResourceLoader): pass
+	-1,-1 to the Pcx.ReadFromStream calls.
+
+	* Starcraft/Starcraft.Gui/Pcx.cs (ReadFromStream): allow the
+	passing in of translucent/transparent indices.
+
+	* Starcraft/Starcraft.Mpq/Bin.cs (ElementFlags): include the
+	unknown flages as Unknown/Unused.
+
 2006-04-10  Chris Toshok  <toshok@hungry.com>
 
 	* Starcraft/Starcraft.Gui/ListBoxElement.cs: track cursor when
