@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Starcraft {
+namespace SCSharp {
 	public class Tbl : MpqResource {
 		Stream stream;
 		int num_strings;

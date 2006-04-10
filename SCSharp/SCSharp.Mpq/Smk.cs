@@ -9,7 +9,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Starcraft {
+namespace SCSharp {
 
 	public class Smk : MpqResource {
 

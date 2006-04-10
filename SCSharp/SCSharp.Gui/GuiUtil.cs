@@ -280,11 +280,6 @@ namespace SCSharp {
 			return CreateSurfaceFromRGBAData (pcx.RgbaData, pcx.Width, pcx.Height, pcx.Depth, pcx.Stride);
 		}
 
-		public static Surface SurfaceFromStream (Stream stream, bool applyTrans)
-		{
-			return SurfaceFromStream (stream, applyTrans ? 252 : -1, applyTrans ? 0 : -1);
-		}
-
 		public static Surface SurfaceFromStream (Stream stream)
 		{
 			return GuiUtil.SurfaceFromStream (stream, -1, -1);

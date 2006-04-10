@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Starcraft {
+namespace SCSharp {
 	public class Util {
 		// read in a LE word
 		public static ushort ReadWord (Stream fs)

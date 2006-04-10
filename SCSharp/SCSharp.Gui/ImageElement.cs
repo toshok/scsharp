@@ -17,9 +17,15 @@ namespace SCSharp
 
 		protected override Surface CreateSurface ()
 		{
-			Surface surface = GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text),
-						     (Flags & ElementFlags.ApplyTranslucency) == ElementFlags.ApplyTranslucency);
-			surface.TransparentColor = Color.Black; /* XXX */
+			Surface surface;
+
+			if ((Flags & ElementFlags.ApplyTranslucency) == ElementFlags.ApplyTranslucency)
+				surface = GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text),
+								     254, 0);
+			else
+				surface = GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text));
+
+			//			surface.TransparentColor = Color.Black; /* XXX */
 
 			return surface;
 		}

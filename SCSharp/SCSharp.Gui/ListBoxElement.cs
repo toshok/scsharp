@@ -90,6 +90,8 @@ namespace SCSharp
 				y += item_surface.Height;
 			}
 
+			surf.TransparentColor = Color.Black; /* XXX */
+
 			return surf;
 		}
 

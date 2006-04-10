@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Starcraft {
+namespace SCSharp {
 	public class Glyph {
 		internal Glyph (int width, int height, int xoffset, int yoffset,
 				byte[,] bitmap)

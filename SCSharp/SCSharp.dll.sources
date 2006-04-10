@@ -9,5 +9,4 @@ SCSharp.Mpq/Smk.cs
 SCSharp.Mpq/SfxDataDat.cs
 SCSharp.Mpq/SpritesDat.cs
 SCSharp.Mpq/Tbl.cs
-SCSharp.Util/Palette.cs
 SCSharp.Util/Util.cs

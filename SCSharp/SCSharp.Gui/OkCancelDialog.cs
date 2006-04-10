@@ -15,7 +15,7 @@ namespace SCSharp
 		public OkCancelDialog (UIScreen parent, Mpq mpq, string message)
 			: base (parent, mpq, "glue\\PalNl", Builtins.rez_GluPOkCancelBin)
 		{
-			background_path = null;
+			background_path = "glue\\PalNl\\pDPopup.pcx";
 			this.message = message;
 		}
 
@@ -25,9 +25,6 @@ namespace SCSharp
 
 		protected override void ResourceLoader ()
 		{
-			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource ("glue\\PalNl\\pDPopup.pcx"),
-								254, 0);
-
 			base.ResourceLoader ();
 
 			Elements[MESSAGE_ELEMENT_INDEX].Text = message;

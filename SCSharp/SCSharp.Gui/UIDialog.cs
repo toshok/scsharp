@@ -16,6 +16,8 @@ namespace SCSharp
 			: base (mpq, prefix, binFile)
 		{
 			this.parent = parent;
+			background_translucent = 254;
+			background_transparent = 0;
 		}
 
 		public override void AddToPainter (Painter painter)

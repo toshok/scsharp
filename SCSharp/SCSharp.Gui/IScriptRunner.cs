@@ -174,9 +174,10 @@ namespace SCSharp {
 			if (sprite_surface != null)
 				sprite_surface.Dispose();
 
+			// XXX
 			sprite_surface = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (frame_num),
 									  grp.Width, grp.Height,
-									  Palette.default_palette,
+									  null /*Palette.default_palette*/,
 									  false);
 		}
 

@@ -19,6 +19,8 @@ namespace SCSharp
 		protected string binFile;
 
 		protected string background_path;
+		protected int background_transparent;
+		protected int background_translucent;
 		protected string fontpal_path;
 		protected string effectpal_path;
 		protected string arrowgrp_path;
@@ -40,6 +42,9 @@ namespace SCSharp
 				effectpal_path = prefix + "\\tEffect.pcx";
 				arrowgrp_path = prefix + "\\arrow.grp";
 			}
+
+			background_transparent = 0;
+			background_translucent = 254;
 		}
 
 		protected UIScreen (Mpq mpq)
@@ -313,7 +318,7 @@ namespace SCSharp
 			if (background_path != null) {
 				Console.WriteLine ("loading background");
 				Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path),
-									252, 0);
+									background_translucent, background_transparent);
 			}
 
 			if (binFile != null) {

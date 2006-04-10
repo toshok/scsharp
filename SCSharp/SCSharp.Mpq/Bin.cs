@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace Starcraft {
+namespace SCSharp {
 	[Flags]
 	public enum ElementFlags {
 		Unknown00000001   = 0x00000001,

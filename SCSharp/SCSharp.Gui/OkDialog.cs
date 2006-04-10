@@ -15,7 +15,7 @@ namespace SCSharp
 		public OkDialog (UIScreen parent, Mpq mpq, string message)
 			: base (parent, mpq, "glue\\PalNl", Builtins.rez_GluPOkBin)
 		{
-			background_path = null;
+			background_path = "glue\\PalNl\\pOPopup.pcx";
 			this.message = message;
 		}
 
@@ -24,9 +24,6 @@ namespace SCSharp
 
 		protected override void ResourceLoader ()
 		{
-			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource ("glue\\PalNl\\pOPopup.pcx"),
-								254, 0);
-
 			base.ResourceLoader ();
 
 			Elements[MESSAGE_ELEMENT_INDEX].Text = message;
