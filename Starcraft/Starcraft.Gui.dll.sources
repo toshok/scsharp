@@ -18,6 +18,7 @@ Starcraft.Gui/OkDialog.cs
 Starcraft.Gui/Painter.cs
 Starcraft.Gui/Pcx.cs
 Starcraft.Gui/Race.cs
+Starcraft.Gui/ReadyRoomScreen.cs
 Starcraft.Gui/Sprite.cs
 Starcraft.Gui/SpriteManager.cs
 Starcraft.Gui/SwooshPainter.cs
