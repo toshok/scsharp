@@ -1,5 +1,13 @@
 2006-04-10  Chris Toshok  <toshok@ximian.com>
 
+	* Starcraft/Starcraft.Gui/ConnectionScreen.cs: add Ok dialog when
+	people select Battle.net.
+
+	* Starcraft/Starcraft.Gui/credits.txt: thank the
+	mono/sdl/sdldotnet projects.
+
+2006-04-10  Chris Toshok  <toshok@ximian.com>
+
 	* Starcraft/Starcraft.Gui/ConnectionScreen.cs: populate the
 	ListBox element with our choices, and handle the cursor moving
 	properly.  Ifdef this for the time being to only display

@@ -33,6 +33,14 @@ Thanks To
 The Starcraft Modding Community.
 </PAGE>
 
+</SCREENLEFT>
+Thanks To
+
+The Mono Project
+The SDL Project
+The SdlDotNet Project
+</PAGE>
+
 </SCREENCENTER>
-Credits for Starcraft
+Credits for Starcraft Brood War
 </PAGE>

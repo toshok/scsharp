@@ -63,7 +63,8 @@ namespace Starcraft
 
 			Elements[OK_ELEMENT_INDEX].Activate +=
 				delegate () {
-					Console.WriteLine ("we should do something here... ");
+					ShowDialog (new OkDialog (this, mpq,
+								  "insert battle.net code here"));
 				};
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=
