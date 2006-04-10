@@ -38,6 +38,12 @@
 
 2006-04-10  Chris Toshok  <toshok@hungry.com>
 
+	* Starcraft/Starcraft.Gui/ReadyRoomScreen.cs: first pass.
+
+	* Starcraft/Starcraft.Gui/Builtins.cs: add ready room builtins.
+
+2006-04-10  Chris Toshok  <toshok@hungry.com>
+
 	* Starcraft/Starcraft.Gui/ListBoxElement.cs: track cursor when
 	list becomes empty/non-empty.  Set it initially to -1.
 
