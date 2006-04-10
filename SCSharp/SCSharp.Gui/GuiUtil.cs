@@ -13,7 +13,7 @@ using SdlDotNet;
 using System.Reflection;
 using Tao.Sdl;
 
-namespace Starcraft {
+namespace SCSharp {
 
 	public delegate void ReadyDelegate ();
 
