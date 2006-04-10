@@ -12,7 +12,7 @@ namespace Starcraft
 	public class ListBoxElement : UIElement
 	{
 		List<string> items;
-		int cursor = 0;
+		int cursor = -1;
 
 		public ListBoxElement (Mpq mpq, BinElement el, byte[] palette)
 			: base (mpq, el, palette)
@@ -59,12 +59,16 @@ namespace Starcraft
 		public void AddItem (string item)
 		{
 			items.Add (item);
+			if (cursor == -1)
+				cursor = 0;
 			ClearSurface ();
 		}
 
 		public void RemoveAt (int index)
 		{
 			items.RemoveAt (index);
+			if (items.Count == 0)
+				cursor = -1;
 			ClearSurface ();
 		}
 

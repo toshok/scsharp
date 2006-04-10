@@ -1,5 +1,12 @@
 2006-04-10  Chris Toshok  <toshok@ximian.com>
 
+	* Starcraft/Starcraft.Gui/ListBoxElement.cs: track cursor when
+	list becomes empty/non-empty.  Set it initially to -1.
+
+	* Starcraft/Starcraft.Gui/LoginScreen.cs (OkElement delegate): if
+	we don't have a selected id, return immediately.  This should only
+	happen if the list is empty.
+
 	* Starcraft/Starcraft.Gui/ConnectionScreen.cs: add Ok dialog when
 	people select Battle.net.
 

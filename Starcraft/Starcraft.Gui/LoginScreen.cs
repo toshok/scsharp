@@ -30,6 +30,8 @@ namespace Starcraft
 
 			Elements[OK_ELEMENT_INDEX].Activate +=
 				delegate () {
+					if (listbox.SelectedIndex == -1)
+						return;
 					ShowDialog (new OkDialog (this, mpq,
 								  String.Format ("should switch to race selection screen as character '{0}'",
 										 listbox.SelectedItem)));
