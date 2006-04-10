@@ -1,4 +1,4 @@
-2006-04-10  Chris Toshok  <toshok@ximian.com>
+2006-04-10  Chris Toshok  <toshok@hungry.com>
 
 	* Starcraft/Starcraft.Gui/ListBoxElement.cs: track cursor when
 	list becomes empty/non-empty.  Set it initially to -1.
@@ -13,7 +13,7 @@
 	* Starcraft/Starcraft.Gui/credits.txt: thank the
 	mono/sdl/sdldotnet projects.
 
-2006-04-10  Chris Toshok  <toshok@ximian.com>
+2006-04-10  Chris Toshok  <toshok@hungry.com>
 
 	* Starcraft/Starcraft.Gui/ConnectionScreen.cs: populate the
 	ListBox element with our choices, and handle the cursor moving
@@ -90,7 +90,7 @@
 	* Starcraft/Starcraft.Gui/ListBoxElement.cs: new UIElement,
 	displaying a list. doesn't do scrolling yet.
 
-2006-04-09  Chris Toshok  <toshok@ximian.com>
+2006-04-09  Chris Toshok  <toshok@hungry.com>
 
 	* Starcraft/Starcraft.Gui/GameModeDialog.cs (ResourceLoader): add
 	title text.
