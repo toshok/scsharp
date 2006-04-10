@@ -1,5 +1,14 @@
 2006-04-10  Chris Toshok  <toshok@ximian.com>
 
+	* Starcraft/Starcraft.Gui/OkCancelDialog.cs: use 254,0 for
+	translucent,transparent.
+
+	* Starcraft/Starcraft.Gui/OkDialog.cs: same.
+
+	* Starcraft/Starcraft.Gui/EntryDialog.cs: same.
+
+2006-04-10  Chris Toshok  <toshok@ximian.com>
+
 	* Starcraft/Starcraft.Gui/GameModeDialog.cs (.ctor): set
 	background_path to null, as we'll load it in ResourceLoader.
 	(ResourceLoader): manually load the background, using its specific

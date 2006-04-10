@@ -15,7 +15,7 @@ namespace Starcraft
 		public OkCancelDialog (UIScreen parent, Mpq mpq, string message)
 			: base (parent, mpq, "glue\\PalNl", Builtins.rez_GluPOkCancelBin)
 		{
-			background_path = "glue\\PalNl\\pDPopup.pcx";
+			background_path = null;
 			this.message = message;
 		}
 
@@ -25,8 +25,10 @@ namespace Starcraft
 
 		protected override void ResourceLoader ()
 		{
-			base.ResourceLoader ();
+			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource ("glue\\PalNl\\pDPopup.pcx"),
+								254, 0);
 
+			base.ResourceLoader ();
 
 			Elements[MESSAGE_ELEMENT_INDEX].Text = message;
 

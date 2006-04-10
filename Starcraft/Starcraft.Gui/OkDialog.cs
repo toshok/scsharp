@@ -15,7 +15,7 @@ namespace Starcraft
 		public OkDialog (UIScreen parent, Mpq mpq, string message)
 			: base (parent, mpq, "glue\\PalNl", Builtins.rez_GluPOkBin)
 		{
-			background_path = "glue\\PalNl\\pOPopup.pcx";
+			background_path = null;
 			this.message = message;
 		}
 
@@ -24,6 +24,9 @@ namespace Starcraft
 
 		protected override void ResourceLoader ()
 		{
+			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource ("glue\\PalNl\\pOPopup.pcx"),
+								254, 0);
+
 			base.ResourceLoader ();
 
 			Elements[MESSAGE_ELEMENT_INDEX].Text = message;

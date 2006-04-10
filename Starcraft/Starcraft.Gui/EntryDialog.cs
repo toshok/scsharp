@@ -15,7 +15,7 @@ namespace Starcraft
 		public EntryDialog (UIScreen parent, Mpq mpq, string title)
 			: base (parent, mpq, "glue\\PalNl", Builtins.rez_GluPEditBin)
 		{
-			background_path = "glue\\PalNl\\pEPopup.pcx";
+			background_path = null;
 			this.title = title;
 		}
 
@@ -28,6 +28,9 @@ namespace Starcraft
 
 		protected override void ResourceLoader ()
 		{
+			Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource ("glue\\PalNl\\pEPopup.pcx"),
+								254, 0);
+
 			base.ResourceLoader ();
 
 			Console.WriteLine ("entry element is {0}", Elements[ENTRY_ELEMENT_INDEX].Type);
