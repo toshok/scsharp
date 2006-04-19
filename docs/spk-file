@@ -1,0 +1,27 @@
+
+offset    size         meaning                          value in default file
+-----------------------------------------------------------------------------
++0000     WORD         number of layers                             5
++0002     WORD         number of stars in layer 0                  66
++0004     WORD         number of stars in layer 1                  81
++0006     WORD         number of stars in layer 2                  36
++0008     WORD         number of stars in layer 3                 173
++000A     WORD         number of stars in layer 4                  69
+                                                                  (425 total stars)
+
++000C     3400 bytes   data arranged in what looks like 4 WORD (8 byte) chunks (425 * 8 == 3400)
+
+   +0     WORD         X coordinate
+   +2     WORD         Y coordinate
+   +4     WORD         offset in file to something (bitmap data?)
+   +6     WORD         unknown (always 0?)
+
++0D54     783 bytes    ???
+
+
+offset at +4 of star data:
+
+0x0D54   01 00 01 00 5a
+0x0D59   01 00 01 00 5b
+0x0D5E   01 00 01 00 2d
+0x0D63   04 00 04 00 00
