@@ -8,6 +8,8 @@ using System.Drawing;
 namespace SCSharp {
 
 	public enum Layer {
+		Foo,
+
 		Background,
 		Map,
 		Shadow,
@@ -16,6 +18,8 @@ namespace SCSharp {
 		Health,
 		Hud,
 		UI,
+		Popup,
+		DialogDimScreenHack,
 		DialogBackground,
 		DialogUI,
 		Tooltip,

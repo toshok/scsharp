@@ -14,6 +14,7 @@ namespace SCSharp
 		MainMenu,
 		Login,
 		Connection,
+		RaceSelection,
 
 		ScreenCount
 	}
@@ -23,7 +24,7 @@ namespace SCSharp
 		UIScreenType currentScreenType;
 		UIScreen[] screens;
 		
-		const int GAME_ANIMATION_TICK = 50; // number of milliseconds between animation updates
+		const int GAME_ANIMATION_TICK = 10; // number of milliseconds between animation updates
 
 		bool isBroodWar;
 
@@ -36,6 +37,8 @@ namespace SCSharp
 		uint cached_cursor_x;
 		uint cached_cursor_y;
 
+		string rootDir;
+
 		static Game instance;
 		public static Game Instance {
 			get { return instance; }
@@ -45,7 +48,7 @@ namespace SCSharp
 		{
 			instance = this;
 
-			race = Race.Protoss;
+			race = Race.Zerg;
 
 			screens = new UIScreen[(int)UIScreenType.ScreenCount];
 
@@ -91,6 +94,8 @@ namespace SCSharp
 
 			if (indexExe != null)
 				((MpqContainer)mpq).Add (indexExe);
+
+			this.rootDir = starcraftDir;
 		}
 
 		Mpq GetMpq (string path)
@@ -101,6 +106,10 @@ namespace SCSharp
 				return new MpqArchive (path);
 			else
 				return null;
+		}
+
+		public string RootDirectory {
+			get { return rootDir; }
 		}
 
 		public bool IsBroodWar {
@@ -207,6 +216,11 @@ namespace SCSharp
 
 		void KeyboardDown (object o, KeyboardEventArgs args)
 		{
+#if !RELEASE
+			if ((args.Mod & ModifierKeys.LeftControl) != 0
+			    && args.Key == Key.Q)
+				Quit ();
+#endif
 			if (currentScreen != null)
 				currentScreen.HandleKeyboardDown (args);
 		}
@@ -271,6 +285,9 @@ namespace SCSharp
 					break;
 				case UIScreenType.Connection:
 					screens[index] = new ConnectionScreen (mpq);
+					break;
+				case UIScreenType.RaceSelection:
+					screens[index] = new RaceSelectionScreen (mpq);
 					break;
 				default:
 					throw new Exception ();

@@ -13,21 +13,27 @@ namespace SCSharp {
 	{
 		BinElement el;
 		Surface surface;
-		Mpq mpq;
+		UIScreen screen;
 		byte[] palette;
 		bool sensitive;
+		bool visible;
 		Fnt fnt;
 
-		public UIElement (Mpq mpq, BinElement el, byte[] palette)
+		public UIElement (UIScreen screen, BinElement el, byte[] palette)
 		{
-			this.mpq = mpq;
+			this.screen = screen;
 			this.el = el;
 			this.palette = palette;
 			this.sensitive = true;
+			this.visible = (el.flags & ElementFlags.Visible) != 0;
+		}
+
+		public UIScreen ParentScreen {
+			get { return screen; }
 		}
 
 		public Mpq Mpq {
-			get { return mpq; }
+			get { return screen.Mpq; }
 		}
 
 		public string Text {
@@ -39,6 +45,12 @@ namespace SCSharp {
 		public bool Sensitive {
 			get { return sensitive; }
 			set { sensitive = value;
+			      ClearSurface (); }
+		}
+
+		public bool Visible {
+			get { return visible; }
+			set { visible = value;
 			      ClearSurface (); }
 		}
 
@@ -60,13 +72,13 @@ namespace SCSharp {
 		public Fnt Font {
 			get { 
 				if (fnt == null) {
-					fnt = GuiUtil.GetMediumFont (mpq); /* XXX */
-					if ((Flags & ElementFlags.FontSmall) == ElementFlags.FontSmall)
-						fnt = GuiUtil.GetSmallFont (mpq);
-					else if ((Flags & ElementFlags.FontMedium) == ElementFlags.FontMedium)
-						fnt = GuiUtil.GetMediumFont (mpq);
-					else if ((Flags & ElementFlags.FontLarge) == ElementFlags.FontLarge)
-						fnt = GuiUtil.GetLargeFont (mpq);
+					fnt = GuiUtil.GetMediumFont (Mpq); /* XXX */
+					if ((Flags & ElementFlags.FontSmallest) == ElementFlags.FontSmallest)
+						fnt = GuiUtil.GetSmallFont (Mpq);
+					else if ((Flags & ElementFlags.FontSmaller) == ElementFlags.FontSmaller)
+						fnt = GuiUtil.GetMediumFont (Mpq);
+					else if ((Flags & ElementFlags.FontLarger) == ElementFlags.FontLarger)
+						fnt = GuiUtil.GetLargeFont (Mpq);
 				}
 				return fnt;
 			}
@@ -109,9 +121,6 @@ namespace SCSharp {
 			case ElementType.DefaultButton:
 			case ElementType.Button:
 			case ElementType.ButtonWithoutBorder:
-			case ElementType.LabelLeftAlign:
-			case ElementType.LabelCenterAlign:
-			case ElementType.LabelRightAlign:
 				return GuiUtil.ComposeText (Text, Font, palette, Width, Height,
 							    sensitive ? 4 : 24);
 			default:
@@ -121,21 +130,39 @@ namespace SCSharp {
 
 		public void Paint (Surface surf, DateTime now)
 		{
+			if (!visible)
+				return;
+
 			if (Surface == null)
 				return;
 
-			int x, y;
-			x = X1;
-			y = Y1;
-
-			if (Type == ElementType.LabelRightAlign)
-				x += Width - surface.Width;
-			else if (Type == ElementType.LabelCenterAlign)
-				x += (Width - surface.Width) / 2;
-
-			surf.Blit (surface, new Point (x, y));
+			surf.Blit (surface, new Point (X1, Y1));
 		}
 		
+		public virtual bool PointInside (int x, int y)
+		{
+			if (x >= X1 && x < X1 + Width &&
+			    y >= Y1 && y < Y1 + Height)
+				return true;
+
+			return false;
+		}
+
+		public virtual void MouseButtonDown (MouseButtonEventArgs args)
+		{
+		}
+
+		public virtual void MouseButtonUp (MouseButtonEventArgs args)
+		{
+		}
+
+		public virtual void PointerMotion (MouseMotionEventArgs args)
+		{
+		}
+
+		public virtual void MouseOver ()
+		{
+		}
 	}
 
 	public delegate void ElementEvent ();

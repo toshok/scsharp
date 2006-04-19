@@ -33,13 +33,7 @@ namespace SCSharp
 					if (listbox.SelectedIndex == -1)
 						return;
 
-#if true
-					Game.Instance.SwitchToScreen (new ReadyRoomScreen (mpq));
-#else
-					ShowDialog (new OkDialog (this, mpq,
-								  String.Format ("should switch to race selection screen as character '{0}'",
-										 listbox.SelectedItem)));
-#endif
+					Game.Instance.SwitchToScreen (UIScreenType.RaceSelection);
 				};
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=

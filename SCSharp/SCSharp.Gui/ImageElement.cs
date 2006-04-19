@@ -10,8 +10,8 @@ namespace SCSharp
 {
 	public class ImageElement : UIElement
 	{
-		public ImageElement (Mpq mpq, BinElement el, byte[] palette)
-			: base (mpq, el, palette)
+		public ImageElement (UIScreen screen, BinElement el, byte[] palette)
+			: base (screen, el, palette)
 		{
 		}
 
@@ -19,7 +19,7 @@ namespace SCSharp
 		{
 			Surface surface;
 
-			if ((Flags & ElementFlags.ApplyTranslucency) == ElementFlags.ApplyTranslucency)
+			if ((Flags & ElementFlags.Translucent) == ElementFlags.Translucent)
 				surface = GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text),
 								     254, 0);
 			else

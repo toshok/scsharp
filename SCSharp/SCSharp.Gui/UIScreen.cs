@@ -10,7 +10,7 @@ namespace SCSharp
 {
 	public abstract class UIScreen
 	{
-		protected Surface Background;
+		Surface background;
 		protected CursorAnimator Cursor;
 		protected UIPainter UIPainter;
 		protected Bin Bin;
@@ -24,6 +24,9 @@ namespace SCSharp
 		protected string fontpal_path;
 		protected string effectpal_path;
 		protected string arrowgrp_path;
+
+		protected Pcx fontpal;
+		protected Pcx effectpal;
 
 		protected List<UIElement> Elements;
 
@@ -80,7 +83,7 @@ namespace SCSharp
 		{
 			this.painter = painter;
 
-			if (Background != null)
+			if (background != null)
 				painter.Add (Layer.Background, BackgroundPainter);
 
 			if (UIPainter != null)
@@ -92,7 +95,7 @@ namespace SCSharp
 
 		public virtual void RemoveFromPainter (Painter painter)
 		{
-			if (Background != null)
+			if (background != null)
 				painter.Remove (Layer.Background, BackgroundPainter);
 			if (UIPainter != null)
 				painter.Remove (Layer.UI, UIPainter.Paint);
@@ -100,6 +103,22 @@ namespace SCSharp
 				Game.Instance.Cursor = null;
 
 			this.painter = null;
+		}
+
+		public virtual bool UseTiles {
+			get { return false; }
+		}
+
+		public virtual Painter Painter {
+			get { return painter; }
+		}
+
+		public Mpq Mpq {
+			get { return mpq; }
+		}
+
+		public Surface Background {
+			get { return background; }
 		}
 
 		UIElement XYToElement (int x, int y, bool onlyUI)
@@ -115,8 +134,7 @@ namespace SCSharp
 				    e.Type == ElementType.Image)
 					continue;
 
-				if (x >= e.X1 && x < e.X1 + e.Width &&
-				    y >= e.Y1 && y < e.Y1 + e.Height)
+				if (e.Visible && e.PointInside (x, y))
 					return e;
 			}
 			return null;
@@ -126,20 +144,12 @@ namespace SCSharp
 		UIElement mouseOverElement;
 		public virtual void MouseOverElement (UIElement element)
 		{
-			if (element.Type == ElementType.Button
-			    || element.Type == ElementType.ButtonWithoutBorder
-			    || element.Type == ElementType.DefaultButton) {
-
-				if ((element.Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
-					/* highlight the text */
-					GuiUtil.PlaySound (mpq, Builtins.MouseoverWav);
-				}
-			}
+			element.MouseOver ();
 		}
 
 		public virtual void ActivateElement (UIElement element)
 		{
-			if (!element.Sensitive)
+			if (!element.Visible || !element.Sensitive)
 				return;
 
 			Console.WriteLine ("activating element {0}", Elements.IndexOf (element));
@@ -152,8 +162,12 @@ namespace SCSharp
 			if (args.Button != MouseButton.PrimaryButton)
 				return;
 
+			if (mouseDownElement != null)
+				Console.WriteLine ("mouseDownElement already set in MouseButtonDown");
+
 			mouseDownElement = XYToElement (args.X, args.Y, true);
-			Console.WriteLine ("mouseDownElement = {0}", mouseDownElement);
+			if (mouseDownElement != null)
+				mouseDownElement.MouseButtonDown (args);
 		}
 
 		public void HandleMouseButtonDown (MouseButtonEventArgs args)
@@ -169,19 +183,11 @@ namespace SCSharp
 			if (args.Button != MouseButton.PrimaryButton)
 				return;
 
-			UIElement mouseUpElement = XYToElement (args.X, args.Y, true);
+			if (mouseDownElement != null) {
+				mouseDownElement.MouseButtonUp (args);
 
-			Console.WriteLine ("mouseUpElement = {0}", mouseUpElement);
-
-			if (mouseUpElement != null) {
-				if (mouseUpElement == mouseDownElement)
-					ActivateElement (mouseUpElement);
-				else {
-					mouseDownElement = null;
-					return;
-				}
+				mouseDownElement = null;
 			}
-
 		}
 
 		public void HandleMouseButtonUp (MouseButtonEventArgs args)
@@ -194,13 +200,18 @@ namespace SCSharp
 
 		public virtual void PointerMotion (MouseMotionEventArgs args)
 		{
-			UIElement newMouseOverElement = XYToElement (args.X, args.Y, true);
+			if (mouseDownElement != null) {
+				mouseDownElement.PointerMotion (args);
+			}
+			else {
+				UIElement newMouseOverElement = XYToElement (args.X, args.Y, true);
 
-			if (newMouseOverElement != null
-			    && newMouseOverElement != mouseOverElement)
-				MouseOverElement (newMouseOverElement);
+				if (newMouseOverElement != null
+				    && newMouseOverElement != mouseOverElement)
+					MouseOverElement (newMouseOverElement);
 
-			mouseOverElement = newMouseOverElement;
+				mouseOverElement = newMouseOverElement;
+			}
 		}
 
 		public void HandlePointerMotion (MouseMotionEventArgs args)
@@ -278,17 +289,18 @@ namespace SCSharp
 
 		protected void BackgroundPainter (Surface surf, DateTime dt)
 		{
-			surf.Blit (Background,
-				   new Point ((surf.Width - Background.Width) / 2,
-					      (surf.Height - Background.Height) / 2));
+			surf.Blit (background,
+				   new Point ((surf.Width - background.Width) / 2,
+					      (surf.Height - background.Height) / 2));
 
 		}
 
 		protected virtual void ResourceLoader ()
 		{
 			Stream s;
-			Pcx fontpal = null;
-			Pcx effectpal = null;
+
+			fontpal = null;
+			effectpal = null;
 
 			if (fontpal_path != null) {
 				Console.WriteLine ("loading font palette");
@@ -317,7 +329,7 @@ namespace SCSharp
 
 			if (background_path != null) {
 				Console.WriteLine ("loading background");
-				Background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path),
+				background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path),
 									background_translucent, background_transparent);
 			}
 
@@ -325,44 +337,57 @@ namespace SCSharp
 				Console.WriteLine ("loading ui elements");
 				Bin = (Bin)mpq.GetResource (binFile);
 
-				if (Bin != null) {
-					/* convert all the BinElements to UIElements for our subclasses to use */
-					Elements = new List<UIElement> ();
-					foreach (BinElement el in Bin.Elements) {
-						UIElement ui_el = null;
-						switch (el.type) {
-						case ElementType.Image:
-							ui_el = new ImageElement (mpq, el, fontpal.RgbData);
-							break;
-						case ElementType.TextBox:
-							ui_el = new TextBoxElement (mpq, el, fontpal.RgbData);
-							break;
-						case ElementType.ListBox:
-							ui_el = new ListBoxElement (mpq, el, fontpal.RgbData);
-							break;
-						case ElementType.Button:
-						case ElementType.DefaultButton:
-						case ElementType.LabelLeftAlign:
-						case ElementType.LabelCenterAlign:
-						case ElementType.LabelRightAlign:
-						case ElementType.ButtonWithoutBorder:
-						case ElementType.Slider:
-						case ElementType.ComboBox:
-						case ElementType.DialogBox:
-						case ElementType.OptionButton:
-						case ElementType.CheckBox:
-							ui_el = new UIElement (mpq, el, fontpal.RgbData);
-							break;
-						default:
-							Console.WriteLine ("unhandled case {0}", el.type);
-							ui_el = new UIElement (mpq, el, fontpal.RgbData);
-							break;
-						}
+				if (Bin == null)
+					throw new Exception (String.Format ("specified file '{0}' does not exist",
+									    binFile));
 
-						Elements.Add (ui_el);
+				/* convert all the BinElements to UIElements for our subclasses to use */
+				Elements = new List<UIElement> ();
+				foreach (BinElement el in Bin.Elements) {
+					Console.WriteLine ("{0}: {1}", el.text, el.flags);
+
+					UIElement ui_el = null;
+					switch (el.type) {
+					case ElementType.DialogBox:
+						ui_el = new DialogBoxElement (this, el, fontpal.RgbData);
+						break;
+					case ElementType.Image:
+						ui_el = new ImageElement (this, el, fontpal.RgbData);
+						break;
+					case ElementType.TextBox:
+						ui_el = new TextBoxElement (this, el, fontpal.RgbData);
+						break;
+					case ElementType.ListBox:
+						ui_el = new ListBoxElement (this, el, fontpal.RgbData);
+						break;
+					case ElementType.ComboBox:
+						ui_el = new ComboBoxElement (this, el, fontpal.RgbData);
+						break;
+					case ElementType.LabelLeftAlign:
+					case ElementType.LabelCenterAlign:
+					case ElementType.LabelRightAlign:
+						ui_el = new LabelElement (this, el, fontpal.RgbData);
+						break;
+					case ElementType.Button:
+					case ElementType.DefaultButton:
+					case ElementType.ButtonWithoutBorder:
+						ui_el = new ButtonElement(this, el, fontpal.RgbData);
+						break;
+					case ElementType.Slider:
+					case ElementType.OptionButton:
+					case ElementType.CheckBox:
+						ui_el = new UIElement (this, el, fontpal.RgbData);
+						break;
+					default:
+						Console.WriteLine ("unhandled case {0}", el.type);
+						ui_el = new UIElement (this, el, fontpal.RgbData);
+						break;
 					}
-					UIPainter = new UIPainter (Elements);
+
+					Elements.Add (ui_el);
 				}
+
+				UIPainter = new UIPainter (Elements);
 			}
 		}
 

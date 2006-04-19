@@ -51,6 +51,9 @@ namespace SCSharp {
 			else if (ext.ToLower () == ".smk") {
 				return typeof (Smk);
 			}
+			else if (ext.ToLower () == ".spk") {
+				return typeof (Spk);
+			}
 
 			return null;
 		}
@@ -58,6 +61,9 @@ namespace SCSharp {
 		public object GetResource (string path)
 		{
 			Stream stream = GetStreamForResource (path);
+			if (stream == null)
+				return null;
+
 			Type t = GetTypeFromResourcePath (path);
 			if (t == null)
 				return stream;
@@ -149,12 +155,9 @@ namespace SCSharp {
 	public class MpqArchive : Mpq
 	{
 		IntPtr mpqHandle;
-		string mpqPath;
 
 		public MpqArchive (string path)
 		{
-			mpqPath = path;
-
 			if (!Storm.SFileOpenArchive (path, 0, 0, out mpqHandle))
 				throw new Exception (String.Format ("Could not load .mpq file at {0}", path));
 		}

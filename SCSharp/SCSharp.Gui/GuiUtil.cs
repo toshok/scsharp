@@ -145,58 +145,6 @@ namespace SCSharp {
 			}
 
 			return surf;
-#if false
-			StringBuilder run;
-			int i;
-			List<Surface> runSurfaces = new List<Surface> ();
-			int width = 0;
-			int maxHeight = 0;
-			Color c = foreground;
-			SdlDotNet.Font font = fonts[fontSize];
-
-			//			font.Bold = true;
-			maxHeight = font.Maxeight; /* XXX should be just the height of the string? */
-			//			font.Bold = false;
-
-			i = 0;
-			run = new StringBuilder ();
-			while (i < text.Length) {
-				if (!Char.IsControl (text[i]))
-					run.Append (text[i]);
-
-				if (Char.IsControl(text[i]) || i == text.Length - 1) {
-					/* blit the current run, reset the font's state,
-					   and start a new run */
-					if (run.Length > 0) {
-						string runString = run.ToString ();
-						Surface runSurf = font.Render (runString, true, foreground);
-						runSurf.AlphaBlending = true;
-						width += runSurf.Width;
-						runSurfaces.Add (runSurf);
-					}
-					if (text[i] == 0x01) {
-						c = foreground;
-						font.Normal = true;
-					}
-					else if (text[i] == 0x04) {
-						c = Color.FromArgb (0, foreground.R + 20, foreground.G + 50, foreground.B + 20);
-						font.Bold = true;
-					}
-					run = new StringBuilder ();
-				}
-
-				i++;
-			}
-
-			Surface composedSurf = new Surface (width, maxHeight);
-			int x = 0;
-			foreach (Surface surf in runSurfaces) {
-				composedSurf.Blit (surf, new Point (x, maxHeight - surf.Height));
-				x += surf.Width;
-			}
-
-			return composedSurf;
-#endif
 		}
 
 		public static byte[] GetBitmapData (byte[,] grid, ushort width, ushort height, byte[] palette, bool with_alpha)
@@ -209,9 +157,9 @@ namespace SCSharp {
 				for (x = width - 1; x >= 0; x--) {
 					if (with_alpha)
 						i++;
-					buf[i++] = palette[ grid[y,x] * 3 ];
-					buf[i++] = palette[ grid[y,x] * 3 + 1];
 					buf[i++] = palette[ grid[y,x] * 3 + 2];
+					buf[i++] = palette[ grid[y,x] * 3 + 1];
+					buf[i++] = palette[ grid[y,x] * 3 ];
 					if (with_alpha) {
 						if (buf[i - 3] == 0
 						    && buf[i - 2] == 0
@@ -253,11 +201,67 @@ namespace SCSharp {
 			return surf;
 		}
 
+		public static Surface CreateSurfaceFromRGBData (byte[] data, ushort width, ushort height, int depth, int stride)
+		{
+			/* beware, kind of a gross hack below */
+			Surface surf;
+
+			IntPtr blob = Marshal.AllocCoTaskMem (data.Length);
+			Marshal.Copy (data, 0, blob, data.Length);
+
+			IntPtr handle = Sdl.SDL_CreateRGBSurfaceFrom (blob,
+								      width, height, depth,
+								      stride,
+								      (int)0x00ff0000,
+								      (int)0x0000ff00,
+								      (int)0x000000ff,
+								      (int)0x00000000);
+
+			surf = (Surface)Activator.CreateInstance (typeof (Surface),
+								  BindingFlags.NonPublic | BindingFlags.Instance,
+								  null,
+								  new object[] {handle},
+								  null);
+
+			return surf;
+		}
+
+		public static byte[] GetBitmapData (byte[,] grid, ushort width, ushort height, byte[] palette, int translucent_index, int transparent_index)
+		{
+			byte[] buf = new byte[width * height * 4];
+			int i = 0;
+			int x, y;
+
+			for (y = height - 1; y >= 0; y --) {
+				for (x = width - 1; x >= 0; x--) {
+					if (grid[y,x] == translucent_index)
+						buf[i+0] = 0x05; /* keep this in sync with Pcx.cs */
+					else if (grid[y,x] == transparent_index)
+						buf[i+0] = 0x00;
+					else
+						buf[i+0] = 0xff;
+					buf[i+1] = palette[ grid[y,x] * 3 + 2];
+					buf[i+2] = palette[ grid[y,x] * 3 + 1];
+					buf[i+3] = palette[ grid[y,x] * 3 + 0];
+					i+= 4;
+				}
+			}
+
+			return buf;
+		}
+
 		public static Surface CreateSurfaceFromBitmap (byte[,] grid, ushort width, ushort height, byte[] palette, bool with_alpha)
 		{
 			byte[] buf = GetBitmapData (grid, width, height, palette, with_alpha);
 
 			return CreateSurfaceFromRGBAData (buf, width, height, with_alpha ? 32 : 24, width * (3 + (with_alpha ? 1 : 0)));
+		}
+
+		public static Surface CreateSurfaceFromBitmap (byte[,] grid, ushort width, ushort height, byte[] palette, int translucent_index, int transparent_index)
+		{
+			byte[] buf = GetBitmapData (grid, width, height, palette, translucent_index, transparent_index);
+
+			return CreateSurfaceFromRGBAData (buf, width, height, 32, width * 4);
 		}
 
 		public static byte[] ReadStream (Stream stream)

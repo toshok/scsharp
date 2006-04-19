@@ -12,6 +12,8 @@ namespace SCSharp {
 		TimeSpan delta_to_change = TimeSpan.FromMilliseconds (200);
 		int current_frame;
 
+		Surface[] surfaces;
+
 		uint x;
 		uint y;
 
@@ -26,6 +28,7 @@ namespace SCSharp {
 			this.x = 100;
 			this.y = 100;
 			this.palette = palette;
+			surfaces = new Surface[grp.FrameCount];
 		}
 
 		public void SetHotSpot (uint hot_x, uint hot_y)
@@ -63,12 +66,13 @@ namespace SCSharp {
 			if (current_frame == grp.FrameCount)
 				current_frame = 0;
 
-			Surface frame = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (current_frame),
-									 grp.Width, grp.Height,
-									 palette,
-									 false);
+			if (surfaces[current_frame] == null)
+				surfaces[current_frame] = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (current_frame),
+											   grp.Width, grp.Height,
+											   palette,
+											   true);
 
-			surf.Blit (frame, new Point (draw_x, draw_y));
+			surf.Blit (surfaces[current_frame], new Point (draw_x, draw_y));
 		}
 	}
 }

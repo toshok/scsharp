@@ -45,8 +45,6 @@ namespace SCSharp {
 
 	public class Fnt : MpqResource {
 		Stream stream;
-		int num_strings;
-		string[] strings;
 
 		public Fnt ()
 		{
@@ -63,13 +61,13 @@ namespace SCSharp {
 
 		void ReadFontHeader ()
 		{
-			uint name = Util.ReadDWord (stream);
+			/*uint name =*/ Util.ReadDWord (stream);
 			
 			lowIndex = Util.ReadByte (stream);
 			highIndex = Util.ReadByte (stream);
 			maxWidth = Util.ReadByte (stream);
 			maxHeight = Util.ReadByte (stream);
-			uint unknown = Util.ReadDWord (stream);
+			/*uint unknown =*/ Util.ReadDWord (stream);
 		}
 
 		Dictionary<uint,uint> offsets;

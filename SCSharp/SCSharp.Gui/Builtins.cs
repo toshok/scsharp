@@ -13,15 +13,22 @@ namespace SCSharp {
 		public static string rez_GluAllTbl = "rez\\gluAll.tbl";
 
 		/* Main menu */
-		public static string Palmm_BackgroundPcx = "glue\\palmm\\Backgnd.pcx";
-		public static string Palmm_ArrowGrp = "glue\\palmm\\arrow.grp";
 		public static string rez_GluMainBin = "rez\\gluMain.bin";
 
 		public static string rez_GluGameModeBin = "rez\\gluGameMode.bin";
 
+		/* Campaign screen */
+		public static string rez_GluExpcmpgnBin = "rez\\gluexpcmpgn.bin";
+
+		/* Play custom screen */
+		public static string rez_GluCustmBin = "rez\\gluCustm.bin";
+
+		public static string rez_GluCreatBin = "rez\\gluCreat.bin";
+
+		/* load saved screen */
+		public static string rez_GluLoadBin = "rez\\gluLoad.bin";
+
 		/* Login screen */
-		public static string PalNl_BackgroundPcx = "glue\\palnl\\Backgnd.pcx";
-		public static string PalNl_ArrowGrp = "glue\\palnl\\arrow.grp";
 		public static string rez_GluLoginBin = "rez\\gluLogin.bin";
 		public static string rez_GluPEditBin = "rez\\gluPEdit.bin";
 		public static string rez_GluPOkBin = "rez\\gluPOk.bin";
@@ -35,10 +42,6 @@ namespace SCSharp {
 		public static string rez_GluConnBin = "rez\\gluConn.bin";
 
 		/* Score screen */
-		public static string Palv_BackgroundPcx = "glue\\pal{0}v\\Backgnd.pcx";
-		public static string Palv_ArrowGrp = "glue\\pal{0}v\\arrow.grp";
-		public static string Pald_BackgroundPcx = "glue\\pal{0}d\\Backgnd.pcx";
-		public static string Pald_ArrowGrp = "glue\\pal{0}d\\arrow.grp";
 		public static string rez_GluScoreBin = "rez\\gluScore.bin";
 
 		public static string Scorev_pMainPcx = "glue\\score{0}v\\pMain.pcx";
@@ -88,5 +91,24 @@ namespace SCSharp {
 
 		/* music */
 		public static string music_titleWav = "music\\title.wav";
+
+		/* game menus */
+		public static string rez_GameMenuBin = "rez\\gamemenu.bin";
+		public static string rez_OptionsBin = "rez\\options.bin";
+		public static string rez_SndDlgBin = "rez\\snd_dlg.bin";
+		public static string rez_SpdDlgBin = "rez\\spd_dlg.bin";
+		public static string rez_VideoBin = "rez\\video.bin";
+		public static string rez_NetDlgBin = "rez\\netdlg.bin";
+		public static string rez_ObjctDlgBin = "rez\\objctdlg.bin";
+		public static string rez_AbrtMenuBin = "rez\\abrtmenu.bin";
+		public static string rez_RestartBin = "rez\\restart.bin";
+		public static string rez_QuitBin = "rez\\quit.bin";
+		public static string rez_Quit2MnuBin = "rez\\quit2mnu.bin";
+		public static string rez_HelpMenuBin = "rez\\helpmenu.bin";
+		public static string rez_HelpBin = "rez\\help.bin";
+
+		public static string rez_HelpTxtTbl = "rez\\help_txt.tbl";
+
+		public static string rez_MinimapBin = "rez\\minimap.bin";
 	}
 }

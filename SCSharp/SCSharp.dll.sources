@@ -7,6 +7,7 @@ SCSharp.Mpq/IScriptBin.cs
 SCSharp.Mpq/Mpq.cs
 SCSharp.Mpq/Smk.cs
 SCSharp.Mpq/SfxDataDat.cs
+SCSharp.Mpq/Spk.cs
 SCSharp.Mpq/SpritesDat.cs
 SCSharp.Mpq/Tbl.cs
 SCSharp.Util/Util.cs

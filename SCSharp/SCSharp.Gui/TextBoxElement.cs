@@ -13,8 +13,8 @@ namespace SCSharp
 		StringBuilder value;
 		int cursor = 0;
 
-		public TextBoxElement (Mpq mpq, BinElement el, byte[] palette)
-			: base (mpq, el, palette)
+		public TextBoxElement (UIScreen screen, BinElement el, byte[] palette)
+			: base (screen, el, palette)
 		{
 			value = new StringBuilder();
 		}

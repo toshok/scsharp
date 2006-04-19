@@ -13,11 +13,15 @@ namespace SCSharp
 	{
 		List<string> items;
 		int cursor = -1;
+		bool selectable = true;
+		int num_visible;
 
-		public ListBoxElement (Mpq mpq, BinElement el, byte[] palette)
-			: base (mpq, el, palette)
+		public ListBoxElement (UIScreen screen, BinElement el, byte[] palette)
+			: base (screen, el, palette)
 		{
 			items = new List<string> ();
+
+			num_visible = Height / Font.LineSize;
 		}
 
 		public void KeyboardDown (KeyboardEventArgs args)
@@ -46,6 +50,11 @@ namespace SCSharp
 
 		}
 
+		public bool Selectable {
+			get { return selectable; }
+			set { selectable = value; }
+		}
+
 		public int SelectedIndex {
 			get { return cursor; }
 			set { cursor = value;
@@ -72,6 +81,13 @@ namespace SCSharp
 			ClearSurface ();
 		}
 
+		public void Clear ()
+		{
+			items.Clear ();
+			cursor = -1;
+			ClearSurface ();
+		}
+
 		public bool Contains (string item)
 		{
 			return items.Contains (item);
@@ -84,7 +100,7 @@ namespace SCSharp
 			int y = 0;
 			for (int i = 0; i < items.Count; i ++) {
 				Surface item_surface = GuiUtil.ComposeText (items[i], Font, Palette,
-									    cursor == i ? 4 : 24);
+									    (!selectable || cursor == i) ? 4 : 24);
 
 				surf.Blit (item_surface, new Point (0, y));
 				y += item_surface.Height;
@@ -99,5 +115,4 @@ namespace SCSharp
 	}
 
 	public delegate void ListBoxSelectionChanged (int selectedIndex);
-
 }

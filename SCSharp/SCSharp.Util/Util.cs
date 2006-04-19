@@ -48,6 +48,18 @@ namespace SCSharp {
 
 		public static char[] RaceChar = { 'P','T','Z' };
 		public static char[] RaceCharLower = { 'p','t','z' };
+
+
+		public static string[] TilesetNames = {
+			"badlands",
+			"platform",
+			"install",
+			"ashworld",
+			"jungle",
+			"desert",
+			"ice",
+			"twilight"
+		};
 	}
 }
 
