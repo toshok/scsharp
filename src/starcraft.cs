@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Configuration;
 
-using Starcraft;
+using SCSharp;
 
 using SdlDotNet;
 

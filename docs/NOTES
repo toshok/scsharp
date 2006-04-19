@@ -1,0 +1,4 @@
+game/blink.grp + game/tblink.pcx = the minimap animation when the
+advisor says "your forces are under attack", etc.
+
+"get tile edit, read the help file"

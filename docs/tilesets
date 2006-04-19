@@ -1,13 +1,16 @@
-
 tilesets are made up of 6 files.
 
-.cv5 - 
+.cv5 - tile groups
 .vf4 - mini-tile "type"
 .vx4 - mapping from tile to mini-tile id's (16 per tile)
 .grp -
 .vr4 - raster data for each mini-tile
-.wpe - 
+.wpe - rgba(?) palette
 
+.cv5 file:
+----------
+10 words for group values
+16 words for mega tile indices
 
 .vf4 file:
 ----------

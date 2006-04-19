@@ -1,7 +1,7 @@
 VERSION=0.0000002
 RELEASEDIR=scsharp-linux-$(VERSION)
 
-SUBDIRS = Starcraft src
+SUBDIRS = SCSharp src
 
 all clean:
 	@for dir in $(SUBDIRS); do \
@@ -14,7 +14,7 @@ release: all
 	-mkdir $(RELEASEDIR)
 	@cp src/starcraft.exe $(RELEASEDIR)
 	@cp src/starcraft.exe.config-example $(RELEASEDIR)/starcraft.exe.config
-	@cp Starcraft/*.dll $(RELEASEDIR)
+	@cp SCSharp/*.dll $(RELEASEDIR)
 	@cp StormLib/libStorm.so $(RELEASEDIR)
 	@cp sdldotnet/bin/examples/SdlDotNet.dll $(RELEASEDIR)
 	@cp sdldotnet/bin/examples/Tao.Sdl.dll $(RELEASEDIR)
