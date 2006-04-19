@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-using Starcraft;
+using SCSharp;
 
 class TGA {
 	public static void WriteTGA (string filename, byte[] image, uint width, uint height)

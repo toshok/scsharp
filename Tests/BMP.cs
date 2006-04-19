@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-using Starcraft;
+using SCSharp;
 
 class BMP {
 	public static void WriteBMP (string filename, byte[,] grid, uint width, uint height, byte[] palette)

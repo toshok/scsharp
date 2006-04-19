@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-using Starcraft;
+using SCSharp;
 
 public class DumpTBL {
 	public static void Main (string[] args) {
