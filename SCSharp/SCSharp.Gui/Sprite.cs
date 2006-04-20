@@ -19,7 +19,7 @@ namespace SCSharp {
 		Mpq mpq;
 		IScriptRunner runner;
 
-		public Sprite (Mpq mpq, int sprite_entry)
+		public Sprite (Mpq mpq, int sprite_entry, byte[] palette, int x, int y)
 		{
 			this.mpq = mpq;
 			this.sprite_entry = sprite_entry;
@@ -38,8 +38,9 @@ namespace SCSharp {
 			Console.WriteLine ("iscript_entry = {0}", iscript_entry);
 			Console.WriteLine ("iscript_entry_offset = {0}", GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry));
 
-			runner = new IScriptRunner (grp, GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry));
-
+			iscript_entry = 204; /* XXX */
+			runner = new IScriptRunner (grp, GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry), palette);
+			runner.SetPosition (x, y);
 		}
 
 		public void RunAnimation (int animation_type)

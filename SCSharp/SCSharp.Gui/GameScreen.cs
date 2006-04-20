@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
 using SdlDotNet;
 using System.Drawing;
@@ -43,12 +44,18 @@ namespace SCSharp {
 
 		CursorAnimator[] ScrollCursors;
 
-		public GameScreen (Mpq mpq, Mpq scenario_mpq) : base (mpq)
+		byte[] unit_palette;
+		byte[] tileset_palette;
+
+		public GameScreen (Mpq mpq,
+				   Mpq scenario_mpq,
+				   Chk scenario) : base (mpq)
 		{
 			this.effectpal_path = "game\\tblink.pcx";
 			this.arrowgrp_path = "cursor\\arrow.grp";
 			this.fontpal_path = "game\\tfontgam.pcx";
 			this.scenario_mpq = scenario_mpq;
+			this.scenario = scenario;
 			ScrollCursors = new CursorAnimator[8];
 		}
 
@@ -144,6 +151,7 @@ namespace SCSharp {
 			painter.Add (Layer.Background, PaintStarfield);
 #elif SHOW_MAP
 			painter.Add (Layer.Map, PaintMap);
+			SpriteManager.AddToPainter (painter);
 #endif
 			painter.Add (Layer.Background, ScrollPainter);
 		}
@@ -158,6 +166,7 @@ namespace SCSharp {
 			painter.Remove (Layer.Background, PaintStarfield);
 #elif SHOW_MAP
 			painter.Remove (Layer.Map, PaintMap);
+			SpriteManager.RemoveFromPainter (painter);
 #endif
 			painter.Remove (Layer.Background, ScrollPainter);
 		}
@@ -165,6 +174,14 @@ namespace SCSharp {
 		protected override void ResourceLoader ()
 		{
 			base.ResourceLoader ();
+
+			Pcx pcx = new Pcx ();
+			pcx.ReadFromStream ((Stream)mpq.GetResource ("game\\tunit.pcx"), -1, -1);
+			unit_palette = pcx.Palette;
+
+			pcx = new Pcx ();
+			pcx.ReadFromStream ((Stream)mpq.GetResource ("tileset\\badlands\\dark.pcx"), 0, 0);
+			tileset_palette = pcx.Palette;
 
 			hud = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (String.Format (Builtins.Game_ConsolePcx,
 												 Util.RaceCharLower[(int)Game.Instance.Race])),
@@ -188,9 +205,9 @@ namespace SCSharp {
 			}
 
 #elif SHOW_MAP
-			Console.WriteLine ("loading scenario.chk");
-			scenario = (Chk) scenario_mpq.GetResource ("staredit\\scenario.chk");
 			map_surf = MapRenderer.RenderToSurface (mpq, scenario);
+
+			PlaceInitialUnits ();
 #else
 			map_surf = new Surface (Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
 			map_surf.Fill (new Rectangle (0, 0, map_surf.Width - 1, map_surf.Height - 1), Color.Black);
@@ -213,9 +230,6 @@ namespace SCSharp {
 								       effectpal.Palette);
 				ScrollCursors[i].SetHotSpot (60, 60);
 			}
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		void ClipTopLeft ()
@@ -233,6 +247,8 @@ namespace SCSharp {
 			topleft_y += vert_delta;
 
 			ClipTopLeft ();
+
+			SpriteManager.SetUpperLeft (topleft_x, topleft_y);
 		}
 
 		bool buttonDownInMinimap;
@@ -347,6 +363,36 @@ namespace SCSharp {
 			case Key.UpArrow:
 				vert_delta = -SCROLL_DELTA;
 				break;
+			}
+		}
+
+		void PlaceInitialUnits ()
+		{
+			List<UnitInfo> units = scenario.Units;
+
+			foreach (UnitInfo unit in units) {
+				Sprite sprite = null;
+
+				switch (unit.unit_id)
+				{
+				case 176:
+					sprite = SpriteManager.CreateSprite (mpq, 279, tileset_palette, unit.x, unit.y);
+					break;
+				case 177:
+					sprite = SpriteManager.CreateSprite (mpq, 280, tileset_palette, unit.x, unit.y);
+					break;
+				case 178:
+					sprite = SpriteManager.CreateSprite (mpq, 281, tileset_palette, unit.x, unit.y);
+					break;
+				case 188:
+					sprite = SpriteManager.CreateSprite (mpq, 275, tileset_palette, unit.x, unit.y);
+					break;
+				default:
+					break;
+				}
+
+				if (sprite != null)
+					sprite.RunAnimation (20);
 			}
 		}
 	}

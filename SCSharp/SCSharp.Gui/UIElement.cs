@@ -72,13 +72,17 @@ namespace SCSharp {
 		public Fnt Font {
 			get { 
 				if (fnt == null) {
-					fnt = GuiUtil.GetMediumFont (Mpq); /* XXX */
-					if ((Flags & ElementFlags.FontSmallest) == ElementFlags.FontSmallest)
-						fnt = GuiUtil.GetSmallFont (Mpq);
-					else if ((Flags & ElementFlags.FontSmaller) == ElementFlags.FontSmaller)
-						fnt = GuiUtil.GetMediumFont (Mpq);
-					else if ((Flags & ElementFlags.FontLarger) == ElementFlags.FontLarger)
-						fnt = GuiUtil.GetLargeFont (Mpq);
+					int idx = 3;
+
+					if ((Flags & ElementFlags.FontSmallest) != 0) idx = 0;
+					else if ((Flags & ElementFlags.FontSmaller) != 0) idx = 4;
+					else if ((Flags & ElementFlags.FontLarger) != 0) idx = 4;
+					else if ((Flags & ElementFlags.FontLargest) != 0) idx = 5;
+
+					Console.WriteLine ("index = {0}", idx);
+
+					fnt = GuiUtil.GetFonts(Mpq)[idx];
+
 				}
 				return fnt;
 			}

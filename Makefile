@@ -1,7 +1,7 @@
 VERSION=0.0000002
 RELEASEDIR=scsharp-linux-$(VERSION)
 
-SUBDIRS = SCSharp src
+SUBDIRS = SCSharp StormLib src
 
 all clean:
 	@for dir in $(SUBDIRS); do \

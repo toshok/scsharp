@@ -29,28 +29,39 @@ namespace SCSharp
 
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
-					GameModeDialog d = new GameModeDialog (this, mpq);
-					d.Cancel += delegate () { DismissDialog (); };
-					d.Activate += delegate (bool expansion) {
-						Console.WriteLine ("dude, you're getting a {0}", expansion ? "expansion" : "original");
-						DismissDialog ();
+					if (Game.Instance.IsBroodWar) {
+						GameModeDialog d = new GameModeDialog (this, mpq);
+						d.Cancel += delegate () { DismissDialog (); };
+						d.Activate += delegate (bool expansion) {
+							DismissDialog ();
+							Game.Instance.IsBroodWar = expansion;
+							GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+							Game.Instance.SwitchToScreen (UIScreenType.Login);
+						};
+						ShowDialog (d);
+					}
+					else {
 						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
 						Game.Instance.SwitchToScreen (UIScreenType.Login);
-					};
-					ShowDialog (d);
+					}
 				};
 
 			Elements[MULTIPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
-					GameModeDialog d = new GameModeDialog (this, mpq);
-					d.Cancel += delegate () { DismissDialog (); };
-					d.Activate += delegate (bool expansion) {
-						Console.WriteLine ("dude, you're getting a {0}", expansion ? "expansion" : "original");
-						DismissDialog ();
+					if (Game.Instance.IsBroodWar) {
+						GameModeDialog d = new GameModeDialog (this, mpq);
+						d.Cancel += delegate () { DismissDialog (); };
+						d.Activate += delegate (bool expansion) {
+							DismissDialog ();
+							GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+							Game.Instance.SwitchToScreen (UIScreenType.Connection);
+						};
+						ShowDialog (d);
+					}
+					else {
 						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
 						Game.Instance.SwitchToScreen (UIScreenType.Connection);
-					};
-					ShowDialog (d);
+					}
 				};
 
 			Elements[CAMPAIGNEDITOR_ELEMENT_INDEX].Activate +=
@@ -77,10 +88,6 @@ namespace SCSharp
 				delegate () {
 					Game.Instance.Quit ();
 				};
-
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 	}
 }

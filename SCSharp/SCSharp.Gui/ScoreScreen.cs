@@ -97,9 +97,6 @@ namespace SCSharp
 			if ((ui.Elements[1].flags & UIElementFlags.ApplyTranslucency) == UIElementFlags.ApplyTranslucency)
 				translucent = true;
 			pMainPb = (Gdk.Pixbuf)ui.Elements[1].resolvedData;
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		protected override void FinishedLoading ()

@@ -131,8 +131,10 @@ namespace SCSharp {
 
 			if (file_hash.ContainsKey (rebased_path.ToLower ())) {
 				string real_path = file_hash[rebased_path.ToLower ()];
-				if (real_path != null)
+				if (real_path != null) {
+					Console.WriteLine ("using {0}", real_path);
 					return File.OpenRead (real_path);
+				}
 			}
 			return null;
 		}
@@ -185,6 +187,7 @@ namespace SCSharp {
 				return null;
 			}
 
+			Console.WriteLine ("found resource {0} in archive", path);
 			Storm.SFileCloseFile (fileHandle);
 			return new MemoryStream (buf);
 		}

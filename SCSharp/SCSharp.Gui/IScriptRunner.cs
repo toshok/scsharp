@@ -87,31 +87,44 @@ namespace SCSharp {
 		/* 0x40 = unknown */
 		/* 0x41 = unknown */
 
+		int x;
+		int y;
+
 		byte[] buf;
 		ushort script_start; /* the pc of the script that started us off */
 		ushort pc;
 		Grp grp;
+		byte[] palette;
 		ushort script_entry_offset;
 
 		int facing = 0;
 
 		void Trace (string fmt, params object[] args)
 		{
-			Console.Write (fmt, args);
+			//			Console.Write (fmt, args);
 		}
 
 		void TraceLine (string fmt, params object[] args)
 		{
-			Console.WriteLine (fmt, args);
+			//			Console.WriteLine (fmt, args);
 		}
 
-		public IScriptRunner (Grp grp, ushort script_entry_offset)
+		public IScriptRunner (Grp grp, ushort script_entry_offset, byte[] palette)
 		{
 			this.grp = grp;
+			this.palette = palette;
 			this.buf = GlobalResources.Instance.IScriptBin.Contents;
 			this.script_entry_offset = script_entry_offset;
 
 			/* make sure the offset points to "SCEP" */
+			if (Util.ReadDWord (buf, script_entry_offset) != 0x45504353)
+				Console.WriteLine ("invalid script_entry_offset");
+		}
+
+		public void SetPosition (int x, int y)
+		{
+			this.x = x;
+			this.y = y;
 		}
 
 		public void RunScript (ushort script_start)
@@ -148,12 +161,14 @@ namespace SCSharp {
 
 		Painter painter;
 		Surface sprite_surface;
-		
+
 		void PaintSprite (Surface surf, DateTime now)
 		{
 			if (sprite_surface != null) {
-				Console.WriteLine ("blitting");
-				surf.Blit (sprite_surface /* XXX position */);
+				if (x > SpriteManager.X - sprite_surface.Width && x <= SpriteManager.X + Game.SCREEN_RES_X
+				    && y > SpriteManager.Y - sprite_surface.Height && y <= SpriteManager.Y + Game.SCREEN_RES_Y)
+					surf.Blit (sprite_surface, new Point (x - SpriteManager.X,
+									      y - SpriteManager.Y));
 			}
 		}
 
@@ -177,7 +192,7 @@ namespace SCSharp {
 			// XXX
 			sprite_surface = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (frame_num),
 									  grp.Width, grp.Height,
-									  null /*Palette.default_palette*/,
+									  palette,
 									  false);
 		}
 
@@ -185,7 +200,6 @@ namespace SCSharp {
 
 		public bool Tick (Surface surf, DateTime now)
 		{
-			Console.WriteLine ("in IScriptRunner.Tick");
 			ushort warg1;
 			ushort warg2;
 			//			ushort warg3;
@@ -300,7 +314,7 @@ namespace SCSharp {
 				barg1 = ReadByte (ref pc);
 				barg2 = ReadByte (ref pc);
 				TraceLine ("PlaceIndependentUnderlay: {0} ({1},{2})", warg1, barg1, barg2);
-				Sprite s = SpriteManager.CreateSprite (warg1);
+				Sprite s = SpriteManager.CreateSprite (warg1, palette, x, y);
 				s.RunAnimation (0);
 				break;
 			case EndAnimation:

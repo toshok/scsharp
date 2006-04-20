@@ -13,7 +13,10 @@ namespace SCSharp
 		public DialogBoxElement (UIScreen screen, BinElement el, byte[] palette)
 			: base (screen, el, palette)
 		{
+			tileGrp = (Grp)Mpq.GetResource ("dlgs\\tile.grp");
 		}
+
+		Grp tileGrp;
 
 		const int TILE_TR = 2;
 		const int TILE_T = 1;
@@ -52,8 +55,6 @@ namespace SCSharp
 
 		protected override Surface CreateSurface ()
 		{
-			Grp tileGrp = (Grp)Mpq.GetResource ("dlgs\\tile.grp");
-
 			if (ParentScreen.Background == null && ParentScreen.UseTiles) {
 				Surface surf = new Surface (Width, Height);
 				surf.Fill (new Rectangle (new Point (0,0), new Size (Width, Height)),

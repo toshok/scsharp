@@ -49,9 +49,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Cancel;

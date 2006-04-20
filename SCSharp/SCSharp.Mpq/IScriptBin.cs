@@ -24,15 +24,16 @@ namespace SCSharp {
 			buf = new byte [stream.Length];
 			stream.Read (buf, 0, buf.Length);
 
+			Console.WriteLine ("reading from 0x{0:x} to 0x{1:x}",
+					   entry_table_offset, buf.Length);
+
 			int p = entry_table_offset;
-			try {
-			while (p < stream.Length) {
+			while (p < buf.Length) {
 				ushort images_id = Util.ReadWord (buf, p);
 				ushort offset = Util.ReadWord (buf, p+2);
 				entries[images_id] = offset;
 				p += 4;
 			}
-			} catch (Exception e) { Console.WriteLine (e);}
 		}
 
 		public byte[] Contents {

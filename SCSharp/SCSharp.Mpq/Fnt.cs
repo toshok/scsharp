@@ -141,19 +141,6 @@ namespace SCSharp {
 			}
 		}
 
-		public int SizeText (string s) {
-			/* XXX ascii only */
-			int w = 0;
-
-			foreach (byte b in Encoding.ASCII.GetBytes (s)) {
-				if (b == 32)
-					w += SpaceSize;
-				else
-					w += this[b-1].Width;
-			}
-			return w;
-		}
-
 		public int SpaceSize {
 			get { return this[109-1].Width; /* 109 = ascii for 'm' */ }
 		}

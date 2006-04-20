@@ -72,9 +72,6 @@ namespace SCSharp
 					d.Previous += delegate () { DismissDialog (); };
 					ShowDialog (d);
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent ReturnToGame;
@@ -102,9 +99,6 @@ namespace SCSharp
 					if (Previous != null)
 						Previous ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Previous;
@@ -156,9 +150,6 @@ namespace SCSharp
 					if (Previous != null)
 						Previous ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Previous;
@@ -187,9 +178,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Cancel;
@@ -225,9 +213,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Cancel;
@@ -266,9 +251,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Exit;
@@ -306,9 +288,6 @@ namespace SCSharp
 					d.Ok += delegate () { DismissDialog (); };
 					ShowDialog (d);
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Previous;
@@ -344,9 +323,6 @@ namespace SCSharp
 			for (int i = 0; i < help_txt.Strings.Length; i++) {
 				list.AddItem (help_txt.Strings[i]);
 			}
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Ok;

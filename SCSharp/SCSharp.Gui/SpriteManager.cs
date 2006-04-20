@@ -14,22 +14,24 @@ namespace SCSharp {
 
 		static Mpq our_mpq;
 
-		public static Sprite CreateSprite (Mpq mpq, int sprite_number)
+		public static int X;
+		public static int Y;
+
+		public static Sprite CreateSprite (Mpq mpq, int sprite_number, byte[] palette, int x, int y)
 		{
 			our_mpq = mpq;
-			return CreateSprite (sprite_number);
+			return CreateSprite (sprite_number, palette, x, y);
 		}
 
-		public static Sprite CreateSprite (int sprite_number)
+		public static Sprite CreateSprite (int sprite_number, byte[] palette, int x, int y)
 		{
-			Sprite sprite = new Sprite (our_mpq, sprite_number);
+			Sprite sprite = new Sprite (our_mpq, sprite_number, palette, x, y);
 			sprites.Add (sprite);
 			if (painter != null)
 				sprite.AddToPainter (painter);
 
 			return sprite;
 		}
-
 
 		public static void RemoveSprite (Sprite sprite)
 		{
@@ -66,6 +68,12 @@ namespace SCSharp {
 			foreach (Sprite s in sprites)
 				s.RemoveFromPainter (p);
 			painter = null;
+		}
+
+		public static void SetUpperLeft (int x, int y)
+		{
+			X = x;
+			Y = y;
 		}
 	}
 

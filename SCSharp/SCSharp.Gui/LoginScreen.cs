@@ -21,6 +21,19 @@ namespace SCSharp
 
 		ListBoxElement listbox;
 
+		string spcdir;
+		string[] files;
+
+		void PopulateUIFromDir ()
+		{
+			files = Directory.GetFiles (spcdir, "*.spc");
+		
+			for (int i = 0; i < files.Length; i ++)
+				listbox.AddItem (Path.GetFileNameWithoutExtension (files[i]));
+
+			listbox.SelectedIndex = 0;
+		}
+
 		protected override void ResourceLoader ()
 		{
 			base.ResourceLoader ();
@@ -73,8 +86,9 @@ namespace SCSharp
 
 			listbox = (ListBoxElement)Elements[LISTBOX_ELEMENT_INDEX];
 
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
+			spcdir = Path.Combine (Game.Instance.RootDirectory, "characters");
+
+			PopulateUIFromDir ();
 		}
 
 		public override void KeyboardDown (KeyboardEventArgs args)

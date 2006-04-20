@@ -19,30 +19,22 @@ namespace SCSharp {
 
 	public static class GuiUtil {
 
-		static Fnt largeFont;
-		static Fnt mediumFont;
-		static Fnt smallFont;
+		static Fnt[] fonts;
 
-		public static Fnt GetLargeFont (Mpq mpq)
-		{
-			if (largeFont == null)
-				largeFont = (Fnt)mpq.GetResource ("files\\font\\font16x.fnt");
-			return largeFont;
+		public static Fnt[] GetFonts (Mpq mpq) {
+			if (fonts == null) {
+				fonts = new Fnt[6];
+
+				fonts[0] = (Fnt)mpq.GetResource ("files\\font\\font8.fnt");
+				fonts[1] = (Fnt)mpq.GetResource ("files\\font\\font10.fnt");
+				fonts[2] = (Fnt)mpq.GetResource ("files\\font\\font12.fnt");
+				fonts[3] = (Fnt)mpq.GetResource ("files\\font\\font14.fnt");
+				fonts[4] = (Fnt)mpq.GetResource ("files\\font\\font16.fnt");
+				fonts[5] = (Fnt)mpq.GetResource ("files\\font\\font16x.fnt");
+			}
+			return fonts;
 		}
 
-		public static Fnt GetMediumFont (Mpq mpq)
-		{
-			if (mediumFont == null)
-				mediumFont = (Fnt)mpq.GetResource ("files\\font\\font14.fnt");
-			return mediumFont;
-		}
-
-		public static Fnt GetSmallFont (Mpq mpq)
-		{
-			if (smallFont == null)
-				smallFont = (Fnt)mpq.GetResource ("files\\font\\font8.fnt");
-			return smallFont;
-		}
 
 		public static Surface RenderGlyph (Fnt font, Glyph g, byte[] palette, int offset)
 		{
@@ -76,7 +68,8 @@ namespace SCSharp {
 			/* create a run of text, for now ignoring any control codes in the string */
 			StringBuilder run = new StringBuilder ();
 			for (i = 0; i < text.Length; i ++)
-				if (!Char.IsControl (text[i]))
+				if (text[i] == 0x0a /* allow newlines */||
+				    !Char.IsControl (text[i]))
 					run.Append (text[i]);
 
 			string rs = run.ToString ();
@@ -85,36 +78,37 @@ namespace SCSharp {
 			int x, y;
 			int text_height, text_width;
 
-			if (width == -1 && height == -1) {
-				text_width = font.SizeText (rs);
-				text_height = font.LineSize;
-			}
-			else {
-				/* measure the text first, wrapping at width */
-				text_width = text_height = 0;
-				x = y = 0;
+			/* measure the text first, optionally wrapping at width */
+			text_width = text_height = 0;
+			x = y = 0;
 
-				for (i = 0; i < r.Length; i ++) {
-					int glyph_width;
+			for (i = 0; i < r.Length; i ++) {
+				int glyph_width = 0;
 
-					if (r[i] == 32) /* space */
+				if (r[i] != 0x0a) /* newline */ {
+					if (r[i] == 0x20) /* space */
 						glyph_width = font.SpaceSize;
-					else
-						glyph_width = font[r[i]-1].Width;
+					else {
+						Glyph g = font[r[i]-1];
 
-					if (x + glyph_width > width) {
-						if (x > text_width)
-							text_width = x;
-						x = 0;
-						text_height += font.LineSize;
+						glyph_width = g.Width + g.XOffset;
 					}
-					
-					x += glyph_width;
 				}
-				if (x > text_width)
-					text_width = x;
-				text_height += font.LineSize;
+
+				if (r[i] == 0x0a ||
+				    (width != -1 && x + glyph_width > width)) {
+					if (x > text_width)
+						text_width = x;
+					x = 0;
+					text_height += font.LineSize;
+				}
+					
+				x += glyph_width;
 			}
+
+			if (x > text_width)
+				text_width = x;
+			text_height += font.LineSize;
 
 			Surface surf = new Surface (text_width, text_height);
 			surf.TransparentColor = Color.Black;
@@ -122,21 +116,24 @@ namespace SCSharp {
 			/* the draw it */
 			x = y = 0;
 			for (i = 0; i < r.Length; i ++) {
-				int glyph_width;
+				int glyph_width = 0;
 				Glyph g = null;
 
-				if (r[i] == 32) {
-					glyph_width = font.SpaceSize;
-				}
-				else {
-					g = font[r[i]-1];
-					glyph_width = g.Width;
+				if (r[i] != 0x0a) /* newline */ {
+					if (r[i] == 0x20)  /* space */{
+						glyph_width = font.SpaceSize;
+					}
+					else {
+						g = font[r[i]-1];
+						glyph_width = g.Width + g.XOffset;
 
-					Surface gs = RenderGlyph (font, g, palette, offset);
-					surf.Blit (gs, new Point (x, y + g.YOffset));
+						Surface gs = RenderGlyph (font, g, palette, offset);
+						surf.Blit (gs, new Point (x, y + g.YOffset));
+					}
 				}
 
-				if (x + glyph_width > text_width) {
+				if (r[i] == 0x0a ||
+				    x + glyph_width > text_width) {
 					x = 0;
 					y += font.LineSize;
 				}

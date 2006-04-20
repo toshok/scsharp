@@ -31,9 +31,6 @@ namespace SCSharp
 				delegate () {
 					Game.Instance.SwitchToScreen (UIScreenType.Login);
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 	}
 }

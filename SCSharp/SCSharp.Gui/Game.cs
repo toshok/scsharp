@@ -114,6 +114,7 @@ namespace SCSharp
 
 		public bool IsBroodWar {
 			get { return isBroodWar; }
+			set { isBroodWar = value; }
 		}
 
 		public void Startup (bool fullscreen)

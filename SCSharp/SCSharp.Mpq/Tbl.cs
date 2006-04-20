@@ -20,20 +20,6 @@ namespace SCSharp {
 			ReadStrings();
 		}
 
-		string ReadUntilNull (StreamReader r)
-		{
-			StringBuilder sb = new StringBuilder();
-
-			char c;
-			do {
-				c = (char)r.Read();
-				if (c != 0)
-					sb.Append (c);
-			} while (c != 0);
-
-			return sb.ToString();
-		}
-
 		void ReadStrings ()
 		{
 			int i;
@@ -55,7 +41,7 @@ namespace SCSharp {
 					tr.DiscardBufferedData ();
 				}
 
-				strings[i] = ReadUntilNull (tr);
+				strings[i] = Util.ReadUntilNull (tr);
 			}
 		}
 

@@ -71,9 +71,6 @@ namespace SCSharp
 				delegate () {
 					Game.Instance.SwitchToScreen (UIScreenType.MainMenu);
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		void HandleSelectionChanged (int selectedIndex)

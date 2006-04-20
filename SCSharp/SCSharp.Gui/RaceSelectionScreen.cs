@@ -42,9 +42,6 @@ namespace SCSharp
 				delegate () {
 					Game.Instance.SwitchToScreen (new PlayCustomScreen (mpq));
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 	}
 }

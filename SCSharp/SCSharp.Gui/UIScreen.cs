@@ -165,9 +165,11 @@ namespace SCSharp
 			if (mouseDownElement != null)
 				Console.WriteLine ("mouseDownElement already set in MouseButtonDown");
 
-			mouseDownElement = XYToElement (args.X, args.Y, true);
-			if (mouseDownElement != null)
+			UIElement element = XYToElement (args.X, args.Y, true);
+			if (element != null && element.Visible && element.Sensitive) {
+				mouseDownElement = element;
 				mouseDownElement.MouseButtonDown (args);
+			}
 		}
 
 		public void HandleMouseButtonDown (MouseButtonEventArgs args)
@@ -391,19 +393,25 @@ namespace SCSharp
 			}
 		}
 
+		void LoadResources ()
+		{
+			ResourceLoader ();
+			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
+		}
+
 		public void Load ()
 		{
 			if (loaded)
 				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (RaiseReadyEvent)));
 			else
 #if MULTI_THREADED
-				ThreadPool.QueueUserWorkItem (delegate (object state) { ResourceLoader (); });
+				ThreadPool.QueueUserWorkItem (delegate (object state) { LoadResources (); })
 #else
-				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (ResourceLoader)));
+				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (LoadResources)));
 #endif
 		}
 
-		protected virtual void FinishedLoading ()
+		void FinishedLoading ()
 		{
 			loaded = true;
 			RaiseReadyEvent ();

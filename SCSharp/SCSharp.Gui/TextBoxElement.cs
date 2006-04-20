@@ -8,6 +8,7 @@ using System.Drawing;
 
 namespace SCSharp
 {
+	// TODO: draw an actual cursor..
 	public class TextBoxElement : UIElement
 	{
 		StringBuilder value;

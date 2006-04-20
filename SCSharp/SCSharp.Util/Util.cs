@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text;
 
 namespace SCSharp {
 	public class Util {
@@ -44,6 +45,20 @@ namespace SCSharp {
 			fs.WriteByte ((byte)((dword >> 8) & 0xff));
 			fs.WriteByte ((byte)((dword >> 16) & 0xff));
 			fs.WriteByte ((byte)((dword >> 24) & 0xff));
+		}
+
+		public static string ReadUntilNull (StreamReader r)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			char c;
+			do {
+				c = (char)r.Read();
+				if (c != 0)
+					sb.Append (c);
+			} while (c != 0);
+
+			return sb.ToString();
 		}
 
 		public static char[] RaceChar = { 'P','T','Z' };

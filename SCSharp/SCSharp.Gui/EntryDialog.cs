@@ -49,9 +49,6 @@ namespace SCSharp
 			entry = (TextBoxElement)Elements[ENTRY_ELEMENT_INDEX];
 
 			Elements[OK_ELEMENT_INDEX].Sensitive = false;
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public override void KeyboardDown (KeyboardEventArgs args)

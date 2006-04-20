@@ -35,18 +35,18 @@ $(LIB): $(OBJS)
 	$(CXX) -shared -o $(LIB) $(OBJS) $(LDFLAGS)
 
 clean:
-	-rm $(OBJS)
+	rm -f $(OBJS)
 
 new: clean all
 
 mrproper: clean
-	-rm $(LIB) .dep
+	rm $(LIB) .dep
 
 mrnew: mrproper new
 
-install: $(LIB)
-	install $(I_FLAGS) $(LIB) /usr/local/lib
-	mkdir -p /usr/local/include/StormLib
-	cp Storm.h /usr/local/include/StormLib
-	cp StormPort.h /usr/local/include/StormLib
-	ldconfig
+#install: $(LIB)
+	#install $(I_FLAGS) $(LIB) /usr/local/lib
+	#mkdir -p /usr/local/include/StormLib
+	#cp Storm.h /usr/local/include/StormLib
+	#cp StormPort.h /usr/local/include/StormLib
+	#ldconfig

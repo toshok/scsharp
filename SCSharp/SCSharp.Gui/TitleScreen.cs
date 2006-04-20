@@ -25,9 +25,6 @@ namespace SCSharp
 
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}.Text = {1}", i, Elements[i].Text);
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 	}
 }

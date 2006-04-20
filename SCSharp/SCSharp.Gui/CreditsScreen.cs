@@ -30,9 +30,6 @@ namespace SCSharp
 
 			/* starcraft credits */
 			AddMarkup ((Stream)mpq.GetResource (Builtins.RezCrdtlistTxt));
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		protected override void MarkupFinished ()

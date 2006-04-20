@@ -37,9 +37,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Ok;
@@ -75,9 +72,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Ok;
@@ -113,9 +107,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Ok;
@@ -151,9 +142,6 @@ namespace SCSharp
 					if (Cancel != null)
 						Cancel ();
 				};
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Ok;
@@ -218,9 +206,6 @@ namespace SCSharp
 
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}: {1} '{2}'", i, Elements[i].Type, Elements[i].Text);
-
-			// notify we're ready to roll
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
 		}
 
 		public event DialogEvent Previous;

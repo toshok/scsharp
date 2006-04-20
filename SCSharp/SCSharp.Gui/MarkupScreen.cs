@@ -186,17 +186,9 @@ namespace SCSharp
 			pal = pcx.RgbData;
 
 			Console.WriteLine ("loading font");
-			fnt = GuiUtil.GetLargeFont (mpq);
-		}
+			fnt = GuiUtil.GetFonts(mpq)[3];
 
-		protected override void FinishedLoading ()
-		{
-			StartUp ();
-			base.FinishedLoading ();
-		}
-
-		void StartUp ()
-		{
+			/* set things up so we're ready to go */
 			millisDelay = 4000;
 			pageEnumerator = pages.GetEnumerator();
 			AdvanceToNextPage ();
