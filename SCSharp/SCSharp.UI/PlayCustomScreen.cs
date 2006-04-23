@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class PlayCustomScreen : UIScreen
 	{
@@ -188,7 +188,7 @@ namespace SCSharp
 			Elements[MAPDESCRIPTION_ELEMENT_INDEX].Text = selectedChk == null ? "" : selectedChk.Description;
 
 			string mapSizeString = GlobalResources.Instance.GluAllTbl.Strings[MAPSIZE_FORMAT_INDEX];
-			string mapDimString = GlobalResources.Instance.GluAllTbl.Strings[MAPDIM_FORMAT_INDEX];
+			//			string mapDimString = GlobalResources.Instance.GluAllTbl.Strings[MAPDIM_FORMAT_INDEX];
 			string tileSetString = GlobalResources.Instance.GluAllTbl.Strings[TILESET_FORMAT_INDEX];
 			string numPlayersString = GlobalResources.Instance.GluAllTbl.Strings[NUMPLAYERS_FORMAT_INDEX];
 

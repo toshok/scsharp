@@ -4,9 +4,11 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace SCSharp {
+namespace SCSharp
+{
 	[Flags]
-	public enum ElementFlags {
+	public enum ElementFlags
+	{
 		Unknown00000001   = 0x00000001,
 		Unknown00000002   = 0x00000002,
 		Unknown00000004   = 0x00000004,
@@ -40,7 +42,8 @@ namespace SCSharp {
 		Unused40000000    = 0x40000000
 	}
 
-	public enum ElementType {
+	public enum ElementType
+	{
 		DialogBox = 0,
 		DefaultButton = 1,
 		Button = 2,

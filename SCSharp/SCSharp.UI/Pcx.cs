@@ -2,7 +2,8 @@
 using System;
 using System.IO;
 
-namespace SCSharp {
+namespace SCSharp.UI
+{
 	public class Pcx
 	{
 		public Pcx ()
@@ -13,9 +14,6 @@ namespace SCSharp {
 		ushort xmax;
 		ushort ymin;
 		ushort ymax;
-
-		ushort h_dpi;
-		ushort v_dpi;
 
 		bool with_alpha;
 
@@ -34,12 +32,12 @@ namespace SCSharp {
 			ymin = Util.ReadWord (stream);
 			xmax = Util.ReadWord (stream);
 			ymax = Util.ReadWord (stream);
-			h_dpi = Util.ReadWord (stream);
-			v_dpi = Util.ReadWord (stream);
+			/*ushort h_dpi =*/ Util.ReadWord (stream);
+			/*ushort v_dpi =*/ Util.ReadWord (stream);
 			stream.Position += 48; /* skip the header palette */
 			stream.Position ++;    /* skip the reserved byte */
 			ushort numplanes = Util.ReadByte (stream);
-			ushort stride = Util.ReadWord (stream);
+			/*ushort stride =*/ Util.ReadWord (stream);
 			/*headerInterp =*/ Util.ReadWord (stream);
 			/*videoWidth =*/ Util.ReadWord (stream);
 			/*videoHeight =*/ Util.ReadWord (stream);

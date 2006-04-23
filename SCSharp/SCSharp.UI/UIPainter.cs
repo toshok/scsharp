@@ -7,7 +7,8 @@ using System.IO;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp {
+namespace SCSharp.UI
+{
 
 	public class UIPainter
 	{

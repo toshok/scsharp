@@ -1,6 +1,8 @@
 
-namespace SCSharp {
-	public static class Builtins {
+namespace SCSharp.UI
+{
+	public static class Builtins
+	{
 		/* title screen */
 		public static string rez_TitleDlgBin = "rez\\titledlg.bin";
 #if RELEASE

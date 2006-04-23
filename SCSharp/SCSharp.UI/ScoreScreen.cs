@@ -5,7 +5,7 @@ using System.Threading;
 using Gtk;
 using Gdk;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class ScoreScreen : UIScreen
 	{

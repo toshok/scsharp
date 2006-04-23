@@ -7,9 +7,10 @@ using System.Drawing;
 
 using System.Text;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
-	public enum UIScreenType {
+	public enum UIScreenType
+	{
 		/* not including title */
 		MainMenu,
 		Login,
@@ -21,7 +22,6 @@ namespace SCSharp
 
 	public class Game
 	{
-		UIScreenType currentScreenType;
 		UIScreen[] screens;
 		
 		const int GAME_ANIMATION_TICK = 10; // number of milliseconds between animation updates
@@ -30,7 +30,6 @@ namespace SCSharp
 
 		Race race;
 
-		Mpq scenario;
 		Mpq mpq;
 		Painter painter;
 

@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp {
+namespace SCSharp.UI
+{
 
-	public class GameScreen : UIScreen {
-		Mpq scenario_mpq;
+	public class GameScreen : UIScreen
+	{
+		//Mpq scenario_mpq;
 
 		Surface hud;
 		Chk scenario;
@@ -47,7 +49,7 @@ namespace SCSharp {
 
 		CursorAnimator[] TargetCursors;
 
-		byte[] unit_palette;
+		//byte[] unit_palette;
 		byte[] tileset_palette;
 
 		public GameScreen (Mpq mpq,
@@ -57,7 +59,7 @@ namespace SCSharp {
 			this.effectpal_path = "game\\tblink.pcx";
 			this.arrowgrp_path = "cursor\\MagG.grp";
 			this.fontpal_path = "game\\tfontgam.pcx";
-			this.scenario_mpq = scenario_mpq;
+			//this.scenario_mpq = scenario_mpq;
 			this.scenario = scenario;
 			ScrollCursors = new CursorAnimator[8];
 		}
@@ -176,7 +178,7 @@ namespace SCSharp {
 
 			Pcx pcx = new Pcx ();
 			pcx.ReadFromStream ((Stream)mpq.GetResource ("game\\tunit.pcx"), -1, -1);
-			unit_palette = pcx.Palette;
+			//unit_palette = pcx.Palette;
 
 			pcx = new Pcx ();
 			pcx.ReadFromStream ((Stream)mpq.GetResource ("tileset\\badlands\\dark.pcx"), 0, 0);

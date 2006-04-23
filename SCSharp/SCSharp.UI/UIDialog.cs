@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using SdlDotNet;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	/* this should probably subclass from UIElement instead...  look into that */
 	public abstract class UIDialog : UIScreen

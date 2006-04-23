@@ -9,7 +9,8 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace SCSharp {
+namespace SCSharp
+{
 
 	public class Smk : MpqResource {
 

@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 using SdlDotNet;
 
-namespace SCSharp {
+namespace SCSharp.UI
+{
 
 	public delegate void DoneSwooshingDelegate ();
 
 #if false
-	public class SwooshPainter {
+	public class SwooshPainter
+	{
 		public enum Direction {
 			FromLeft,
 			FromRight

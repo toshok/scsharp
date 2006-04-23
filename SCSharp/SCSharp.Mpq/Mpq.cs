@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Collections.Generic;
 
-namespace SCSharp {
-
+namespace SCSharp
+{
 	public interface MpqResource
 	{
 		void ReadFromStream (Stream stream);
@@ -220,7 +220,8 @@ namespace SCSharp {
 		SeedUnfixed     = 18      // Decryption seed not fixed to file pos and size
 	}
 
-	static class Storm {
+	static class Storm
+	{
 		[DllImport ("Storm.dll")]
 		public extern static bool SFileOpenArchive (string archiveFilename,
 							    uint priority,

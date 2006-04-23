@@ -7,7 +7,7 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class ListBoxElement : UIElement
 	{

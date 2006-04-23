@@ -3,8 +3,10 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace SCSharp {
-	public class Grp : MpqResource {
+namespace SCSharp
+{
+	public class Grp : MpqResource
+	{
 		// file header info
 		ushort frame_count;
 		ushort width;

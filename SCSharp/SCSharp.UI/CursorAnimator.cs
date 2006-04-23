@@ -4,8 +4,10 @@ using SdlDotNet;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace SCSharp {
-	public class CursorAnimator {
+namespace SCSharp.UI
+{
+	public class CursorAnimator
+	{
 		Grp grp;
 
 		DateTime last;

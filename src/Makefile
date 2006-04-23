@@ -2,7 +2,7 @@ MCSFLAGS= -debug
 MCS= gmcs
 
 PROGRAM=starcraft.exe
-PROGRAM_REFS= -r:../SCSharp/SCSharp.Gui.dll -r:../SCSharp/SCSharp.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
+PROGRAM_REFS= -r:../SCSharp/SCSharp.UI.dll -r:../SCSharp/SCSharp.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
 
 all: $(PROGRAM)
 

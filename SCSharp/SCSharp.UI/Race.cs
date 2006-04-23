@@ -1,4 +1,4 @@
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public enum Race {
 		Protoss,

@@ -7,7 +7,7 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public abstract class MarkupScreen : UIScreen
 	{
@@ -36,13 +36,10 @@ namespace SCSharp
 			Fnt fnt;
 			byte[] pal;
 
-			bool delay; /* should we stop processing for some amount of time after this page */
-
 			public MarkupPage (PageLocation loc, Fnt font, byte[] palette)
 			{
 				location = loc;
 				lines = new List<string> ();
-				delay = true;
 				fnt = font;
 				pal = palette;
 			}
@@ -50,7 +47,6 @@ namespace SCSharp
 			public MarkupPage (Stream background)
 			{
 				newBackground = GuiUtil.SurfaceFromStream (background, 254, 0);
-				delay = false;
 			}
 
 			public void AddLine (string line)

@@ -12,7 +12,8 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace SCSharp {
+namespace SCSharp
+{
 	public class FlingyDat : MpqResource
 	{
 		public FlingyDat ()

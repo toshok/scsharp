@@ -4,7 +4,7 @@ using System.Threading;
 
 using SdlDotNet;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class GlobalResources
 	{

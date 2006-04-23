@@ -6,23 +6,25 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace SCSharp {
+namespace SCSharp.UI
+{
 
-	public class Sprite {
-		int sprite_entry;
+	public class Sprite
+	{
+		//int sprite_entry;
 
 		ushort images_entry;
 		ushort iscript_entry;
 
 		string grp_path;
 		Grp grp;
-		Mpq mpq;
+		//Mpq mpq;
 		IScriptRunner runner;
 
 		public Sprite (Mpq mpq, int sprite_entry, byte[] palette, int x, int y)
 		{
-			this.mpq = mpq;
-			this.sprite_entry = sprite_entry;
+			//this.mpq = mpq;
+			//this.sprite_entry = sprite_entry;
 
 			images_entry = GlobalResources.Instance.SpritesDat.GetImagesDatEntry (sprite_entry);
 			//			Console.WriteLine ("image_dat_entry == {0}", images_entry);

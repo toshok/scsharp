@@ -4,9 +4,11 @@ using System.Text;
 
 using System.Collections.Generic;
 
-namespace SCSharp {
+namespace SCSharp
+{
 
-	public enum Tileset {
+	public enum Tileset
+	{
 		Badlands = 0,
 		Platform = 1,
 		Installation = 2,
@@ -17,7 +19,8 @@ namespace SCSharp {
 		Twilight = 7
 	}
 
-	public class Chk : MpqResource {
+	public class Chk : MpqResource
+	{
 
 		public Chk ()
 		{
@@ -189,7 +192,7 @@ namespace SCSharp {
 
 			int i = 0;
 			while (i <= data.Length / 36) {
-				uint serial = Util.ReadDWord (stream);
+				/*uint serial =*/ Util.ReadDWord (stream);
 				ushort x = Util.ReadWord (stream);
 				ushort y = Util.ReadWord (stream);
 				ushort type = Util.ReadWord (stream);

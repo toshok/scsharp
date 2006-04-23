@@ -3,8 +3,10 @@ using System.IO;
 
 using SdlDotNet;
 
-namespace SCSharp {
-	public static class MapRenderer {
+namespace SCSharp.UI
+{
+	public static class MapRenderer
+	{
 		public static Surface RenderToSurface (Mpq mpq, Chk chk)
 		{
 			ushort pixel_width, pixel_height;
@@ -44,7 +46,7 @@ namespace SCSharp {
 				for (int map_x = 0; map_x < chk.Width; map_x ++) {
 					int mapTile = mapTiles[map_x,map_y];
 
-					bool odd = (mapTile & 0x10) == 0x10;
+					//					bool odd = (mapTile & 0x10) == 0x10;
 
 					int tile_group = mapTile >> 4; /* the tile's group in the cv5 file */
 					int tile_number = mapTile & 0x0F;    /* the megatile within the tile group */

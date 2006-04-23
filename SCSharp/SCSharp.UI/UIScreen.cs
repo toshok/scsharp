@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using SdlDotNet;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public abstract class UIScreen
 	{

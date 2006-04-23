@@ -6,9 +6,10 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace SCSharp {
-
-	public static class SpriteManager {
+namespace SCSharp.UI
+{
+	public static class SpriteManager
+	{
 		public static List<Sprite> sprites = new List<Sprite>();
 		static Painter painter;
 

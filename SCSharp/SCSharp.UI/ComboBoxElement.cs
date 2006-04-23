@@ -7,7 +7,7 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class ComboBoxElement : UIElement
 	{
@@ -115,6 +115,8 @@ namespace SCSharp
 			dropdown_visible = false;
 			if (cursor != selected_item) {
 				cursor = selected_item;
+				if (SelectionChanged != null)
+					SelectionChanged (cursor);
 				ClearSurface ();
 			}
 			ParentScreen.Painter.Remove (Layer.Popup, PaintDropdown);

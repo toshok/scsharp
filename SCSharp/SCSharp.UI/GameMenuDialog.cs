@@ -6,7 +6,7 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class GameMenuDialog : UIDialog
 	{
@@ -238,12 +238,8 @@ namespace SCSharp
 
 			Elements[EXIT_ELEMENT_INDEX].Activate +=
 				delegate () {
-#if false
 					if (Exit != null)
 						Exit ();
-#else
-					Game.Instance.Quit();
-#endif
 				};
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=

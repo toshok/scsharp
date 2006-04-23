@@ -5,7 +5,7 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class MainMenu : UIScreen
 	{
@@ -75,7 +75,7 @@ namespace SCSharp
 				delegate () {
 					OkDialog d = new OkDialog (this,
 								   mpq,
-								   "Cinematics are not available in SCSharp");
+								   "Cinematics are not available (yet) in SCSharp");
 					ShowDialog (d);
 				};
 

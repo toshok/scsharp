@@ -5,9 +5,11 @@ using SdlDotNet;
 using SdlDotNet.Sprites;
 using System.Drawing;
 
-namespace SCSharp {
+namespace SCSharp.UI
+{
 
-	public enum Layer {
+	public enum Layer
+	{
 		Foo,
 
 		Background,

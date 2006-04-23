@@ -13,7 +13,8 @@ using SdlDotNet;
 using System.Reflection;
 using Tao.Sdl;
 
-namespace SCSharp {
+namespace SCSharp.UI
+{
 
 	public delegate void ReadyDelegate ();
 

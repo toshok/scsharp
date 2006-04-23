@@ -15,8 +15,10 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace SCSharp {
-	public enum AnimationType {
+namespace SCSharp.UI
+{
+	public enum AnimationType
+	{
 		Init,
 		Death,
 		GndAttkInit,
@@ -47,7 +49,8 @@ namespace SCSharp {
 		Unknown27
 	}
 
-	public class IScriptRunner {
+	public class IScriptRunner
+	{
 		static Random rng = new Random (Environment.TickCount);
 
 		/* opcodes */
@@ -214,7 +217,7 @@ namespace SCSharp {
 			return retval;
 		}
 
-		Painter painter;
+		//Painter painter;
 		Surface sprite_surface;
 
 		void PaintSprite (Surface surf, DateTime now)
@@ -229,14 +232,14 @@ namespace SCSharp {
 
 		public void AddToPainter (Painter painter)
 		{
-			this.painter = painter;
+			//this.painter = painter;
 			painter.Add (Layer.Unit, PaintSprite);
 		}
 
 		public void RemoveFromPainter (Painter painter)
 		{
 			painter.Add (Layer.Unit, PaintSprite);
-			this.painter = null;
+			//this.painter = null;
 		}
 
 		void DoPlayFrame (Surface painter_surface, int frame_num)

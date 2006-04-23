@@ -7,13 +7,10 @@ using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
-namespace SCSharp
+namespace SCSharp.UI
 {
 	public class CreditsScreen : MarkupScreen
 	{
-		Fnt fnt;
-		byte[] pal;
-
 		public CreditsScreen (Mpq mpq) : base (mpq)
 		{
 		}
