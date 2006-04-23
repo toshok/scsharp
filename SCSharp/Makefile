@@ -4,10 +4,10 @@ MCS= gmcs
 LIBRARY1=SCSharp.dll
 LIBRARY1_REFS=
 
-LIBRARY2=SCSharp.Gui.dll
+LIBRARY2=SCSharp.UI.dll
 LIBRARY2_REFS= -r:SCSharp.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll
 
-LIBRARY2_RES=/resource:SCSharp.Gui/credits.txt,credits.txt
+LIBRARY2_RES=/resource:SCSharp.UI/credits.txt,credits.txt
 
 all: $(LIBRARY2)
 
