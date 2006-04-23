@@ -16,6 +16,36 @@ using System.Text;
 using System.Collections.Generic;
 
 namespace SCSharp {
+	public enum AnimationType {
+		Init,
+		Death,
+		GndAttkInit,
+		AirAttkInit,
+		SpAbility1,
+		GndAttkRpt,
+		AirAttkRpt,
+		SpAbility2,
+		GndAttkToIdle,
+		AirAttkToIdle,
+		SpAbility3,
+		Walking,
+		Other,
+		BurrowInit,
+		ConstrctHarvst,
+		IsWorking,
+		Landing,
+		LiftOff,
+		Unknown18,
+		Unknown19,
+		Unknown20,
+		Unknown21,
+		Unknown22,
+		Unknown23,
+		Unknown24,
+		Burrow,
+		UnBurrow,
+		Unknown27
+	}
 
 	public class IScriptRunner {
 		static Random rng = new Random (Environment.TickCount);
@@ -76,7 +106,7 @@ namespace SCSharp {
 		/* 0x35 = unknown */
 		/* 0x36 = unknown */
 		/* 0x37 = unknown */
-		/* 0x38 = unknown */
+		const byte Unknown38 = 0x38;
 		const byte IfPickedUp = 0x39;
 		const byte IfTargetInRangeGoto = 0x3a;
 		const byte IfTargetInArcGoto = 0x3b;
@@ -99,15 +129,7 @@ namespace SCSharp {
 
 		int facing = 0;
 
-		void Trace (string fmt, params object[] args)
-		{
-			//			Console.Write (fmt, args);
-		}
-
-		void TraceLine (string fmt, params object[] args)
-		{
-			//			Console.WriteLine (fmt, args);
-		}
+		bool trace;
 
 		public IScriptRunner (Grp grp, ushort script_entry_offset, byte[] palette)
 		{
@@ -121,10 +143,33 @@ namespace SCSharp {
 				Console.WriteLine ("invalid script_entry_offset");
 		}
 
+		void Trace (string fmt, params object[] args)
+		{
+			if (trace)
+				Console.Write (fmt, args);
+		}
+
+		void TraceLine (string fmt, params object[] args)
+		{
+			if (trace)
+				Console.WriteLine (fmt, args);
+		}
+
+		public bool Debug {
+			get { return trace; }
+			set { trace = value; }
+		}
+
 		public void SetPosition (int x, int y)
 		{
 			this.x = x;
 			this.y = y;
+		}
+
+		public void GetPosition (out int xo, out int yo)
+		{
+			xo = this.x;
+			yo = this.y;
 		}
 
 		public void RunScript (ushort script_start)
@@ -133,16 +178,26 @@ namespace SCSharp {
 			pc = script_start;
 		}
 
-		public void RunScriptType (int script_type)
+		public void RunScript (AnimationType animationType)
 		{
-			TraceLine ("running script type = {0}", script_type);
+			TraceLine ("running script type = {0}", animationType);
 
 			int offset_to_script_type = (4 /* "SCEP" */ + 1 /* the script entry "type" */ + 3 /* the spacers */ +
-						     script_type * 2);
+						     (int)animationType * 2);
 
 			script_start = Util.ReadWord (buf, script_entry_offset + offset_to_script_type);
 			pc = script_start;
 			TraceLine ("pc = {0}", pc);
+		}
+
+		public void ListAnimations ()
+		{
+			for (int i = 0; i < (int)AnimationType.Unknown27; i ++) {
+				int offset_to_script_type = (4 /* "SCEP" */ + 1 /* the script entry "type" */ + 3 /* the spacers */ +
+							     i * 2);
+
+				Console.WriteLine ("Animation[{0}] = {1}", (AnimationType)i, Util.ReadWord (buf, script_entry_offset + offset_to_script_type));
+			}
 		}
 
 		ushort ReadWord (ref ushort pc)
@@ -193,7 +248,7 @@ namespace SCSharp {
 			sprite_surface = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (frame_num),
 									  grp.Width, grp.Height,
 									  palette,
-									  false);
+									  true);
 		}
 
 		int waiting;
@@ -315,10 +370,14 @@ namespace SCSharp {
 				barg2 = ReadByte (ref pc);
 				TraceLine ("PlaceIndependentUnderlay: {0} ({1},{2})", warg1, barg1, barg2);
 				Sprite s = SpriteManager.CreateSprite (warg1, palette, x, y);
-				s.RunAnimation (0);
+				s.RunAnimation (AnimationType.Init);
 				break;
 			case EndAnimation:
 				return false;
+			case Unknown38:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("Unknown 0x38 iscript opcode, arg {0}", warg1);
+				break;
 			case SwitchUnderlay:
 			case PlaceOverlay:
 			case PlaceIndependentOverlay:
@@ -343,8 +402,10 @@ namespace SCSharp {
 			case IfPickedUp:
 			case IfTargetInRangeGoto:
 			case IfTargetInArcGoto:
+				Console.WriteLine ("Unhandled iscript opcode: 0x{0:x}", buf[pc-1]);
+				break;
 			default:
-				Console.WriteLine ("Unknown iscript opcode: {0}", buf[pc-1]);
+				Console.WriteLine ("Unknown iscript opcode: 0x{0:x}", buf[pc-1]);
 				break;
 			}
 

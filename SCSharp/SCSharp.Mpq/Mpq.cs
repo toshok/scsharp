@@ -41,12 +41,16 @@ namespace SCSharp {
 				return typeof (Chk);
 			}
 			else if (ext.ToLower () == ".dat") {
-				if (path.ToLower().EndsWith ("images.dat"))
+				if (path.ToLower().EndsWith ("flingy.dat"))
+					return typeof (FlingyDat);
+				else if (path.ToLower().EndsWith ("images.dat"))
 					return typeof (ImagesDat);
 				else if (path.ToLower().EndsWith ("sfxdata.dat"))
 					return typeof (SfxDataDat);
 				else if (path.ToLower().EndsWith ("sprites.dat"))
 					return typeof (SpritesDat);
+				else if (path.ToLower().EndsWith ("units.dat"))
+					return typeof (UnitsDat);
 			}
 			else if (ext.ToLower () == ".smk") {
 				return typeof (Smk);
@@ -187,7 +191,7 @@ namespace SCSharp {
 				return null;
 			}
 
-			Console.WriteLine ("found resource {0} in archive", path);
+			//			Console.WriteLine ("found resource {0} in archive", path);
 			Storm.SFileCloseFile (fileHandle);
 			return new MemoryStream (buf);
 		}

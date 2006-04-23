@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace SCSharp {
 
 	public static class SpriteManager {
-		static List<Sprite> sprites = new List<Sprite>();
+		public static List<Sprite> sprites = new List<Sprite>();
 		static Painter painter;
 
 		static Mpq our_mpq;

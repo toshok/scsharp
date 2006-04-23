@@ -72,17 +72,19 @@ namespace SCSharp {
 		public Fnt Font {
 			get { 
 				if (fnt == null) {
-					int idx = 3;
+					int idx = 2;
 
 					if ((Flags & ElementFlags.FontSmallest) != 0) idx = 0;
-					else if ((Flags & ElementFlags.FontSmaller) != 0) idx = 4;
-					else if ((Flags & ElementFlags.FontLarger) != 0) idx = 4;
-					else if ((Flags & ElementFlags.FontLargest) != 0) idx = 5;
+					else if ((Flags & ElementFlags.FontSmaller) != 0) idx = 3;
+					else if ((Flags & ElementFlags.FontLarger) != 0) idx = 3;
+					else if ((Flags & ElementFlags.FontLargest) != 0) idx = 4;
 
 					Console.WriteLine ("index = {0}", idx);
 
 					fnt = GuiUtil.GetFonts(Mpq)[idx];
 
+					if (fnt == null)
+						throw new Exception (String.Format ("null font at index {0}..  bad things are afoot", idx));
 				}
 				return fnt;
 			}

@@ -26,30 +26,44 @@ namespace SCSharp {
 		const string DIM = "DIM ";
 		const string MTXM = "MTXM";
 
-		Dictionary<string,byte[]> sections;
+		class SectionData {
+			public long data_position;
+			public uint data_length;
+			public byte[] buffer;
+		}
+
+		Stream stream;
+		Dictionary<string,SectionData> sections;
 
 		public void ReadFromStream (Stream stream)
 		{
+			this.stream = stream;
+
 			long stream_length = stream.Length;
 			byte[] section_name_buf = new byte[4];
 			string section_name;
-			uint section_length;
 
-			sections = new Dictionary<string,byte[]>();
+			sections = new Dictionary<string,SectionData>();
 
 			do {
 				stream.Read (section_name_buf, 0, 4);
-				section_length = Util.ReadDWord (stream);
-				
+
+				SectionData sec_data = new SectionData();
+
+				sec_data.data_length = Util.ReadDWord (stream);
+				sec_data.data_position = stream.Position;
+
 				section_name = Encoding.ASCII.GetString (section_name_buf, 0, 4);
 
-				Console.WriteLine ("section '{0}' length = {1}", section_name, section_length);
+				stream.Position += sec_data.data_length;
 
-				byte[] section_buf = new byte[section_length];
-				stream.Read (section_buf, 0, (int)section_length);
-
-				sections.Add (section_name, section_buf);
+				sections.Add (section_name, sec_data);
 			} while (stream.Position < stream_length);
+
+			/* parse only the sections we really care
+			 * about up front.  the rest are done as
+			 * needed.  this speeds up the Play Custom
+			 * screen immensely. */
 
 			/* find out what version we're dealing with */
 			ParseSection ("VER ");
@@ -72,30 +86,24 @@ namespace SCSharp {
 			/* tileset info */
 			ParseSection ("ERA ");
 
-			/* graphical tile section */
-			ParseSection ("MTXM");
-
 			/* player information */
 			//			ParseSection ("OWNR");
 			ParseSection ("SIDE");
-
-			/* tile info */
-			if (sections.ContainsKey ("TILE"))
-				ParseSection ("TILE");
-
-			/* isometric mapping */
-			if (sections.ContainsKey ("ISOM"))
-				ParseSection ("ISOM");
-
-			/* fog of war */
-			ParseSection ("MASK");
 		}
 		
 		void ParseSection (string section_name)
 		{
-			byte[] section_data = sections[section_name];
-			if (section_data == null)
+			SectionData sec = sections[section_name];
+			if (sec == null)
 				throw new Exception (String.Format ("map file is missing section {0}, cannot load", section_name));
+
+			if (sec.buffer == null) {
+				stream.Position = sec.data_position;
+				sec.buffer = new byte[sec.data_length];
+				stream.Read (sec.buffer, 0, (int)sec.data_length);
+			}
+
+			byte[] section_data = sec.buffer;
 
 			if (section_name == "TYPE") {
 				scenarioType = Util.ReadWord (section_data, 0);
@@ -105,11 +113,8 @@ namespace SCSharp {
 			else if (section_name == "DIM ") {
 				width = Util.ReadWord (section_data, 0);
 				height = Util.ReadWord (section_data, 2);
-
-				Console.WriteLine ("map is {0} x {1}", width, height);
 			}
 			else if (section_name == "MTXM") {
-				Console.WriteLine ("section_data == {0} bytes, width * height * 2 == {1}", section_data.Length, width * height * 2);
 				mapTiles = new ushort[width,height];
 				int y, x;
 				for (y = 0; y < height; y ++)
@@ -170,8 +175,8 @@ namespace SCSharp {
 			else if (section_name == "UNIT") {
 				ReadUnits (section_data);
 			}
-			else
-				Console.WriteLine ("Unhandled Chk section type {0}, length {1}", section_name, section_data.Length);
+			//else
+			//Console.WriteLine ("Unhandled Chk section type {0}, length {1}", section_name, section_data.Length);
 		}
 
 		List<UnitInfo> units;
@@ -184,16 +189,14 @@ namespace SCSharp {
 
 			int i = 0;
 			while (i <= data.Length / 36) {
-				Console.WriteLine ("unit {0}", i);
-				Console.WriteLine ("========");
-				uint serial = Util.ReadDWord (stream); Console.WriteLine ("serial = {0}", serial);
-				ushort x = Util.ReadWord (stream); Console.WriteLine ("x = {0}", x);
-				ushort y = Util.ReadWord (stream); Console.WriteLine ("y = {0}", y);
-				ushort type = Util.ReadWord (stream); Console.WriteLine ("type = {0}", type);
+				uint serial = Util.ReadDWord (stream);
+				ushort x = Util.ReadWord (stream);
+				ushort y = Util.ReadWord (stream);
+				ushort type = Util.ReadWord (stream);
 				Util.ReadWord (stream);
 				Util.ReadWord (stream);
 				Util.ReadWord (stream);
-				byte player = Util.ReadByte (stream); Console.WriteLine ("player = {0}", player);
+				byte player = Util.ReadByte (stream);
 				Util.ReadByte (stream);
 				Util.ReadByte (stream);
 				Util.ReadByte (stream);
@@ -285,12 +288,34 @@ namespace SCSharp {
 
 		ushort[,] mapTiles;
 		public ushort[,] MapTiles {
-			get { return mapTiles; }
+			get {
+				if (mapTiles == null) {
+					ParseSection ("MTXM");
+
+					/* XXX put these here for now.. */
+
+					/* tile info */
+					if (sections.ContainsKey ("TILE"))
+						ParseSection ("TILE");
+
+					/* isometric mapping */
+					if (sections.ContainsKey ("ISOM"))
+						ParseSection ("ISOM");
+				}
+
+
+				return mapTiles;
+			}
 		}
 
 		byte[,] mapMask;
 		public byte[,] MapMask {
-			get { return mapMask; }
+			get {
+				if (mapMask == null)
+					ParseSection ("MASK");
+
+				return mapMask;
+			}
 		}
 
 		int numPlayers;

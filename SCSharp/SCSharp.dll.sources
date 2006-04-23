@@ -1,5 +1,6 @@
 SCSharp.Mpq/Bin.cs
 SCSharp.Mpq/Chk.cs
+SCSharp.Mpq/FlingyDat.cs
 SCSharp.Mpq/Fnt.cs
 SCSharp.Mpq/Grp.cs
 SCSharp.Mpq/ImagesDat.cs
@@ -10,4 +11,5 @@ SCSharp.Mpq/SfxDataDat.cs
 SCSharp.Mpq/Spk.cs
 SCSharp.Mpq/SpritesDat.cs
 SCSharp.Mpq/Tbl.cs
+SCSharp.Mpq/UnitsDat.cs
 SCSharp.Util/Util.cs

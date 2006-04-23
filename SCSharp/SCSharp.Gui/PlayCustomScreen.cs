@@ -59,8 +59,8 @@ namespace SCSharp
 
 		void InitializePlayerCombo (ComboBoxElement combo)
 		{
-			combo.AddItem ("Closed"); /* XXX these should all come from some string constant table someplace */
-			combo.AddItem ("Computer", true);
+			combo.AddItem (GlobalResources.Instance.GluAllTbl.Strings[130]); /* Closed */
+			combo.AddItem (GlobalResources.Instance.GluAllTbl.Strings[128], true); /* Closed */
 		}
 
 		string[] files;
@@ -175,13 +175,10 @@ namespace SCSharp
 			string map_path = Path.Combine (curdir, file_listbox.SelectedItem);
 
 			if (selectedIndex < directories.Length) {
-				Console.WriteLine ("selected directory = {0}", map_path);
 				selectedScenario = null;
 				selectedChk = null;
 			}
 			else {
-				Console.WriteLine ("selectedScenario = {0}", map_path);
-
 				selectedScenario = new MpqArchive (map_path);
 
 				selectedChk = (Chk)selectedScenario.GetResource ("staredit\\scenario.chk");

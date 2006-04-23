@@ -65,6 +65,12 @@ namespace SCSharp {
 			
 			lowIndex = Util.ReadByte (stream);
 			highIndex = Util.ReadByte (stream);
+
+			if (lowIndex > highIndex) {
+				byte tmp = lowIndex;
+				lowIndex = highIndex;
+				highIndex = tmp;
+			}
 			maxWidth = Util.ReadByte (stream);
 			maxHeight = Util.ReadByte (stream);
 			/*uint unknown =*/ Util.ReadDWord (stream);
@@ -135,7 +141,8 @@ namespace SCSharp {
 		public Glyph this [int index] {
 			get {
 				if (index < lowIndex || index > highIndex)
-					throw new ArgumentOutOfRangeException ("index");
+					throw new ArgumentOutOfRangeException ("index",
+							       String.Format ("value of {0} out of range of {1}-{2}", index, lowIndex, highIndex));
 
 				return GetGlyph (index);
 			}

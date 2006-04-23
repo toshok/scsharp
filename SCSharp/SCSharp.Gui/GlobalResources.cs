@@ -14,6 +14,8 @@ namespace SCSharp
 		ImagesDat imagesDat;
 		SpritesDat spritesDat;
 		SfxDataDat sfxDataDat;
+		UnitsDat unitsDat;
+		FlingyDat flingyDat;
 
 		Tbl imagesTbl;
 		Tbl sfxDataTbl;
@@ -71,6 +73,14 @@ namespace SCSharp
 			get { return iscriptBin; }
 		}
 
+		public UnitsDat UnitsDat {
+			get { return unitsDat; }
+		}
+
+		public FlingyDat FlingyDat {
+			get { return flingyDat; }
+		}
+
 		void ResourceLoader (object state)
 		{
 			try {
@@ -97,6 +107,12 @@ namespace SCSharp
 
 				Console.WriteLine ("loading iscript.bin");
 				iscriptBin = (IScriptBin)mpq.GetResource (Builtins.IScriptBin);
+
+				Console.WriteLine ("loading units.dat");
+				unitsDat = (UnitsDat)mpq.GetResource (Builtins.UnitsDat);
+
+				Console.WriteLine ("loading flingy.dat");
+				flingyDat = (FlingyDat)mpq.GetResource (Builtins.FlingyDat);
 
 				// notify we're ready to roll
 				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));

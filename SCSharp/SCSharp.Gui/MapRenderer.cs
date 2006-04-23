@@ -68,7 +68,7 @@ namespace SCSharp {
 
 										byte palette_entry = vr4[minitile_id * 64 + pixel_y * 8 + pixel_x];
 
-										image[0 + 4 * (x + y)] = 255;
+										image[0 + 4 * (x + y)] = (byte)(255 - wpe[palette_entry * 4 + 3]);
 										image[1 + 4 * (x + y)] = wpe[palette_entry * 4 + 2];
 										image[2 + 4 * (x + y)] = wpe[palette_entry * 4 + 1];
 										image[3 + 4 * (x + y)] = wpe[palette_entry * 4 + 0];
@@ -82,7 +82,7 @@ namespace SCSharp {
 
 										byte palette_entry = vr4[minitile_id * 64 + pixel_y * 8 + pixel_x];
 
-										image[0 + 4 * (x + y)] = 255;
+										image[0 + 4 * (x + y)] = (byte)(255 - wpe[palette_entry * 4 + 3]);
 										image[1 + 4 * (x + y)] = wpe[palette_entry * 4 + 2];
 										image[2 + 4 * (x + y)] = wpe[palette_entry * 4 + 1];
 										image[3 + 4 * (x + y)] = wpe[palette_entry * 4 + 0];

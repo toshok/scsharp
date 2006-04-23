@@ -21,16 +21,25 @@ namespace SCSharp {
 
 		static Fnt[] fonts;
 
+		static string[] BroodwarFonts = {
+			"files\\font\\font8.fnt",
+			"files\\font\\font10.fnt",
+			"files\\font\\font14.fnt",
+			"files\\font\\font16.fnt",
+			"files\\font\\font16x.fnt"
+		};
+
 		public static Fnt[] GetFonts (Mpq mpq) {
 			if (fonts == null) {
-				fonts = new Fnt[6];
+				string[] font_list;
+				font_list = BroodwarFonts;
 
-				fonts[0] = (Fnt)mpq.GetResource ("files\\font\\font8.fnt");
-				fonts[1] = (Fnt)mpq.GetResource ("files\\font\\font10.fnt");
-				fonts[2] = (Fnt)mpq.GetResource ("files\\font\\font12.fnt");
-				fonts[3] = (Fnt)mpq.GetResource ("files\\font\\font14.fnt");
-				fonts[4] = (Fnt)mpq.GetResource ("files\\font\\font16.fnt");
-				fonts[5] = (Fnt)mpq.GetResource ("files\\font\\font16x.fnt");
+				fonts = new Fnt[font_list.Length];
+
+				for (int i = 0; i < fonts.Length; i ++) {
+					fonts[i] = (Fnt)mpq.GetResource (font_list[i]);
+					Console.WriteLine ("fonts[{0}] = {1}", i, fonts[i] == null ? "null" : "not null");
+				}
 			}
 			return fonts;
 		}

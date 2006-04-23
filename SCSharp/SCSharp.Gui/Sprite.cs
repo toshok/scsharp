@@ -25,27 +25,31 @@ namespace SCSharp {
 			this.sprite_entry = sprite_entry;
 
 			images_entry = GlobalResources.Instance.SpritesDat.GetImagesDatEntry (sprite_entry);
-			Console.WriteLine ("image_dat_entry == {0}", images_entry);
+			//			Console.WriteLine ("image_dat_entry == {0}", images_entry);
 
 			ushort grp_index = GlobalResources.Instance.ImagesDat.GetGrpIndex (images_entry);
-			Console.WriteLine ("grp_index = {0}", grp_index);
+			//			Console.WriteLine ("grp_index = {0}", grp_index);
 			grp_path = GlobalResources.Instance.ImagesTbl[grp_index-1];
-			Console.WriteLine ("grp_path = {0}", grp_path);
+			//			Console.WriteLine ("grp_path = {0}", grp_path);
 
 			grp = (Grp)mpq.GetResource ("unit\\" + grp_path);
 
 			iscript_entry = GlobalResources.Instance.ImagesDat.GetIScriptIndex (images_entry);
-			Console.WriteLine ("iscript_entry = {0}", iscript_entry);
-			Console.WriteLine ("iscript_entry_offset = {0}", GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry));
+			//			Console.WriteLine ("iscript_entry = {0}", iscript_entry);
+			//			Console.WriteLine ("iscript_entry_offset = {0}", GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry));
 
-			iscript_entry = 204; /* XXX */
 			runner = new IScriptRunner (grp, GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry), palette);
 			runner.SetPosition (x, y);
+
+			if (sprite_entry == 252) {
+				runner.ListAnimations();
+				runner.Debug = true;
+			}
 		}
 
-		public void RunAnimation (int animation_type)
+		public void RunAnimation (AnimationType animation_type)
 		{
-			runner.RunScriptType (animation_type);
+			runner.RunScript (animation_type);
 		}
 
 		public void AddToPainter (Painter painter)
@@ -61,6 +65,11 @@ namespace SCSharp {
 		public bool Tick (Surface surf, DateTime now)
 		{
 			return runner.Tick (surf, now);
+		}
+
+		public void GetPosition (out int x, out int y)
+		{
+			runner.GetPosition (out x, out y);
 		}
 	}
 

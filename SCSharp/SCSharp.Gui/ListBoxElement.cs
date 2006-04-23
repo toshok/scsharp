@@ -15,6 +15,7 @@ namespace SCSharp
 		int cursor = -1;
 		bool selectable = true;
 		int num_visible;
+		int first_visible;
 
 		public ListBoxElement (UIScreen screen, BinElement el, byte[] palette)
 			: base (screen, el, palette)
@@ -22,6 +23,7 @@ namespace SCSharp
 			items = new List<string> ();
 
 			num_visible = Height / Font.LineSize;
+			first_visible = 0;
 		}
 
 		public void KeyboardDown (KeyboardEventArgs args)
@@ -33,12 +35,18 @@ namespace SCSharp
 				if (cursor > 0) {
 					cursor--;
 					selection_changed = true;
+
+					if (cursor < first_visible)
+						first_visible = cursor;
 				}
 			}
 			else if (args.Key == Key.DownArrow) {
 				if (cursor < items.Count - 1) {
 					cursor++;
 					selection_changed = true;
+
+					if (cursor >= first_visible + num_visible)
+						first_visible = cursor - num_visible + 1;
 				}
 			}
 
@@ -98,7 +106,9 @@ namespace SCSharp
 			Surface surf = new Surface (Width, Height);
 
 			int y = 0;
-			for (int i = 0; i < items.Count; i ++) {
+			for (int i = first_visible; i < first_visible + num_visible; i ++) {
+				if (i >= items.Count)
+					break;
 				Surface item_surface = GuiUtil.ComposeText (items[i], Font, Palette,
 									    (!selectable || cursor == i) ? 4 : 24);
 

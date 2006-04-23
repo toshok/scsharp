@@ -54,7 +54,7 @@ namespace SCSharp
 
 			mpq = new MpqContainer ();
 
-			Mpq broodatMpq = null, stardatMpq = null, indexExe = null;
+			Mpq broodatMpq = null, stardatMpq = null, installExe = null;
 
 			try {
 				foreach (string path in Directory.GetFileSystemEntries (starcraftDir, "*.mpq")) {
@@ -76,7 +76,7 @@ namespace SCSharp
 				foreach (string path in Directory.GetFileSystemEntries (cdDir, "*.exe")) {
 					if (path.ToLower().EndsWith ("install.exe")) {
 						Console.WriteLine (path);
-						indexExe = GetMpq (path);
+						installExe = GetMpq (path);
 					}
 				}
 			}
@@ -92,8 +92,8 @@ namespace SCSharp
 			if (stardatMpq != null)
 				((MpqContainer)mpq).Add (stardatMpq);
 
-			if (indexExe != null)
-				((MpqContainer)mpq).Add (indexExe);
+			if (installExe != null)
+				((MpqContainer)mpq).Add (installExe);
 
 			this.rootDir = starcraftDir;
 		}

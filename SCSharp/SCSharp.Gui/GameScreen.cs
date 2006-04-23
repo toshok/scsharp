@@ -1,6 +1,3 @@
-//#define SHOW_STARFIELD
-#define SHOW_MAP
-
 using System;
 using System.IO;
 using System.Threading;
@@ -33,16 +30,22 @@ namespace SCSharp {
 		const int SCROLL_DELTA = 15;
 		const int MOUSE_MOVE_BORDER = 10;
 
-		const int CURSOR_UL = 0;
-		const int CURSOR_U  = 1;
-		const int CURSOR_UR = 2;
-		const int CURSOR_R  = 3;
-		const int CURSOR_DR = 4;
-		const int CURSOR_D  = 5;
-		const int CURSOR_DL = 6;
-		const int CURSOR_L  = 7;
+		const int SCROLL_CURSOR_UL = 0;
+		const int SCROLL_CURSOR_U  = 1;
+		const int SCROLL_CURSOR_UR = 2;
+		const int SCROLL_CURSOR_R  = 3;
+		const int SCROLL_CURSOR_DR = 4;
+		const int SCROLL_CURSOR_D  = 5;
+		const int SCROLL_CURSOR_DL = 6;
+		const int SCROLL_CURSOR_L  = 7;
 
 		CursorAnimator[] ScrollCursors;
+
+		const int TARG_CURSOR_G = 0;
+		const int TARG_CURSOR_Y = 0;
+		const int TARG_CURSOR_R = 0;
+
+		CursorAnimator[] TargetCursors;
 
 		byte[] unit_palette;
 		byte[] tileset_palette;
@@ -52,14 +55,13 @@ namespace SCSharp {
 				   Chk scenario) : base (mpq)
 		{
 			this.effectpal_path = "game\\tblink.pcx";
-			this.arrowgrp_path = "cursor\\arrow.grp";
+			this.arrowgrp_path = "cursor\\MagG.grp";
 			this.fontpal_path = "game\\tfontgam.pcx";
 			this.scenario_mpq = scenario_mpq;
 			this.scenario = scenario;
 			ScrollCursors = new CursorAnimator[8];
 		}
 
-#if SHOW_STARFIELD
 		Surface[] starfield_layers;
 
 		void PaintStarfield (Surface surf, DateTime dt)
@@ -110,7 +112,6 @@ namespace SCSharp {
 			}
 		}
 
-#elif SHOW_MAP
 		Surface map_surf;
 
 		void PaintMap (Surface surf, DateTime dt)
@@ -123,7 +124,6 @@ namespace SCSharp {
 						  new Size (Game.SCREEN_RES_X,
 							    Game.SCREEN_RES_Y)));
 		}
-#endif
 
 		void PaintHud (Surface surf, DateTime dt)
 		{
@@ -147,12 +147,11 @@ namespace SCSharp {
 			painter.Add (Layer.Hud, PaintHud);
 			painter.Add (Layer.Hud, PaintMinimap);
 
-#if SHOW_STARFIELD
-			painter.Add (Layer.Background, PaintStarfield);
-#elif SHOW_MAP
+			if (scenario.Tileset == Tileset.Platform)
+				painter.Add (Layer.Background, PaintStarfield);
+
 			painter.Add (Layer.Map, PaintMap);
 			SpriteManager.AddToPainter (painter);
-#endif
 			painter.Add (Layer.Background, ScrollPainter);
 		}
 
@@ -162,12 +161,12 @@ namespace SCSharp {
 			painter.Remove (Layer.Hud, PaintHud);
 			painter.Remove (Layer.Hud, PaintMinimap);
 
-#if SHOW_STARFIELD
-			painter.Remove (Layer.Background, PaintStarfield);
-#elif SHOW_MAP
+			if (scenario.Tileset == Tileset.Platform)
+				painter.Remove (Layer.Background, PaintStarfield);
+
 			painter.Remove (Layer.Map, PaintMap);
 			SpriteManager.RemoveFromPainter (painter);
-#endif
+
 			painter.Remove (Layer.Background, ScrollPainter);
 		}
 
@@ -187,31 +186,27 @@ namespace SCSharp {
 												 Util.RaceCharLower[(int)Game.Instance.Race])),
 							 254, 0);
 
-#if SHOW_STARFIELD
-			Spk starfield = (Spk)mpq.GetResource ("parallax\\star.spk");
+			if (scenario.Tileset == Tileset.Platform) {
+				Spk starfield = (Spk)mpq.GetResource ("parallax\\star.spk");
 
-			starfield_layers = new Surface [starfield.Layers.Length];
-			for (int i = 0; i < starfield_layers.Length; i ++) {
-				starfield_layers[i] = new Surface (Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
+				starfield_layers = new Surface [starfield.Layers.Length];
+				for (int i = 0; i < starfield_layers.Length; i ++) {
+					starfield_layers[i] = new Surface (Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
 
-				starfield_layers[i].TransparentColor = Color.Black;
+					starfield_layers[i].TransparentColor = Color.Black;
 
-				for (int o = 0; o < starfield.Layers[i].Objects.Length; o ++) {
-					ParallaxObject obj = starfield.Layers[i].Objects[o];
+					for (int o = 0; o < starfield.Layers[i].Objects.Length; o ++) {
+						ParallaxObject obj = starfield.Layers[i].Objects[o];
 
-					starfield_layers[i].Fill (new Rectangle (new Point (obj.X, obj.Y), new Size (2,2)),
-								  Color.White);
+						starfield_layers[i].Fill (new Rectangle (new Point (obj.X, obj.Y), new Size (2,2)),
+									  Color.White);
+					}
 				}
 			}
 
-#elif SHOW_MAP
 			map_surf = MapRenderer.RenderToSurface (mpq, scenario);
 
 			PlaceInitialUnits ();
-#else
-			map_surf = new Surface (Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
-			map_surf.Fill (new Rectangle (0, 0, map_surf.Width - 1, map_surf.Height - 1), Color.Black);
-#endif
 
 			// load the cursors we'll show when scrolling with the mouse
 			string[] cursornames = new string[] {
@@ -222,13 +217,26 @@ namespace SCSharp {
 				"cursor\\ScrollDR.grp",
 				"cursor\\ScrollD.grp",
 				"cursor\\ScrollDL.grp",
-				"cursor\\ScrollL.grp"
+				"cursor\\ScrollL.grp",
 			};
 			ScrollCursors = new CursorAnimator [cursornames.Length];
 			for (int i = 0; i < cursornames.Length; i ++) {
 				ScrollCursors[i] = new CursorAnimator ((Grp)mpq.GetResource (cursornames[i]),
 								       effectpal.Palette);
 				ScrollCursors[i].SetHotSpot (60, 60);
+			}
+
+			// load the targeting cursors
+			string[] targetcursornames = new string[] {
+				"cursor\\TargG.grp"
+				"cursor\\TargY.grp"
+				"cursor\\TargR.grp"
+			};
+			TargetCursors = new CursorAnimator [targetcursornames.Length];
+			for (int i = 0; i < targetcursornames.Length; i ++) {
+				TargetCursors[i] = new CursorAnimator ((Grp)mpq.GetResource (targetcursornames[i]),
+								       effectpal.Palette);
+				//TargetCursors[i].SetHotSpot (60, 60);
 			}
 		}
 
@@ -307,25 +315,35 @@ namespace SCSharp {
 
 				if (horiz_delta < 0)
 					if (vert_delta < 0)
-						Game.Instance.Cursor = ScrollCursors[CURSOR_UL];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_UL];
 					else if (vert_delta > 0)
-						Game.Instance.Cursor = ScrollCursors[CURSOR_DL];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_DL];
 					else
-						Game.Instance.Cursor = ScrollCursors[CURSOR_L];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_L];
 				else if (horiz_delta > 0)
 					if (vert_delta < 0)
-						Game.Instance.Cursor = ScrollCursors[CURSOR_UR];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_UR];
 					else if (vert_delta > 0)
-						Game.Instance.Cursor = ScrollCursors[CURSOR_DR];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_DR];
 					else
-						Game.Instance.Cursor = ScrollCursors[CURSOR_R];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_R];
 				else
 					if (vert_delta < 0)
-						Game.Instance.Cursor = ScrollCursors[CURSOR_U];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_U];
 					else if (vert_delta > 0)
-						Game.Instance.Cursor = ScrollCursors[CURSOR_D];
+						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_D];
 					else
 						Game.Instance.Cursor = Cursor;
+
+				/* are we over a unit?  if so, display */
+				foreach (Sprite s in SpriteManager.sprites) {
+					int sx, sy;
+					s.GetPosition (out sx, out sy);
+
+					if (args.X + topleft_x > sx && args.X + topleft_x <= sx + 10 /* XXX */
+					    && args.Y + topleft_y > sy && args.Y + topleft_y <= sy + 10 /* XXX */)
+						Game.Instance.Cursor = TargetCursors[TARG_CURSOR_G];
+				}
 			}
 		}
 
@@ -370,29 +388,38 @@ namespace SCSharp {
 		{
 			List<UnitInfo> units = scenario.Units;
 
+			List<UnitInfo> startLocations = new List<UnitInfo>();
+
 			foreach (UnitInfo unit in units) {
 				Sprite sprite = null;
 
-				switch (unit.unit_id)
-				{
-				case 176:
-					sprite = SpriteManager.CreateSprite (mpq, 279, tileset_palette, unit.x, unit.y);
+				if (unit.unit_id == 0xffff)
 					break;
-				case 177:
-					sprite = SpriteManager.CreateSprite (mpq, 280, tileset_palette, unit.x, unit.y);
-					break;
-				case 178:
-					sprite = SpriteManager.CreateSprite (mpq, 281, tileset_palette, unit.x, unit.y);
-					break;
-				case 188:
-					sprite = SpriteManager.CreateSprite (mpq, 275, tileset_palette, unit.x, unit.y);
-					break;
-				default:
-					break;
+
+				int flingy_id = GlobalResources.Instance.UnitsDat.GetFlingyId (unit.unit_id);
+
+				/* we handle start locations in a special way, below */
+				if (flingy_id == 140) {
+					startLocations.Add (unit);
+					continue;
 				}
 
-				if (sprite != null)
-					sprite.RunAnimation (20);
+				int sprite_id = GlobalResources.Instance.FlingyDat.GetSpriteId (flingy_id);
+
+				sprite = SpriteManager.CreateSprite (mpq, sprite_id, tileset_palette, unit.x, unit.y);
+
+				sprite.RunAnimation (AnimationType.Init);
+			}
+
+			/* now place the starting units (a base and
+			 * three harvesters), if we aren't using map
+			 * settings */
+			foreach (UnitInfo sl in startLocations) {
+				Console.WriteLine ("Creating sprite for start location (terran command center)");
+
+				Sprite sprite = SpriteManager.CreateSprite (mpq, 252, tileset_palette, sl.x, sl.y);
+
+				sprite.RunAnimation (AnimationType.Init);
 			}
 		}
 	}
