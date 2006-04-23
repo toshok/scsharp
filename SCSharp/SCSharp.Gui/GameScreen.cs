@@ -228,8 +228,8 @@ namespace SCSharp {
 
 			// load the targeting cursors
 			string[] targetcursornames = new string[] {
-				"cursor\\TargG.grp"
-				"cursor\\TargY.grp"
+				"cursor\\TargG.grp",
+				"cursor\\TargY.grp",
 				"cursor\\TargR.grp"
 			};
 			TargetCursors = new CursorAnimator [targetcursornames.Length];
@@ -261,15 +261,20 @@ namespace SCSharp {
 
 		bool buttonDownInMinimap;
 
+		void Recenter (int x, int y)
+		{
+			topleft_x = x - Game.SCREEN_RES_X / 2;
+			topleft_y = y - Game.SCREEN_RES_Y / 2;
+
+			ClipTopLeft ();
+		}
+
 		void RecenterFromMinimap (int x, int y)
 		{
 			int map_x = (int)((float)(x - MINIMAP_X) / MINIMAP_WIDTH * map_surf.Width);
 			int map_y = (int)((float)(y - MINIMAP_Y) / MINIMAP_HEIGHT * map_surf.Height);
 
-			topleft_x = map_x - Game.SCREEN_RES_X / 2;
-			topleft_y = map_y - Game.SCREEN_RES_Y / 2;
-
-			ClipTopLeft ();
+			Recenter (map_x, map_y);
 		}
 
 		public override void MouseButtonDown (MouseButtonEventArgs args)
@@ -421,6 +426,9 @@ namespace SCSharp {
 
 				sprite.RunAnimation (AnimationType.Init);
 			}
+
+			/* for now assume the player is at startLocations[0], and center the view there */
+			Recenter (startLocations[0].x, startLocations[0].y);
 		}
 	}
 }
