@@ -21,12 +21,6 @@ Things you need to do to make this work:
 	SDL_mixer-1.2.6  (http://www.libsdl.org/projects/SDL_mixer/release/)
 	SDL_image-1.2.4  (http://www.libsdl.org/projects/SDL_image/release/)
 
-6) Run the mono.sh script to set up th necessary environment variables:
-
-	$ cd src
-	$ . ./mono.sh
-
 7) That's it.  The following should be enough:
 
 	$ mono starcraft.exe
-
