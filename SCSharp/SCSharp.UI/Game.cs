@@ -47,7 +47,7 @@ namespace SCSharp.UI
 		{
 			instance = this;
 
-			race = Race.Zerg;
+			race = Race.Protoss; /* XXX */
 
 			screens = new UIScreen[(int)UIScreenType.ScreenCount];
 

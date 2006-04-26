@@ -52,6 +52,8 @@ namespace SCSharp.UI
 		//byte[] unit_palette;
 		byte[] tileset_palette;
 
+		//		Player[] players;
+
 		public GameScreen (Mpq mpq,
 				   Mpq scenario_mpq,
 				   Chk scenario) : base (mpq)
@@ -422,9 +424,11 @@ namespace SCSharp.UI
 			 * three harvesters), if we aren't using map
 			 * settings */
 			foreach (UnitInfo sl in startLocations) {
-				Console.WriteLine ("Creating sprite for start location (terran command center)");
+				Console.WriteLine ("Creating sprite for start location");
 
-				Sprite sprite = SpriteManager.CreateSprite (mpq, 252, tileset_palette, sl.x, sl.y);
+				/* terran command center = 252,
+				   protos nexus = 211 */
+				Sprite sprite = SpriteManager.CreateSprite (mpq, 211, tileset_palette, sl.x, sl.y);
 
 				sprite.RunAnimation (AnimationType.Init);
 			}

@@ -65,7 +65,7 @@ namespace SCSharp.UI
 		const byte PlaceActiveOverlay = 0x08;
 		const byte PlaceActiveUnderlay = 0x09;
 		/* 0x0a = unknown */
-		const byte SwitchUnderlay = 0x0b; /* unknown according to sceb */
+		const byte SwitchUnderlay = 0x0b;
 		/* 0x0c = unknown */
 		const byte PlaceOverlay = 0x0d;
 		/* 0x0e = unknown */
@@ -113,12 +113,13 @@ namespace SCSharp.UI
 		const byte IfPickedUp = 0x39;
 		const byte IfTargetInRangeGoto = 0x3a;
 		const byte IfTargetInArcGoto = 0x3b;
-		/* 0x3c = unknown */
-		/* 0x3d = unknown */
+		const byte Unknown3c = 0x3c;
+		const byte Unknown3d = 0x3d;
 		/* 0x3e = unknown */
-		/* 0x3f = unknown */
-		/* 0x40 = unknown */
-		/* 0x41 = unknown */
+		const byte Unknown3f = 0x3f;
+		const byte Unknown40 = 0x40;
+		const byte Unknown41 = 0x41;
+		const byte Unknown42 = 0x42; /* ICE manual says this is something dealing with sprites */
 
 		int x;
 		int y;
@@ -380,6 +381,30 @@ namespace SCSharp.UI
 			case Unknown38:
 				warg1 = ReadWord (ref pc);
 				TraceLine ("Unknown 0x38 iscript opcode, arg {0}", warg1);
+				break;
+			case Unknown3c:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("Unknown 0x3c iscript opcode, arg {0}", warg1);
+				break;
+			case Unknown3d:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("Unknown 0x3d iscript opcode, arg {0}", warg1);
+				break;
+			case Unknown3f:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("Unknown 0x3f iscript opcode, arg {0}", warg1);
+				break;
+			case Unknown40:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("Unknown 0x40 iscript opcode, arg {0}", warg1);
+				break;
+			case Unknown41:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("Unknown 0x41 iscript opcode, arg {0}", warg1);
+				break;
+			case Unknown42:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("Unknown 0x42 iscript opcode, arg {0}", warg1);
 				break;
 			case SwitchUnderlay:
 			case PlaceOverlay:

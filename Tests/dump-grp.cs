@@ -3,6 +3,7 @@ using System;
 using System.IO;
 
 using SCSharp;
+using SCSharp.UI;
 
 public class DumpGRP {
 
