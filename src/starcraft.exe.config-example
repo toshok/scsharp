@@ -7,5 +7,9 @@
     <!-- this should be the path to a directory containing the
 	 install.exe file from the Brood Wars CD -->
     <add key="CDDirectory" value="/media/BroodWars" />
+
+    <!-- set this to true to see borders around UI Elements on
+         the screens leading up to the game -->
+    <add key="ShowElementBorders" value="false" />
   </appSettings>
 </configuration>

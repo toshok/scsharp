@@ -7,7 +7,9 @@ Things you need to do to make this work:
 
 3) Do the same with the "install.exe" file from the Broodwars CD.
    This release requires that file be present.  It can live on the CD,
-   or you can copy it to the local filesystem.
+   or you can copy it to the local filesystem.  It must be the Broodwars
+   CD at the moment, due to the fact that the font code only works
+   with the files on the BW cd for some reason.
 
 4) Edit the starcraft.exe.config file and point it at the directories
    from 1) and 2).
@@ -19,5 +21,12 @@ Things you need to do to make this work:
 	SDL_mixer-1.2.6  (http://www.libsdl.org/projects/SDL_mixer/release/)
 	SDL_image-1.2.4  (http://www.libsdl.org/projects/SDL_image/release/)
 
-that's it.  after those steps, running "mono starcraft.exe" should do
-it.
+6) Run the mono.sh script to set up th necessary environment variables:
+
+	$ cd src
+	$ . ./mono.sh
+
+7) That's it.  The following should be enough:
+
+	$ mono starcraft.exe
+

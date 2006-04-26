@@ -45,7 +45,7 @@ namespace SCSharp.UI
 		static UIPainter()
 		{
 #if DEBUG
-			string sb = ConfigurationManager.AppSettings ["showElementBorders"];
+			string sb = ConfigurationManager.AppSettings ["ShowElementBorders"];
 			if (sb != null) {
 				showBorders = Boolean.Parse (sb);
 			}

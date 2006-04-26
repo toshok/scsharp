@@ -1,2 +1,2 @@
-export MONO_PATH=/home/toshok/src/starcraft/starcraft-sharp/sdldotnet/bin/examples:/home/toshok/src/starcraft/starcraft-sharp/SCSharp
-export LD_LIBRARY_PATH=/home/toshok/src/starcraft/starcraft-sharp/StormLib
+export MONO_PATH=`pwd`/../sdldotnet/bin/examples:`pwd`/../SCSharp
+export LD_LIBRARY_PATH=`pwd`/StormLib
