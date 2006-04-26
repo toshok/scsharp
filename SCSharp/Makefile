@@ -29,10 +29,12 @@ library1_frag=.deps/$(LIBRARY1).makefrag
 
 $(library2_frag): $(LIBRARY2_SOURCES)
 	@echo Creating $@ ...
+	@-mkdir .deps
 	@sed 's,^,$(LIBRARY2): ,' $< > $@
 
 $(library1_frag): $(LIBRARY1_SOURCES)
 	@echo Creating $@ ...
+	@-mkdir .deps
 	@sed 's,^,$(LIBRARY1): ,' $< > $@
 
 -include $(library2_frag)
