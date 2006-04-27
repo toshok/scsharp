@@ -15,7 +15,7 @@ all clean::
 dist:: dist-local dist-recurse dist-finish
 
 dist-local:
-	@rm -rf $(DISTDIR).tar.gz
+	@rm -rf $(DISTDIR).tar.bz2
 	@rm -rf $(DISTDIR)
 	@mkdir $(DISTDIR)
 	@mkdir $(DISTDIR)/sdldotnet-bin
@@ -29,7 +29,7 @@ dist-recurse:
 	done
 
 dist-finish:
-	tar -cvzf $(DISTDIR).tar.gz $(DISTDIR)
+	tar -cvjf $(DISTDIR).tar.bz2 $(DISTDIR)
 	rm -rf $(DISTDIR)
 
 #dll configs?
@@ -43,5 +43,6 @@ release: all
 	@cp sdldotnet/bin/examples/Tao.Sdl.dll $(RELEASEDIR)
 	@cp sdldotnet/bin/examples/Tao.Sdl.dll.config $(RELEASEDIR)
 	@cp RELEASE_README $(RELEASEDIR)/README
-	tar -cvzf $(RELEASEDIR).tar.gz $(RELEASEDIR)
+	@cp AUTHORS $(RELEASEDIR)
+	tar -cvjf $(RELEASEDIR).tar.bz2 $(RELEASEDIR)
 	rm -rf $(RELEASEDIR)

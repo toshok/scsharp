@@ -185,7 +185,7 @@ namespace SCSharp.UI
 		void CreateWindow (bool fullscreen)
 		{
 			Video.WindowIcon ();
-			Video.WindowCaption = "Starcraft";
+			Video.WindowCaption = "SCSharp";
 			Surface surf;
 
 			if (fullscreen)
