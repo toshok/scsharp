@@ -55,7 +55,7 @@ namespace SCSharp.UI
 		{
 			base.ResourceLoader ();
 
-			Elements[VERSION_ELEMENT_INDEX].Text = "v0.0000000001";
+			Elements[VERSION_ELEMENT_INDEX].Text = "v0.0000004";
 
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {

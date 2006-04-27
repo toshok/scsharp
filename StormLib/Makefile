@@ -19,6 +19,16 @@ pklib/implode.c \
 pklib/explode.c \
 pklib/crc32.c
 
+HEADERS= \
+	SCommon.h \
+	Storm.h \
+	StormLib.h \
+	StormPort.h \
+	huffman/huff.h \
+	huffman/huffman.h \
+	pklib/pklib.h \
+	wave/wave.h
+
 OBJS:=$(CPP_SOURCES:.cpp=.o) $(C_SOURCES:.c=.o)
 
 include Makefile.config
@@ -37,12 +47,13 @@ $(LIB): $(OBJS)
 clean:
 	rm -f $(OBJS)
 
-new: clean all
-
-mrproper: clean
-	rm $(LIB) .dep
-
-mrnew: mrproper new
+dist:
+	@mkdir $(DISTDIR)
+	@mkdir $(DISTDIR)/wave
+	@mkdir $(DISTDIR)/huffman
+	@mkdir $(DISTDIR)/pklib
+	@cp Makefile Makefile.config $(DISTDIR)
+	@for i in $(CPP_SOURCES) $(C_SOURCES) $(HEADERS); do cp $$i $(DISTDIR)/$$i; done
 
 #install: $(LIB)
 	#install $(I_FLAGS) $(LIB) /usr/local/lib

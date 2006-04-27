@@ -1,41 +1,53 @@
 MCSFLAGS= -debug -d:DEBUG
 MCS= gmcs
 
-LIBRARY1=SCSharp.dll
-LIBRARY1_REFS=
+SCSHARPDLL=SCSharp.dll
+SCSHARPDLL_REFS=
 
-LIBRARY2=SCSharp.UI.dll
-LIBRARY2_REFS= -r:SCSharp.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
+SCSHARPUIDLL=SCSharp.UI.dll
+SCSHARPUIDLL_REFS= -r:SCSharp.dll -r:../sdldotnet-bin/SdlDotNet.dll -r:../sdldotnet-bin/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
 
-LIBRARY2_RES=/resource:SCSharp.UI/credits.txt,credits.txt
+SCSHARPUIDLL_RES=SCSharp.UI/credits.txt
+# XXX should autogenerate the next one from the previous one
+SCSHARPUIDLL_RESFLAGS=/resource:SCSharp.UI/credits.txt,credits.txt
 
-all: $(LIBRARY2)
+all: $(SCSHARPUIDLL)
 
-$(LIBRARY2): $(LIBRARY1)
-	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY2_SOURCES) $(LIBRARY2_RES) $(LIBRARY2_REFS)
+$(SCSHARPUIDLL): $(SCSHARPDLL)
+	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(SCSHARPUIDLL_SOURCES) $(SCSHARPUIDLL_RESFLAGS) $(SCSHARPUIDLL_REFS)
 
-$(LIBRARY1):
-	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(LIBRARY1_SOURCES) $(LIBRARY1_RES) $(LIBRARY1_REFS)
+$(SCSHARPDLL):
+	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(SCSHARPDLL_SOURCES) $(SCSHARPDLL_RESFLAGS) $(SCSHARPDLL_REFS)
 
 
 clean:
-	$(RM) -f $(LIBRARY2) $(LIBRARY1) $(LIBRARY2).mdb $(LIBRARY1).mdb
+	$(RM) -f $(SCSHARPUIDLL) $(SCSHARPDLL) $(SCSHARPUIDLL).mdb $(SCSHARPDLL).mdb
 
-LIBRARY1_SOURCES=$(LIBRARY1).sources
-LIBRARY2_SOURCES=$(LIBRARY2).sources
+dist:
+	@mkdir $(DISTDIR)
+	@mkdir $(DISTDIR)/SCSharp.Mpq
+	@mkdir $(DISTDIR)/SCSharp.UI
+	@mkdir $(DISTDIR)/SCSharp.Util
+	@cp Makefile $(SCSHARPDLL_SOURCES) $(SCSHARPUIDLL_SOURCES) $(DISTDIR)
+	@for i in `cat $(SCSHARPDLL_SOURCES)`; do cp $$i $(DISTDIR)/$$i; done
+	@for i in `cat $(SCSHARPUIDLL_SOURCES)`; do cp $$i $(DISTDIR)/$$i; done
+	@for i in $(SCSHARPUIDLL_RES); do cp $$i $(DISTDIR)/$$i; done
 
-library2_frag=.deps/$(LIBRARY2).makefrag
-library1_frag=.deps/$(LIBRARY1).makefrag
+SCSHARPDLL_SOURCES=$(SCSHARPDLL).sources
+SCSHARPUIDLL_SOURCES=$(SCSHARPUIDLL).sources
 
-$(library2_frag): $(LIBRARY2_SOURCES)
+library2_frag=.deps/$(SCSHARPUIDLL).makefrag
+library1_frag=.deps/$(SCSHARPDLL).makefrag
+
+$(library2_frag): $(SCSHARPUIDLL_SOURCES)
 	@echo Creating $@ ...
 	@-mkdir .deps
-	@sed 's,^,$(LIBRARY2): ,' $< > $@
+	@sed 's,^,$(SCSHARPUIDLL): ,' $< > $@
 
-$(library1_frag): $(LIBRARY1_SOURCES)
+$(library1_frag): $(SCSHARPDLL_SOURCES)
 	@echo Creating $@ ...
 	@-mkdir .deps
-	@sed 's,^,$(LIBRARY1): ,' $< > $@
+	@sed 's,^,$(SCSHARPDLL): ,' $< > $@
 
 -include $(library2_frag)
 -include $(library1_frag)

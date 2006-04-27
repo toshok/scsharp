@@ -34,7 +34,7 @@
 #include "wave/wave.h"  
 
 // Include functions from BZip2 compression library
-#include "bzlib/bzlib.h"  
+#include "bzlib.h"  
 
 //-----------------------------------------------------------------------------
 // Local structures
