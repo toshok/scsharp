@@ -1,5 +1,5 @@
 VERSION=0.0000004
-DISTDIR=scsharp-src-$(VERSION)
+DISTDIR=scsharp-$(VERSION)
 RELEASEDIR=scsharp-linux-$(VERSION)
 
 SUBDIRS = SCSharp StormLib src
@@ -19,7 +19,7 @@ dist-local:
 	@rm -rf $(DISTDIR)
 	@mkdir $(DISTDIR)
 	@mkdir $(DISTDIR)/sdldotnet-bin
-	@cp Makefile RELEASE_README ChangeLog $(DISTDIR)
+	@cp Makefile AUTHORS LICENSE HACKING RELEASE_README ChangeLog $(DISTDIR)
 	@cp sdldotnet-bin/*.dll sdldotnet-bin/*.dll.config $(DISTDIR)/sdldotnet-bin
 
 dist-recurse:

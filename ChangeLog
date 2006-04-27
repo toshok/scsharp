@@ -4,85 +4,85 @@
 
 2006-04-10  Chris Toshok  <toshok@ximian.com>
 
-	* Starcraft/Starcraft.Gui/OkCancelDialog.cs: use 254,0 for
+	* SCSharp/SCSharp.UI/OkCancelDialog.cs: use 254,0 for
 	translucent,transparent.
 
-	* Starcraft/Starcraft.Gui/OkDialog.cs: same.
+	* SCSharp/SCSharp.UI/OkDialog.cs: same.
 
-	* Starcraft/Starcraft.Gui/EntryDialog.cs: same.
+	* SCSharp/SCSharp.UI/EntryDialog.cs: same.
 
 2006-04-10  Chris Toshok  <toshok@ximian.com>
 
-	* Starcraft/Starcraft.Gui/GameModeDialog.cs (.ctor): set
+	* SCSharp/SCSharp.UI/GameModeDialog.cs (.ctor): set
 	background_path to null, as we'll load it in ResourceLoader.
 	(ResourceLoader): manually load the background, using its specific
 	translucent/transparent indices.
 	
-	* Starcraft/Starcraft.Gui/GuiUtil.cs (SurfaceFromStream): always
+	* SCSharp/SCSharp.UI/GuiUtil.cs (SurfaceFromStream): always
 	use our managed Pcx loader.
 	(SurfaceFromStream): for the Stream,bool overload, pass in 252,0
 	for translucent,transparent, respectively.
 	(SurfaceFromStream): for the Stream overload, pass -1,-1.
 	
-	* Starcraft/Starcraft.Gui/UIScreen.cs (ResourceLoader): pass -1,-1
+	* SCSharp/SCSharp.UI/UIScreen.cs (ResourceLoader): pass -1,-1
 	to the Pcx.ReadFromStream calls.
 
-	* Starcraft/Starcraft.Gui/CreditsScreen.cs (ResourceLoader): pass
+	* SCSharp/SCSharp.UI/CreditsScreen.cs (ResourceLoader): pass
 	-1,-1 to the Pcx.ReadFromStream calls.
 
-	* Starcraft/Starcraft.Gui/Pcx.cs (ReadFromStream): allow the
+	* SCSharp/SCSharp.UI/Pcx.cs (ReadFromStream): allow the
 	passing in of translucent/transparent indices.
 
-	* Starcraft/Starcraft.Mpq/Bin.cs (ElementFlags): include the
+	* SCSharp/SCSharp.Mpq/Bin.cs (ElementFlags): include the
 	unknown flages as Unknown/Unused.
 
 2006-04-10  Chris Toshok  <toshok@hungry.com>
 
-	* Starcraft/Starcraft.Gui/ReadyRoomScreen.cs: first pass.
+	* SCSharp/SCSharp.UI/ReadyRoomScreen.cs: first pass.
 
-	* Starcraft/Starcraft.Gui/Builtins.cs: add ready room builtins.
+	* SCSharp/SCSharp.UI/Builtins.cs: add ready room builtins.
 
 2006-04-10  Chris Toshok  <toshok@hungry.com>
 
-	* Starcraft/Starcraft.Gui/ListBoxElement.cs: track cursor when
+	* SCSharp/SCSharp.UI/ListBoxElement.cs: track cursor when
 	list becomes empty/non-empty.  Set it initially to -1.
 
-	* Starcraft/Starcraft.Gui/LoginScreen.cs (OkElement delegate): if
+	* SCSharp/SCSharp.UI/LoginScreen.cs (OkElement delegate): if
 	we don't have a selected id, return immediately.  This should only
 	happen if the list is empty.
 
-	* Starcraft/Starcraft.Gui/ConnectionScreen.cs: add Ok dialog when
+	* SCSharp/SCSharp.UI/ConnectionScreen.cs: add Ok dialog when
 	people select Battle.net.
 
-	* Starcraft/Starcraft.Gui/credits.txt: thank the
+	* SCSharp/SCSharp.UI/credits.txt: thank the
 	mono/sdl/sdldotnet projects.
 
 2006-04-10  Chris Toshok  <toshok@hungry.com>
 
-	* Starcraft/Starcraft.Gui/ConnectionScreen.cs: populate the
+	* SCSharp/SCSharp.UI/ConnectionScreen.cs: populate the
 	ListBox element with our choices, and handle the cursor moving
 	properly.  Ifdef this for the time being to only display
 	Battle.net.
 
-	* Starcraft/Starcraft.Gui/GameModeDialog.cs: insert the title
+	* SCSharp/SCSharp.UI/GameModeDialog.cs: insert the title
 	string in the dialog, and change Canceled/Activated to
 	Cancel/Activate.
 
-	* Starcraft/Starcraft.Gui/UIDialog.cs: keep track of the parent
+	* SCSharp/SCSharp.UI/UIDialog.cs: keep track of the parent
 	UIScreen that popped us up.
 	(ShowDialog): overload this so we can remove ourselves from the
 	painter before showing the new dialog.  In a better world we'd
 	just show the new popup at a higher layer.
 	(DismissDialog): overload to add ourselves back to the painter.
 
-	* Starcraft/Starcraft.Gui/GuiUtil.cs: add another ComposeText
+	* SCSharp/SCSharp.UI/GuiUtil.cs: add another ComposeText
 	overload.
 
-	* Starcraft/Starcraft.Gui/MainMenu.cs: pop up Ok dialogs with
+	* SCSharp/SCSharp.UI/MainMenu.cs: pop up Ok dialogs with
 	messages about missing functionality (no cinematics and no
 	campaign editor.)
 
-	* Starcraft/Starcraft.Gui/LoginScreen.cs (ResourceLoader): for the
+	* SCSharp/SCSharp.UI/LoginScreen.cs (ResourceLoader): for the
 	ok button pop up a dialog saying what we should do in this case.
 	Also add functionality for the new button (pops up an entry
 	dialog) and delete button (pops up an ok/cancel dialog).
@@ -90,16 +90,16 @@
 	element.
 	(NameAlreadyExists): pop up an OkDialog.
 
-	* Starcraft/Starcraft.Gui/UIPainter.cs: clean up warnings, and
+	* SCSharp/SCSharp.UI/UIPainter.cs: clean up warnings, and
 	make it compile with -define:SHOW_ELEMENT_BORDERS.
 
-	* Starcraft/Starcraft.Gui/CreditsScreen.cs: clean up some
+	* SCSharp/SCSharp.UI/CreditsScreen.cs: clean up some
 	warnings.
 
-	* Starcraft/Starcraft.Gui/Builtins.cs: add some more strings for
+	* SCSharp/SCSharp.UI/Builtins.cs: add some more strings for
 	the login screen dialogs.
 
-	* Starcraft/Starcraft.Gui/UIElement.cs (Mpq): add getter.
+	* SCSharp/SCSharp.UI/UIElement.cs (Mpq): add getter.
 	(Text): use ClearSurface.
 	(Sensitive): same.
 	(Palette): new getter/setter.
@@ -108,7 +108,7 @@
 	(CreateSurface): provider base class implementation that handles
 	the types we don't provider subclasses for.
 
-	* Starcraft/Starcraft.Gui/UIScreen.cs (HandleKeyboardUp): return
+	* SCSharp/SCSharp.UI/UIScreen.cs (HandleKeyboardUp): return
 	immediately for keypresses corresponding to modifier keys.
 	(HandleKeyboardDown): same.
 	(ActivateElement): if the element isn't sensitive, don't activate
@@ -116,26 +116,26 @@
 	(ResourceLoader): create different UIElement subclasses depending
 	on the BinElement's type.
 
-	* Starcraft/Starcraft.Gui/TextBoxElement.cs: new UIElement,
+	* SCSharp/SCSharp.UI/TextBoxElement.cs: new UIElement,
 	allowing text editing.  No flashing cursor displayed yet.
 
-	* Starcraft/Starcraft.Gui/OkCancelDialog.cs: a question dialog,
+	* SCSharp/SCSharp.UI/OkCancelDialog.cs: a question dialog,
 	containing a message and Ok/Cancel buttons.
 
-	* Starcraft/Starcraft.Gui/OkDialog.cs: a simple message dialog,
+	* SCSharp/SCSharp.UI/OkDialog.cs: a simple message dialog,
 	containing a message and Ok button.
 
-	* Starcraft/Starcraft.Gui/EntryDialog.cs: new Dialog containing a
+	* SCSharp/SCSharp.UI/EntryDialog.cs: new Dialog containing a
 	title, text entry, and Ok/Cancel buttons.
 
-	* Starcraft/Starcraft.Gui/ImageElement.cs: new UIElement
+	* SCSharp/SCSharp.UI/ImageElement.cs: new UIElement
 	displaying an image.
 
-	* Starcraft/Starcraft.Gui/ListBoxElement.cs: new UIElement,
+	* SCSharp/SCSharp.UI/ListBoxElement.cs: new UIElement,
 	displaying a list. doesn't do scrolling yet.
 
 2006-04-09  Chris Toshok  <toshok@hungry.com>
 
-	* Starcraft/Starcraft.Gui/GameModeDialog.cs (ResourceLoader): add
+	* SCSharp/SCSharp.UI/GameModeDialog.cs (ResourceLoader): add
 	title text.
 
