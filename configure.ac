@@ -4,7 +4,7 @@ AC_INIT(HACKING)
 # The extra brackets are to foil regex-based scans.
 m4_ifdef([_A][M_PROG_TAR],[_A][M_SET_OPTION([tar-ustar])])
 
-AM_INIT_AUTOMAKE(scsharp,0.0000004)
+AM_INIT_AUTOMAKE(scsharp,0.0000005)
 AM_MAINTAINER_MODE
 
 AC_PROG_LIBTOOL
@@ -16,4 +16,5 @@ AC_OUTPUT([
 Makefile
 SCSharp/Makefile
 StormLib/Makefile
+StormLib/bzlib/Makefile
 src/Makefile])

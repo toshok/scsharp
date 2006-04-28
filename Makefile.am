@@ -1,6 +1,12 @@
 
 SUBDIRS= SCSharp StormLib src
 
+EXTRA_DIST= HACKING RELEASE_README
+
+dist-hook:
+	mkdir -p $(distdir)/sdldotnet-bin
+	cp sdldotnet-bin/* $(distdir)/sdldotnet-bin
+
 #dll configs?
 release: all
 	-mkdir $(RELEASEDIR)

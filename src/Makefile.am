@@ -11,6 +11,10 @@ all-local: $(PROGRAM)
 clean-local:
 	-rm -f $(PROGRAM)
 
+dist-hook:
+	cp -p $(PROGRAM_SOURCE_LIST) $(distdir)
+	for i in `cat $(PROGRAM_SOURCE_LIST)`; do cp -p $$i $(distdir)/$$i; done
+
 $(PROGRAM): $(LIBRARY)
 	$(MCS) $(MCSFLAGS) -target:exe -out:$@ @$(PROGRAM_SOURCE_LIST) $(PROGRAM_REFS)
 

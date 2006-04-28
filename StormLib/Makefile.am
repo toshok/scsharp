@@ -1,5 +1,7 @@
 
-noinst_LTLIBRARIES=libStorm.la
+SUBDIRS=bzlib
+
+lib_LTLIBRARIES=libStorm.la
 
 libStorm_la_SOURCES= \
 	GfxDecode.cpp \
@@ -27,3 +29,5 @@ libStorm_la_SOURCES= \
 	huffman/huffman.h \
 	pklib/pklib.h \
 	wave/wave.h
+
+libStorm_la_LIBADD=bzlib/libbz2.la

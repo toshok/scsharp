@@ -16,6 +16,15 @@ all-local: $(SCSHARPDLL) $(SCSHARPUIDLL)
 clean-local:
 	-rm -f *.dll
 
+dist-hook:
+	mkdir $(distdir)/SCSharp.Mpq
+	mkdir $(distdir)/SCSharp.UI
+	mkdir $(distdir)/SCSharp.Util
+	cp -p $(SCSHARPDLL_SOURCE_LIST) $(SCSHARPUIDLL_SOURCE_LIST) $(distdir)
+	for i in `cat $(SCSHARPDLL_SOURCE_LIST)`; do cp -p $$i $(distdir)/$$i; done
+	for i in `cat $(SCSHARPUIDLL_SOURCE_LIST)`; do cp -p $$i $(distdir)/$$i; done
+	for i in $(SCSHARPUIDLL_RES); do cp -p $$i $(distdir)/$$i; done
+
 $(SCSHARPUIDLL): $(SCSHARPDLL)
 	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(SCSHARPUIDLL_SOURCE_LIST) $(SCSHARPUIDLL_RESFLAGS) $(SCSHARPUIDLL_REFS)
 
