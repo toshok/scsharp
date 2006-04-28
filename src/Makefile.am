@@ -6,7 +6,10 @@ PROGRAM_REFS= -r:../SCSharp/SCSharp.UI.dll -r:../SCSharp/SCSharp.dll -r:../sdldo
 
 EXTRA_DIST=starcraft.exe.config-example mono.sh
 
-all: $(PROGRAM)
+all-local: $(PROGRAM)
+
+clean-local:
+	-rm -f $(PROGRAM)
 
 $(PROGRAM): $(LIBRARY)
 	$(MCS) $(MCSFLAGS) -target:exe -out:$@ @$(PROGRAM_SOURCE_LIST) $(PROGRAM_REFS)

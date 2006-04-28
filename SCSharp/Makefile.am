@@ -11,7 +11,10 @@ SCSHARPUIDLL_RES=SCSharp.UI/credits.txt
 # XXX should autogenerate the next one from the previous one
 SCSHARPUIDLL_RESFLAGS=/resource:SCSharp.UI/credits.txt,credits.txt
 
-all: $(SCSHARPUIDLL)
+all-local: $(SCSHARPDLL) $(SCSHARPUIDLL)
+
+clean-local:
+	-rm -f *.dll
 
 $(SCSHARPUIDLL): $(SCSHARPDLL)
 	$(MCS) $(MCSFLAGS) -target:library -out:$@ @$(SCSHARPUIDLL_SOURCE_LIST) $(SCSHARPUIDLL_RESFLAGS) $(SCSHARPUIDLL_REFS)
