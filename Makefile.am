@@ -3,6 +3,9 @@ SUBDIRS= SCSharp StormLib src
 
 EXTRA_DIST= HACKING RELEASE_README
 
+install:
+	@echo \"make install\" doesn\'t work yet.  try again later.
+
 dist-hook:
 	mkdir -p $(distdir)/sdldotnet-bin
 	cp sdldotnet-bin/* $(distdir)/sdldotnet-bin

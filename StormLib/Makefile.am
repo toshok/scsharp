@@ -16,18 +16,18 @@ libStorm_la_SOURCES= \
 	SFileReadFile.cpp \
 	SListFile.cpp \
 	StormPortLinux.cpp \
-	wave/wave.cpp \
-	huffman/huffman.cpp
-	pklib/implode.c \
-	pklib/explode.c \
-	pklib/crc32.c
 	SCommon.h \
 	Storm.h \
 	StormLib.h \
 	StormPort.h \
-	huffman/huff.h \
+	wave/wave.cpp \
+	wave/wave.h \
+	huffman/huffman.cpp \
 	huffman/huffman.h \
-	pklib/pklib.h \
-	wave/wave.h
+	huffman/huff.h \
+	pklib/implode.c \
+	pklib/explode.c \
+	pklib/crc32.c \
+	pklib/pklib.h
 
 libStorm_la_LIBADD=bzlib/libbz2.la
