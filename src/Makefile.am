@@ -9,21 +9,13 @@ EXTRA_DIST=starcraft.exe.config-example mono.sh
 all: $(PROGRAM)
 
 $(PROGRAM): $(LIBRARY)
-	$(MCS) $(MCSFLAGS) -target:exe -out:$@ @$(PROGRAM_SOURCES) $(PROGRAM_REFS)
+	$(MCS) $(MCSFLAGS) -target:exe -out:$@ @$(PROGRAM_SOURCE_LIST) $(PROGRAM_REFS)
 
-clean:
-	$(RM) -f $(PROGRAM) $(PROGRAM).mdb
-
-dist:
-	@mkdir $(DISTDIR)
-	@cp Makefile $(PROGRAM_SOURCES) $(EXTRA_DIST) $(DISTDIR)
-	@for i in `cat $(PROGRAM_SOURCES)`; do cp $$i $(DISTDIR)/$$i; done
-
-PROGRAM_SOURCES=$(PROGRAM).sources
+PROGRAM_SOURCE_LIST=$(PROGRAM).sources
 
 program_frag=.deps/$(PROGRAM).makefrag
 
-$(program_frag): $(PROGRAM_SOURCES)
+$(program_frag): $(PROGRAM_SOURCE_LIST)
 	@echo Creating $@ ...
 	@-mkdir .deps
 	@sed 's,^,$(PROGRAM): ,' $< > $@
