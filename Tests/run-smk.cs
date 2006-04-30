@@ -2,7 +2,8 @@
 using System;
 using System.IO;
 
-using Starcraft;
+using SCSharp;
+using SCSharp.UI;
 
 using Gtk;
 using Gdk;

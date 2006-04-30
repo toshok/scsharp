@@ -1,6 +1,7 @@
 using System;
 using System.IO;
-using Starcraft;
+using SCSharp;
+using SCSharp.UI;
 
 using SdlDotNet;
 using System.Drawing;
@@ -24,7 +25,7 @@ public class FontFoo {
 		Console.WriteLine ("loading font palette");
 		Stream palStream = (Stream)mpq.GetResource ("glue\\Palmm\\tFont.pcx");
 		Pcx pcx1 = new Pcx ();
-		pcx1.ReadFromStream (palStream, false);
+		pcx1.ReadFromStream (palStream, -1, -1);
 
 		Painter painter = new Painter (Video.SetVideoModeWindow (600, 100), 300);
 

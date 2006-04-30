@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-using Starcraft;
+using SCSharp;
 
 public class DumpTileset {
 

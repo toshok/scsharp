@@ -2,7 +2,8 @@
 using System;
 using System.IO;
 
-using Starcraft;
+using SCSharp;
+using SCSharp.UI;
 
 using SdlDotNet;
 using SdlDotNet.Sprites;
@@ -13,7 +14,7 @@ public class RunAnimation {
 	int animation_type = 11;
 
 	Mpq mpq;
-	Starcraft.Sprite sprite;
+	SCSharp.UI.Sprite sprite;
 	Painter painter;
 
 	public RunAnimation (Mpq mpq)
@@ -36,25 +37,25 @@ public class RunAnimation {
 	{
 		Video.WindowIcon ();
 		Video.WindowCaption = "animation viewer";
-		Video.SetVideoModeWindow (320, 200);
+		Surface surf = Video.SetVideoModeWindow (320, 200);
 
 		Mouse.ShowCursor = false;
 
-		painter = new Painter (100);
+		painter = new Painter (surf, 100);
 		SpriteManager.AddToPainter (painter);
 	}
 
         bool die ()
 	{
-		sprite.RunAnimation (1);
+		sprite.RunScript (1);
 		return false;
 	}
 
 	void GlobalsReady ()
 	{
 		Console.WriteLine ("GlobalsReady");
-		sprite = SpriteManager.CreateSprite (mpq, sprite_number);
-		sprite.RunAnimation (animation_type);
+		sprite = SpriteManager.CreateSprite (mpq, sprite_number, 0, 0);
+		sprite.RunScript (animation_type);
 
 		//		Timer.DelaySeconds (3);
 
