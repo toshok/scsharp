@@ -48,6 +48,8 @@ namespace SCSharp.UI
 		const int MAPDIM_FORMAT_INDEX = 31; // XXX we don't use this one yet..
 		const int TILESET_FORMAT_INDEX = 33;
 		const int NUMPLAYERS_FORMAT_INDEX = 30;
+		const int HUMANSLOT_FORMAT_INDEX = 37;
+		const int COMPUTERSLOT_FORMAT_INDEX = 35;
 
 		const int FILELISTBOX_ELEMENT_INDEX = 7;
 		const int CURRENTDIR_ELEMENT_INDEX = 8;
@@ -55,8 +57,8 @@ namespace SCSharp.UI
 		const int MAPDESCRIPTION_ELEMENT_INDEX = 10;
 		const int MAPSIZE_ELEMENT_INDEX = 11;
 		const int MAPTILESET_ELEMENT_INDEX = 12;
-		const int MAPPLAYERS_ELEMENT_INDEX = 14;
-		const int MAPINFO4_ELEMENT_INDEX = 15;
+		const int MAPPLAYERS1_ELEMENT_INDEX = 14;
+		const int MAPPLAYERS2_ELEMENT_INDEX = 15;
 
 		const int OK_ELEMENT_INDEX = 16;
 		const int CANCEL_ELEMENT_INDEX = 17;
@@ -76,8 +78,10 @@ namespace SCSharp.UI
 
 		Mpq selectedScenario;
 		Chk selectedChk;
+		Got selectedGot;
 
 		ListBoxElement file_listbox;
+		ComboBoxElement gametype_combo;
 
 		void InitializeRaceCombo (ComboBoxElement combo)
 		{
@@ -90,13 +94,14 @@ namespace SCSharp.UI
 		void InitializePlayerCombo (ComboBoxElement combo)
 		{
 			combo.AddItem (GlobalResources.Instance.GluAllTbl.Strings[130]); /* Closed */
-			combo.AddItem (GlobalResources.Instance.GluAllTbl.Strings[128], true); /* Closed */
+			combo.AddItem (GlobalResources.Instance.GluAllTbl.Strings[128], true); /* Computer */
 		}
 
 		string[] files;
 		string[] directories;
+		Got[] templates;
 
-		void PopulateUIFromDir ()
+		void PopulateFileList ()
 		{
 			file_listbox.Clear ();
 
@@ -137,7 +142,40 @@ namespace SCSharp.UI
 			}
 
 			file_listbox.SelectedIndex = directories.Length;
-			HandleSelectionChanged (directories.Length);
+			FileListSelectionChanged (directories.Length);
+		}
+
+		void PopulateGameTypes ()
+		{
+			/* load the templates we're interested in displaying */
+			StreamReader sr = new StreamReader ((Stream)mpq.GetResource ("templates\\templates.lst"));
+			List<Got> templateList = new List<Got>();
+			string l;
+
+			while ((l = sr.ReadLine ()) != null) {
+				string t = l.Replace ("\"", "");
+
+				Got got = (Got)mpq.GetResource ("templates\\" + t);
+
+				if (got.ComputerPlayersAllowed && got.NumberOfTeams == 0) {
+					Console.WriteLine ("adding template {0}:{1}", got.UIGameTypeName, got.UISubtypeLabel);
+					templateList.Add (got);
+				}
+			}
+
+			templates = new Got[templateList.Count];
+			templateList.CopyTo (templates, 0);
+
+			Array.Sort (templates, delegate (Got g1, Got g2) { return g1.ListPosition - g2.ListPosition; });
+
+			/* fill in the game type menu.
+			   we only show the templates that allow computer players, have 0 teams */
+			foreach (Got got in templates) {
+				gametype_combo.AddItem (got.UIGameTypeName);
+			}
+			gametype_combo.SelectedIndex = 0;
+
+			GameTypeSelectionChanged (gametype_combo.SelectedIndex);
 		}
 
 		protected override void ResourceLoader ()
@@ -158,14 +196,17 @@ namespace SCSharp.UI
 			}
 
 			file_listbox = (ListBoxElement)Elements[FILELISTBOX_ELEMENT_INDEX];
+			gametype_combo = (ComboBoxElement)Elements[GAMETYPECOMBO_ELEMENT_INDEX];
 
 			/* initially populate the map list by scanning the maps/ directory in the starcraftdir */
 			mapdir = Path.Combine (Game.Instance.RootDirectory, "maps");
 			curdir = mapdir;
 
-			PopulateUIFromDir ();
+			PopulateGameTypes ();
+			PopulateFileList ();
 
-			file_listbox.SelectionChanged += HandleSelectionChanged;
+			file_listbox.SelectionChanged += FileListSelectionChanged;
+			gametype_combo.SelectionChanged += GameTypeSelectionChanged;
 
 			Elements[OK_ELEMENT_INDEX].Activate +=
 				delegate () {
@@ -180,7 +221,7 @@ namespace SCSharp.UI
 						else
 								curdir = directories[file_listbox.SelectedIndex];
 
-						PopulateUIFromDir ();
+						PopulateFileList ();
 					}
 					else {
 						Game.Instance.SwitchToScreen (new GameScreen (mpq,
@@ -194,13 +235,88 @@ namespace SCSharp.UI
 					Game.Instance.SwitchToScreen (UIScreenType.RaceSelection);
 				};
 
+
 			/* make sure the PLAYER1 player combo reads
 			 * the player's name and is desensitized */
 			((ComboBoxElement)Elements[PLAYER1_COMBOBOX_PLAYER]).AddItem (/*XXX player name*/"toshok");
 			Elements[PLAYER1_COMBOBOX_PLAYER].Sensitive = false;
 		}
 
-		void HandleSelectionChanged (int selectedIndex)
+		void UpdatePlayersDisplay ()
+		{
+			if (selectedGot.UseMapSettings) {
+				string slotString;
+
+				slotString = GlobalResources.Instance.GluAllTbl.Strings[HUMANSLOT_FORMAT_INDEX];
+				slotString = slotString.Replace ("%c", " "); /* should probably be a tab.. */
+				slotString = slotString.Replace ("%s",
+								 (selectedChk == null
+								  ? ""
+								  : String.Format ("{0}",
+										   selectedChk.NumHumanSlots)));
+
+				Elements[MAPPLAYERS1_ELEMENT_INDEX].Text = slotString;
+				Elements[MAPPLAYERS1_ELEMENT_INDEX].Visible = true;
+
+				slotString = GlobalResources.Instance.GluAllTbl.Strings[COMPUTERSLOT_FORMAT_INDEX];
+				slotString = slotString.Replace ("%c", " "); /* should probably be a tab.. */
+				slotString = slotString.Replace ("%s",
+								 (selectedChk == null
+								  ? ""
+								  : String.Format ("{0}",
+										   selectedChk.NumComputerSlots)));
+
+				Elements[MAPPLAYERS2_ELEMENT_INDEX].Text = slotString;
+				Elements[MAPPLAYERS2_ELEMENT_INDEX].Visible = true;
+			}
+			else {
+				string numPlayersString = GlobalResources.Instance.GluAllTbl.Strings[NUMPLAYERS_FORMAT_INDEX];
+
+				numPlayersString = numPlayersString.Replace ("%c", " "); /* should probably be a tab.. */
+				numPlayersString = numPlayersString.Replace ("%s",
+									     (selectedChk == null
+									      ? ""
+									      : String.Format ("{0}",
+											       selectedChk.NumPlayers)));
+
+				Elements[MAPPLAYERS1_ELEMENT_INDEX].Text = numPlayersString;
+				Elements[MAPPLAYERS1_ELEMENT_INDEX].Visible = true;
+				Elements[MAPPLAYERS2_ELEMENT_INDEX].Visible = false;
+			}
+
+			int i = 0;
+			if (selectedChk != null) {
+				for (i = 0; i < max_players; i ++) {
+					if (selectedGot.UseMapSettings) {
+						if (i >= selectedChk.NumComputerSlots + 1) break;
+					}
+					else {
+						if (i >= selectedChk.NumPlayers) break;
+					}
+
+					if (i > 0)
+						((ComboBoxElement)Elements[PLAYER1_COMBOBOX_PLAYER + i]).SelectedIndex = 1;
+					((ComboBoxElement)Elements[PLAYER1_COMBOBOX_RACE + i]).SelectedIndex = 3;
+					Elements[PLAYER1_COMBOBOX_PLAYER + i].Visible = true;
+					Elements[PLAYER1_COMBOBOX_RACE + i].Visible = true;
+				}
+			}
+			for (int j = i; j < max_players; j ++) {
+				Elements[PLAYER1_COMBOBOX_PLAYER + j].Visible = false;
+				Elements[PLAYER1_COMBOBOX_RACE + j].Visible = false;
+			}
+		}
+
+		void GameTypeSelectionChanged (int selectedIndex)
+		{
+			/* the display of the number of players
+			 * changes depending upon the template */
+			selectedGot = templates[selectedIndex];
+
+			UpdatePlayersDisplay ();
+		}
+
+		void FileListSelectionChanged (int selectedIndex)
 		{
 			string map_path = Path.Combine (curdir, file_listbox.SelectedItem);
 
@@ -220,7 +336,6 @@ namespace SCSharp.UI
 			string mapSizeString = GlobalResources.Instance.GluAllTbl.Strings[MAPSIZE_FORMAT_INDEX];
 			//			string mapDimString = GlobalResources.Instance.GluAllTbl.Strings[MAPDIM_FORMAT_INDEX];
 			string tileSetString = GlobalResources.Instance.GluAllTbl.Strings[TILESET_FORMAT_INDEX];
-			string numPlayersString = GlobalResources.Instance.GluAllTbl.Strings[NUMPLAYERS_FORMAT_INDEX];
 
 			mapSizeString = mapSizeString.Replace ("%c", " "); /* should probably be a tab.. */
 			mapSizeString = mapSizeString.Replace ("%s",
@@ -237,33 +352,10 @@ namespace SCSharp.UI
 								: String.Format ("{0}",
 										 selectedChk.Tileset)));
 
-			numPlayersString = numPlayersString.Replace ("%c", " "); /* should probably be a tab.. */
-			numPlayersString = numPlayersString.Replace ("%s",
-								     (selectedChk == null
-								      ? ""
-								      : String.Format ("{0}",
-										       selectedChk.NumPlayers)));
-
 			Elements[MAPSIZE_ELEMENT_INDEX].Text = mapSizeString;
 			Elements[MAPTILESET_ELEMENT_INDEX].Text = tileSetString;
-			Elements[MAPPLAYERS_ELEMENT_INDEX].Text = numPlayersString;
-			Elements[MAPPLAYERS_ELEMENT_INDEX].Visible = true;
 
-			int i = 0;
-			if (selectedChk != null) {
-				for (i = 0; i < max_players; i ++) {
-					if (i >= selectedChk.NumPlayers) break;
-					if (i > 0)
-						((ComboBoxElement)Elements[PLAYER1_COMBOBOX_PLAYER + i]).SelectedIndex = 1;
-					((ComboBoxElement)Elements[PLAYER1_COMBOBOX_RACE + i]).SelectedIndex = 3;
-					Elements[PLAYER1_COMBOBOX_PLAYER + i].Visible = true;
-					Elements[PLAYER1_COMBOBOX_RACE + i].Visible = true;
-				}
-			}
-			for (int j = i; j < max_players; j ++) {
-				Elements[PLAYER1_COMBOBOX_PLAYER + j].Visible = false;
-				Elements[PLAYER1_COMBOBOX_RACE + j].Visible = false;
-			}
+			UpdatePlayersDisplay ();
 		}
 
 		public override void KeyboardDown (KeyboardEventArgs args)

@@ -85,7 +85,77 @@ namespace SCSharp.UI
 				if (SelectionChanged != null)
 					SelectionChanged (cursor);
 			}
+		}
 
+		bool selecting;
+		int selectionIndex;
+
+		public override void MouseWheel (MouseButtonEventArgs args)
+		{
+			bool need_redraw = false;
+
+			if (args.Button == MouseButton.WheelUp) {
+				if (first_visible > 0) {
+					first_visible --;
+					need_redraw = true;
+				}
+			}
+			else {
+				if (first_visible + num_visible < items.Count - 1) {
+					first_visible ++;
+					need_redraw = true;
+				}
+			}
+
+			if (need_redraw)
+				ClearSurface ();
+		}
+
+		public override void MouseButtonDown (MouseButtonEventArgs args)
+		{
+			bool need_redraw = false;
+			/* if we're over the scrollbar handle that here */
+
+			/* otherwise start our selection */
+			selecting = true;
+
+			/* otherwise, select the clicked-on item (if
+			 * there is one) */
+			int index = (args.Y - Y1) / Font.LineSize + first_visible;
+			if (index < items.Count) {
+				selectionIndex = index;
+				need_redraw = true;
+			}
+
+			if (need_redraw)
+				ClearSurface ();
+		}
+
+		public override void PointerMotion (MouseMotionEventArgs args)
+		{
+			if (!selecting)
+				return;
+
+			int index = (args.Y - Y1) / Font.LineSize + first_visible;
+			if (index < items.Count) {
+				selectionIndex = index;
+				ClearSurface ();
+			}
+		}
+
+		public override void MouseButtonUp (MouseButtonEventArgs args)
+		{
+			if (!selecting)
+				return;
+
+			selecting = false;
+			if (selectionIndex != cursor) {
+				cursor = selectionIndex;
+				if (SelectionChanged != null)
+					SelectionChanged (cursor);
+			}
+
+			ClearSurface ();
 		}
 
 		public bool Selectable {
@@ -140,7 +210,9 @@ namespace SCSharp.UI
 				if (i >= items.Count)
 					break;
 				Surface item_surface = GuiUtil.ComposeText (items[i], Font, Palette,
-									    (!selectable || cursor == i) ? 4 : 24);
+									    (!selectable ||
+									     (!selecting && cursor == i) ||
+									     (selecting && selectionIndex == i)) ? 4 : 24);
 
 				surf.Blit (item_surface, new Point (0, y));
 				y += item_surface.Height;

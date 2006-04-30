@@ -53,6 +53,17 @@ namespace SCSharp.UI
 			return CreateSprite (sprite_number, palette, x, y);
 		}
 
+		public static Sprite CreateSprite (Sprite parentSprite, ushort images_number, byte[] palette)
+		{
+			Sprite sprite = new Sprite (parentSprite, images_number, palette);
+			sprites.Add (sprite);
+
+			if (painter != null)
+				sprite.AddToPainter (painter);
+
+			return sprite;
+		}
+
 		public static Sprite CreateSprite (int sprite_number, byte[] palette, int x, int y)
 		{
 			Sprite sprite = new Sprite (our_mpq, sprite_number, palette, x, y);

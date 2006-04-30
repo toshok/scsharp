@@ -1,0 +1,5 @@
+wireframe .grp file frame numbers mirror unit indices.
+
+grpwire.grp only contains units that can appear in selection groups.
+tranwire.grp only contains units that can go in transports.
+wireframe.grp contains all units that can be selected.

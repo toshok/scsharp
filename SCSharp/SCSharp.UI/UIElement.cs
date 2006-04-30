@@ -109,8 +109,6 @@ namespace SCSharp.UI
 					else if ((Flags & ElementFlags.FontLarger) != 0) idx = 3;
 					else if ((Flags & ElementFlags.FontLargest) != 0) idx = 4;
 
-					Console.WriteLine ("index = {0}", idx);
-
 					fnt = GuiUtil.GetFonts(Mpq)[idx];
 
 					if (fnt == null)
@@ -182,6 +180,10 @@ namespace SCSharp.UI
 				return true;
 
 			return false;
+		}
+
+		public virtual void MouseWheel (MouseButtonEventArgs args)
+		{
 		}
 
 		public virtual void MouseButtonDown (MouseButtonEventArgs args)

@@ -43,7 +43,12 @@ namespace SCSharp
 
 	public abstract class Mpq
 	{
-		protected Mpq () { }
+		Dictionary<string,object> cached_resources;
+
+		protected Mpq ()
+		{
+			cached_resources = new Dictionary <string,object>();
+		}
 
 		protected internal abstract Stream GetStreamForResource (string path);
 
@@ -55,6 +60,9 @@ namespace SCSharp
 			}
 			else if (ext.ToLower () == ".fnt") {
 				return typeof (Fnt);
+			}
+			else if (ext.ToLower () == ".got") {
+				return typeof (Got);
 			}
 			else if (ext.ToLower () == ".grp") {
 				return typeof (Grp);
@@ -94,6 +102,9 @@ namespace SCSharp
 
 		public object GetResource (string path)
 		{
+			if (cached_resources.ContainsKey (path))
+				return cached_resources[path];
+
 			Stream stream = GetStreamForResource (path);
 			if (stream == null)
 				return null;
@@ -107,6 +118,8 @@ namespace SCSharp
 			if (res == null) return null;
 
 			res.ReadFromStream (stream);
+
+			cached_resources [path] = res;
 
 			return res;
 		}

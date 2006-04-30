@@ -1,0 +1,47 @@
+cmdicon.grp frame numbers mirror unit indices.
+
+
+after unit icons we have the both icons in the 3x3 matrix in the bottom right and upgrade icons.
+
+in stardat.mpq they range from 228 to 364
+in broodat.mpq they range from 228 to 385
+
+tcmdbtns.grp indices:
+
+0 - 3x3 matrix background, normal
+1 - 3x3 matrix background, depressed
+2 - 1/4 frame box orange
+3 - 1/4 frame box orange
+4 - 1/4 frame box orange with arrow
+5 - 1/4 frame box orange with arrow
+6 - number 1 orange
+7 - number 2 orange
+8 - number 3 orange
+9 - number 4 orange
+10 - number 5 orange
+11 - blank?  unknown
+12 - 1/4 frame box orange with lower right overlay (used for armor/weapons that can show upgrade numbers)
+13 - 1/4 frame box orange (like 2,3)
+14 - 1/4 frame box orange with translucent interior
+15 - half frame box orange with translucent interior
+16 - half frame box orange with translucent interior
+17 - full frame box orange with translucent interior
+18 - full frame box orange with translucent interior
+19 - 1/4 frame box white
+20 - 1/4 frame box white
+21 - 1/2 frame box white with red background (for transparency?)
+22 - 1/2 frame box white
+23 - full frame box white with red background (for transparency?)
+24 - full frame box white
+25 - 1/4 frame box green with translucent interior
+26 - 1/4 frame box green with translucent interior
+27 - 1/2 frame box green with translucent interior
+28 - 1/2 frame box green with translucent interior
+29 - full frame box green with translucent interior
+30 - full frame box green with translucent interior
+31 - 1/4 frame box bold orange with translucent interior
+32 - 1/4 frame box orange with translucent interior
+33 - 1/4 frame box bold orange with translucent interior
+34 - 1/4 frame box orange with translucent interior
+35 - full frame box bold orange with translucent interior
+36 - full frame box orange with translucent interior

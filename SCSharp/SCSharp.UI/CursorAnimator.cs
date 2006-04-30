@@ -41,7 +41,7 @@ namespace SCSharp.UI
 		Grp grp;
 
 		DateTime last;
-		TimeSpan delta_to_change = TimeSpan.FromMilliseconds (200);
+		TimeSpan delta_to_change = TimeSpan.FromMilliseconds (100);
 		int current_frame;
 
 		Surface[] surfaces;

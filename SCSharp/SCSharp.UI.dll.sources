@@ -13,7 +13,6 @@ SCSharp.UI/GameScreen.cs
 SCSharp.UI/GlobalResources.cs
 SCSharp.UI/GuiUtil.cs
 SCSharp.UI/ImageElement.cs
-SCSharp.UI/IScriptRunner.cs
 SCSharp.UI/LabelElement.cs
 SCSharp.UI/LoadSavedScreen.cs
 SCSharp.UI/ListBoxElement.cs

@@ -2,6 +2,7 @@ SCSharp.Mpq/Bin.cs
 SCSharp.Mpq/Chk.cs
 SCSharp.Mpq/FlingyDat.cs
 SCSharp.Mpq/Fnt.cs
+SCSharp.Mpq/Got.cs
 SCSharp.Mpq/Grp.cs
 SCSharp.Mpq/ImagesDat.cs
 SCSharp.Mpq/IScriptBin.cs

@@ -54,7 +54,7 @@ namespace SCSharp.UI
 	{
 		UIScreen[] screens;
 		
-		const int GAME_ANIMATION_TICK = 10; // number of milliseconds between animation updates
+		const int GAME_ANIMATION_TICK = 50; // number of milliseconds between animation updates
 
 		bool isBroodWar;
 

@@ -61,6 +61,21 @@ namespace SCSharp {
 			return sb.ToString();
 		}
 
+		public static string ReadUntilNull (byte[] buf, int position)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			int i = position;
+
+			while (buf[i] != 0)
+				i++;
+
+			byte[] bs = new byte[i-position];
+			Array.Copy (buf, position, bs, 0, i-position);
+
+			return Encoding.UTF8.GetString (bs);
+		}
+
 		public static char[] RaceChar = { 'P','T','Z' };
 		public static char[] RaceCharLower = { 'p','t','z' };
 

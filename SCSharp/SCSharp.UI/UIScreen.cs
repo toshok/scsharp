@@ -189,7 +189,9 @@ namespace SCSharp.UI
 		// SDL Event handling
 		public virtual void MouseButtonDown (MouseButtonEventArgs args)
 		{
-			if (args.Button != MouseButton.PrimaryButton)
+			if (args.Button != MouseButton.PrimaryButton &&
+			    args.Button != MouseButton.WheelUp &&
+			    args.Button != MouseButton.WheelDown)
 				return;
 
 			if (mouseDownElement != null)
@@ -198,7 +200,10 @@ namespace SCSharp.UI
 			UIElement element = XYToElement (args.X, args.Y, true);
 			if (element != null && element.Visible && element.Sensitive) {
 				mouseDownElement = element;
-				mouseDownElement.MouseButtonDown (args);
+				if (args.Button == MouseButton.PrimaryButton)
+					mouseDownElement.MouseButtonDown (args);
+				else
+					mouseDownElement.MouseWheel (args);
 			}
 		}
 
@@ -212,11 +217,14 @@ namespace SCSharp.UI
 
 		public virtual void MouseButtonUp (MouseButtonEventArgs args)
 		{
-			if (args.Button != MouseButton.PrimaryButton)
+			if (args.Button != MouseButton.PrimaryButton &&
+			    args.Button != MouseButton.WheelUp &&
+			    args.Button != MouseButton.WheelDown)
 				return;
 
 			if (mouseDownElement != null) {
-				mouseDownElement.MouseButtonUp (args);
+				if (args.Button == MouseButton.PrimaryButton)
+					mouseDownElement.MouseButtonUp (args);
 
 				mouseDownElement = null;
 			}
@@ -376,7 +384,7 @@ namespace SCSharp.UI
 				/* convert all the BinElements to UIElements for our subclasses to use */
 				Elements = new List<UIElement> ();
 				foreach (BinElement el in Bin.Elements) {
-					Console.WriteLine ("{0}: {1}", el.text, el.flags);
+					//					Console.WriteLine ("{0}: {1}", el.text, el.flags);
 
 					UIElement ui_el = null;
 					switch (el.type) {

@@ -45,6 +45,7 @@ namespace SCSharp.UI
 
 		Surface hud;
 		Chk scenario;
+		Got template;
 
 		/* the deltas associated with scrolling */
 		int horiz_delta;
@@ -74,10 +75,16 @@ namespace SCSharp.UI
 		CursorAnimator[] ScrollCursors;
 
 		const int TARG_CURSOR_G = 0;
-		const int TARG_CURSOR_Y = 0;
-		const int TARG_CURSOR_R = 0;
+		const int TARG_CURSOR_Y = 1;
+		const int TARG_CURSOR_R = 2;
 
 		CursorAnimator[] TargetCursors;
+
+		const int MAG_CURSOR_G = 0;
+		const int MAG_CURSOR_Y = 1;
+		const int MAG_CURSOR_R = 2;
+
+		CursorAnimator[] MagCursors;
 
 		//byte[] unit_palette;
 		byte[] tileset_palette;
@@ -86,13 +93,15 @@ namespace SCSharp.UI
 
 		public GameScreen (Mpq mpq,
 				   Mpq scenario_mpq,
-				   Chk scenario) : base (mpq)
+				   Chk scenario,
+				   Got template) : base (mpq)
 		{
 			this.effectpal_path = "game\\tblink.pcx";
-			this.arrowgrp_path = "cursor\\MagG.grp";
+			this.arrowgrp_path = "cursor\\arrow.grp";
 			this.fontpal_path = "game\\tfontgam.pcx";
 			//this.scenario_mpq = scenario_mpq;
 			this.scenario = scenario;
+			this.template = template;
 			ScrollCursors = new CursorAnimator[8];
 		}
 
@@ -240,8 +249,6 @@ namespace SCSharp.UI
 
 			map_surf = MapRenderer.RenderToSurface (mpq, scenario);
 
-			PlaceInitialUnits ();
-
 			// load the cursors we'll show when scrolling with the mouse
 			string[] cursornames = new string[] {
 				"cursor\\ScrollUL.grp",
@@ -260,6 +267,19 @@ namespace SCSharp.UI
 				ScrollCursors[i].SetHotSpot (60, 60);
 			}
 
+			// load the mag cursors
+			string[] magcursornames = new string[] {
+				"cursor\\MagG.grp",
+				"cursor\\MagY.grp",
+				"cursor\\MagR.grp"
+			};
+			MagCursors = new CursorAnimator [magcursornames.Length];
+			for (int i = 0; i < magcursornames.Length; i ++) {
+				MagCursors[i] = new CursorAnimator ((Grp)mpq.GetResource (magcursornames[i]),
+								    effectpal.Palette);
+				MagCursors[i].SetHotSpot (60, 60);
+			}
+
 			// load the targeting cursors
 			string[] targetcursornames = new string[] {
 				"cursor\\TargG.grp",
@@ -270,8 +290,10 @@ namespace SCSharp.UI
 			for (int i = 0; i < targetcursornames.Length; i ++) {
 				TargetCursors[i] = new CursorAnimator ((Grp)mpq.GetResource (targetcursornames[i]),
 								       effectpal.Palette);
-				//TargetCursors[i].SetHotSpot (60, 60);
+				TargetCursors[i].SetHotSpot (60, 60);
 			}
+
+			PlaceInitialUnits ();
 		}
 
 		void ClipTopLeft ()
@@ -374,14 +396,16 @@ namespace SCSharp.UI
 					else
 						Game.Instance.Cursor = Cursor;
 
-				/* are we over a unit?  if so, display */
-				foreach (Sprite s in SpriteManager.sprites) {
+				/* are we over a unit?  if so, display the mag cursor */
+				for (int i = 0; i < SpriteManager.sprites.Count; i ++) {
+					Sprite s = SpriteManager.sprites[i];
 					int sx, sy;
-					s.GetPosition (out sx, out sy);
 
-					if (args.X + topleft_x > sx && args.X + topleft_x <= sx + 10 /* XXX */
-					    && args.Y + topleft_y > sy && args.Y + topleft_y <= sy + 10 /* XXX */)
-						Game.Instance.Cursor = TargetCursors[TARG_CURSOR_G];
+					s.GetTopLeftPosition (out sx, out sy);
+
+					if (args.X + topleft_x > sx && args.X + topleft_x <= sx + 100 /* XXX */
+					    && args.Y + topleft_y > sy && args.Y + topleft_y <= sy + 100 /* XXX */)
+						Game.Instance.Cursor = MagCursors[MAG_CURSOR_G];
 				}
 			}
 		}
@@ -447,20 +471,17 @@ namespace SCSharp.UI
 
 				sprite = SpriteManager.CreateSprite (mpq, sprite_id, tileset_palette, unit.x, unit.y);
 
-				sprite.RunAnimation (AnimationType.Init);
+				sprite.RunScript (AnimationType.Init);
 			}
 
-			/* now place the starting units (a base and
-			 * three harvesters), if we aren't using map
-			 * settings */
-			foreach (UnitInfo sl in startLocations) {
-				Console.WriteLine ("Creating sprite for start location");
+			if (template.InitialUnits != InitialUnits.UseMapSettings) {
+				foreach (UnitInfo sl in startLocations) {
+					/* terran command center = 252,
+					   protos nexus = 211 */
+					Sprite sprite = SpriteManager.CreateSprite (mpq, 211, tileset_palette, sl.x, sl.y);
 
-				/* terran command center = 252,
-				   protos nexus = 211 */
-				Sprite sprite = SpriteManager.CreateSprite (mpq, 211, tileset_palette, sl.x, sl.y);
-
-				sprite.RunAnimation (AnimationType.Init);
+					sprite.RunScript (AnimationType.Init);
+				}
 			}
 
 			/* for now assume the player is at startLocations[0], and center the view there */

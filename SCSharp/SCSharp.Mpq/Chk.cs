@@ -120,7 +120,7 @@ namespace SCSharp
 			ParseSection ("ERA ");
 
 			/* player information */
-			//			ParseSection ("OWNR");
+			ParseSection ("OWNR");
 			ParseSection ("SIDE");
 		}
 		
@@ -183,9 +183,10 @@ namespace SCSharp
 					   06 - Human
 					   07 - Neutral
 					*/
-					if (section_data[i] == 0x05 ||
-					    section_data[i] == 0x06)
-						numPlayers ++;
+					if (section_data[i] == 0x05)
+						numComputerSlots ++;
+					else if (section_data[i] == 0x06)
+						numHumanSlots ++;
 				}
 			}
 			else if (section_name == "SIDE") {
@@ -349,6 +350,16 @@ namespace SCSharp
 
 				return mapMask;
 			}
+		}
+
+		int numComputerSlots;
+		public int NumComputerSlots {
+			get { return numComputerSlots; }
+		}
+
+		int numHumanSlots;
+		public int NumHumanSlots {
+			get { return numHumanSlots; }
 		}
 
 		int numPlayers;
