@@ -81,7 +81,6 @@ namespace SCSharp.UI
 
 		public static string Game_ConsolePcx = "game\\{0}console.pcx";
 
-
 		/* scripts */
 		public static string IScriptBin = "scripts\\iscript.bin";
 		public static string AIScriptBin = "scripts\\aiscript.bin";

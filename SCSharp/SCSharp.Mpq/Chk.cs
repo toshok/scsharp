@@ -252,6 +252,7 @@ namespace SCSharp
 				info.unit_id = type;
 				info.x = x;
 				info.y = y;
+				info.player = player;
 
 				units.Add (info);
 			}
@@ -382,6 +383,7 @@ namespace SCSharp
 		public int unit_id;
 		public int x;
 		public int y;
+		public int player;
 	};
 
 }

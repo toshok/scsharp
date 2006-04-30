@@ -38,4 +38,5 @@ SCSharp.UI/UIDialog.cs
 SCSharp.UI/UIElement.cs
 SCSharp.UI/UIPainter.cs
 SCSharp.UI/UIScreen.cs
+SCSharp.UI/Unit.cs
 

@@ -226,7 +226,8 @@ namespace SCSharp.UI
 					else {
 						Game.Instance.SwitchToScreen (new GameScreen (mpq,
 											      selectedScenario,
-											      selectedChk));
+											      selectedChk,
+											      selectedGot));
 					}
 				};
 

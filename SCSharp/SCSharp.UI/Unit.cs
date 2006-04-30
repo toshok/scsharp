@@ -1,5 +1,5 @@
 //
-// SCSharp.Mpq.IScriptBin
+// SCSharp.UI.Unit
 //
 // Authors:
 //	Chris Toshok (toshok@hungry.com)
@@ -30,52 +30,82 @@
 
 using System;
 using System.IO;
-using System.Text;
+using System.Threading;
 using System.Collections.Generic;
 
-namespace SCSharp
+using SdlDotNet;
+using System.Drawing;
+
+namespace SCSharp.UI
 {
-
-	public class IScriptBin : MpqResource
+	public class Unit
 	{
-		byte[] buf;
-		Dictionary<ushort,ushort> entries;
+		int unit_id;
+		UnitsDat units;
 
-		const int entry_table_offset = 0x0082e0;
+		uint hitpoints;
+		uint shields;
 
-		public IScriptBin ()
+		int x;
+		int y;
+
+		public Unit (int unit_id)
 		{
-			entries = new Dictionary<ushort,ushort>();
+			this.unit_id = unit_id;
+			units = GlobalResources.Instance.UnitsDat;
+
+			hitpoints = units.GetHitpoints (unit_id);
+			shields = units.GetShields (unit_id);
 		}
 
-		public void ReadFromStream (Stream stream)
+		public Unit (UnitInfo info) : this (info.unit_id)
 		{
-			buf = new byte [stream.Length];
-			stream.Read (buf, 0, buf.Length);
-
-			int p = entry_table_offset;
-
-			Console.WriteLine ("iscript entry offsets {0:x}", p);
-			Console.WriteLine ("iscript.bin contains {0} entries",
-					   (buf.Length - p) / 4);
-
-			while (p < buf.Length - 4) {
-				ushort images_id = Util.ReadWord (buf, p);
-				ushort offset = Util.ReadWord (buf, p+2);
-				entries[images_id] = offset;
-				p += 4;
-			}
+			x = info.x;
+			y = info.y;
 		}
 
-		public byte[] Contents {
-			get { return buf; }
+		public void CreateSprite (Mpq mpq, byte[] palette)
+		{
 		}
 
-		public ushort GetScriptEntryOffset (ushort images_id) {
-			if (!entries.ContainsKey (images_id))
-				throw new Exception ();
-			return entries[images_id];
+		public int X {
+			get { return x; }
+			set { x = value; }
+		}
+
+		public int Y {
+			get { return y; }
+			set { y = value; }
+		}
+
+		public int FlingyId {
+			get { return units.GetFlingyId (unit_id); }
+		}
+
+		public uint ConstructSpriteId {
+			get { return units.GetConstructSpriteId (unit_id); }
+		}
+
+		public int AnimationLevel {
+			get { return units.GetAnimationLevel (unit_id); }
+		}
+
+		public uint HitPoints {
+			get { return hitpoints; }
+			set { hitpoints = value; }
+		}
+
+		public uint Shields {
+			get { return shields; }
+			set { shields = value; }
+		}
+
+		public int CreateScore {
+			get { return units.GetCreateScore (unit_id); }
+		}
+
+		public int DestroyScore {
+			get { return units.GetDestroyScore (unit_id); }
 		}
 	}
-
 }

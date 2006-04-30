@@ -75,6 +75,14 @@ namespace SCSharp.UI
 			this.y = y;
 		}
 
+		public uint X {
+			get { return x; }
+		}
+
+		public uint Y {
+			get { return y; }
+		}
+
 		public uint HotX {
 			get { return hot_x; }
 		}

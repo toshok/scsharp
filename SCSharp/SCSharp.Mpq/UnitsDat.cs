@@ -88,10 +88,46 @@ namespace SCSharp
 		const int flingy_offset = 0x0000;
 		const int overlay_offset = 0x00e3;
 		const int construct_sprite_offset = 0x0534;
+		const int animation_level_offset = 0x0fe4;
+		const int create_score_offset = 0x43d8;
+		const int destroy_score_offset = 0x45a0;
+		const int shield_offset = 0x0a8c;
+		const int hitpoint_offset = 0x0c54;
 
 		public byte GetFlingyId (int unit_id)
 		{
 			return buf[flingy_offset + unit_id];
 		}
+
+		public uint GetConstructSpriteId (int unit_id)
+		{
+			return Util.ReadDWord (buf, construct_sprite_offset + unit_id * 4);
+		}
+
+		public byte GetAnimationLevel (int unit_id)
+		{
+			return buf[animation_level_offset + unit_id];
+		}
+
+		public ushort GetCreateScore (int unit_id)
+		{
+			return Util.ReadWord (buf, create_score_offset + unit_id * 2);
+		}
+
+		public ushort GetDestroyScore (int unit_id)
+		{
+			return Util.ReadWord (buf, destroy_score_offset + unit_id * 2);
+		}
+
+		public ushort GetShields (int unit_id)
+		{
+			return Util.ReadWord (buf, shield_offset + unit_id * 2);
+		}
+
+		public uint GetHitpoints (int unit_id)
+		{
+			return Util.ReadWord (buf, hitpoint_offset + unit_id * 2);
+		}
+
 	}
 }

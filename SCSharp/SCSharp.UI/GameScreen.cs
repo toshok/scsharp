@@ -305,6 +305,22 @@ namespace SCSharp.UI
 			if (topleft_y > map_surf.Height - Game.SCREEN_RES_Y) topleft_y = map_surf.Height - Game.SCREEN_RES_Y;
 		}
 
+		void UpdateCursor ()
+		{
+			/* are we over a unit?  if so, display the mag cursor */
+			for (int i = 0; i < SpriteManager.sprites.Count; i ++) {
+				Sprite s = SpriteManager.sprites[i];
+				int sx, sy;
+
+				s.GetTopLeftPosition (out sx, out sy);
+
+				CursorAnimator c = Game.Instance.Cursor;
+				if (c.X + topleft_x > sx && c.X + topleft_x <= sx + 100 /* XXX */
+				    && c.Y + topleft_y > sy && c.Y + topleft_y <= sy + 100 /* XXX */)
+					Game.Instance.Cursor = MagCursors[MAG_CURSOR_G];
+			}
+		}
+
 		public void ScrollPainter (Surface surf, DateTime dt)
 		{
 			topleft_x += horiz_delta;
@@ -313,6 +329,8 @@ namespace SCSharp.UI
 			ClipTopLeft ();
 
 			SpriteManager.SetUpperLeft (topleft_x, topleft_y);
+
+			UpdateCursor ();
 		}
 
 		bool buttonDownInMinimap;
@@ -396,17 +414,7 @@ namespace SCSharp.UI
 					else
 						Game.Instance.Cursor = Cursor;
 
-				/* are we over a unit?  if so, display the mag cursor */
-				for (int i = 0; i < SpriteManager.sprites.Count; i ++) {
-					Sprite s = SpriteManager.sprites[i];
-					int sx, sy;
-
-					s.GetTopLeftPosition (out sx, out sy);
-
-					if (args.X + topleft_x > sx && args.X + topleft_x <= sx + 100 /* XXX */
-					    && args.Y + topleft_y > sy && args.Y + topleft_y <= sy + 100 /* XXX */)
-						Game.Instance.Cursor = MagCursors[MAG_CURSOR_G];
-				}
+				UpdateCursor ();
 			}
 		}
 
@@ -451,41 +459,51 @@ namespace SCSharp.UI
 		{
 			List<UnitInfo> units = scenario.Units;
 
-			List<UnitInfo> startLocations = new List<UnitInfo>();
+			List<Unit> startLocations = new List<Unit>();
 
-			foreach (UnitInfo unit in units) {
+			foreach (UnitInfo unitinfo in units) {
 				Sprite sprite = null;
 
-				if (unit.unit_id == 0xffff)
+				if (unitinfo.unit_id == 0xffff)
 					break;
 
-				int flingy_id = GlobalResources.Instance.UnitsDat.GetFlingyId (unit.unit_id);
+				Unit unit = new Unit (unitinfo);
 
 				/* we handle start locations in a special way, below */
-				if (flingy_id == 140) {
+				if (unit.FlingyId == 140) {
 					startLocations.Add (unit);
 					continue;
 				}
 
-				int sprite_id = GlobalResources.Instance.FlingyDat.GetSpriteId (flingy_id);
+				//players[unitinfo.player].AddUnit (unit);
 
-				sprite = SpriteManager.CreateSprite (mpq, sprite_id, tileset_palette, unit.x, unit.y);
+				//				PlaceUnit (unit);
+
+				int sprite_id = GlobalResources.Instance.FlingyDat.GetSpriteId (unit.FlingyId);
+
+				sprite = SpriteManager.CreateSprite (mpq, sprite_id, tileset_palette, unit.X, unit.Y);
 
 				sprite.RunScript (AnimationType.Init);
 			}
 
 			if (template.InitialUnits != InitialUnits.UseMapSettings) {
-				foreach (UnitInfo sl in startLocations) {
+				foreach (Unit sl in startLocations) {
 					/* terran command center = 252,
 					   protos nexus = 211 */
-					Sprite sprite = SpriteManager.CreateSprite (mpq, 211, tileset_palette, sl.x, sl.y);
+					Sprite sprite = SpriteManager.CreateSprite (mpq, 211, tileset_palette, sl.X, sl.Y);
 
 					sprite.RunScript (AnimationType.Init);
 				}
 			}
 
 			/* for now assume the player is at startLocations[0], and center the view there */
-			Recenter (startLocations[0].x, startLocations[0].y);
+			Recenter (startLocations[0].X, startLocations[0].Y);
+		}
+
+		void PlaceUnit (Unit unit)
+		{
+			//unit.CreateSprite (mpq, tileset_palette);
+			//RunScript (AnimationType.Init);
 		}
 	}
 }
