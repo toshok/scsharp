@@ -64,8 +64,15 @@ namespace SCSharp.UI
 			y = info.y;
 		}
 
-		public void CreateSprite (Mpq mpq, byte[] palette)
+		public Sprite CreateSprite (Mpq mpq, byte[] palette)
 		{
+			int sprite_id = GlobalResources.Instance.FlingyDat.GetSpriteId (FlingyId);
+
+			Sprite sprite = SpriteManager.CreateSprite (mpq, sprite_id, palette, x, y);
+
+			sprite.RunScript (AnimationType.Init);
+
+			return sprite;
 		}
 
 		public int X {

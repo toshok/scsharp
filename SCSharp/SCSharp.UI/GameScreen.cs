@@ -462,8 +462,6 @@ namespace SCSharp.UI
 			List<Unit> startLocations = new List<Unit>();
 
 			foreach (UnitInfo unitinfo in units) {
-				Sprite sprite = null;
-
 				if (unitinfo.unit_id == 0xffff)
 					break;
 
@@ -477,33 +475,25 @@ namespace SCSharp.UI
 
 				//players[unitinfo.player].AddUnit (unit);
 
-				//				PlaceUnit (unit);
-
-				int sprite_id = GlobalResources.Instance.FlingyDat.GetSpriteId (unit.FlingyId);
-
-				sprite = SpriteManager.CreateSprite (mpq, sprite_id, tileset_palette, unit.X, unit.Y);
-
-				sprite.RunScript (AnimationType.Init);
+				unit.CreateSprite (mpq, tileset_palette);
 			}
 
 			if (template.InitialUnits != InitialUnits.UseMapSettings) {
 				foreach (Unit sl in startLocations) {
-					/* terran command center = 252,
-					   protos nexus = 211 */
-					Sprite sprite = SpriteManager.CreateSprite (mpq, 211, tileset_palette, sl.X, sl.Y);
+					/* terran command center = 106,
+					   zerg hatchery = 131,
+					   protoss nexus = 154 */
 
-					sprite.RunScript (AnimationType.Init);
+					Unit unit = new Unit (154);
+					unit.X = sl.X;
+					unit.Y = sl.Y;
+
+					unit.CreateSprite (mpq, tileset_palette);
 				}
 			}
 
 			/* for now assume the player is at startLocations[0], and center the view there */
 			Recenter (startLocations[0].X, startLocations[0].Y);
-		}
-
-		void PlaceUnit (Unit unit)
-		{
-			//unit.CreateSprite (mpq, tileset_palette);
-			//RunScript (AnimationType.Init);
 		}
 	}
 }

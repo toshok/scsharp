@@ -1,8 +1,23 @@
-2006-04-10  Chris Toshok  <toshok@ximian.com>
+2006-04-30  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/Unit.cs (CreateSprite): implement.
+
+	* SCSharp/SCSharp.UI/GameScreen.cs (PlaceInitialUnits): use Unit
+	everywhere.
+
+	* SCSharp/SCSharp.UI/Sprite.cs (.ctor): add a little more info to
+	the spew.
+
+	* SCSharp/SCSharp.UI/GlobalResources.cs (ResourceLoader): remove
+	spew.
+	(LoadSingleThreaded): load without spawning off a worker thread.
+	useful in tools and tests.
+
+2006-04-10  Chris Toshok  <toshok@hungry.com>
 
 	* Makefile (VERSION): bump to 0.0000002.
 
-2006-04-10  Chris Toshok  <toshok@ximian.com>
+2006-04-10  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/OkCancelDialog.cs: use 254,0 for
 	translucent,transparent.
@@ -11,7 +26,7 @@
 
 	* SCSharp/SCSharp.UI/EntryDialog.cs: same.
 
-2006-04-10  Chris Toshok  <toshok@ximian.com>
+2006-04-10  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GameModeDialog.cs (.ctor): set
 	background_path to null, as we'll load it in ResourceLoader.

@@ -71,6 +71,11 @@ namespace SCSharp.UI
 			ThreadPool.QueueUserWorkItem (ResourceLoader);
 		}
 
+		public void LoadSingleThreaded ()
+		{
+			ResourceLoader (null);
+		}
+
 		public Tbl ImagesTbl {
 			get { return imagesTbl; }
 		}
@@ -114,34 +119,24 @@ namespace SCSharp.UI
 		void ResourceLoader (object state)
 		{
 			try {
-				Console.WriteLine ("loading images.tbl");
 				imagesTbl = (Tbl)mpq.GetResource (Builtins.ImagesTbl);
 
-				Console.WriteLine ("loading sfxdata.tbl");
 				sfxDataTbl = (Tbl)mpq.GetResource (Builtins.SfxDataTbl);
 
-				Console.WriteLine ("loading sprites.tbl");
 				spritesTbl = (Tbl)mpq.GetResource (Builtins.SpritesTbl);
 
-				Console.WriteLine ("loading gluAll.tbl");
 				gluAllTbl = (Tbl)mpq.GetResource (Builtins.rez_GluAllTbl);
 
-				Console.WriteLine ("loading images.dat");
 				imagesDat = (ImagesDat)mpq.GetResource (Builtins.ImagesDat);
 
-				Console.WriteLine ("loading sfxdata.dat");
 				sfxDataDat = (SfxDataDat)mpq.GetResource (Builtins.SfxDataDat);
 
-				Console.WriteLine ("loading sprites.dat");
 				spritesDat = (SpritesDat)mpq.GetResource (Builtins.SpritesDat);
 
-				Console.WriteLine ("loading iscript.bin");
 				iscriptBin = (IScriptBin)mpq.GetResource (Builtins.IScriptBin);
 
-				Console.WriteLine ("loading units.dat");
 				unitsDat = (UnitsDat)mpq.GetResource (Builtins.UnitsDat);
 
-				Console.WriteLine ("loading flingy.dat");
 				flingyDat = (FlingyDat)mpq.GetResource (Builtins.FlingyDat);
 
 				// notify we're ready to roll

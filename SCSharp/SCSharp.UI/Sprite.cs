@@ -102,7 +102,7 @@ namespace SCSharp.UI
 
 			grp = (Grp)mpq.GetResource ("unit\\" + grp_path);
 
-			Console.WriteLine ("new sprite: unit\\" + grp_path);
+			Console.WriteLine ("new sprite: unit\\{0} @ {1}x{2} (image {3})", grp_path, x, y, images_entry);
 
 			this.buf = GlobalResources.Instance.IScriptBin.Contents;
 			iscript_entry = GlobalResources.Instance.ImagesDat.GetIScriptIndex (images_entry);
