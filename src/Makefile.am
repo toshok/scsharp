@@ -1,10 +1,10 @@
 MCSFLAGS= -debug
 MCS= gmcs
 
-PROGRAM=starcraft.exe
+PROGRAM=scsharp.exe
 PROGRAM_REFS= -r:../SCSharp/SCSharp.UI.dll -r:../SCSharp/SCSharp.dll -r:../sdldotnet-bin/SdlDotNet.dll -r:../sdldotnet-bin/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
 
-EXTRA_DIST=starcraft.exe.config-example mono.sh
+EXTRA_DIST=scsharp.exe.config-example mono.sh
 
 all-local: $(PROGRAM)
 
