@@ -1,5 +1,5 @@
 
-SUBDIRS= SCSharp StormLib src
+SUBDIRS= docs SCSharp StormLib src Tests
 
 EXTRA_DIST= HACKING RELEASE_README
 
