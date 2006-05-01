@@ -18,6 +18,7 @@ Things you need to do to make this work:
    versions should work, as well as newer ones.):
 
 	SDL-1.2.9        (http://www.libsdl.org/download-1.2.php)
+        SDL_gfx-2.0.13   (http://www.ferzkopp.net/Software/SDL_gfx-2.0/)
 	SDL_mixer-1.2.6  (http://www.libsdl.org/projects/SDL_mixer/release/)
 	SDL_image-1.2.4  (http://www.libsdl.org/projects/SDL_image/release/)
 
