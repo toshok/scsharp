@@ -50,7 +50,7 @@ namespace SCSharp
 			cached_resources = new Dictionary <string,object>();
 		}
 
-		protected internal abstract Stream GetStreamForResource (string path);
+		public abstract Stream GetStreamForResource (string path);
 
 		protected Type GetTypeFromResourcePath (string path)
 		{
@@ -139,7 +139,7 @@ namespace SCSharp
 			mpqs.Add (mpq);
 		}
 
-		protected internal override Stream GetStreamForResource (string path)
+		public override Stream GetStreamForResource (string path)
 		{
 			foreach (Mpq mpq in mpqs) {
 				Stream s = mpq.GetStreamForResource (path);
@@ -172,7 +172,7 @@ namespace SCSharp
 			return path;
 		}
 
-		protected internal override Stream GetStreamForResource (string path)
+		public override Stream GetStreamForResource (string path)
 		{
 			string rebased_path = ConvertBackSlashes (Path.Combine (mpq_dir_path, path));
 
@@ -211,7 +211,7 @@ namespace SCSharp
 				throw new Exception (String.Format ("Could not load .mpq file at {0}", path));
 		}
 
-		protected internal override Stream GetStreamForResource (string path)
+		public override Stream GetStreamForResource (string path)
 		{
 			IntPtr fileHandle;
 			uint fileSize;
