@@ -1,5 +1,7 @@
 2006-05-01  Chris Toshok  <toshok@ximian.com>
 
+	* Tests/Makefile.am (font_foo_exe_REFS): more build fixes.
+
 	* configure.ac: add a check for mono >= 1.1.14
 
 2006-05-01  Chris Toshok  <toshok@ximian.com>

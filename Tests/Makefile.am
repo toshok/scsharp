@@ -14,7 +14,7 @@ dump_tbl_exe_FILES = dump-tbl.cs
 dump_tbl_exe_REFS= -r:../SCSharp/SCSharp.dll
 
 font_foo_exe_FILES = font-foo.cs
-font_foo_exe_REFS= -r:../SCSharp/SCSharp.dll -r:../SCSharp/SCSharp.UI.dll -r:../sdldotnet/bin/assemblies/SdlDotNet.dll -r:../sdldotnet/lib/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
+font_foo_exe_REFS= -r:../SCSharp/SCSharp.dll -r:../SCSharp/SCSharp.UI.dll -r:../sdldotnet-bin/SdlDotNet.dll -r:../sdldotnet-bin/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll
 
 all: dump-map.exe dump-grp.exe dump-iscript.exe dump-tbl.exe font-foo.exe
 
