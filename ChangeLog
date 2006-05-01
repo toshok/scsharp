@@ -1,10 +1,10 @@
-2006-05-01  Chris Toshok  <toshok@ximian.com>
+2006-05-01  Chris Toshok  <toshok@hungry.com>
 
 	* Tests/Makefile.am (font_foo_exe_REFS): more build fixes.
 
 	* configure.ac: add a check for mono >= 1.1.14
 
-2006-05-01  Chris Toshok  <toshok@ximian.com>
+2006-05-01  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.Mpq/Mpq.cs: Make GetStreamForResource public so
 	it can be used to extract files from mpq archives.
