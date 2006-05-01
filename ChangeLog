@@ -1,5 +1,9 @@
 2006-05-01  Chris Toshok  <toshok@ximian.com>
 
+	* configure.ac: add a check for mono >= 1.1.14
+
+2006-05-01  Chris Toshok  <toshok@ximian.com>
+
 	* SCSharp/SCSharp.Mpq/Mpq.cs: Make GetStreamForResource public so
 	it can be used to extract files from mpq archives.
 
