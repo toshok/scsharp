@@ -1,3 +1,11 @@
+2006-05-08  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/GuiUtil.cs (CreateSurface): refactor the
+	duplicated code from
+	CreateSurfaceFromRGBAData/CreateSurfaceFromRGBData here.
+	(CreateSurfaceFromRGBAData): call CreateSurface
+	(CreateSurfaceFromRGBData): call CreateSurface
+
 2006-05-01  Chris Toshok  <toshok@hungry.com>
 
 	* Tests/Makefile.am (font_foo_exe_REFS): more build fixes.

@@ -212,8 +212,10 @@ namespace SCSharp.UI
 			return buf;
 		}
 
-		public static Surface CreateSurfaceFromRGBAData (byte[] data, ushort width, ushort height, int depth, int stride)
+		static Surface CreateSurface (byte[] data, ushort width, ushort height, int depth, int stride,
+					      int rmask, int gmask, int bmask, int amask)
 		{
+					      
 			/* beware, kind of a gross hack below */
 			Surface surf;
 
@@ -223,11 +225,7 @@ namespace SCSharp.UI
 			IntPtr handle = Sdl.SDL_CreateRGBSurfaceFrom (blob,
 								      width, height, depth,
 								      stride,
-								      /* XXX this needs addressing in Tao.Sdl - these arguments should be uints */
-								      unchecked ((int)0xff000000),
-								      (int)0x00ff0000,
-								      (int)0x0000ff00,
-								      (int)0x000000ff);
+								      rmask, gmask, bmask, amask);
 
 			surf = (Surface)Activator.CreateInstance (typeof (Surface),
 								  BindingFlags.NonPublic | BindingFlags.Instance,
@@ -238,29 +236,23 @@ namespace SCSharp.UI
 			return surf;
 		}
 
+		public static Surface CreateSurfaceFromRGBAData (byte[] data, ushort width, ushort height, int depth, int stride)
+		{
+			return CreateSurface (data, width, height, depth, stride,
+					      /* XXX this needs addressing in Tao.Sdl - these arguments should be uints */
+					      unchecked ((int)0xff000000),
+					      (int)0x00ff0000,
+					      (int)0x0000ff00,
+					      (int)0x000000ff);
+		}
+
 		public static Surface CreateSurfaceFromRGBData (byte[] data, ushort width, ushort height, int depth, int stride)
 		{
-			/* beware, kind of a gross hack below */
-			Surface surf;
-
-			IntPtr blob = Marshal.AllocCoTaskMem (data.Length);
-			Marshal.Copy (data, 0, blob, data.Length);
-
-			IntPtr handle = Sdl.SDL_CreateRGBSurfaceFrom (blob,
-								      width, height, depth,
-								      stride,
-								      (int)0x00ff0000,
-								      (int)0x0000ff00,
-								      (int)0x000000ff,
-								      (int)0x00000000);
-
-			surf = (Surface)Activator.CreateInstance (typeof (Surface),
-								  BindingFlags.NonPublic | BindingFlags.Instance,
-								  null,
-								  new object[] {handle},
-								  null);
-
-			return surf;
+			return CreateSurface (data, width, height, depth, stride,
+					      (int)0x00ff0000,
+					      (int)0x0000ff00,
+					      (int)0x000000ff,
+					      (int)0x00000000);
 		}
 
 		public static byte[] GetBitmapData (byte[,] grid, ushort width, ushort height, byte[] palette, int translucent_index, int transparent_index)
