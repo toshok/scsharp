@@ -51,6 +51,19 @@ namespace SCSharp.UI
 		const int CREDITS_ELEMENT_INDEX = 9;
 		const int VERSION_ELEMENT_INDEX = 10;
 
+		void ShowGameModeDialog (UIScreenType nextScreen)
+		{
+			GameModeDialog d = new GameModeDialog (this, mpq);
+			d.Cancel += delegate () { DismissDialog (); };
+			d.Activate += delegate (bool expansion) {
+				DismissDialog ();
+				Game.Instance.IsBroodWar = expansion;
+				GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+				Game.Instance.SwitchToScreen (nextScreen);
+			};
+			ShowDialog (d);
+		}
+
 		protected override void ResourceLoader ()
 		{
 			base.ResourceLoader ();
@@ -60,15 +73,7 @@ namespace SCSharp.UI
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
 					if (Game.Instance.IsBroodWar) {
-						GameModeDialog d = new GameModeDialog (this, mpq);
-						d.Cancel += delegate () { DismissDialog (); };
-						d.Activate += delegate (bool expansion) {
-							DismissDialog ();
-							Game.Instance.IsBroodWar = expansion;
-							GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
-							Game.Instance.SwitchToScreen (UIScreenType.Login);
-						};
-						ShowDialog (d);
+						ShowGameModeDialog (UIScreenType.Login);
 					}
 					else {
 						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
@@ -79,14 +84,7 @@ namespace SCSharp.UI
 			Elements[MULTIPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
 					if (Game.Instance.IsBroodWar) {
-						GameModeDialog d = new GameModeDialog (this, mpq);
-						d.Cancel += delegate () { DismissDialog (); };
-						d.Activate += delegate (bool expansion) {
-							DismissDialog ();
-							GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
-							Game.Instance.SwitchToScreen (UIScreenType.Connection);
-						};
-						ShowDialog (d);
+						ShowGameModeDialog (UIScreenType.Connection);
 					}
 					else {
 						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
@@ -103,10 +101,18 @@ namespace SCSharp.UI
 
 			Elements[INTRO_ELEMENT_INDEX].Activate +=
 				delegate () {
+#if false
+					Cinematic introScreen = new Cinematic (mpq, "smk\\xProtoss.smk" /*"smk\\starXIntr.smk"*/);
+					introScreen.Finished += delegate () {
+						Game.Instance.SwitchToScreen (this);
+					};
+					Game.Instance.SwitchToScreen (introScreen);
+#else
 					OkDialog d = new OkDialog (this,
 								   mpq,
 								   "Cinematics are not available (yet) in SCSharp");
 					ShowDialog (d);
+#endif
 				};
 
 			Elements[CREDITS_ELEMENT_INDEX].Activate += 

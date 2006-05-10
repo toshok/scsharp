@@ -90,9 +90,6 @@ namespace SCSharp
 				else if (path.ToLower().EndsWith ("units.dat"))
 					return typeof (UnitsDat);
 			}
-			else if (ext.ToLower () == ".smk") {
-				return typeof (Smk);
-			}
 			else if (ext.ToLower () == ".spk") {
 				return typeof (Spk);
 			}
@@ -119,7 +116,9 @@ namespace SCSharp
 
 			res.ReadFromStream (stream);
 
-			cached_resources [path] = res;
+			/* don't cache .smk files */
+			if (!path.ToLower().EndsWith (".smk"))
+				cached_resources [path] = res;
 
 			return res;
 		}

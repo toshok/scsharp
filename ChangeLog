@@ -1,3 +1,44 @@
+2006-05-10  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.Mpq/Mpq.cs (GetResource): don't cache .smk files
+	(the cinematics at least are enormous).
+	(GetTypeFromResourcePath): make .smk files use a Stream instead of
+	our Smk class.
+
+	* SCSharp/SCSharp.UI/SmackerPlayer.cs: use FFmpeg to display .smk
+	files.  This works on my machine, but lacks audio and the glue
+	code is in general pretty ugly.  Going to take a look at using
+	gstreamer tonight.  With this in mind, I'm not adding
+	SmackerPlayer.cs+Cinematic.cs to the build, and I'm not going to
+	check in the ffmpegglue code.
+
+	* SCSharp/SCSharp.UI/Cinematic.cs: new file, basically takes over
+	the screen and runs a SmackerPlayer.
+
+	* SCSharp/SCSharp.UI/ButtonElement.cs (MouseEnter): rename
+	MouseOver to this.
+
+	* SCSharp/SCSharp.UI/GuiUtil.cs (CreateSurface): make this public.
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs (ResourceLoader): add
+	delegates for MouseEnter/MouseLeave to display the incomplete
+	messages.  we always show them at the moment, instead of getting
+	that information from the .spc file.
+
+	* SCSharp/SCSharp.UI/MainMenu.cs (ShowGameModeDialog): factor this
+	code out from both the single/multiplayer delegates.
+	(ResourceLoader): add ifdef'ed code for the intro cinematic, and
+	use ShowGameModeDialog for single/multiplayer.
+
+	* SCSharp/SCSharp.UI/UIElement.cs: switch from MouseOver to
+	MouseEnter+MouseLeave.
+
+	* SCSharp/SCSharp.UI/UIScreen.cs: switch from MouseOver to
+	MouseEnter+MouseLeave so we can implement things like the strings
+	on the race selection screen where they tell you previous
+	campaigns haven't been completed yet.
+	(KeyboardDown): guard against Elements being null.
+
 2006-05-08  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GuiUtil.cs (CreateSurface): refactor the

@@ -137,11 +137,24 @@ namespace SCSharp.UI
 		public Key Hotkey { get { return (Key)el.hotkey; } }
 
 		public event ElementEvent Activate;
-
 		public void OnActivate ()
 		{
 			if (Activate != null)
 				Activate ();
+		}
+
+		public event ElementEvent MouseEnterEvent;
+		public void OnMouseEnter ()
+		{
+			if (MouseEnterEvent != null)
+				MouseEnterEvent ();
+		}
+
+		public event ElementEvent MouseLeaveEvent;
+		public void OnMouseLeave ()
+		{
+			if (MouseLeaveEvent != null)
+				MouseLeaveEvent ();
 		}
 
 		protected void ClearSurface ()
@@ -198,8 +211,14 @@ namespace SCSharp.UI
 		{
 		}
 
-		public virtual void MouseOver ()
+		public virtual void MouseEnter ()
 		{
+			OnMouseEnter ();
+		}
+
+		public virtual void MouseLeave ()
+		{
+			OnMouseLeave ();
 		}
 	}
 

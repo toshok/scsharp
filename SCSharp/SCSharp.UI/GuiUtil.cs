@@ -212,8 +212,8 @@ namespace SCSharp.UI
 			return buf;
 		}
 
-		static Surface CreateSurface (byte[] data, ushort width, ushort height, int depth, int stride,
-					      int rmask, int gmask, int bmask, int amask)
+		public static Surface CreateSurface (byte[] data, ushort width, ushort height, int depth, int stride,
+						     int rmask, int gmask, int bmask, int amask)
 		{
 					      
 			/* beware, kind of a gross hack below */

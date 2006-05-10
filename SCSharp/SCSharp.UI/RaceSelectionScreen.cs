@@ -50,6 +50,9 @@ namespace SCSharp.UI
 		const int TERRAN_ELEMENT_INDEX = 6;
 		const int CANCEL_ELEMENT_INDEX = 7;
 		const int PLAYCUSTOM_ELEMENT_INDEX = 8;
+		const int TERRAN_PROTOSS_INCOMPLETE_INDEX = 9;
+		const int ZERG_PROTOSS_INCOMPLETE_INDEX = 10;
+		const int ZERG_TERRAN_INCOMPLETE_INDEX = 11;
 
 		protected override void ResourceLoader ()
 		{
@@ -57,6 +60,34 @@ namespace SCSharp.UI
 
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}: {1} '{2}'", i, Elements[i].Type, Elements[i].Text);
+
+			Elements[ZERG_ELEMENT_INDEX].MouseEnterEvent += 
+				delegate () {
+					if (true /* XXX this should come from the player's file */) {
+						Elements[ZERG_PROTOSS_INCOMPLETE_INDEX].Visible = true;
+					}
+				};
+
+			Elements[ZERG_ELEMENT_INDEX].MouseLeaveEvent += 
+				delegate () {
+					if (true /* XXX this should come from the player's file */) {
+						Elements[ZERG_PROTOSS_INCOMPLETE_INDEX].Visible = false;
+					}
+				};
+
+			Elements[TERRAN_ELEMENT_INDEX].MouseEnterEvent += 
+				delegate () {
+					if (true /* XXX this should come from the player's file */) {
+						Elements[TERRAN_PROTOSS_INCOMPLETE_INDEX].Visible = true;
+					}
+				};
+
+			Elements[TERRAN_ELEMENT_INDEX].MouseLeaveEvent += 
+				delegate () {
+					if (true /* XXX this should come from the player's file */) {
+						Elements[TERRAN_PROTOSS_INCOMPLETE_INDEX].Visible = false;
+					}
+				};
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=
 				delegate () {

@@ -1,7 +1,7 @@
 //
-// SCSharp.UI.ButtonElement
+// SCSharp.UI.Cinematic
 //
-// Author:
+// Authors:
 //	Chris Toshok (toshok@hungry.com)
 //
 // (C) 2006 The Hungry Programmers (http://www.hungry.com/)
@@ -30,7 +30,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using System.Threading;
 
 using SdlDotNet;
@@ -38,46 +37,61 @@ using System.Drawing;
 
 namespace SCSharp.UI
 {
-	public class ButtonElement : UIElement
+	public class Cinematic : UIScreen
 	{
-		public ButtonElement (UIScreen screen, BinElement el, byte[] palette)
-			: base (screen, el, palette)
+		SmackerPlayer player;
+		string resourcePath;
+
+		public Cinematic (Mpq mpq, string resourcePath)
+			: base (mpq, null, null)
 		{
+			this.resourcePath = resourcePath;
 		}
 
-		protected override Surface CreateSurface ()
+		public override void AddToPainter (Painter painter)
 		{
-			Surface surf = new Surface (Width, Height);
+			/* XXX this should be abstracted into Game with the other mouse settings */
+			Mouse.ShowCursor = false;
 
-			surf.TransparentColor = Color.Black; /* XXX */
-
-			Surface text_surf = GuiUtil.ComposeText (Text, Font, Palette, -1, -1,
-								 Sensitive ? 4 : 24);
-			
-			surf.Blit (text_surf, new Point ((surf.Width - text_surf.Width) / 2,
-							 (surf.Height - text_surf.Height) / 2));
-
-			return surf;
+			painter.Add (Layer.Background, VideoPainter);
 		}
 
-		public override void MouseButtonDown (MouseButtonEventArgs args)
+		public override void RemoveFromPainter (Painter painter)
 		{
+			painter.Remove (Layer.Background, VideoPainter);
 		}
 
-		public override void MouseButtonUp (MouseButtonEventArgs args)
+		void VideoPainter (Surface surf, DateTime dt)
 		{
-			if (PointInside (args.X, args.Y))
-				OnActivate ();
-		}
+			if (player == null) {
+				player = new SmackerPlayer (resourcePath,
+							    (Stream)mpq.GetResource (resourcePath),
+							    Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
 
-		public override void MouseEnter ()
-		{
-			if ((Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
-				/* highlight the text */
-				GuiUtil.PlaySound (Mpq, Builtins.MouseoverWav);
+				player.Finished += PlayerFinished;
+				player.Play ();
 			}
-			base.MouseEnter ();
+
+			player.BlitSurface (surf);
+		}
+
+		public event PlayerEvent Finished;
+
+		void PlayerFinished ()
+		{
+			player = null;
+			if (Finished != null)
+				Finished ();
+		}
+
+		public override void KeyboardDown (KeyboardEventArgs args)
+		{
+			if (args.Key == Key.Escape
+			    || args.Key == Key.Return
+			    || args.Key == Key.Space) {
+				player.Stop ();
+				PlayerFinished ();
+			}
 		}
 	}
-
 }

@@ -172,9 +172,14 @@ namespace SCSharp.UI
 
 		UIElement mouseDownElement;
 		UIElement mouseOverElement;
-		public virtual void MouseOverElement (UIElement element)
+		public virtual void MouseEnterElement (UIElement element)
 		{
-			element.MouseOver ();
+			element.MouseEnter ();
+		}
+
+		public virtual void MouseLeaveElement (UIElement element)
+		{
+			element.MouseLeave ();
 		}
 
 		public virtual void ActivateElement (UIElement element)
@@ -246,9 +251,12 @@ namespace SCSharp.UI
 			else {
 				UIElement newMouseOverElement = XYToElement (args.X, args.Y, true);
 
-				if (newMouseOverElement != null
-				    && newMouseOverElement != mouseOverElement)
-					MouseOverElement (newMouseOverElement);
+				if (newMouseOverElement != mouseOverElement) {
+					if (mouseOverElement != null)
+						MouseLeaveElement (mouseOverElement);
+					if (newMouseOverElement != null)
+						MouseEnterElement (newMouseOverElement);
+				}
 
 				mouseOverElement = newMouseOverElement;
 			}
@@ -280,16 +288,18 @@ namespace SCSharp.UI
 
 		public virtual void KeyboardDown (KeyboardEventArgs args)
 		{
-			foreach (UIElement e in Elements) {
-				if ( (args.Key == e.Hotkey)
-				     ||
-				     (args.Key == Key.Return
-				      && (e.Flags & ElementFlags.DefaultButton) == ElementFlags.DefaultButton)
-				     ||
-				     (args.Key == Key.Escape
-				      && (e.Flags & ElementFlags.CancelButton) == ElementFlags.CancelButton)) {
-					ActivateElement (e);
-					return;
+			if (Elements != null) {
+				foreach (UIElement e in Elements) {
+					if ( (args.Key == e.Hotkey)
+					     ||
+					     (args.Key == Key.Return
+					      && (e.Flags & ElementFlags.DefaultButton) == ElementFlags.DefaultButton)
+					     ||
+					     (args.Key == Key.Escape
+					      && (e.Flags & ElementFlags.CancelButton) == ElementFlags.CancelButton)) {
+						ActivateElement (e);
+						return;
+					}
 				}
 			}
 		}
