@@ -1,8 +1,8 @@
-MCSFLAGS= -debug -d:DEBUG
+MCSFLAGS= -debug -d:DEBUG -d:USE_STORM_DLL
 MCS=gmcs
 
 SCSHARPDLL=SCSharp.dll
-SCSHARPDLL_REFS=
+SCSHARPDLL_REFS=-r:ICSharpCode.SharpZipLib
 
 SCSHARPUIDLL=SCSharp.UI.dll
 SCSHARPUIDLL_REFS= -r:SCSharp.dll -r:../sdldotnet-bin/SdlDotNet.dll -r:../sdldotnet-bin/Tao.Sdl.dll -r:System.Drawing.dll -r:System.Configuration.dll

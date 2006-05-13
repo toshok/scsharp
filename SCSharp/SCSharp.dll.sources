@@ -7,6 +7,10 @@ SCSharp.Mpq/Grp.cs
 SCSharp.Mpq/ImagesDat.cs
 SCSharp.Mpq/IScriptBin.cs
 SCSharp.Mpq/Mpq.cs
+SCSharp.Mpq/MpqArchive.cs
+SCSharp.Mpq/MpqStream.cs
+SCSharp.Mpq/MpqStructs.cs
+SCSharp.Mpq/PKLibDecompress.cs
 SCSharp.Mpq/Smk.cs
 SCSharp.Mpq/SfxDataDat.cs
 SCSharp.Mpq/Spk.cs

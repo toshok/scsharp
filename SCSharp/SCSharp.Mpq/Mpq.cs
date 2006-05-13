@@ -138,6 +138,11 @@ namespace SCSharp
 			mpqs.Add (mpq);
 		}
 
+		public void Remove (Mpq mpq)
+		{
+			mpqs.Remove (mpq);
+		}
+
 		public override Stream GetStreamForResource (string path)
 		{
 			foreach (Mpq mpq in mpqs) {
@@ -202,16 +207,25 @@ namespace SCSharp
 
 	public class MpqArchive : Mpq
 	{
+#if USE_STORM_DLL
 		IntPtr mpqHandle;
+#else
+		MpqReader.MpqArchive mpq;
+#endif
 
 		public MpqArchive (string path)
 		{
+#if USE_STORM_DLL
 			if (!Storm.SFileOpenArchive (path, 0, 0, out mpqHandle))
 				throw new Exception (String.Format ("Could not load .mpq file at {0}", path));
+#else
+			mpq = new MpqReader.MpqArchive (path);
+#endif
 		}
 
 		public override Stream GetStreamForResource (string path)
 		{
+#if USE_STORM_DLL
 			IntPtr fileHandle;
 			uint fileSize;
 			uint numRead;
@@ -236,9 +250,18 @@ namespace SCSharp
 			//			Console.WriteLine ("found resource {0} in archive", path);
 			Storm.SFileCloseFile (fileHandle);
 			return new MemoryStream (buf);
+#else
+			try {
+				return mpq.OpenFile (path);
+			}
+			catch (FileNotFoundException) {
+				return null;
+			}
+#endif
 		}
 	}
 
+#if USE_STORM_DLL
 	/* this should remain in sync with what's in StormLib.h */
 	enum SFileInfo {
 		ArchiveSize     =  1,      // MPQ size (value from header)
@@ -293,4 +316,5 @@ namespace SCSharp
 		[DllImport ("Storm.dll")]
 		public extern static bool SFileCloseFile (IntPtr fileHandle);
 	}
+#endif
 }

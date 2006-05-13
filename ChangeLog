@@ -1,3 +1,19 @@
+2006-05-13  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.dll.sources: add the MpqReader sources.
+
+	* SCSharp/Makefile.am (MCSFLAGS): add -d:USE_STORM_DLL
+
+	* SCSharp/SCSharp.Mpq/Mpq.cs: add a series of USE_STORM_DLL ifdefs
+	to choose between libStorm.so and Foole's managed MpqReader.
+
+	* SCSharp/SCSharp.Mpq/MpqStructs.cs,
+	SCSharp/SCSharp.Mpq/MpqArchive.cs,
+	SCSharp/SCSharp.Mpq/MpqStream.cs,
+	SCSharp/SCSharp.Mpq/PKLibDecompress.cs: add 0.02 of Foole's
+	managed Mpq reading code.  It doesn't work quite yet, but this way
+	we can test it with scsharp.
+	
 2006-05-10  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.Mpq/Mpq.cs (GetResource): don't cache .smk files
