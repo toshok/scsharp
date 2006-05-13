@@ -45,10 +45,8 @@ namespace SCSharp.UI
 		{
 		}
 
-		protected override void ResourceLoader ()
+		protected override void LoadMarkup ()
 		{
-			base.ResourceLoader ();
-
 			AddMarkup (Assembly.GetExecutingAssembly().GetManifestResourceStream ("credits.txt"));
 
 			/* broodwar credits */

@@ -214,6 +214,9 @@ namespace SCSharp.UI
 			Console.WriteLine ("loading font");
 			fnt = GuiUtil.GetFonts(mpq)[3];
 
+			Console.WriteLine ("loading markup");
+			LoadMarkup ();
+
 			/* set things up so we're ready to go */
 			millisDelay = 4000;
 			pageEnumerator = pages.GetEnumerator();
@@ -309,10 +312,12 @@ namespace SCSharp.UI
 					return;
 			}
 
+			Console.WriteLine ("finished!");
                         Events.Tick -= FlipPage;
 			MarkupFinished ();
 		}
 
+		protected abstract void LoadMarkup ();
 		protected abstract void MarkupFinished ();
 	}
 }

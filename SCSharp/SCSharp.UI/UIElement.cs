@@ -53,6 +53,8 @@ namespace SCSharp.UI
 		{
 			this.screen = screen;
 			this.el = el;
+			this.x1 = el.x1;
+			this.y1 = el.y1;
 			this.palette = palette;
 			this.sensitive = true;
 			this.visible = (el.flags & ElementFlags.Visible) != 0;
@@ -123,13 +125,16 @@ namespace SCSharp.UI
 		public ElementFlags Flags { get { return el.flags; } }
 		public ElementType Type { get { return el.type; } }
 
+		ushort x1;
 		public ushort X1 {
-			get { return el.x1; }
-			set { el.x1 = value; }
+			get { return x1; }
+			set { x1 = value; }
 		}
+
+		ushort y1;
 		public ushort Y1 {
-			get { return el.y1; }
-			set { el.y1 = value; }
+			get { return y1; }
+			set { y1 = value; }
 		}
 		public ushort Width { get { return el.width; } }
 		public ushort Height { get { return el.height; } }

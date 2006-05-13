@@ -76,7 +76,7 @@ namespace SCSharp.UI
 					if (listbox.SelectedIndex == -1)
 						return;
 
-					Game.Instance.SwitchToScreen (UIScreenType.RaceSelection);
+					Game.Instance.SwitchToScreen (new RaceSelectionScreen (mpq));
 				};
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=

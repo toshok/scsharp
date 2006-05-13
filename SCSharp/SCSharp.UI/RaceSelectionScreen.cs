@@ -39,7 +39,9 @@ namespace SCSharp.UI
 {
 	public class RaceSelectionScreen : UIScreen
 	{
-		public RaceSelectionScreen (Mpq mpq) : base (mpq, "glue\\PalNl", Builtins.rez_GluExpcmpgnBin)
+		public RaceSelectionScreen (Mpq mpq) 
+			: base (mpq, "glue\\PalNl",
+				Game.Instance.PlayingBroodWar ? Builtins.rez_GluExpcmpgnBin : Builtins.rez_GluCmpgnBin)
 		{
 			background_path = null;
 		}

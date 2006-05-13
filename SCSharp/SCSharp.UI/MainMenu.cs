@@ -57,9 +57,14 @@ namespace SCSharp.UI
 			d.Cancel += delegate () { DismissDialog (); };
 			d.Activate += delegate (bool expansion) {
 				DismissDialog ();
-				Game.Instance.IsBroodWar = expansion;
-				GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
-				Game.Instance.SwitchToScreen (nextScreen);
+				try {
+					Game.Instance.PlayingBroodWar = expansion;
+					GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
+					Game.Instance.SwitchToScreen (nextScreen);
+				}
+				catch (Exception e) {
+					ShowDialog (new OkDialog (this, mpq, e.Message));
+				}
 			};
 			ShowDialog (d);
 		}

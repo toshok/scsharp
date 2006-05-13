@@ -1,5 +1,53 @@
 2006-05-13  Chris Toshok  <toshok@ximian.com>
 
+	* src/scsharp.cs (Main): switch from just 1 CD directory setting
+	to 2.
+
+	* src/scsharp.exe.config: add the new CD directory settings.
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs (.ctor): load the
+	correct resource depending on if we're BW or SC.
+
+	* SCSharp/SCSharp.UI/Game.cs (.ctor): change the way we look for
+	and load mpq's.  Keep track of both BW and SC install.exe's.
+	(PlayingBroodWar): this property is initialized to true if
+	broodat.mpq is found, and causes either the bw or sc cd to become
+	available for resource lookups.
+
+	* SCSharp/SCSharp.UI/MainMenu.cs (ShowGameDialog): add some code
+	to display a dialog if the user is missing the correct CD
+	install.exe.
+
+	* SCSharp/SCSharp.UI/LoginScreen.cs (ResourceLoader): we don't
+	cache the race selection screen anymore, as it changes depending
+	on whether you pick BW/SC.
+
+	* SCSharp/SCSharp.UI/PlayCustomScreen.cs (ResourceLoader): no more
+	cached race selection screen.
+
+	* SCSharp/SCSharp.UI/LoadSavedScreen.cs: same.
+
+	* SCSharp/SCSharp.UI/Builtins.cs: add the original campaign ui.
+
+	* SCSharp/SCSharp.UI/ButtonElement.cs (MouseEnter): only play the
+	sound if the button is sensitive -- maybe we shouldn't even get
+	called if we're insensitive?
+
+	* SCSharp/SCSharp.UI/MarkupScreen.cs (ResourceLoader): call
+	LoadMarkup, and add it as an abstract method.
+
+	* SCSharp/SCSharp.UI/CreditsScreen.cs (LoadMarkup): rename
+	ResourceLoader to this.
+
+	* SCSharp/SCSharp.UI/UIElement.cs (.ctor): cache x1/y1 here so the
+	setters so we don't keep modifying the BinElement's coordinates
+	each time we display a dialog, shifting it further and further
+	down and to the right.
+	(X1): use the cached value.
+	(Y1): same.
+
+2006-05-13  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.dll.sources: add the MpqReader sources.
 
 	* SCSharp/Makefile.am (MCSFLAGS): add -d:USE_STORM_DLL

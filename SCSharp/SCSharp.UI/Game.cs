@@ -45,7 +45,6 @@ namespace SCSharp.UI
 		MainMenu,
 		Login,
 		Connection,
-		RaceSelection,
 
 		ScreenCount
 	}
@@ -57,10 +56,17 @@ namespace SCSharp.UI
 		const int GAME_ANIMATION_TICK = 50; // number of milliseconds between animation updates
 
 		bool isBroodWar;
+		bool playingBroodWar;
 
 		Race race;
 
-		Mpq mpq;
+		Mpq broodatMpq;
+		Mpq stardatMpq;
+		Mpq bwInstallExe;
+		Mpq scInstallExe;
+
+		MpqContainer mpq;
+
 		Painter painter;
 
 		uint cached_cursor_x;
@@ -73,57 +79,88 @@ namespace SCSharp.UI
 			get { return instance; }
 		}
 
-		public Game (string starcraftDir, string cdDir)
+		public Game (string starcraftDir, string scCDDir, string bwCDDir)
 		{
 			instance = this;
-
-			race = Race.Protoss; /* XXX */
 
 			screens = new UIScreen[(int)UIScreenType.ScreenCount];
 
 			mpq = new MpqContainer ();
 
-			Mpq broodatMpq = null, stardatMpq = null, installExe = null;
-
-			try {
-				foreach (string path in Directory.GetFileSystemEntries (starcraftDir, "*.mpq")) {
-					if (path.ToLower().EndsWith ("broodat.mpq")) {
-						Console.WriteLine (path);
-						broodatMpq = GetMpq (path);
+			if (starcraftDir != null) {
+				foreach (string path in Directory.GetFileSystemEntries (starcraftDir)) {
+					if (Path.GetFileName (path).ToLower() == "broodat.mpq") {
+						try {
+							broodatMpq = GetMpq (path);
+							Console.WriteLine ("found BrooDat.mpq");
+						}
+						catch (Exception e) {
+							throw new Exception (String.Format ("Could not read mpq archive {0}",
+											    path),
+									     e);
+						}
 					}
-					else if (path.ToLower().EndsWith ("stardat.mpq")) {
-						Console.WriteLine (path);
-						stardatMpq = GetMpq (path);
+					else if (Path.GetFileName (path).ToLower() == "stardat.mpq") {
+						try {
+							stardatMpq = GetMpq (path);
+							Console.WriteLine ("found StarDat.mpq");
+						}
+						catch (Exception e) {
+							throw new Exception (String.Format ("could not read mpq archive {0}",
+											    path),
+									     e);
+						}
 					}
 				}
 			}
-			catch (Exception e) {
-				throw new Exception ("Could not locate broodat.mpq and/or stardat.mpq.  Please update your StarcraftDirectory setting in the .config file", e);
+
+			if (stardatMpq == null) {
+				throw new Exception ("unable to locate stardat.mpq, please check your StarcraftDirectory configuration setting");
 			}
 
-			try {
-				foreach (string path in Directory.GetFileSystemEntries (cdDir, "*.exe")) {
-					if (path.ToLower().EndsWith ("install.exe")) {
-						Console.WriteLine (path);
-						installExe = GetMpq (path);
+			if (scCDDir != null) {
+				foreach (string path in Directory.GetFileSystemEntries (scCDDir)) {
+					if (Path.GetFileName (path) == "install.exe") {
+						try {
+							scInstallExe = GetMpq (path);
+							Console.WriteLine ("found SC install.exe");
+						}
+						catch (Exception e) {
+							throw new Exception (String.Format ("could not read mpq archive {0}",
+											    path),
+									     e);
+						}
 					}
 				}
 			}
-			catch {
-				throw new Exception ("Could not locate the cd data.  Please update your CDDirectory setting in the .config file");
+
+			if (bwCDDir != null) {
+				foreach (string path in Directory.GetFileSystemEntries (bwCDDir)) {
+					if (Path.GetFileName (path).ToLower() == "install.exe") {
+						try {
+							bwInstallExe = GetMpq (path);
+							Console.WriteLine ("found BW install.exe");
+						}
+						catch (Exception e) {
+							throw new Exception (String.Format ("could not read mpq archive {0}",
+											    path),
+									     e);
+						}
+					}
+				}
 			}
 
-			if (broodatMpq != null) {
-				isBroodWar = true;
-				((MpqContainer)mpq).Add (broodatMpq);
-			}
+			if (bwInstallExe == null)
+				throw new Exception ("unable to locate broodwar cd's install.exe, please check your BroodwarCDDirectory configuration setting");
+
+			if (broodatMpq != null)
+				mpq.Add (broodatMpq);
 
 			if (stardatMpq != null)
-				((MpqContainer)mpq).Add (stardatMpq);
+				mpq.Add (stardatMpq);
 
-			if (installExe != null)
-				((MpqContainer)mpq).Add (installExe);
-
+			PlayingBroodWar = isBroodWar = (broodatMpq != null);
+			
 			this.rootDir = starcraftDir;
 		}
 
@@ -141,9 +178,28 @@ namespace SCSharp.UI
 			get { return rootDir; }
 		}
 
+		public bool PlayingBroodWar {
+			get { return playingBroodWar; }
+			set {
+				playingBroodWar = value;
+				if (playingBroodWar) {
+					if (bwInstallExe == null)
+						throw new Exception ("you need the Broodwar CD to play Broodwar games.  Please check the BroodwarCDDirectory configuration setting.");
+					mpq.Remove (scInstallExe);
+					mpq.Add (bwInstallExe);
+				}
+				else {
+					if (scInstallExe == null)
+						throw new Exception ("you need the Starcraft CD to play original games.  Please check the StarcraftCDDirectory configuration setting.");
+					mpq.Remove (bwInstallExe);
+					mpq.Add (scInstallExe);
+				}
+			}
+
+		}
+
 		public bool IsBroodWar {
 			get { return isBroodWar; }
-			set { isBroodWar = value; }
 		}
 
 		public void Startup (bool fullscreen)
@@ -315,9 +371,6 @@ namespace SCSharp.UI
 					break;
 				case UIScreenType.Connection:
 					screens[index] = new ConnectionScreen (mpq);
-					break;
-				case UIScreenType.RaceSelection:
-					screens[index] = new RaceSelectionScreen (mpq);
 					break;
 				default:
 					throw new Exception ();

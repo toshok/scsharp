@@ -72,7 +72,7 @@ namespace SCSharp.UI
 
 		public override void MouseEnter ()
 		{
-			if ((Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
+			if (Sensitive && (Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
 				/* highlight the text */
 				GuiUtil.PlaySound (Mpq, Builtins.MouseoverWav);
 			}

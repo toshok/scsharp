@@ -49,7 +49,8 @@ namespace SCSharp.UI
 		public static string rez_GluGameModeBin = "rez\\gluGameMode.bin";
 
 		/* Campaign screen */
-		public static string rez_GluExpcmpgnBin = "rez\\gluexpcmpgn.bin";
+		public static string rez_GluCmpgnBin = "rez\\glucmpgn.bin"; // original
+		public static string rez_GluExpcmpgnBin = "rez\\gluexpcmpgn.bin"; // broodwar
 
 		/* Play custom screen */
 		public static string rez_GluCustmBin = "rez\\gluCustm.bin";

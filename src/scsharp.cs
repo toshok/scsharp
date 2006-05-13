@@ -43,7 +43,8 @@ public class Driver
 		bool fullscreen = false;
 
 		Game g = new Game (ConfigurationManager.AppSettings["StarcraftDirectory"],
-				   ConfigurationManager.AppSettings["CDDirectory"]);
+				   ConfigurationManager.AppSettings["StarcraftCDDirectory"],
+				   ConfigurationManager.AppSettings["BroodwarCDDirectory"]);
 
 		if (args.Length > 0)
 			if (args[0] == "/fullscreen")

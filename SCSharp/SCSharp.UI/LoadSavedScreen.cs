@@ -57,7 +57,7 @@ namespace SCSharp.UI
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=
 				delegate () {
-					Game.Instance.SwitchToScreen (UIScreenType.RaceSelection);
+					Game.Instance.SwitchToScreen (new RaceSelectionScreen (mpq));
 				};
 		}
 	}
