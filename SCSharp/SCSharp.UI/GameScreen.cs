@@ -105,6 +105,18 @@ namespace SCSharp.UI
 			ScrollCursors = new CursorAnimator[8];
 		}
 
+		public GameScreen (Mpq mpq,
+				   string prefix,
+				   Chk scenario) : base (mpq)
+		{
+			this.effectpal_path = "game\\tblink.pcx";
+			this.arrowgrp_path = "cursor\\arrow.grp";
+			this.fontpal_path = "game\\tfontgam.pcx";
+			//this.scenario_mpq = scenario_mpq;
+			this.scenario = scenario;
+			ScrollCursors = new CursorAnimator[8];
+		}
+
 		Surface[] starfield_layers;
 
 		void PaintStarfield (Surface surf, DateTime dt)
@@ -478,7 +490,7 @@ namespace SCSharp.UI
 				unit.CreateSprite (mpq, tileset_palette);
 			}
 
-			if (template.InitialUnits != InitialUnits.UseMapSettings) {
+			if (template != null && (template.InitialUnits != InitialUnits.UseMapSettings)) {
 				foreach (Unit sl in startLocations) {
 					/* terran command center = 106,
 					   zerg hatchery = 131,

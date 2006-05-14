@@ -67,8 +67,7 @@ namespace SCSharp.UI
 		public static string rez_GluPOkCancelBin = "rez\\gluPOkCancel.bin";
 
 		/* Ready room */
-		public static string rez_GluRdyPBin = "rez\\glurdyp.bin";
-		public static string rez_GluRdyTBin = "rez\\glurdyt.bin";
+		public static string rez_GluRdyBin = "rez\\glurdy{0}.bin";
 
 		/* Connection screen */
 		public static string rez_GluConnBin = "rez\\gluConn.bin";

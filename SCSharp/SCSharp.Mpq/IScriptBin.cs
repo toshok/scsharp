@@ -73,7 +73,7 @@ namespace SCSharp
 
 		public ushort GetScriptEntryOffset (ushort images_id) {
 			if (!entries.ContainsKey (images_id))
-				throw new Exception ();
+				return 0;
 			return entries[images_id];
 		}
 	}

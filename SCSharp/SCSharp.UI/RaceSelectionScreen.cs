@@ -46,15 +46,39 @@ namespace SCSharp.UI
 			background_path = null;
 		}
 
+		string[] BroodWarCampaigns = new string[] {
+			"campaign\\expprotoss\\protoss01",
+			"campaign\\expterran\\terran01",
+			"campaign\\expzerg\\zerg01"
+		};
+
+		Race[] BroodWarRaces = new Race[] {
+			Race.Protoss,
+			Race.Terran,
+			Race.Zerg
+		};
+
+		string[] StarcraftCampaigns = new string[] {
+			"campaign\\protoss\\protoss01",
+			"campaign\\terran\\terran01",
+			"campaign\\zerg\\zerg01"
+		};
+
+		Race[] StarcraftRaces = new Race[] {
+			Race.Terran,
+			Race.Zerg,
+			Race.Protoss
+		};
+
 		const int LOADSAVED_ELEMENT_INDEX = 3;
-		const int ZERG_ELEMENT_INDEX = 4;
-		const int PROTOSS_ELEMENT_INDEX = 5;
-		const int TERRAN_ELEMENT_INDEX = 6;
+		const int THIRD_CAMPAIGN_ELEMENT_INDEX = 4;
+		const int FIRST_CAMPAIGN_ELEMENT_INDEX = 5;
+		const int SECOND_CAMPAIGN_ELEMENT_INDEX = 6;
 		const int CANCEL_ELEMENT_INDEX = 7;
 		const int PLAYCUSTOM_ELEMENT_INDEX = 8;
-		const int TERRAN_PROTOSS_INCOMPLETE_INDEX = 9;
-		const int ZERG_PROTOSS_INCOMPLETE_INDEX = 10;
-		const int ZERG_TERRAN_INCOMPLETE_INDEX = 11;
+		const int SECOND_BUT_FIRST_INCOMPLETE_INDEX = 9;
+		const int THIRD_BUT_FIRST_INCOMPLETE_INDEX = 10;
+		const int THIRD_BUT_SECOND_INCOMPLETE_INDEX = 11;
 
 		protected override void ResourceLoader ()
 		{
@@ -63,33 +87,57 @@ namespace SCSharp.UI
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}: {1} '{2}'", i, Elements[i].Type, Elements[i].Text);
 
-			Elements[ZERG_ELEMENT_INDEX].MouseEnterEvent += 
+			Elements[THIRD_CAMPAIGN_ELEMENT_INDEX].MouseEnterEvent += 
 				delegate () {
+					Console.WriteLine ("over third campaign element");
 					if (true /* XXX this should come from the player's file */) {
-						Elements[ZERG_PROTOSS_INCOMPLETE_INDEX].Visible = true;
+						Elements[THIRD_BUT_FIRST_INCOMPLETE_INDEX].Visible = true;
 					}
 				};
 
-			Elements[ZERG_ELEMENT_INDEX].MouseLeaveEvent += 
+			Elements[THIRD_CAMPAIGN_ELEMENT_INDEX].MouseLeaveEvent += 
 				delegate () {
 					if (true /* XXX this should come from the player's file */) {
-						Elements[ZERG_PROTOSS_INCOMPLETE_INDEX].Visible = false;
+						Elements[THIRD_BUT_FIRST_INCOMPLETE_INDEX].Visible = false;
 					}
 				};
 
-			Elements[TERRAN_ELEMENT_INDEX].MouseEnterEvent += 
+			Elements[SECOND_CAMPAIGN_ELEMENT_INDEX].MouseEnterEvent += 
 				delegate () {
+					Console.WriteLine ("over second campaign element");
 					if (true /* XXX this should come from the player's file */) {
-						Elements[TERRAN_PROTOSS_INCOMPLETE_INDEX].Visible = true;
+						Elements[SECOND_BUT_FIRST_INCOMPLETE_INDEX].Visible = true;
 					}
 				};
 
-			Elements[TERRAN_ELEMENT_INDEX].MouseLeaveEvent += 
+			Elements[SECOND_CAMPAIGN_ELEMENT_INDEX].MouseLeaveEvent += 
 				delegate () {
 					if (true /* XXX this should come from the player's file */) {
-						Elements[TERRAN_PROTOSS_INCOMPLETE_INDEX].Visible = false;
+						Elements[SECOND_BUT_FIRST_INCOMPLETE_INDEX].Visible = false;
 					}
 				};
+			
+			Elements[FIRST_CAMPAIGN_ELEMENT_INDEX].Activate +=
+				delegate () {
+					Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[0];
+					string prefix = (Game.Instance.PlayingBroodWar ? BroodWarCampaigns : StarcraftCampaigns)[(int)Game.Instance.Race];
+					Game.Instance.SwitchToScreen (ReadyRoomScreen.Create (mpq, prefix));
+				};
+
+			Elements[SECOND_CAMPAIGN_ELEMENT_INDEX].Activate +=
+				delegate () {
+					Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[1];
+					string prefix = (Game.Instance.PlayingBroodWar ? BroodWarCampaigns : StarcraftCampaigns)[(int)Game.Instance.Race];
+					Game.Instance.SwitchToScreen (ReadyRoomScreen.Create (mpq, prefix));
+				};
+
+			Elements[THIRD_CAMPAIGN_ELEMENT_INDEX].Activate +=
+				delegate () {
+					Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[2];
+					string prefix = (Game.Instance.PlayingBroodWar ? BroodWarCampaigns : StarcraftCampaigns)[(int)Game.Instance.Race];
+					Game.Instance.SwitchToScreen (ReadyRoomScreen.Create (mpq, prefix));
+				};
+
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=
 				delegate () {

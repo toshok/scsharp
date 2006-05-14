@@ -1,3 +1,42 @@
+2006-05-14  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.UI/GameScreen.cs (.ctor): add a constructor
+	that's useful from the readyroom.
+	(PlaceInitialUnits): deal with a null template, which happens with
+	campaigns.
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs: make this work for
+	both broodwar and original race selection screens.  Hardcode the
+	first scenarios for each campaign here as well - eventually
+	they'll come from mapdata.dat/tbl.
+
+	* SCSharp/SCSharp.UI/Game.cs (.ctor): don't add anything to the
+	mpq container - let the PlayingBroodWar setter do that.
+	(set_PlayingBroodWar): clean this up a bit.
+	(set_Race): add setter.
+	
+	* SCSharp/SCSharp.UI/ReadyRoomScreen.cs: subclass ReadyRoomScreen
+	for each race, since at least the zerg screen has different
+	element indices.  Write an initial pass of the briefing runner,
+	which displays text and plays .wav files.  There are definite
+	threading + Sdl audio issues here.
+
+	* SCSharp/SCSharp.UI/Builtins.cs: replace the race specific ready
+	room strings with a formatable string.
+
+	* SCSharp/SCSharp.Mpq/IScriptBin.cs (GetScriptEntryOffset): don't
+	throw an exception here, just return 0. the caller can handle
+	that.
+
+	* SCSharp/SCSharp.Mpq/Chk.cs: add mission briefing support (add
+	trigger, condition, action classes).
+
+	* SCSharp/SCSharp.Mpq/Mpq.cs (Add): return if mpq == null.
+	(Remove): same.
+	(Clear): new function, call mpqs.Clear.
+	(GetStreamForResource): spew something if we're going to return
+	null.
+
 2006-05-13  Chris Toshok  <toshok@ximian.com>
 
 	* src/scsharp.cs (Main): switch from just 1 CD directory setting

@@ -135,12 +135,21 @@ namespace SCSharp
 
 		public void Add (Mpq mpq)
 		{
+			if (mpq == null)
+				return;
 			mpqs.Add (mpq);
 		}
 
 		public void Remove (Mpq mpq)
 		{
+			if (mpq == null)
+				return;
 			mpqs.Remove (mpq);
+		}
+
+		public void Clear ()
+		{
+			mpqs.Clear ();
 		}
 
 		public override Stream GetStreamForResource (string path)
@@ -151,6 +160,7 @@ namespace SCSharp
 					return s;
 			}
 
+			Console.WriteLine ("returning null stream for resource: {0}", path);
 			return null;
 		}
 	}

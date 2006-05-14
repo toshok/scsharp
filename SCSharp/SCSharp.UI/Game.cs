@@ -153,12 +153,6 @@ namespace SCSharp.UI
 			if (bwInstallExe == null)
 				throw new Exception ("unable to locate broodwar cd's install.exe, please check your BroodwarCDDirectory configuration setting");
 
-			if (broodatMpq != null)
-				mpq.Add (broodatMpq);
-
-			if (stardatMpq != null)
-				mpq.Add (stardatMpq);
-
 			PlayingBroodWar = isBroodWar = (broodatMpq != null);
 			
 			this.rootDir = starcraftDir;
@@ -185,14 +179,17 @@ namespace SCSharp.UI
 				if (playingBroodWar) {
 					if (bwInstallExe == null)
 						throw new Exception ("you need the Broodwar CD to play Broodwar games.  Please check the BroodwarCDDirectory configuration setting.");
-					mpq.Remove (scInstallExe);
+					mpq.Clear ();
 					mpq.Add (bwInstallExe);
+					mpq.Add (broodatMpq);
+					mpq.Add (stardatMpq);
 				}
 				else {
 					if (scInstallExe == null)
 						throw new Exception ("you need the Starcraft CD to play original games.  Please check the StarcraftCDDirectory configuration setting.");
-					mpq.Remove (bwInstallExe);
+					mpq.Clear ();
 					mpq.Add (scInstallExe);
+					mpq.Add (stardatMpq);
 				}
 			}
 
@@ -317,6 +314,7 @@ namespace SCSharp.UI
 
 		public Race Race {
 			get { return race; }
+			set { race = value; }
 		}
 
 		CursorAnimator cursor;

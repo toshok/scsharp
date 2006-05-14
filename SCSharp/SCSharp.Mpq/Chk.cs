@@ -167,6 +167,8 @@ namespace SCSharp
 				int nameStringIndex = Util.ReadWord (section_data, 0);
 				int descriptionStringIndex = Util.ReadWord (section_data, 2);
 
+				Console.WriteLine ("mapName = {0}", nameStringIndex);
+				Console.WriteLine ("mapDescription = {0}", descriptionStringIndex);
 				mapName = GetMapString (nameStringIndex);
 				mapDescription = GetMapString (descriptionStringIndex);
 			}
@@ -208,6 +210,10 @@ namespace SCSharp
 			}
 			else if (section_name == "UNIT") {
 				ReadUnits (section_data);
+			}
+			else if (section_name == "MBRF") {
+				briefingData = new TriggerData();
+				briefingData.Parse (section_data, true);
 			}
 			//else
 			//Console.WriteLine ("Unhandled Chk section type {0}, length {1}", section_name, section_data.Length);
@@ -286,8 +292,10 @@ namespace SCSharp
 		}
 
 		string[] strings;
-		string GetMapString (int idx)
+		public string GetMapString (int idx)
 		{
+			if (idx == 0)
+				return "";
 			return strings[idx-1];
 		}
 
@@ -368,6 +376,15 @@ namespace SCSharp
 			get { return numPlayers; }
 		}
 
+		TriggerData briefingData;
+		public TriggerData BriefingData {
+			get {
+				if (briefingData == null)
+					ParseSection ("MBRF");
+				return briefingData;
+			}
+		}
+
 		public List<UnitInfo> Units {
 			get {
 				if (units == null)
@@ -379,11 +396,221 @@ namespace SCSharp
 		}
 	}
 
-	public class UnitInfo {
+	public class UnitInfo
+	{
 		public int unit_id;
 		public int x;
 		public int y;
 		public int player;
 	};
 
+
+	public class TriggerCondition
+	{
+		uint number;
+		public uint Number {
+			get { return number; }
+			set { number = value; }
+		}
+
+		uint group;
+		public uint Group {
+			get { return group; }
+			set { group = value; }
+		}
+
+		uint amount;
+		public uint Amount {
+			get { return amount; }
+			set { amount = value; }
+		}
+
+		ushort unitType;
+		public ushort UnitType {
+			get { return unitType; }
+			set { unitType = value; }
+		}
+
+		byte comparison;
+		public byte ComparisonSwitch {
+			get { return comparison; }
+			set { comparison = value; }
+		}
+
+		byte condition;
+		public byte Condition {
+			get { return condition; }
+			set { condition = value; }
+		}
+
+		byte resource;
+		public byte Resource {
+			get { return resource; }
+			set { resource = value; }
+		}
+
+		byte flags;
+		public byte Flags {
+			get { return flags; }
+			set { flags = value; }
+		}
+
+		public override string ToString () {
+			return String.Format ("Trigger{{ Condition={0} }}", Condition);
+		}
+	}
+
+	public class TriggerAction
+	{
+		uint location;
+		public uint Location {
+			get { return location; }
+			set { location = value; }
+		}
+
+		uint textIndex;
+		public uint TextIndex {
+			get { return textIndex; }
+			set { textIndex = value; }
+		}
+
+		uint wavIndex;
+		public uint WavIndex {
+			get { return wavIndex; }
+			set { wavIndex = value; }
+		}
+
+		uint delay;
+		public uint Delay {
+			get { return delay; }
+			set { delay = value; }
+		}
+
+		uint group1;
+		public uint Group1 {
+			get { return group1; }
+			set { group1 = value; }
+		}
+
+		uint group2;
+		public uint Group2 {
+			get { return group2; }
+			set { group2 = value; }
+		}
+
+		ushort unitType;
+		public ushort UnitType {
+			get { return unitType; }
+			set { unitType = value; }
+		}
+
+		byte action;
+		public byte Action {
+			get { return action; }
+			set { action = value; }
+		}
+
+		byte _switch;
+		public byte Switch {
+			get { return _switch; }
+			set { _switch = value; }
+		}
+
+		byte flags;
+		public byte Flags {
+			get { return flags; }
+			set { flags = value; }
+		}
+	}
+
+	public class Trigger
+	{
+		TriggerCondition[] conditions = new TriggerCondition[16];
+		TriggerAction[] actions = new TriggerAction[64];
+
+		public void Parse (byte[] data, ref int offset)
+		{
+			int i;
+			for (i = 0; i < conditions.Length; i ++) {
+				TriggerCondition c = new TriggerCondition ();
+				c.Number = Util.ReadDWord (data, offset); offset += 4;
+				c.Group = Util.ReadDWord (data, offset); offset += 4;
+				c.Amount = Util.ReadDWord (data, offset); offset += 4;
+				c.UnitType = Util.ReadWord (data, offset); offset += 2;
+				c.ComparisonSwitch = data[offset++];
+				c.Condition = data[offset++];
+				c.Resource = data[offset++];
+				c.Flags = data[offset++];
+
+				// padding
+				offset += 2;
+
+				conditions[i] = c;
+			}
+
+			for (i = 0; i < actions.Length; i ++) {
+				TriggerAction a = new TriggerAction ();
+				
+				a.Location = Util.ReadDWord (data, offset); offset += 4;
+				a.TextIndex = Util.ReadDWord (data, offset); offset += 4;
+				a.WavIndex = Util.ReadWord (data, offset); offset += 4;
+				a.Delay = Util.ReadDWord (data, offset); offset += 4;
+				a.Group1 = Util.ReadDWord (data, offset); offset += 4;
+				a.Group2 = Util.ReadDWord (data, offset); offset += 4;
+				a.UnitType = Util.ReadWord (data, offset); offset += 2;
+				a.Action = data[offset++];
+				a.Switch = data[offset++];
+				a.Flags = data[offset++];
+
+				// padding
+				offset += 3;
+
+				actions[i] = a;
+			}
+
+			// more padding?
+			offset += 4;
+
+
+			// this is 1 byte for each player in the groups list:
+			//
+			// 00 - trigger is not executed for player
+			// 01 - trigger is executed for player
+			offset += 28;
+		}
+
+		public TriggerCondition[] Conditions {
+			get { return conditions; }
+		}
+
+		public TriggerAction[] Actions {
+			get { return actions; }
+		}
+	}
+
+	public class TriggerData
+	{
+		public TriggerData ()
+		{
+			triggers = new List<Trigger> ();
+		}
+
+		public void Parse (byte[] data, bool briefing)
+		{
+			int offset = 0;
+
+			while (offset < data.Length) {
+				Trigger t = new Trigger ();
+
+				t.Parse (data, ref offset);
+
+				triggers.Add (t);
+			}
+		}
+
+		List<Trigger> triggers;
+		public List<Trigger> Triggers {
+			get { return triggers; }
+		}
+	}
 }
