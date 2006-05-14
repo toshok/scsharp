@@ -4,30 +4,20 @@ using System.IO;
 
 namespace MpqReader
 {
-	public enum CompressionType
+	enum CompressionType
 	{
 		Binary = 0,
-		Ascii = 1,
+		Ascii = 1
 	}
-	// The functionality of this class could be implemented as a single public static function
-	// to do this, compression type would need to be passed to DecodeLit and dictionary size 
-	// would need to be passed to DecodeDist
-	// The input stream would need to be passed to WasteBits, DecodeDist and DecodeLit
-
 	/// <summary>
 	/// A decompressor for PKLib implode/explode
 	/// </summary>
 	public class PKLibDecompress
 	{
-		private Stream mInput;
+		private BitStream mStream;
 
 		private CompressionType mCType;
-
 		private int mDSizeBits;	// Dictionary size in bits
-		private int mDSizeMask;
-
-		private UInt32 mBitBuff;
-		private int mExtraBits;
 		
 		private static byte[] sPosition1;
 		private static byte[] sPosition2;
@@ -77,52 +67,109 @@ namespace MpqReader
 
 		public PKLibDecompress(Stream Input)
 		{
-			mInput = Input;
+			mStream = new BitStream(Input);
 
-			mCType = (CompressionType)mInput.ReadByte();
+			mCType = (CompressionType)Input.ReadByte();
 			if (mCType != CompressionType.Binary && mCType != CompressionType.Ascii)
 				throw new Exception("Invalid compression type: " + mCType);
 
-			mDSizeBits = mInput.ReadByte();
+			mDSizeBits = Input.ReadByte();
 			// This is 6 in test cases
 			if(4 > mDSizeBits || mDSizeBits > 6)
 				throw new Exception("Invalid dictionary size: " + mDSizeBits);
-			mDSizeMask = 0xFFFF >> (0x10 - mDSizeBits);
-
-			mBitBuff = (UInt32)mInput.ReadByte();
-			mExtraBits = 0;
 		}
 
 		public byte[] Explode(int ExpectedSize)
 		{
-			//if (mCType == CompressionType.Ascii) GenAscTabs();
-
 			byte[] outputbuffer = new byte[ExpectedSize];
 			Stream outputstream = new MemoryStream(outputbuffer);
-			BinaryWriter outputwriter = new BinaryWriter(outputstream);
 
-			UInt32 instruction;
-			while((instruction = DecodeLit()) < 0x305)
+			int instruction;
+			while((instruction = DecodeLit()) != -1)
 			{
 				if(instruction < 0x100)
 				{
 					outputstream.WriteByte((byte)instruction);
 				} else
 				{
-					// If instruction is greater than 0x100, means "Repeat n - 0xFE bytes"
-					UInt32 copylength = instruction - 0xFE;
+					// If instruction is greater than 0x100, it means "Repeat n - 0xFE bytes"
+					int copylength = instruction - 0xFE;
 					int moveback = DecodeDist(copylength);
 					if (moveback == 0) break;
 
 					int source = (int)outputstream.Position - moveback;
-					for (int i = 0; i < copylength; i++)
+					// We can't just outputstream.Write the section of the array
+					// because it might overlap with what is currently being written
+					while(copylength-- > 0)
 						outputstream.WriteByte(outputbuffer[source++]);
 				}
 			}
 			if (outputstream.Position != ExpectedSize)
 				throw new Exception(String.Format("Decompressed to {0}, but was expecting {1}", outputstream.Position, ExpectedSize));
-			
+
 			return outputbuffer;
+		}
+
+		// Return values:
+		// 0x000 - 0x0FF : One byte from compressed file.
+		// 0x100 - 0x305 : Copy previous block (0x100 = 1 byte)
+		// -1            : EOF
+		private int DecodeLit()
+		{
+			switch(mStream.ReadBits(1))
+			{
+				case -1:
+					return -1;
+					
+				case 1:
+					// The next bits are position in buffers
+					int pos = sPosition2[mStream.PeekByte()];
+
+					// Skip the bits we just used
+					if (mStream.ReadBits(sLenBits[pos]) == -1) return -1;
+	
+					int nbits = sExLenBits[pos];
+					if(nbits != 0)
+					{
+						// TODO: Verify this conversion
+						int val2 = mStream.ReadBits(nbits);
+						if (val2 == -1 && (pos + val2 != 0x10e)) return -1;
+	
+						pos = sLenBase[pos] + val2;
+					}
+					return pos + 0x100; // Return number of bytes to repeat
+
+				case 0:
+					if (mCType == CompressionType.Binary)
+						return mStream.ReadBits(8);
+
+					// TODO: Text mode
+					throw new NotImplementedException("Text mode is not yet implemented");
+				default:
+					return 0;
+			}
+		}
+
+		private int DecodeDist(int Length)
+		{
+			if (mStream.EnsureBits(8) == false) return 0;
+			int pos = sPosition1[mStream.PeekByte()];
+			byte skip = sDistBits[pos];     // Number of bits to skip
+
+			// Skip the appropriate number of bits
+			if (mStream.ReadBits(skip) == -1) return 0;
+
+			if(Length == 2)
+			{
+				if (mStream.EnsureBits(2) == false) return 0;
+				pos = (pos << 2) | mStream.ReadBits(2);
+			} else
+			{
+				if (mStream.EnsureBits(mDSizeBits) == false) return 0;
+				pos = ((pos << mDSizeBits)) | mStream.ReadBits(mDSizeBits);
+			}
+
+			return pos+1;
 		}
 
 		private static byte[] GenerateDecodeTable(byte[] Bits, byte[] Codes)
@@ -141,92 +188,6 @@ namespace MpqReader
 				} while(idx1 < 0x100);
 			}
 			return result;
-		}
-
-		// Return values:
-		// 0x000 - 0x0FF : One byte from compressed file.
-		// 0x100 - 0x305 : Copy previous block (0x100 = 1 byte)
-		// 0x306         : EOF
-		private UInt32 DecodeLit()
-		{
-			UInt32 value;
-			
-			if ((mBitBuff & 1) != 0)
-			{
-				// Skip current bit in the buffer
-				if(WasteBits(1)) return 0x306;
-
-				// The next bits are position in buffers
-				value = sPosition2[(byte)mBitBuff];
-
-				// Get number of bits to skip
-				if(WasteBits(sLenBits[value])) return 0x306;
-
-				int nbits = sExLenBits[value];
-				if(nbits != 0)
-				{
-					UInt32 val2 = (UInt32)(mBitBuff & ((1 << nbits) - 1));
-
-					if(WasteBits(nbits))
-					{
-						if((value + val2) != 0x10E) return 0x306;
-					}
-					value = sLenBase[value] + val2;
-				}
-				return value + 0x100; // Return number of bytes to repeat
-			} else
-			{
-				if(WasteBits(1)) return 0x306;
-
-				if (mCType == CompressionType.Binary)
-				{
-					value = (byte)mBitBuff;
-					if(WasteBits(8)) return 0x306;
-					return value;
-				}
-				// TODO: Text mode
-				throw new NotImplementedException("Text mode is not yet implemented");
-			}
-		}
-
-		// Returns true if there is no more data left
-		private bool WasteBits(int BitCount)
-		{
-			if (BitCount <= mExtraBits)
-			{
-				mExtraBits -= BitCount;
-				mBitBuff >>= BitCount;
-				return false;
-			}
-			if (mInput.Position >= mInput.Length)
-				return true;
-
-			int next = mInput.ReadByte();
-			mBitBuff |= (UInt32)next << (8 + mExtraBits);
-			mBitBuff >>= BitCount;
-			mExtraBits += 8 - BitCount;
-			return false;
-		}
-
-		private int DecodeDist(UInt32 Length)
-		{
-			int pos = sPosition1[mBitBuff & 0xFF];
-			byte skip = sDistBits[pos];     // Number of bits to skip
-
-			// Skip the appropriate number of bits
-			if (WasteBits(skip)) return 0;
-
-			if(Length == 2)
-			{
-				pos = ((int)(pos << 2)) | ((int)mBitBuff & 0x03);
-				if(WasteBits(2)) return 0;
-			} else
-			{
-				pos = ((int)(pos << mDSizeBits)) | ((int)mBitBuff & mDSizeMask);
-				if(WasteBits(mDSizeBits)) return 0;
-			}
-
-			return pos+1;
 		}
 	}
 }

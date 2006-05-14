@@ -37,23 +37,19 @@ namespace MpqReader
 
 		private void Init()
 		{
-			if (LocateMpqHeader() == false) 
+			if (LocateMpqHeader() == false)
 				throw new Exception("Unable to find MPQ header");
 
 			BinaryReader br = new BinaryReader(mStream);
 
 			mBlockSize = 0x200 << mHeader.BlockSize;
 
-			// Read hash table
+			// Load hash table
 			mStream.Seek(mHeader.HashTablePos, SeekOrigin.Begin);
-			// read header.HashTableSize instances of MpqHash
 			byte[] hashdata = br.ReadBytes((int)(mHeader.HashTableSize * MpqHash.Size));
-			// then decrypt
 			DecryptTable(hashdata, "(hash table)");
 
-			// then create another binaryreader and load the Hash instances
 			BinaryReader br2 = new BinaryReader(new MemoryStream(hashdata));
-
 			mHashes = new MpqHash[mHeader.HashTableSize];
 
 			for (int i = 0; i < mHeader.HashTableSize; i++)
@@ -62,11 +58,11 @@ namespace MpqReader
 			// Load block table
 			mStream.Seek(mHeader.BlockTablePos, SeekOrigin.Begin);
 			byte[] blockdata = br.ReadBytes((int)(mHeader.BlockTableSize * MpqBlock.Size));
-			
 			DecryptTable(blockdata, "(block table)");
 
 			br2 = new BinaryReader(new MemoryStream(blockdata));
 			mBlocks = new MpqBlock[mHeader.BlockTableSize];
+
 			for (int i = 0; i < mHeader.BlockTableSize; i++)
 				mBlocks[i] = new MpqBlock(br2, (uint)mHeaderOffset);
 		}
@@ -113,6 +109,12 @@ namespace MpqReader
 
 			return new MpqStream(this, block);
 		}
+		
+		public bool FileExists(string Filename)
+		{
+			MpqHash hash = GetHashEntry(Filename);
+			return (hash.BlockIndex != uint.MaxValue);
+		}              
 		
 		internal Stream BaseStream
 		{ get { return mStream; } }

@@ -1,7 +1,7 @@
 // Copyright 2006 Foole (fooleau@gmail.com)
 using System;
 using System.IO;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams; // Zlib
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace MpqReader
 {
@@ -88,8 +88,12 @@ namespace MpqReader
 				mStream.Read(data, 0, toread);
 			}
 
-			if (mBlock.IsEncrypted)
+			if (mBlock.IsEncrypted && mBlock.FileSize > 3)
+			{
+				if (mSeed1 == 0)
+					throw new Exception("Unable to determine encryption key");
 				MpqArchive.DecryptBlock(data, (uint)(mSeed1 + BlockIndex));
+			}
 
 			if (mBlock.IsCompressed)
 			{
@@ -111,7 +115,7 @@ namespace MpqReader
 
 		public override bool CanWrite
 		{ get { return false; } }
-		
+
 		public override long Length
 		{ get { return mBlock.FileSize; } }
 		
@@ -123,8 +127,6 @@ namespace MpqReader
 			}
 			set 
 			{
-				if (value < 0)
-					throw new ArgumentOutOfRangeException("Attempt to set the position to a negative value");
 				Seek(value, SeekOrigin.Begin);
 			}
 		}
@@ -173,13 +175,15 @@ namespace MpqReader
 			BufferData();
 
 			int localposition = (int)(mPosition % mBlockSize);
-			int bytestocopy = Math.Min(mBlockSize - localposition, Count);
+			int bytestocopy = Math.Min(mCurrentData.Length - localposition, Count);
+			if (bytestocopy <= 0) return 0;
+
 			Array.Copy(mCurrentData, localposition, Buffer, Offset, bytestocopy);
 
 			mPosition += bytestocopy;
 			return bytestocopy;
 		}
-		
+
 		public override int ReadByte()
 		{
 			if (mPosition >= Length) return -1;

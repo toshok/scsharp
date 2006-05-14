@@ -1,4 +1,5 @@
 SCSharp.Mpq/Bin.cs
+SCSharp.Mpq/BitStream.cs
 SCSharp.Mpq/Chk.cs
 SCSharp.Mpq/FlingyDat.cs
 SCSharp.Mpq/Fnt.cs
