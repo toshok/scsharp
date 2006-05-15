@@ -52,8 +52,10 @@ namespace SCSharp.UI
 				String.Format ("glue\\Ready{0}", Util.RaceChar[(int)Game.Instance.Race]),
 				String.Format (Builtins.rez_GluRdyBin, Util.RaceCharLower[(int)Game.Instance.Race]))
 		{
-			background_path = null;
-			fontpal_path = "glue\\Palmm\\tFont.pcx";
+			background_path = String.Format ("glue\\PalR{0}\\Backgnd.pcx", Util.RaceCharLower[(int)Game.Instance.Race]);
+			fontpal_path = String.Format ("glue\\PalR{0}\\tFont.pcx", Util.RaceCharLower[(int)Game.Instance.Race]);
+			effectpal_path = String.Format ("glue\\PalR{0}\\tEffect.pcx", Util.RaceCharLower[(int)Game.Instance.Race]);
+			arrowgrp_path = String.Format ("glue\\PalR{0}\\arrow.grp", Util.RaceCharLower[(int)Game.Instance.Race]);
 
 			this.start_element_index = start_element_index;
 			this.cancel_element_index = cancel_element_index;
@@ -78,14 +80,17 @@ namespace SCSharp.UI
 		int objectives_element_index;
 		int first_portrait_element_index;
 
-		Thread runnerThread;
-
 		protected override void ResourceLoader ()
 		{
 			base.ResourceLoader ();
 
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}: {1} '{2}'", i, Elements[i].Type, Elements[i].Text);
+
+			if (scenario_prefix.EndsWith ("tutorial")) {
+				Elements[skiptutorial_element_index].Visible = true;
+				/* XXX Activate */
+			}
 
 			Elements[cancel_element_index].Activate +=
 				delegate () {
@@ -111,6 +116,7 @@ namespace SCSharp.UI
 		{
 			runner.Stop ();
 
+
 			Elements[transmission_element_index].Visible = false;
 			Elements[transmission_element_index].Text = "";
 
@@ -119,19 +125,11 @@ namespace SCSharp.UI
 
 			for (int i = 0; i < 4; i ++)
 				Elements[first_portrait_element_index + i].Visible = false;
-
-			if (runnerThread != null) {
-				runnerThread.Abort();
-				runnerThread = null;
-			}
 		}
 
 		void PlayBriefing ()
 		{
-			runnerThread = new Thread (runner.Run);
-			runnerThread.IsBackground = true;
-
-			runnerThread.Start();
+			runner.Play ();
 		}
 
 		void FirstPaint (Surface surf, DateTime now)
@@ -143,13 +141,13 @@ namespace SCSharp.UI
 		public override void AddToPainter (Painter painter)
 		{
 			base.AddToPainter (painter);
-			painter.Add (Layer.Background, FirstPaint);
+			painter.Add (Layer.Background, runner.Tick);
 		}
 
 		public override void RemoveFromPainter (Painter painter)
 		{
 			base.RemoveFromPainter (painter);
-			painter.Remove (Layer.Background, FirstPaint);
+			painter.Remove (Layer.Background, runner.Tick);
 		}
 
 		public void SetObjectives (string str)
@@ -162,6 +160,22 @@ namespace SCSharp.UI
 		{
 			Elements[transmission_element_index].Visible = true;
 			Elements[transmission_element_index].Text = str;
+		}
+
+		int highlightedPortrait = -1;
+		public void HighlightPortrait (int slot)
+		{
+			if (highlightedPortrait != -1)
+				UnhighlightPortrait (highlightedPortrait);
+
+			Elements[first_portrait_element_index + slot].Background = String.Format ("glue\\Ready{0}\\{0}FrameH{1}.pcx",
+												  Util.RaceChar[(int)Game.Instance.Race],
+												  slot + 1);
+			highlightedPortrait = slot;
+		}
+		public void UnhighlightPortrait (int slot)
+		{
+			Elements[first_portrait_element_index + slot].Background = null;
 		}
 
 		public void ShowPortrait (int slot)
@@ -272,7 +286,8 @@ namespace SCSharp.UI
 		ReadyRoomScreen screen;
 		string prefix;
 
-		bool stopped = true;
+		DateTime sleepUntil;
+		int current_action;
 
 		public BriefingRunner (ReadyRoomScreen screen, Chk scenario,
 				       string scenario_prefix)
@@ -283,95 +298,46 @@ namespace SCSharp.UI
 			triggerData = scenario.BriefingData;
 		}
 
-		public void Run (object o)
+		public void Play ()
 		{
-			lock (this) {
-				stopped = false;
-			}
-
-			/* sounds can be played from this thread, and
-			 * delays are processed here as well.
-			 *
-			 * text messages and portrait changes need to
-			 * go through the main thread.
-			 */
-			TriggerAction[] actions = triggerData.Triggers[0].Actions;
-			DispatchAction dispatch;
-			for (int i = 0; i < actions.Length; i ++) {
-
-				bool flag;
-
-				lock (this) {
-					flag = stopped;
-				}
-
-				if (flag)
-					return;
-
-				switch (actions[i].Action) {
-				case 0:
-					break;
-				case 1:
-					Thread.Sleep ((int)actions[i].Delay);
-					break;
-				case 2:
-					GuiUtil.PlaySound (screen.Mpq, prefix + "\\" + scenario.GetMapString ((int)actions[i].WavIndex));
-					Thread.Sleep ((int)actions[i].Delay);
-					break;
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-					dispatch = new DispatchAction (this, actions[i], screen, scenario, prefix);
-					Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (dispatch.Run)));
-					break;
-				case 8:
-					dispatch = new DispatchAction (this, actions[i], screen, scenario, prefix);
-					Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (dispatch.Run)));
-					GuiUtil.PlaySound (screen.Mpq, prefix + "\\" + scenario.GetMapString ((int)actions[i].WavIndex));
-					Thread.Sleep ((int)actions[i].Delay);
-					break;
-				default:
-					break;
-				}
-			}
+			current_action = 0;
 		}
 
 		public void Stop ()
 		{
-			lock (this) {
-				stopped = true;
-			}
+			TriggerAction[] actions = triggerData.Triggers[0].Actions;
+			current_action = actions.Length;
+			sleepUntil = DateTime.Now;
 		}
 
-		public bool Stopped {
-			get { return stopped; }
-		}
+		public void Tick (Surface surf, DateTime now)
+		{
+			TriggerAction[] actions = triggerData.Triggers[0].Actions;
 
-		class DispatchAction {
-			TriggerAction action;
-			ReadyRoomScreen screen;
-			Chk scenario;
-			string prefix;
-			BriefingRunner runner;
+			if (current_action == actions.Length)
+				return;
 
-			public DispatchAction (BriefingRunner runner,
-					       TriggerAction action, ReadyRoomScreen screen, Chk scenario, string prefix)
-			{
-				this.runner = runner;
-				this.action = action;
-				this.screen = screen;
-				this.scenario = scenario;
-				this.prefix = prefix;
-			}
+			/* if we're presently waiting, make sure
+			   enough time has gone by.  otherwise
+			   return */
+			if (DateTime.Now < sleepUntil)
+				return;
 
-			public void Run ()
-			{
-				if (runner.Stopped)
-					return;
+			while (current_action < actions.Length) {
+				TriggerAction action = actions[current_action];
+
+				current_action ++;
 
 				switch (action.Action) {
+				case 0: /* no action */
+					break;
+				case 1:
+					sleepUntil = DateTime.Now + TimeSpan.FromMilliseconds ((int)action.Delay);
+					return;
+				case 2:
+					GuiUtil.PlaySound (screen.Mpq, prefix + "\\" + scenario.GetMapString ((int)action.WavIndex));
+					sleepUntil = DateTime.Now + TimeSpan.FromMilliseconds ((int)action.Delay);
+					return;
 				case 3:
 					screen.SetTransmissionText (scenario.GetMapString ((int)action.TextIndex));
 					break;
@@ -390,7 +356,10 @@ namespace SCSharp.UI
 				case 8:
 					Console.WriteLine ("Transmission(Text, Slot, Time, Modifier, Wave, WavTime)");
 					screen.SetTransmissionText (scenario.GetMapString ((int)action.TextIndex));
-					break;
+					screen.HighlightPortrait ((int)action.Group1);
+					GuiUtil.PlaySound (screen.Mpq, prefix + "\\" + scenario.GetMapString ((int)action.WavIndex));
+					sleepUntil = DateTime.Now + TimeSpan.FromMilliseconds ((int)action.Delay);
+					return;
 				default:
 					break;
 				}

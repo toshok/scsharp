@@ -59,8 +59,8 @@ namespace SCSharp.UI
 		};
 
 		string[] StarcraftCampaigns = new string[] {
-			"campaign\\protoss\\protoss01",
-			"campaign\\terran\\terran01",
+			"campaign\\protoss\\tutorial",
+			"campaign\\terran\\tutorial",
 			"campaign\\zerg\\zerg01"
 		};
 

@@ -48,6 +48,8 @@ namespace SCSharp.UI
 		bool sensitive;
 		bool visible;
 		Fnt fnt;
+		string background;
+		Surface background_surface;
 
 		public UIElement (UIScreen screen, BinElement el, byte[] palette)
 		{
@@ -66,6 +68,12 @@ namespace SCSharp.UI
 
 		public Mpq Mpq {
 			get { return screen.Mpq; }
+		}
+
+		public string Background {
+			get { return background; }
+			set { background = value;
+			      background_surface = null; }
 		}
 
 		public string Text {
@@ -97,6 +105,10 @@ namespace SCSharp.UI
 				if (surface == null)
 					surface = CreateSurface ();
 
+				if (background != null && background != ""
+				    && background_surface == null)
+					background_surface = CreateBackgroundSurface ();
+					
 				return surface;
 			}
 		}
@@ -167,6 +179,12 @@ namespace SCSharp.UI
 			surface = null;
 		}
 
+		Surface CreateBackgroundSurface ()
+		{
+			return GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (background),
+							  254, 0);
+		}
+
 		protected virtual Surface CreateSurface ()
 		{
 			switch (Type) {
@@ -188,6 +206,8 @@ namespace SCSharp.UI
 			if (Surface == null)
 				return;
 
+			if (background_surface != null)
+				surf.Blit (background_surface, new Point (X1, Y1));
 			surf.Blit (surface, new Point (X1, Y1));
 		}
 		

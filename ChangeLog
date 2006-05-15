@@ -1,5 +1,20 @@
 2006-05-14  Chris Toshok  <toshok@ximian.com>
 
+	* SCSharp/SCSharp.UI/ReadyRoomScreen.cs: why do i insist on
+	writing threaded code?  there's no need for it here.  Also, make
+	things work a lot better.  highlight the current speaker, set the
+	background/font/effects/cursor stuff correctly.
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs: use the tutorials for
+	protoss/terran.  zerg doesn't work for some reason.  there are no
+	triggers.
+
+	* SCSharp/SCSharp.UI/UIElement.cs: kind of a hack, but allow a
+	"background .pcx" to be supplied.  it's used to highlight the
+	current speaker in the mission briefings.
+
+2006-05-14  Chris Toshok  <toshok@ximian.com>
+
 	* SCSharp/SCSharp.UI/GameScreen.cs (.ctor): add a constructor
 	that's useful from the readyroom.
 	(PlaceInitialUnits): deal with a null template, which happens with
