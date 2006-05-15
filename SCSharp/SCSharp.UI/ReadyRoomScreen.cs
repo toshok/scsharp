@@ -123,19 +123,15 @@ namespace SCSharp.UI
 			Elements[objectives_element_index].Visible = false;
 			Elements[objectives_element_index].Text = "";
 
-			for (int i = 0; i < 4; i ++)
+			for (int i = 0; i < 4; i ++) {
+				Elements[first_portrait_element_index + i].Background = null;
 				Elements[first_portrait_element_index + i].Visible = false;
+			}
 		}
 
 		void PlayBriefing ()
 		{
 			runner.Play ();
-		}
-
-		void FirstPaint (Surface surf, DateTime now)
-		{
-			PlayBriefing ();
-			painter.Remove (Layer.Background, FirstPaint);
 		}
 
 		public override void AddToPainter (Painter painter)
@@ -175,17 +171,24 @@ namespace SCSharp.UI
 		}
 		public void UnhighlightPortrait (int slot)
 		{
-			Elements[first_portrait_element_index + slot].Background = null;
+			if (Elements[first_portrait_element_index + slot].Visible)
+				Elements[first_portrait_element_index + slot].Background = String.Format ("glue\\Ready{0}\\{0}Frame{1}.pcx",
+													  Util.RaceChar[(int)Game.Instance.Race],
+													  slot + 1);
 		}
 
 		public void ShowPortrait (int slot)
 		{
 			Elements[first_portrait_element_index + slot].Visible = true;
+			Elements[first_portrait_element_index + slot].Background = String.Format ("glue\\Ready{0}\\{0}Frame{1}.pcx",
+												  Util.RaceChar[(int)Game.Instance.Race],
+												  slot + 1);
 		}
 
 		public void HidePortrait (int slot)
 		{
 			Elements[first_portrait_element_index + slot].Visible = false;
+			Elements[first_portrait_element_index + slot].Background = null;
 		}
 
 		public static ReadyRoomScreen Create (Mpq mpq,

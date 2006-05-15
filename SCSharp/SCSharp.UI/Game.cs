@@ -65,7 +65,8 @@ namespace SCSharp.UI
 		Mpq bwInstallExe;
 		Mpq scInstallExe;
 
-		MpqContainer mpq;
+		MpqContainer installedMpq;
+		MpqContainer playingMpq;
 
 		Painter painter;
 
@@ -85,7 +86,8 @@ namespace SCSharp.UI
 
 			screens = new UIScreen[(int)UIScreenType.ScreenCount];
 
-			mpq = new MpqContainer ();
+			installedMpq = new MpqContainer ();
+			playingMpq = new MpqContainer ();
 
 			if (starcraftDir != null) {
 				foreach (string path in Directory.GetFileSystemEntries (starcraftDir)) {
@@ -153,6 +155,15 @@ namespace SCSharp.UI
 			if (bwInstallExe == null)
 				throw new Exception ("unable to locate broodwar cd's install.exe, please check your BroodwarCDDirectory configuration setting");
 
+			if (broodatMpq != null)
+				installedMpq.Add (broodatMpq);
+			if (bwInstallExe != null)
+				installedMpq.Add (bwInstallExe);
+			if (stardatMpq != null)
+				installedMpq.Add (stardatMpq);
+			if (scInstallExe != null)
+				installedMpq.Add (broodatMpq);
+			
 			PlayingBroodWar = isBroodWar = (broodatMpq != null);
 			
 			this.rootDir = starcraftDir;
@@ -176,20 +187,19 @@ namespace SCSharp.UI
 			get { return playingBroodWar; }
 			set {
 				playingBroodWar = value;
+				playingMpq.Clear ();
 				if (playingBroodWar) {
 					if (bwInstallExe == null)
 						throw new Exception ("you need the Broodwar CD to play Broodwar games.  Please check the BroodwarCDDirectory configuration setting.");
-					mpq.Clear ();
-					mpq.Add (bwInstallExe);
-					mpq.Add (broodatMpq);
-					mpq.Add (stardatMpq);
+					playingMpq.Add (bwInstallExe);
+					playingMpq.Add (broodatMpq);
+					playingMpq.Add (stardatMpq);
 				}
 				else {
 					if (scInstallExe == null)
 						throw new Exception ("you need the Starcraft CD to play original games.  Please check the StarcraftCDDirectory configuration setting.");
-					mpq.Clear ();
-					mpq.Add (scInstallExe);
-					mpq.Add (stardatMpq);
+					playingMpq.Add (scInstallExe);
+					playingMpq.Add (stardatMpq);
 				}
 			}
 
@@ -227,7 +237,7 @@ namespace SCSharp.UI
 			/* create the title screen, and make sure we
 			   don't start loading anything else until
 			   it's on the screen */
-			UIScreen screen = new TitleScreen (mpq);
+			UIScreen screen = new TitleScreen (installedMpq);
 			screen.Ready += TitleScreenReady;
 			SwitchToScreen (screen);
 		}
@@ -362,13 +372,13 @@ namespace SCSharp.UI
 			if (screens[index] == null) {
 				switch (screenType) {
 				case UIScreenType.MainMenu:
-					screens[index] = new MainMenu (mpq);
+					screens[index] = new MainMenu (installedMpq);
 					break;
 				case UIScreenType.Login:
-					screens[index] = new LoginScreen (mpq);
+					screens[index] = new LoginScreen (playingMpq);
 					break;
 				case UIScreenType.Connection:
-					screens[index] = new ConnectionScreen (mpq);
+					screens[index] = new ConnectionScreen (playingMpq);
 					break;
 				default:
 					throw new Exception ();
@@ -376,6 +386,14 @@ namespace SCSharp.UI
 			}
 
 			SwitchToScreen (screens[(int)screenType]);
+		}
+
+		public Mpq PlayingMpq {
+			get { return playingMpq; }
+		}
+
+		public Mpq InstalledMpq {
+			get { return installedMpq; }
 		}
 
 		void SwitchReady ()
@@ -393,7 +411,7 @@ namespace SCSharp.UI
 		void TitleScreenReady ()
 		{
 			Console.WriteLine ("Loading global resources");
-			new GlobalResources (mpq);
+			new GlobalResources (installedMpq);
 			GlobalResources.Instance.Ready += GlobalResourcesLoaded;
 			GlobalResources.Instance.Load ();
 		}
