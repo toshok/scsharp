@@ -1,4 +1,4 @@
-2006-05-14  Chris Toshok  <toshok@ximian.com>
+2006-05-14  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/ReadyRoomScreen.cs: why do i insist on
 	writing threaded code?  there's no need for it here.  Also, make
@@ -13,7 +13,7 @@
 	"background .pcx" to be supplied.  it's used to highlight the
 	current speaker in the mission briefings.
 
-2006-05-14  Chris Toshok  <toshok@ximian.com>
+2006-05-14  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GameScreen.cs (.ctor): add a constructor
 	that's useful from the readyroom.
@@ -52,7 +52,7 @@
 	(GetStreamForResource): spew something if we're going to return
 	null.
 
-2006-05-13  Chris Toshok  <toshok@ximian.com>
+2006-05-13  Chris Toshok  <toshok@hungry.com>
 
 	* src/scsharp.cs (Main): switch from just 1 CD directory setting
 	to 2.
