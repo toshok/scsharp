@@ -7,6 +7,7 @@ SCSharp.Mpq/Got.cs
 SCSharp.Mpq/Grp.cs
 SCSharp.Mpq/ImagesDat.cs
 SCSharp.Mpq/IScriptBin.cs
+SCSharp.Mpq/MapDataDat.cs
 SCSharp.Mpq/Mpq.cs
 SCSharp.Mpq/MpqArchive.cs
 SCSharp.Mpq/MpqStream.cs
