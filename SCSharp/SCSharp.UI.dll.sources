@@ -1,5 +1,6 @@
 SCSharp.UI/Builtins.cs
 SCSharp.UI/ButtonElement.cs
+SCSharp.UI/Cinematic.cs
 SCSharp.UI/ComboBoxElement.cs
 SCSharp.UI/ConnectionScreen.cs
 SCSharp.UI/CreditsScreen.cs
@@ -29,6 +30,7 @@ SCSharp.UI/Pcx.cs
 SCSharp.UI/Race.cs
 SCSharp.UI/RaceSelectionScreen.cs
 SCSharp.UI/ReadyRoomScreen.cs
+SCSharp.UI/SmackerPlayer.cs
 SCSharp.UI/Sprite.cs
 SCSharp.UI/SpriteManager.cs
 SCSharp.UI/SwooshPainter.cs
