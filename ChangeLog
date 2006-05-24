@@ -1,4 +1,10 @@
-2006-05-24  Chris Toshok  <toshok@ximian.com>
+2006-05-24  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/GuiUtil.cs (RenderGlyph): add a hack to
+	antialias the fonts.  of course this is yet another hack on top of
+	the already hackish nature of font rendering.
+
+2006-05-24  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GameScreen.cs: track the Unit currently under
 	the cursor, and when we click on it, spew a little info about it.

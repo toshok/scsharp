@@ -78,14 +78,30 @@ namespace SCSharp.UI
 
 		public static Surface RenderGlyph (Fnt font, Glyph g, byte[] palette, int offset)
 		{
-			byte[,] bm2 = new byte[g.Height,g.Width];
-			for (int y = 0; y < g.Height; y++) {
-				for (int x = 0; x < g.Width; x++)
-					bm2[y,x] = (byte)(g.Bitmap[y,x] + offset);
+			byte[] buf = new byte[g.Width * g.Height * 4];
+			int i = 0;
+
+			for (int y = g.Height - 1; y >= 0; y--) {
+				for (int x = g.Width - 1; x >= 0; x--) {
+					if (g.Bitmap[y,x] == 0)
+						buf [i + 0] = 0;
+					else if (g.Bitmap[y,x] == 1)
+						buf [i + 0] = 255;
+					else
+						buf [i + 0] = 128;
+
+					buf[i + 1] = palette[ (g.Bitmap[y,x] + offset) * 3 + 2];
+					buf[i + 2] = palette[ (g.Bitmap[y,x] + offset) * 3 + 1];
+					buf[i + 3] = palette[ (g.Bitmap[y,x] + offset) * 3 ];
+
+					if (buf[i+1] == 252 && buf[i+2] == 0 && buf[i+3] == 252)
+						buf[i + 0] = 0;
+
+					i += 4;
+				}
 			}
 
-			return CreateSurfaceFromBitmap (bm2, (ushort)g.Width, (ushort)g.Height,
-							palette, true);
+			return CreateSurfaceFromRGBAData (buf, (ushort)g.Width, (ushort)g.Height, 32, g.Width * 4);
 		}
 
 		public static Surface ComposeText (string text, Fnt font, byte[] palette)
