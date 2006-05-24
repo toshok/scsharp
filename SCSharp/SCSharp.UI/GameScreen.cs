@@ -91,6 +91,8 @@ namespace SCSharp.UI
 
 		//		Player[] players;
 
+		List<Unit> units;
+
 		public GameScreen (Mpq mpq,
 				   Mpq scenario_mpq,
 				   Chk scenario,
@@ -320,16 +322,23 @@ namespace SCSharp.UI
 		void UpdateCursor ()
 		{
 			/* are we over a unit?  if so, display the mag cursor */
-			for (int i = 0; i < SpriteManager.sprites.Count; i ++) {
-				Sprite s = SpriteManager.sprites[i];
+			unitUnderCursor = null;
+			for (int i = 0; i < units.Count; i ++) {
+				Unit u = units[i];
+				Sprite s = u.Sprite;
+
 				int sx, sy;
 
 				s.GetTopLeftPosition (out sx, out sy);
 
 				CursorAnimator c = Game.Instance.Cursor;
+
 				if (c.X + topleft_x > sx && c.X + topleft_x <= sx + 100 /* XXX */
-				    && c.Y + topleft_y > sy && c.Y + topleft_y <= sy + 100 /* XXX */)
+				    && c.Y + topleft_y > sy && c.Y + topleft_y <= sy + 100 /* XXX */) {
 					Game.Instance.Cursor = MagCursors[MAG_CURSOR_G];
+					unitUnderCursor = u;
+					break;
+				}
 			}
 		}
 
@@ -346,6 +355,7 @@ namespace SCSharp.UI
 		}
 
 		bool buttonDownInMinimap;
+		Unit unitUnderCursor;
 
 		void Recenter (int x, int y)
 		{
@@ -369,6 +379,12 @@ namespace SCSharp.UI
 			    args.Y > MINIMAP_Y && args.Y < MINIMAP_Y + MINIMAP_HEIGHT) {
 				RecenterFromMinimap (args.X, args.Y);
 				buttonDownInMinimap = true;
+			}
+			else {
+				if (unitUnderCursor != null) {
+					Console.WriteLine ("selected unit: {0}", unitUnderCursor);
+					Console.WriteLine ("selectioncircle = {0}", unitUnderCursor.SelectionCircleOffset);
+				}
 			}
 		}
 		
@@ -469,11 +485,13 @@ namespace SCSharp.UI
 
 		void PlaceInitialUnits ()
 		{
-			List<UnitInfo> units = scenario.Units;
+			List<UnitInfo> unit_infos = scenario.Units;
 
 			List<Unit> startLocations = new List<Unit>();
 
-			foreach (UnitInfo unitinfo in units) {
+			units = new List<Unit>();
+
+			foreach (UnitInfo unitinfo in unit_infos) {
 				if (unitinfo.unit_id == 0xffff)
 					break;
 
@@ -488,6 +506,7 @@ namespace SCSharp.UI
 				//players[unitinfo.player].AddUnit (unit);
 
 				unit.CreateSprite (mpq, tileset_palette);
+				units.Add (unit);
 			}
 
 			if (template != null && (template.InitialUnits != InitialUnits.UseMapSettings)) {
@@ -501,6 +520,7 @@ namespace SCSharp.UI
 					unit.Y = sl.Y;
 
 					unit.CreateSprite (mpq, tileset_palette);
+					units.Add (unit);
 				}
 			}
 
