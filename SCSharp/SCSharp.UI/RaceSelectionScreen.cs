@@ -46,10 +46,10 @@ namespace SCSharp.UI
 			background_path = null;
 		}
 
-		string[] BroodWarCampaigns = new string[] {
-			"campaign\\expprotoss\\protoss01",
-			"campaign\\expterran\\terran01",
-			"campaign\\expzerg\\zerg01"
+		int[] BroodwarCampaigns_MapDataStart = new int[] {
+			31,
+			40,
+			49
 		};
 
 		Race[] BroodWarRaces = new Race[] {
@@ -58,10 +58,10 @@ namespace SCSharp.UI
 			Race.Zerg
 		};
 
-		string[] StarcraftCampaigns = new string[] {
-			"campaign\\protoss\\tutorial",
-			"campaign\\terran\\tutorial",
-			"campaign\\zerg\\zerg01"
+		int[] StarcraftCampaigns_MapDataStart = new int[] {
+			0,
+			11,
+			21
 		};
 
 		Race[] StarcraftRaces = new Race[] {
@@ -116,26 +116,20 @@ namespace SCSharp.UI
 						Elements[SECOND_BUT_FIRST_INCOMPLETE_INDEX].Visible = false;
 					}
 				};
-			
+
 			Elements[FIRST_CAMPAIGN_ELEMENT_INDEX].Activate +=
 				delegate () {
-					Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[0];
-					string prefix = (Game.Instance.PlayingBroodWar ? BroodWarCampaigns : StarcraftCampaigns)[(int)Game.Instance.Race];
-					Game.Instance.SwitchToScreen (ReadyRoomScreen.Create (mpq, prefix));
+					SelectCampaign (0);
 				};
 
 			Elements[SECOND_CAMPAIGN_ELEMENT_INDEX].Activate +=
 				delegate () {
-					Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[1];
-					string prefix = (Game.Instance.PlayingBroodWar ? BroodWarCampaigns : StarcraftCampaigns)[(int)Game.Instance.Race];
-					Game.Instance.SwitchToScreen (ReadyRoomScreen.Create (mpq, prefix));
+					SelectCampaign (1);
 				};
 
 			Elements[THIRD_CAMPAIGN_ELEMENT_INDEX].Activate +=
 				delegate () {
-					Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[2];
-					string prefix = (Game.Instance.PlayingBroodWar ? BroodWarCampaigns : StarcraftCampaigns)[(int)Game.Instance.Race];
-					Game.Instance.SwitchToScreen (ReadyRoomScreen.Create (mpq, prefix));
+					SelectCampaign (2);
 				};
 
 
@@ -153,6 +147,25 @@ namespace SCSharp.UI
 				delegate () {
 					Game.Instance.SwitchToScreen (new PlayCustomScreen (mpq));
 				};
+		}
+
+		void SelectCampaign (int campaign)
+		{
+			uint mapdata_index;
+			string prefix;
+			string markup;
+
+			Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[campaign];
+			
+			mapdata_index = GlobalResources.Instance.MapDataDat.GetFileIndex ((uint)(Game.Instance.PlayingBroodWar ? BroodwarCampaigns_MapDataStart : StarcraftCampaigns_MapDataStart)[campaign]);
+
+			prefix = GlobalResources.Instance.MapDataTbl [(int)mapdata_index];
+			markup = String.Format ("rez\\Est{0}{1}{2}.txt",
+						Util.RaceChar[(int)Game.Instance.Race],
+						prefix.EndsWith ("tutorial") ? "0t" : prefix.Substring (prefix.Length - 2),
+						Game.Instance.PlayingBroodWar ? "x" : "");
+
+			Game.Instance.SwitchToScreen (new EstablishingShot (markup, prefix, mpq));
 		}
 	}
 }

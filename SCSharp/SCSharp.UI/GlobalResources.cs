@@ -36,33 +36,46 @@ using SdlDotNet;
 
 namespace SCSharp.UI
 {
+	public class Resources {
+		public IScriptBin IscriptBin;
+		public ImagesDat ImagesDat;
+		public SpritesDat SpritesDat;
+		public SfxDataDat SfxDataDat;
+		public UnitsDat UnitsDat;
+		public FlingyDat FlingyDat;
+		public MapDataDat MapDataDat;
+
+		public Tbl ImagesTbl;
+		public Tbl SfxDataTbl;
+		public Tbl SpritesTbl;
+		public Tbl GluAllTbl;
+		public Tbl MapDataTbl;
+	}
+
 	public class GlobalResources
 	{
-		Mpq mpq;
+		Mpq stardatMpq;
+		Mpq broodatMpq;
 
-		IScriptBin iscriptBin;
-		ImagesDat imagesDat;
-		SpritesDat spritesDat;
-		SfxDataDat sfxDataDat;
-		UnitsDat unitsDat;
-		FlingyDat flingyDat;
-
-		Tbl imagesTbl;
-		Tbl sfxDataTbl;
-		Tbl spritesTbl;
-		Tbl gluAllTbl;
+		Resources starcraftResources;
+		Resources broodwarResources;
 
 		static GlobalResources instance;
 		public static GlobalResources Instance {
 			get { return instance; }
 		}
 
-		public GlobalResources (Mpq mpq)
+		public GlobalResources (Mpq stardatMpq, Mpq broodatMpq)
 		{
 			if (instance != null)
 				throw new Exception ("There can only be one GlobalResources");
 
-			this.mpq = mpq;
+			this.stardatMpq = stardatMpq;
+			this.broodatMpq = broodatMpq;
+
+			starcraftResources = new Resources();
+			broodwarResources = new Resources();
+
 			instance = this;
 		}
 
@@ -76,68 +89,96 @@ namespace SCSharp.UI
 			ResourceLoader (null);
 		}
 
+		Resources Resources {
+			get { return Game.Instance.PlayingBroodWar ? broodwarResources : starcraftResources; }
+		}
+
 		public Tbl ImagesTbl {
-			get { return imagesTbl; }
+			get { return Resources.ImagesTbl; }
 		}
 
 		public Tbl SfxDataTbl {
-			get { return sfxDataTbl; }
+			get { return Resources.SfxDataTbl; }
 		}
 
 		public Tbl SpritesTbl {
-			get { return spritesTbl; }
+			get { return Resources.SpritesTbl; }
 		}
 
 		public Tbl GluAllTbl {
-			get { return gluAllTbl; }
+			get { return Resources.GluAllTbl; }
 		}
 
 		public ImagesDat ImagesDat {
-			get { return imagesDat; }
+			get { return Resources.ImagesDat; }
 		}
 
 		public SpritesDat SpritesDat {
-			get { return spritesDat; }
+			get { return Resources.SpritesDat; }
 		}
 
 		public SfxDataDat SfxDataDat {
-			get { return sfxDataDat; }
+			get { return Resources.SfxDataDat; }
 		}
 
 		public IScriptBin IScriptBin {
-			get { return iscriptBin; }
+			get { return Resources.IscriptBin; }
 		}
 
 		public UnitsDat UnitsDat {
-			get { return unitsDat; }
+			get { return Resources.UnitsDat; }
 		}
 
 		public FlingyDat FlingyDat {
-			get { return flingyDat; }
+			get { return Resources.FlingyDat; }
+		}
+
+		public MapDataDat MapDataDat {
+			get { return Resources.MapDataDat; }
+		}
+
+		public Tbl MapDataTbl {
+			get { return Resources.MapDataTbl; }
+		}
+
+		public Resources StarDat {
+			get { return starcraftResources; }
+		}
+
+		public Resources BrooDat {
+			get { return broodwarResources; }
 		}
 
 		void ResourceLoader (object state)
 		{
 			try {
-				imagesTbl = (Tbl)mpq.GetResource (Builtins.ImagesTbl);
+				starcraftResources.ImagesTbl = (Tbl)stardatMpq.GetResource (Builtins.ImagesTbl);
+				starcraftResources.SfxDataTbl = (Tbl)stardatMpq.GetResource (Builtins.SfxDataTbl);
+				starcraftResources.SpritesTbl = (Tbl)stardatMpq.GetResource (Builtins.SpritesTbl);
+				starcraftResources.GluAllTbl = (Tbl)stardatMpq.GetResource (Builtins.rez_GluAllTbl);
+				starcraftResources.MapDataTbl = (Tbl)stardatMpq.GetResource (Builtins.MapDataTbl);
+				starcraftResources.ImagesDat = (ImagesDat)stardatMpq.GetResource (Builtins.ImagesDat);
+				starcraftResources.SfxDataDat = (SfxDataDat)stardatMpq.GetResource (Builtins.SfxDataDat);
+				starcraftResources.SpritesDat = (SpritesDat)stardatMpq.GetResource (Builtins.SpritesDat);
+				starcraftResources.IscriptBin = (IScriptBin)stardatMpq.GetResource (Builtins.IScriptBin);
+				starcraftResources.UnitsDat = (UnitsDat)stardatMpq.GetResource (Builtins.UnitsDat);
+				starcraftResources.FlingyDat = (FlingyDat)stardatMpq.GetResource (Builtins.FlingyDat);
+				starcraftResources.MapDataDat = (MapDataDat)stardatMpq.GetResource (Builtins.MapDataDat);
 
-				sfxDataTbl = (Tbl)mpq.GetResource (Builtins.SfxDataTbl);
-
-				spritesTbl = (Tbl)mpq.GetResource (Builtins.SpritesTbl);
-
-				gluAllTbl = (Tbl)mpq.GetResource (Builtins.rez_GluAllTbl);
-
-				imagesDat = (ImagesDat)mpq.GetResource (Builtins.ImagesDat);
-
-				sfxDataDat = (SfxDataDat)mpq.GetResource (Builtins.SfxDataDat);
-
-				spritesDat = (SpritesDat)mpq.GetResource (Builtins.SpritesDat);
-
-				iscriptBin = (IScriptBin)mpq.GetResource (Builtins.IScriptBin);
-
-				unitsDat = (UnitsDat)mpq.GetResource (Builtins.UnitsDat);
-
-				flingyDat = (FlingyDat)mpq.GetResource (Builtins.FlingyDat);
+				if (broodatMpq != null) {
+					broodwarResources.ImagesTbl = (Tbl)broodatMpq.GetResource (Builtins.ImagesTbl);
+					broodwarResources.SfxDataTbl = (Tbl)broodatMpq.GetResource (Builtins.SfxDataTbl);
+					broodwarResources.SpritesTbl = (Tbl)broodatMpq.GetResource (Builtins.SpritesTbl);
+					broodwarResources.GluAllTbl = (Tbl)broodatMpq.GetResource (Builtins.rez_GluAllTbl);
+					broodwarResources.MapDataTbl = (Tbl)broodatMpq.GetResource (Builtins.MapDataTbl);
+					broodwarResources.ImagesDat = (ImagesDat)broodatMpq.GetResource (Builtins.ImagesDat);
+					broodwarResources.SfxDataDat = (SfxDataDat)broodatMpq.GetResource (Builtins.SfxDataDat);
+					broodwarResources.SpritesDat = (SpritesDat)broodatMpq.GetResource (Builtins.SpritesDat);
+					broodwarResources.IscriptBin = (IScriptBin)broodatMpq.GetResource (Builtins.IScriptBin);
+					broodwarResources.UnitsDat = (UnitsDat)broodatMpq.GetResource (Builtins.UnitsDat);
+					broodwarResources.FlingyDat = (FlingyDat)broodatMpq.GetResource (Builtins.FlingyDat);
+					broodwarResources.MapDataDat = (MapDataDat)broodatMpq.GetResource (Builtins.MapDataDat);
+				}
 
 				// notify we're ready to roll
 				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));

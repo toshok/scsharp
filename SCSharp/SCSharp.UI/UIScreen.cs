@@ -113,6 +113,8 @@ namespace SCSharp.UI
 		{
 			this.painter = painter;
 
+			painter.Add (Layer.Background, FirstPaint);
+
 			if (background != null)
 				painter.Add (Layer.Background, BackgroundPainter);
 
@@ -125,6 +127,8 @@ namespace SCSharp.UI
 
 		public virtual void RemoveFromPainter (Painter painter)
 		{
+			painter.Remove (Layer.Background, FirstPaint);
+
 			if (background != null)
 				painter.Remove (Layer.Background, BackgroundPainter);
 			if (UIPainter != null)
@@ -320,10 +324,19 @@ namespace SCSharp.UI
 		{
 		}
 
+		public event ReadyDelegate FirstPainted;
 		public event ReadyDelegate DoneSwooshing;
 		public event ReadyDelegate Ready;
 
 		bool loaded;
+
+		protected virtual void FirstPaint (Surface surf, DateTime now)
+		{
+			if (FirstPainted != null)
+				FirstPainted ();
+
+			painter.Remove (Layer.Background, FirstPaint);
+		}
 
 		protected void RaiseReadyEvent ()
 		{

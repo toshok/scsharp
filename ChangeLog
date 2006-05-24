@@ -1,4 +1,78 @@
-2006-05-15  Chris Toshok  <toshok@ximian.com>
+2006-05-24  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/Game.cs (DisplayTitle): use the FirstPainted
+	event to determine when the title screen is shown, rather than the
+	Ready event (which is emitted when it finishes loading.)
+	(TitleScreenReady): pass in both stardatMpq and broodatMpq to the
+	GlobalResources ctor so it can load both sets of resources.
+
+	* SCSharp/SCSharp.UI/Builtins.cs: add mapdata.dat and mapdata.tbl.
+
+	* SCSharp/SCSharp.UI/GlobalResources.cs: rework things in this
+	class to handle loading both the broodwar and starcraft assets.
+	Use Game.PlayingBroodwar to implicitly switch between the
+	different versions when using just the resource name, but allow
+	explicit access to each version when necessary.
+
+	* SCSharp/SCSharp.Mpq/Mpq.cs (GetTypeFromResourcePath): handle
+	mapdata.dat.
+
+	* SCSharp/SCSharp.Mpq/MapDataDat.cs: new class, just a set of
+	indices into mapdata.tbl.
+
+	* SCSharp/SCSharp.UI/GameModeDialog.cs (LoadResources): explicitly
+	use broodat's gluAll.tbl to get the dialog title.  This keeps us
+	from crashing if we select "Original", then exit back to the main
+	menu and open this dialog again.
+
+	* SCSharp/SCSharp.UI/Painter.cs (Tick): rename "Animate" to this.
+	(DrawText):  remove unused, empty function.
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs
+	(BroodwarCampaigns_MapDataStart): stop hardcoding the strings
+	here.  instead, hardcode the indices into the mapdata.dat file.
+	(StarcraftCampaigns_MapDataStart): same.
+	(LoadResources): in the campaign element activate delegates, just
+	call SelectCampaign.
+	(SelectCampaign): factor out a lot of shared code here.  Use the
+	campaign indices to determine the correct prefix.  Also, switch to
+	the establishing shot for the given scenario.  It'll take care of
+	starting up the ready room.
+
+	* SCSharp/SCSharp.UI/ReadyRoomScreen.cs (LoadResources): in the
+	start_element activate delegate, stop the briefing before
+	switching to the game screen.
+	(StopBriefing): remove our Events.Tick handler.
+	(FirstPaint): remove the AddToPainter/RemoveFromPainter
+	runner.Tick hack, and just hook up to Events.Tick.
+	(BriefingRunner.Tick): change this to a Tick event handler from a
+	painter.  Keep track of total elapsed, and change sleepUntil to an
+	int from a DateTime.
+	(EstablishingShot): new markup screen, used for showing the
+	establishing shot/text before the ready room is displayed.
+
+	* SCSharp/SCSharp.UI/MarkupScreen.cs (Paint): add handling for
+	PageLocation.LowerLeft.
+	(AddMarkup): add handling for </SCREENLOWERLEFT>.
+	(AddToPainter): remove the FirstPainted stuff from here.  we'll
+	just use UIScreen's.
+	(RemoveFromPainter): same.
+	(FirstPaint): change FirstPainted to this, overriding UIScreen's.
+
+	* SCSharp/SCSharp.UI/UIScreen.cs (FirstPaint): emit our
+	FirstPainted event and remove the painter delegate.
+	(AddToPainter): add the FirstPaint delegate.
+	(RemoveFromPainter): remove the FirstPaint delegate.
+
+	* SCSharp/SCSharp.UI/MainMenu.cs (LoadResources): in the
+	intro_element delegate, remove the ifdefs.  Just switch to the
+	cinematic.  If it fails to play we'll return to the main menu.
+
+	* SCSharp/SCSharp.UI/SmackerPlayer.cs: catch the
+	DllNotFoundException if we couldn't load ffmpegglue.dll, and just
+	finish immediately in that case whenever someone plays a movie.
+
+2006-05-15  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/ReadyRoomScreen.cs (FirstPaint): remove
 	unused function.

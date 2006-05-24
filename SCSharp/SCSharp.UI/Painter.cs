@@ -88,7 +88,7 @@ namespace SCSharp.UI
 				layers[(int)i] = new List<PainterDelegate>();
 
 			/* and set ourselves up to invalidate at a regular interval*/
-                        Events.Tick +=new TickEventHandler (Animate);
+                        Events.Tick +=new TickEventHandler (Tick);
 		}
 
 		public void Add (Layer layer, PainterDelegate painter)
@@ -106,11 +106,7 @@ namespace SCSharp.UI
 			layers[(int)layer].Clear ();
 		}
 
-		public void DrawText (int x, int y, string text)
-		{
-		}
-
-		void Animate (object sender, TickEventArgs e)
+		void Tick (object sender, TickEventArgs e)
 		{
 			total_elapsed += e.TicksElapsed;
 

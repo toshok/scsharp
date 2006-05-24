@@ -106,6 +106,7 @@ namespace SCSharp.UI
 
 			Elements[start_element_index].Activate +=
 				delegate () {
+					StopBriefing ();
 					Game.Instance.SwitchToScreen (new GameScreen (mpq, scenario_prefix, scenario));
 				};
 
@@ -114,8 +115,8 @@ namespace SCSharp.UI
 
 		void StopBriefing ()
 		{
+			Events.Tick -= runner.Tick;
 			runner.Stop ();
-
 
 			Elements[transmission_element_index].Visible = false;
 			Elements[transmission_element_index].Text = "";
@@ -134,16 +135,11 @@ namespace SCSharp.UI
 			runner.Play ();
 		}
 
-		public override void AddToPainter (Painter painter)
+		protected override void FirstPaint (Surface surf, DateTime now)
 		{
-			base.AddToPainter (painter);
-			painter.Add (Layer.Background, runner.Tick);
-		}
+			base.FirstPaint (surf, now);
 
-		public override void RemoveFromPainter (Painter painter)
-		{
-			base.RemoveFromPainter (painter);
-			painter.Remove (Layer.Background, runner.Tick);
+			Events.Tick += runner.Tick;
 		}
 
 		public void SetObjectives (string str)
@@ -222,7 +218,7 @@ namespace SCSharp.UI
 				FIRST_PORTRAIT_ELEMENT_INDEX)
 		{
 		}
-		
+
 		const int START_ELEMENT_INDEX = 1;
 		const int CANCEL_ELEMENT_INDEX = 9;
 		const int SKIPTUTORIAL_ELEMENT_INDEX = 11;
@@ -289,7 +285,8 @@ namespace SCSharp.UI
 		ReadyRoomScreen screen;
 		string prefix;
 
-		DateTime sleepUntil;
+		int sleepUntil;
+		int totalElapsed;
 		int current_action;
 
 		public BriefingRunner (ReadyRoomScreen screen, Chk scenario,
@@ -308,23 +305,25 @@ namespace SCSharp.UI
 
 		public void Stop ()
 		{
-			TriggerAction[] actions = triggerData.Triggers[0].Actions;
-			current_action = actions.Length;
-			sleepUntil = DateTime.Now;
+			sleepUntil = 0;
 		}
 
-		public void Tick (Surface surf, DateTime now)
+		public void Tick (object sender, TickEventArgs e)
 		{
 			TriggerAction[] actions = triggerData.Triggers[0].Actions;
 
 			if (current_action == actions.Length)
 				return;
 
+			totalElapsed += e.TicksElapsed;
+
 			/* if we're presently waiting, make sure
 			   enough time has gone by.  otherwise
 			   return */
-			if (DateTime.Now < sleepUntil)
+			if (totalElapsed < sleepUntil)
 				return;
+
+			totalElapsed = 0;
 
 			while (current_action < actions.Length) {
 				TriggerAction action = actions[current_action];
@@ -335,11 +334,11 @@ namespace SCSharp.UI
 				case 0: /* no action */
 					break;
 				case 1:
-					sleepUntil = DateTime.Now + TimeSpan.FromMilliseconds ((int)action.Delay);
+					sleepUntil = (int)action.Delay;
 					return;
 				case 2:
 					GuiUtil.PlaySound (screen.Mpq, prefix + "\\" + scenario.GetMapString ((int)action.WavIndex));
-					sleepUntil = DateTime.Now + TimeSpan.FromMilliseconds ((int)action.Delay);
+					sleepUntil = (int)action.Delay;
 					return;
 				case 3:
 					screen.SetTransmissionText (scenario.GetMapString ((int)action.TextIndex));
@@ -361,12 +360,33 @@ namespace SCSharp.UI
 					screen.SetTransmissionText (scenario.GetMapString ((int)action.TextIndex));
 					screen.HighlightPortrait ((int)action.Group1);
 					GuiUtil.PlaySound (screen.Mpq, prefix + "\\" + scenario.GetMapString ((int)action.WavIndex));
-					sleepUntil = DateTime.Now + TimeSpan.FromMilliseconds ((int)action.Delay);
+					sleepUntil = (int)action.Delay;
 					return;
 				default:
 					break;
 				}
 			}
+		}
+	}
+
+	public class EstablishingShot : MarkupScreen {
+		string markup_resource;
+		string scenario_prefix;
+
+		public EstablishingShot (string markup_resource, string scenario_prefix, Mpq mpq) : base (mpq)
+		{
+			this.markup_resource = markup_resource;
+			this.scenario_prefix = scenario_prefix;
+		}
+
+		protected override void LoadMarkup ()
+		{
+			AddMarkup ((Stream)mpq.GetResource (markup_resource));
+		}
+
+		protected override void MarkupFinished ()
+		{
+			Game.Instance.SwitchToScreen (ReadyRoomScreen.Create (mpq, scenario_prefix));
 		}
 	}
 }

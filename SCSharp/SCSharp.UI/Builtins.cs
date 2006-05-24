@@ -94,6 +94,8 @@ namespace SCSharp.UI
 		public static string MapdataTbl = "arr\\mapdata.tbl";
 		public static string OrdersDat = "arr\\orders.dat";
 		public static string OrdersTbl = "arr\\orders.tbl";
+		public static string MapDataDat = "arr\\mapdata.dat";
+		public static string MapDataTbl = "arr\\mapdata.tbl";
 		public static string PortdataDat = "arr\\portdata.dat";
 		public static string PortdataTbl = "arr\\portdata.tbl";
 		public static string SfxDataDat = "arr\\sfxdata.dat";

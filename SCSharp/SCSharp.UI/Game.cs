@@ -238,7 +238,7 @@ namespace SCSharp.UI
 			   don't start loading anything else until
 			   it's on the screen */
 			UIScreen screen = new TitleScreen (installedMpq);
-			screen.Ready += TitleScreenReady;
+			screen.FirstPainted += TitleScreenReady;
 			SwitchToScreen (screen);
 		}
 
@@ -411,7 +411,7 @@ namespace SCSharp.UI
 		void TitleScreenReady ()
 		{
 			Console.WriteLine ("Loading global resources");
-			new GlobalResources (installedMpq);
+			new GlobalResources (stardatMpq, broodatMpq);
 			GlobalResources.Instance.Ready += GlobalResourcesLoaded;
 			GlobalResources.Instance.Load ();
 		}

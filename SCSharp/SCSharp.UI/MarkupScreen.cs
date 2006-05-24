@@ -54,7 +54,8 @@ namespace SCSharp.UI
 			Top,
 			Bottom,
 			Left,
-			Right
+			Right,
+			LowerLeft
 		}
 
 		class MarkupPage
@@ -132,6 +133,14 @@ namespace SCSharp.UI
 						y += fnt.LineSize;
 					}
 					break;
+				case PageLocation.LowerLeft:
+					y = surf.Height - 10 - fnt.LineSize * lines.Count;
+					foreach (Surface s in lineSurfaces) {
+						if (s != null)
+							surf.Blit (s, new Point (60, y));
+						y += fnt.LineSize;
+					}
+					break;
 				case PageLocation.Right:
 					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
@@ -173,6 +182,9 @@ namespace SCSharp.UI
 					}
 					else if (l.StartsWith ("</SCREENLEFT>")) {
 						currentPage = new MarkupPage (PageLocation.Left, fnt, pal);
+					}
+					else if (l.StartsWith ("</SCREENLOWERLEFT>")) {
+						currentPage = new MarkupPage (PageLocation.LowerLeft, fnt, pal);
 					}
 					else if (l.StartsWith ("</SCREENRIGHT>")) {
 						currentPage = new MarkupPage (PageLocation.Right, fnt, pal);
@@ -230,32 +242,23 @@ namespace SCSharp.UI
 		int millisDelay;
 		int totalElapsed;
 
-		Painter p;
-
 		public override void AddToPainter (Painter painter)
 		{
-			p = painter;
-			/* we add a special entry to the background
-			 * painter layer just so we can find out when
-			 * we're first painted */
-			painter.Add (Layer.Background, FirstPainted);
-
+			base.AddToPainter (painter);
 			painter.Add (Layer.Background, PaintBackground);
 			painter.Add (Layer.UI, PaintMarkup);
 		}
 
 		public override void RemoveFromPainter (Painter painter)
 		{
-			painter.Remove (Layer.Background, FirstPainted);
-
+			base.RemoveFromPainter (painter);
 			painter.Remove (Layer.Background, PaintBackground);
 			painter.Remove (Layer.UI, PaintMarkup);
 		}
 
-		void FirstPainted (Surface surf, DateTime now)
+		protected override void FirstPaint (Surface surf, DateTime now)
 		{
-			p.Remove (Layer.Background, FirstPainted);
-			p = null;
+			base.FirstPaint (surf, now);
 
 			/* set ourselves up to invalidate at a regular interval*/
                         Events.Tick += FlipPage;

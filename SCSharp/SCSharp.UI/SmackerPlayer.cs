@@ -132,33 +132,37 @@ namespace SCSharp.UI
 
 		void DecoderThread ()
 		{
-			decoder = new FFmpeg (filename, buf);
+			try {
+				decoder = new FFmpeg (filename, buf);
 
-			decoder.Start ();
+				decoder.Start ();
 
-			Console.WriteLine ("animation is {0}x{1}, we're displaying at {2}x{3}",
-					   decoder.Width, decoder.Height,
-					   width, height);
-			byte[] frame_buf = new byte [decoder.Width * decoder.Height * 3];
-			while (decoder.GetNextFrame (frame_buf)) {
-				lock (sync) {
-					if (surface != null)
-						surface.Dispose ();
-					surface = ScaleSurface (GuiUtil.CreateSurface (frame_buf,
-										       (ushort)decoder.Width,
-										       (ushort)decoder.Height,
-										       24, decoder.Width * 3,
-										       (int)0x000000ff,
-										       (int)0x0000ff00,
-										       (int)0x00ff0000,
-										       (int)0x00000000));
+				Console.WriteLine ("animation is {0}x{1}, we're displaying at {2}x{3}",
+						   decoder.Width, decoder.Height,
+						   width, height);
+				byte[] frame_buf = new byte [decoder.Width * decoder.Height * 3];
+				while (decoder.GetNextFrame (frame_buf)) {
+					lock (sync) {
+						if (surface != null)
+							surface.Dispose ();
+						surface = ScaleSurface (GuiUtil.CreateSurface (frame_buf,
+											       (ushort)decoder.Width,
+											       (ushort)decoder.Height,
+											       24, decoder.Width * 3,
+											       (int)0x000000ff,
+											       (int)0x0000ff00,
+											       (int)0x00ff0000,
+											       (int)0x00000000));
+					}
+					Thread.Sleep (100);
 				}
-				Thread.Sleep (100);
+
+				decoder.Stop ();
+			}
+			finally {
+				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (EmitFinished)));
 			}
 
-			decoder.Stop ();
-
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (EmitFinished)));
 		}
 
 		public event PlayerEvent Finished;
@@ -174,9 +178,17 @@ namespace SCSharp.UI
 
 	class FFmpeg
 	{
+		static bool init_succeeded;
+
 		static FFmpeg ()
 		{
-			ffmpeg_init();
+			try {
+				ffmpeg_init();
+				init_succeeded = true;
+			}
+			catch (DllNotFoundException) {
+				init_succeeded = false;
+			}
 		}
 
 		GCHandle handle;
@@ -186,6 +198,9 @@ namespace SCSharp.UI
 
 		public FFmpeg (string filename, byte[] buf)
 		{
+			if (!init_succeeded)
+				throw new Exception ("initialization of ffmpegglue library failed");
+
 			this.filename = filename;
 			this.buf = buf;
 		}

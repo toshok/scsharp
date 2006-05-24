@@ -89,6 +89,8 @@ namespace SCSharp
 					return typeof (SpritesDat);
 				else if (path.ToLower().EndsWith ("units.dat"))
 					return typeof (UnitsDat);
+				else if (path.ToLower().EndsWith ("mapdata.dat"))
+					return typeof (MapDataDat);
 			}
 			else if (ext.ToLower () == ".spk") {
 				return typeof (Spk);
@@ -219,6 +221,7 @@ namespace SCSharp
 	{
 #if USE_STORM_DLL
 		IntPtr mpqHandle;
+		string archive_path;
 #else
 		MpqReader.MpqArchive mpq;
 #endif
@@ -226,6 +229,7 @@ namespace SCSharp
 		public MpqArchive (string path)
 		{
 #if USE_STORM_DLL
+			archive_path = path;
 			if (!Storm.SFileOpenArchive (path, 0, 0, out mpqHandle))
 				throw new Exception (String.Format ("Could not load .mpq file at {0}", path));
 #else
@@ -257,7 +261,6 @@ namespace SCSharp
 				return null;
 			}
 
-			//			Console.WriteLine ("found resource {0} in archive", path);
 			Storm.SFileCloseFile (fileHandle);
 			return new MemoryStream (buf);
 #else

@@ -106,18 +106,14 @@ namespace SCSharp.UI
 
 			Elements[INTRO_ELEMENT_INDEX].Activate +=
 				delegate () {
-#if false
-					Cinematic introScreen = new Cinematic (mpq, "smk\\xProtoss.smk" /*"smk\\starXIntr.smk"*/);
+					Cinematic introScreen = new Cinematic (mpq,
+									       Game.Instance.IsBroodWar
+									       ? "smk\\starXIntr.smk"
+									       : "smk\\starintr.smk");
 					introScreen.Finished += delegate () {
 						Game.Instance.SwitchToScreen (this);
 					};
 					Game.Instance.SwitchToScreen (introScreen);
-#else
-					OkDialog d = new OkDialog (this,
-								   mpq,
-								   "Cinematics are not available (yet) in SCSharp");
-					ShowDialog (d);
-#endif
 				};
 
 			Elements[CREDITS_ELEMENT_INDEX].Activate += 
