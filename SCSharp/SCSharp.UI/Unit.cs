@@ -49,6 +49,8 @@ namespace SCSharp.UI
 		int x;
 		int y;
 
+		Sprite sprite;
+
 		public Unit (int unit_id)
 		{
 			this.unit_id = unit_id;
@@ -66,9 +68,10 @@ namespace SCSharp.UI
 
 		public Sprite CreateSprite (Mpq mpq, byte[] palette)
 		{
-			int sprite_id = GlobalResources.Instance.FlingyDat.GetSpriteId (FlingyId);
+			if (sprite != null)
+				throw new Exception ();
 
-			Sprite sprite = SpriteManager.CreateSprite (mpq, sprite_id, palette, x, y);
+			sprite = SpriteManager.CreateSprite (mpq, SpriteId, palette, x, y);
 
 			sprite.RunScript (AnimationType.Init);
 
@@ -85,8 +88,16 @@ namespace SCSharp.UI
 			set { y = value; }
 		}
 
+		public Sprite Sprite {
+			get { return sprite; }
+		}
+
 		public int FlingyId {
 			get { return units.GetFlingyId (unit_id); }
+		}
+
+		public int SpriteId {
+			get { return GlobalResources.Instance.FlingyDat.GetSpriteId (FlingyId); }
 		}
 
 		public uint ConstructSpriteId {
@@ -113,6 +124,14 @@ namespace SCSharp.UI
 
 		public int DestroyScore {
 			get { return units.GetDestroyScore (unit_id); }
+		}
+
+		public int SelectionCircle {
+			get { return GlobalResources.Instance.SpritesDat.GetSelectionCircle (SpriteId); }
+		}
+
+		public int SelectionCircleOffset {
+			get { return GlobalResources.Instance.SpritesDat.GetSelectionCircleOffset (SpriteId); }
 		}
 	}
 }

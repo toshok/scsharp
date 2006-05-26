@@ -35,7 +35,6 @@ using System.Collections.Generic;
 
 namespace SCSharp
 {
-
 	public class SpritesDat : MpqResource
 	{
 		const int NUM_SPRITES = 517;
@@ -86,6 +85,21 @@ namespace SCSharp
 		public ushort GetImagesDatEntry (int index)
 		{
 			return Util.ReadWord (buf, GetIndexLocation (IMAGESDAT_FIELD, index));
+		}
+
+		public byte GetBarLength (int index)
+		{
+			return buf [GetIndexLocation (BARLENGTH_FIELD, index)];
+		}
+
+		public byte GetSelectionCircle (int index)
+		{
+			return buf [GetIndexLocation (SELECTIONCIRCLE_FIELD, index)];
+		}
+
+		public byte GetSelectionCircleOffset (int index)
+		{
+			return buf [GetIndexLocation (SELECTIONCIRCLE_OFFSET_FIELD, index)];
 		}
 	}
 
