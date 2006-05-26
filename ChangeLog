@@ -1,3 +1,8 @@
+2006-05-26  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.Mpq/Chk.cs (ReadFromStream): change the loop so
+	that it'll work with both StormLib and the managed .mpq stuff.
+
 2006-05-24  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GuiUtil.cs (RenderGlyph): add a hack to

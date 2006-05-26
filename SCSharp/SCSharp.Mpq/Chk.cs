@@ -78,7 +78,7 @@ namespace SCSharp
 
 			sections = new Dictionary<string,SectionData>();
 
-			do {
+			while (true) {
 				stream.Read (section_name_buf, 0, 4);
 
 				SectionData sec_data = new SectionData();
@@ -88,10 +88,13 @@ namespace SCSharp
 
 				section_name = Encoding.ASCII.GetString (section_name_buf, 0, 4);
 
-				stream.Position += sec_data.data_length;
-
 				sections.Add (section_name, sec_data);
-			} while (stream.Position < stream_length);
+
+				if (stream.Position + sec_data.data_length >= stream.Length)
+					break;
+
+				stream.Position += sec_data.data_length;
+			}
 
 			/* parse only the sections we really care
 			 * about up front.  the rest are done as
