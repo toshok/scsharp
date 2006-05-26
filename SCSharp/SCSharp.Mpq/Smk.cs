@@ -35,6 +35,8 @@
    as a guide
 */
 
+#if notyet
+
 using System;
 using System.IO;
 using System.Text;
@@ -1136,3 +1138,5 @@ namespace SCSharp
 	}
 }
 
+
+#endif
