@@ -1,7 +1,35 @@
-// Copyright 2006 Foole (fooleau@gmail.com)
+//
+// MpqHuffman.cs
+//
+// Authors:
+//		Foole (fooleau@gmail.com)
+//
+// (C) 2006 Foole (fooleau@gmail.com)
+// Based on code from StormLib by Ladislav Zezula
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 using System;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using ICSharpCode.SharpZipLib.BZip2;
 
 namespace MpqReader
 {
@@ -30,7 +58,7 @@ namespace MpqReader
 			
 			mStream = File.BaseStream;
 			mBlockSize = File.BlockSize;
-
+			
 			if (mBlock.IsCompressed) LoadBlockPositions();
 		}
 
@@ -95,7 +123,7 @@ namespace MpqReader
 				MpqArchive.DecryptBlock(data, (uint)(mSeed1 + BlockIndex));
 			}
 
-			if (mBlock.IsCompressed)
+			if (mBlock.IsCompressed && data.Length != ExpectedLength)
 			{
 				if ((mBlock.Flags & MpqFileFlags.CompressedMulti) != 0)
 					data = DecompressMulti(data, ExpectedLength);
@@ -212,31 +240,78 @@ namespace MpqReader
 		}
 #endregion Strem overrides
 
+		/* Compression types in order:
+		 *  10 = BZip2
+		 *   8 = PKLib
+		 *   2 = ZLib
+		 *   1 = Huffman
+		 *  80 = IMA ADPCM Stereo
+		 *  40 = IMA ADPCM Mono
+		 */
 		private static byte[] DecompressMulti(byte[] Input, int OutputLength)
 		{
 			Stream sinput = new MemoryStream(Input);
 
 			byte comptype = (byte)sinput.ReadByte();
 
-			// These 3 cases are the most common
-			// only 8 and 81 appear to be used by Starcraft
-			if (comptype == 2) // WoW/WC3
+			// BZip2
+			if ((comptype & 0x10) != 0)
 			{
-				return ZlibDecompress(sinput, OutputLength);
-			} else if (comptype == 8) // SC
-			{
-				return PKDecompress(sinput, OutputLength);
-			} else if (comptype == 0x81 || comptype == 0x41) // SC WAV
-			{
-				// TODO: Wave file compression
-				// 1 = Huffmann compression
-				// 80 = IMA ADPCM stereo compression
-				// 40 = IMA ADPCM mono compression
-				throw new Exception(String.Format("Unhandled multi compression: {0:X}", comptype));
-			} else
-			{
-				throw new Exception(String.Format("Unhandled multi compression: {0:X}", comptype));
+				byte[] result = BZip2Decompress(sinput, OutputLength);
+				comptype &= 0xEF;
+				if (comptype == 0) return result;
+				sinput = new MemoryStream(result);
 			}
+			
+			// PKLib
+			if ((comptype & 8) != 0)
+			{
+				byte[] result = PKDecompress(sinput, OutputLength);
+				comptype &= 0xF7;
+				if (comptype == 0) return result;
+				sinput = new MemoryStream(result);
+			}
+
+			// ZLib
+			if ((comptype & 2) != 0)
+			{
+				byte[] result = ZlibDecompress(sinput, OutputLength);
+				comptype &= 0xFD;
+				if (comptype == 0) return result;
+				sinput = new MemoryStream(result);
+			}
+			
+			if ((comptype & 1) != 0)
+			{
+				byte[] result = MpqHuffman.Decompress(sinput);
+				comptype &= 0xfe;
+				if (comptype == 0) return result;
+				sinput = new MemoryStream(result);
+			}
+			
+			if ((comptype & 0x80) != 0)
+			{
+				byte[] result = MpqWavCompression.Decompress(sinput, 2);
+				comptype &= 0x7f;
+				if (comptype == 0) return result;
+				sinput = new MemoryStream(result);
+			}
+
+			if ((comptype & 0x40) != 0)
+			{
+				byte[] result = MpqWavCompression.Decompress(sinput, 1);
+				comptype &= 0xbf;
+				if (comptype == 0) return result;
+				sinput = new MemoryStream(result);
+			}
+			throw new Exception(String.Format("Unhandled compression flags: 0x{0:X}", comptype));
+		}
+		
+		private static byte[] BZip2Decompress(Stream Data, int ExpectedLength)
+		{
+			MemoryStream output = new MemoryStream();
+			BZip2.Decompress(Data, output);
+			return output.ToArray();
 		}
 
 		private static byte[] PKDecompress(Stream Data, int ExpectedLength)
@@ -247,15 +322,15 @@ namespace MpqReader
 
 		private static byte[] ZlibDecompress(Stream Data, int ExpectedLength)
 		{
+			// This assumes that Zlib won't be used in combination with another compression type
 			byte[] Output = new byte[ExpectedLength];
 			Stream s = new InflaterInputStream(Data);
 			int Offset = 0;
 			while(true)
 			{
 				int size = s.Read(Output, Offset, ExpectedLength);
-				if (size == ExpectedLength) break;
+				if (size == 0) break;
 				Offset += size;
-				ExpectedLength -= size;
 			}
 			return Output;
 		}
