@@ -330,12 +330,19 @@ namespace SCSharp.UI
 
 		bool loaded;
 
+		bool emitted_firstpaint;
 		protected virtual void FirstPaint (Surface surf, DateTime now)
 		{
-			if (FirstPainted != null)
-				FirstPainted ();
-
-			painter.Remove (Layer.Background, FirstPaint);
+			/* XXX we should actually remove the
+			 * FirstPaint handler somehow (maybe by making
+			 * painter.Remove queue up removes when it's
+			 * executing a particular layer's handlers,
+			 * then doing the removes after? */
+			if (!emitted_firstpaint) {
+				if (FirstPainted != null)
+					FirstPainted ();
+				emitted_firstpaint = true;
+			}
 		}
 
 		protected void RaiseReadyEvent ()
