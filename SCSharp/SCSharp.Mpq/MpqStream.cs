@@ -200,6 +200,22 @@ namespace MpqReader
 		
 		public override int Read(byte[] Buffer, int Offset, int Count)
 		{
+			int toread = Count;
+			int readtotal = 0;
+
+			while (toread > 0)
+			{
+				int read = ReadInternal(Buffer, Offset, toread);
+				if (read == 0) break;
+				readtotal += read;
+				Offset += read;
+				toread -= read;
+			}
+			return readtotal;
+		}
+
+		private int ReadInternal(byte[] Buffer, int Offset, int Count)
+		{
 			BufferData();
 
 			int localposition = (int)(mPosition % mBlockSize);

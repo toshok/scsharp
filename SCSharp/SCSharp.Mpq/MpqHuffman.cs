@@ -260,12 +260,10 @@ namespace MpqReader
 
 		private static LinkedNode Decode(BitStream Input, LinkedNode Head)
 		{
-			int bitcount = 0;
 			LinkedNode node = Head;
 
 			while(node.Child0 != null)
 			{
-				bitcount++;
 				int bit = Input.ReadBits(1);
 				if (bit == -1)
 					throw new Exception("Unexpected end of file");
