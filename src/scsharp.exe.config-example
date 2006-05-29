@@ -25,7 +25,7 @@
 
          UseUnmanagedMpqLibrary:
               requires that you configure scsharp with
-              --enable-stormlib when building.  Supplying "true" here
+              enable-stormlib when building.  Supplying "true" here
               causes all Mpq access to go through the unmanaged
               library.  Only enable this if you're helping
               develop/debug the managed port.  There's no compelling
