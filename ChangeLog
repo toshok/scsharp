@@ -1,3 +1,27 @@
+2006-05-29  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.UI/Game.cs (CreateWindow): switch to new Painter
+	ctor.
+	(KeyboardDown): add handling for Ctrl-F to switch between
+	fullscreen and windowed mode.
+
+	* SCSharp/SCSharp.UI/UIDialog.cs: s/Game/Painter for the screen
+	nres constants.
+
+	* SCSharp/SCSharp.UI/Sprite.cs: same.
+	
+	* SCSharp/SCSharp.UI/Cinematic.cs: same.
+	
+	* SCSharp/SCSharp.UI/GameScreen: same.
+
+	* SCSharp/SCSharp.UI/UIScreen.cs (FirstPaint): revert to this
+	the non-disgusting hack version.
+
+	* SCSharp/SCSharp.UI/Painter.cs: move the SCREEN_RES_X/Y constants
+	here, from Game.cs.
+	(Fullscreen): new property, allow switching between fullscreen and
+	not.
+
 2006-05-26  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.Mpq/Chk.cs (ReadFromStream): change the loop so

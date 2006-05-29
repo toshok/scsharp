@@ -135,34 +135,34 @@ namespace SCSharp.UI
 				int scroll_x = (int)(topleft_x * factors[i]);
 				int scroll_y = (int)(topleft_y * factors[i]);
 
-				if (scroll_x > Game.SCREEN_RES_X) scroll_x %= Game.SCREEN_RES_X;
-				if (scroll_y > Game.SCREEN_RES_Y) scroll_y %= Game.SCREEN_RES_Y;
+				if (scroll_x > Painter.SCREEN_RES_X) scroll_x %= Painter.SCREEN_RES_X;
+				if (scroll_y > Painter.SCREEN_RES_Y) scroll_y %= Painter.SCREEN_RES_Y;
 
 				surf.Blit (starfield_layers[i],
 					   new Rectangle (new Point (0,0),
-							  new Size (Game.SCREEN_RES_X - scroll_x,
-								    Game.SCREEN_RES_Y - scroll_y)),
+							  new Size (Painter.SCREEN_RES_X - scroll_x,
+								    Painter.SCREEN_RES_Y - scroll_y)),
 					   new Rectangle (new Point (scroll_x, scroll_y),
-							  new Size (Game.SCREEN_RES_X - scroll_x,
-								    Game.SCREEN_RES_Y - scroll_y)));
+							  new Size (Painter.SCREEN_RES_X - scroll_x,
+								    Painter.SCREEN_RES_Y - scroll_y)));
 
 				if (scroll_x != 0)
 					surf.Blit (starfield_layers[i],
-						   new Rectangle (new Point (Game.SCREEN_RES_X - scroll_x, 0),
-								  new Size (scroll_x, Game.SCREEN_RES_Y - scroll_y)),
+						   new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
+								  new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)),
 						   new Rectangle (new Point (0, scroll_y),
-								  new Size (scroll_x, Game.SCREEN_RES_Y - scroll_y)));
+								  new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)));
 
 				if (scroll_y != 0)
 					surf.Blit (starfield_layers[i],
-						   new Rectangle (new Point (0, Game.SCREEN_RES_Y - scroll_y),
-								  new Size (Game.SCREEN_RES_X - scroll_x, scroll_y)),
+						   new Rectangle (new Point (0, Painter.SCREEN_RES_Y - scroll_y),
+								  new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)),
 						   new Rectangle (new Point (scroll_x, 0),
-								  new Size (Game.SCREEN_RES_X - scroll_x, scroll_y)));
+								  new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)));
 
 				if (scroll_x != 0 || scroll_y != 0)
 					surf.Blit (starfield_layers[i],
-						   new Rectangle (new Point (Game.SCREEN_RES_X - scroll_x, Game.SCREEN_RES_Y - scroll_y),
+						   new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, Painter.SCREEN_RES_Y - scroll_y),
 								  new Size (scroll_x, scroll_y)),
 						   new Rectangle (new Point (0, 0),
 								  new Size (scroll_x, scroll_y)));
@@ -175,11 +175,11 @@ namespace SCSharp.UI
 		{
 			surf.Blit (map_surf,
 				   new Rectangle (new Point (0,0),
-						  new Size (Game.SCREEN_RES_X - topleft_x,
-							    Game.SCREEN_RES_Y - topleft_y)),
+						  new Size (Painter.SCREEN_RES_X - topleft_x,
+							    Painter.SCREEN_RES_Y - topleft_y)),
 				   new Rectangle (new Point (topleft_x, topleft_y),
-						  new Size (Game.SCREEN_RES_X,
-							    Game.SCREEN_RES_Y)));
+						  new Size (Painter.SCREEN_RES_X,
+							    Painter.SCREEN_RES_Y)));
 		}
 
 		void PaintHud (Surface surf, DateTime dt)
@@ -191,8 +191,8 @@ namespace SCSharp.UI
 		{
 			Rectangle rect = new Rectangle (new Point ((int)((float)topleft_x / (float)map_surf.Width * MINIMAP_WIDTH + MINIMAP_X),
 								   (int)((float)topleft_y / (float)map_surf.Height * MINIMAP_HEIGHT + MINIMAP_Y)),
-							new Size ((int)((float)Game.SCREEN_RES_X / (float)map_surf.Width * MINIMAP_WIDTH),
-								  (int)((float)Game.SCREEN_RES_Y / (float)map_surf.Height * MINIMAP_HEIGHT)));
+							new Size ((int)((float)Painter.SCREEN_RES_X / (float)map_surf.Width * MINIMAP_WIDTH),
+								  (int)((float)Painter.SCREEN_RES_Y / (float)map_surf.Height * MINIMAP_HEIGHT)));
 
 			surf.DrawBox (rect, Color.Green);
 		}
@@ -248,7 +248,7 @@ namespace SCSharp.UI
 
 				starfield_layers = new Surface [starfield.Layers.Length];
 				for (int i = 0; i < starfield_layers.Length; i ++) {
-					starfield_layers[i] = new Surface (Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
+					starfield_layers[i] = new Surface (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y);
 
 					starfield_layers[i].TransparentColor = Color.Black;
 
@@ -315,8 +315,8 @@ namespace SCSharp.UI
 			if (topleft_x < 0) topleft_x = 0;
 			if (topleft_y < 0) topleft_y = 0;
 
-			if (topleft_x > map_surf.Width - Game.SCREEN_RES_X) topleft_x = map_surf.Width - Game.SCREEN_RES_X;
-			if (topleft_y > map_surf.Height - Game.SCREEN_RES_Y) topleft_y = map_surf.Height - Game.SCREEN_RES_Y;
+			if (topleft_x > map_surf.Width - Painter.SCREEN_RES_X) topleft_x = map_surf.Width - Painter.SCREEN_RES_X;
+			if (topleft_y > map_surf.Height - Painter.SCREEN_RES_Y) topleft_y = map_surf.Height - Painter.SCREEN_RES_Y;
 		}
 
 		void UpdateCursor ()
@@ -359,8 +359,8 @@ namespace SCSharp.UI
 
 		void Recenter (int x, int y)
 		{
-			topleft_x = x - Game.SCREEN_RES_X / 2;
-			topleft_y = y - Game.SCREEN_RES_Y / 2;
+			topleft_x = x - Painter.SCREEN_RES_X / 2;
+			topleft_y = y - Painter.SCREEN_RES_Y / 2;
 
 			ClipTopLeft ();
 		}
@@ -403,7 +403,7 @@ namespace SCSharp.UI
 				if (args.X < MOUSE_MOVE_BORDER) {
 					horiz_delta = -SCROLL_DELTA;
 				}
-				else if (args.X + MOUSE_MOVE_BORDER > Game.SCREEN_RES_X) {
+				else if (args.X + MOUSE_MOVE_BORDER > Painter.SCREEN_RES_X) {
 					horiz_delta = SCROLL_DELTA;
 				}
 				else {
@@ -413,7 +413,7 @@ namespace SCSharp.UI
 				if (args.Y < MOUSE_MOVE_BORDER) {
 					vert_delta = -SCROLL_DELTA;
 				}
-				else if (args.Y + MOUSE_MOVE_BORDER > Game.SCREEN_RES_Y) {
+				else if (args.Y + MOUSE_MOVE_BORDER > Painter.SCREEN_RES_Y) {
 					vert_delta = SCROLL_DELTA;
 				}
 				else {

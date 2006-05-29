@@ -242,21 +242,12 @@ namespace SCSharp.UI
 			SwitchToScreen (screen);
 		}
 
-		public const int SCREEN_RES_X = 640;
-		public const int SCREEN_RES_Y = 480;
-
 		void CreateWindow (bool fullscreen)
 		{
 			Video.WindowIcon ();
 			Video.WindowCaption = "SCSharp";
-			Surface surf;
 
-			if (fullscreen)
-				surf = Video.SetVideoMode (SCREEN_RES_X, SCREEN_RES_Y);
-			else
-				surf = Video.SetVideoModeWindow (SCREEN_RES_X, SCREEN_RES_Y);
-
-			painter = new Painter (surf, GAME_ANIMATION_TICK);
+			painter = new Painter (fullscreen, GAME_ANIMATION_TICK);
 		}
 
 		void UserEvent (object sender, UserEventArgs args)
@@ -310,9 +301,13 @@ namespace SCSharp.UI
 		void KeyboardDown (object o, KeyboardEventArgs args)
 		{
 #if !RELEASE
-			if ((args.Mod & ModifierKeys.LeftControl) != 0
-			    && args.Key == Key.Q)
-				Quit ();
+			if ((args.Mod & ModifierKeys.LeftControl) != 0)
+				if (args.Key == Key.Q) {
+					Quit ();
+				}
+				else if (args.Key == Key.F) {
+					painter.Fullscreen = !painter.Fullscreen;
+				}
 #endif
 			if (currentScreen != null)
 				currentScreen.HandleKeyboardDown (args);

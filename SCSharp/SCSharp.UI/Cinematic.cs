@@ -66,7 +66,7 @@ namespace SCSharp.UI
 			if (player == null) {
 				player = new SmackerPlayer (resourcePath,
 							    (Stream)mpq.GetResource (resourcePath),
-							    Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
+							    Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y);
 
 				player.Finished += PlayerFinished;
 				player.Play ();

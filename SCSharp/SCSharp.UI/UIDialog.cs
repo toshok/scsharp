@@ -54,7 +54,7 @@ namespace SCSharp.UI
 
 			dimScreen = true;
 
-			dimScreenSurface = new Surface (Game.SCREEN_RES_X, Game.SCREEN_RES_Y);
+			dimScreenSurface = new Surface (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y);
 			dimScreenSurface.Alpha = 100;
 			dimScreenSurface.AlphaBlending = true;
 		}
@@ -102,8 +102,8 @@ namespace SCSharp.UI
 			int si;
 
 			if (Background != null) {
-				baseX = (Game.SCREEN_RES_X - Background.Width) / 2;
-				baseY = (Game.SCREEN_RES_Y - Background.Height) / 2;
+				baseX = (Painter.SCREEN_RES_X - Background.Width) / 2;
+				baseY = (Painter.SCREEN_RES_Y - Background.Height) / 2;
 				si = 0;
 			}
 			else {

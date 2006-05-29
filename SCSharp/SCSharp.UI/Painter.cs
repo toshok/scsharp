@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using SdlDotNet;
 using SdlDotNet.Sprites;
@@ -40,8 +41,6 @@ namespace SCSharp.UI
 
 	public enum Layer
 	{
-		Foo,
-
 		Background,
 		Map,
 		Shadow,
@@ -73,37 +72,81 @@ namespace SCSharp.UI
 		Surface paintingSurface;
 		Surface backbuffer;
 
-		public Painter (Surface paintingSurface, int millis)
+		Layer paintingLayer;
+
+		bool fullscreen;
+
+		List<PainterDelegate> pendingRemoves;
+		List<PainterDelegate> pendingAdds;
+		bool pendingClear;
+
+		public const int SCREEN_RES_X = 640;
+		public const int SCREEN_RES_Y = 480;
+
+		public Painter (bool fullscreen, int millis)
 		{
 			this.millis = millis;
-			this.paintingSurface = paintingSurface;
 
-			/* create an initialize our video surface */
-			backbuffer = paintingSurface.CreateCompatibleSurface (paintingSurface.Size);
-			backbuffer.Fill (new Rectangle (new Point (0, 0), backbuffer.Size), Color.Black);
+			this.fullscreen = fullscreen;
+			Fullscreen = fullscreen;
 			
 			/* init our list of painter delegates */
 			layers = new List<PainterDelegate>[(int)Layer.Count];
 			for (Layer i = Layer.Background; i < Layer.Count; i ++)
 				layers[(int)i] = new List<PainterDelegate>();
 
+			pendingRemoves = new List<PainterDelegate>();
+			pendingAdds = new List<PainterDelegate>();
+
 			/* and set ourselves up to invalidate at a regular interval*/
                         Events.Tick +=new TickEventHandler (Tick);
 		}
 
+		public bool Fullscreen {
+			get { return fullscreen; }
+			set {
+				if (fullscreen != value || paintingSurface == null) {
+					fullscreen = value;
+
+					if (fullscreen)
+						paintingSurface = Video.SetVideoMode (SCREEN_RES_X, SCREEN_RES_Y);
+					else
+						paintingSurface = Video.SetVideoModeWindow (SCREEN_RES_X, SCREEN_RES_Y);
+
+					backbuffer = paintingSurface.CreateCompatibleSurface (paintingSurface.Size);
+					backbuffer.Fill (new Rectangle (new Point (0, 0), backbuffer.Size), Color.Black);
+				}
+			}
+		}
+
 		public void Add (Layer layer, PainterDelegate painter)
 		{
-			layers[(int)layer].Add (painter);
+			if (layer == paintingLayer) {
+				pendingAdds.Add (painter);
+			}
+			else {
+				layers[(int)layer].Add (painter);
+			}
 		}
 
 		public void Remove (Layer layer, PainterDelegate painter)
 		{
-			layers[(int)layer].Remove (painter);
+			if (layer == paintingLayer)
+				pendingRemoves.Add (painter);
+			else
+				layers[(int)layer].Remove (painter);
 		}
 
 		public void Clear (Layer layer)
 		{
-			layers[(int)layer].Clear ();
+			if (layer == paintingLayer) {
+				pendingClear = true;
+				pendingAdds.Clear ();
+				pendingRemoves.Clear ();
+			}
+			else {
+				layers[(int)layer].Clear ();
+			}
 		}
 
 		void Tick (object sender, TickEventArgs e)
@@ -119,8 +162,22 @@ namespace SCSharp.UI
 
                         backbuffer.Fill(new Rectangle(new Point(0, 0), backbuffer.Size), Color.Black);
 			
-			for (Layer i = Layer.Background; i < Layer.Count; i ++)
+			for (Layer i = Layer.Background; i < Layer.Count; i ++) {
+				paintingLayer = i;
+
 				DrawLayer (layers[(int)i]);
+
+				if (pendingClear)
+					layers[(int)i].Clear ();
+				for (int j = 0; j < pendingAdds.Count; j ++)
+					layers[(int)i].Add (pendingAdds[j]);
+				pendingAdds.Clear ();
+				for (int j = 0; j < pendingRemoves.Count; j ++)
+					layers[(int)i].Remove (pendingRemoves[j]);
+				pendingRemoves.Clear ();
+			}
+
+			paintingLayer = Layer.Count;
 
 			paintingSurface.Blit (backbuffer);
 
