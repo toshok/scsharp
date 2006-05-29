@@ -4,7 +4,7 @@ AC_INIT(HACKING)
 # The extra brackets are to foil regex-based scans.
 m4_ifdef([_A][M_PROG_TAR],[_A][M_SET_OPTION([tar-ustar])])
 
-AM_INIT_AUTOMAKE(scsharp,0.0000007)
+AM_INIT_AUTOMAKE(scsharp,0.0000008)
 AM_MAINTAINER_MODE
 
 AC_ARG_ENABLE(stormlib, AC_HELP_STRING([--enable-stormlib], [Enable unmanaged StormLib code]), , enable_stormlib="no")

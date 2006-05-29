@@ -15,15 +15,15 @@ dist-hook:
 	cp sdldotnet-bin/* $(distdir)/sdldotnet-bin
 
 #dll configs?
+RELEASEDIR=$(PACKAGE)-$(VERSION)
 release: all
 	-mkdir $(RELEASEDIR)
-	@cp src/starcraft.exe $(RELEASEDIR)
-	@cp src/starcraft.exe.config-example $(RELEASEDIR)/starcraft.exe.config
+	@cp src/scsharp.exe $(RELEASEDIR)
+	@cp src/scsharp.exe.config-example $(RELEASEDIR)/scsharp.exe.config
 	@cp SCSharp/*.dll $(RELEASEDIR)
-	@cp StormLib/libStorm.so $(RELEASEDIR)
-	@cp sdldotnet/bin/examples/SdlDotNet.dll $(RELEASEDIR)
-	@cp sdldotnet/bin/examples/Tao.Sdl.dll $(RELEASEDIR)
-	@cp sdldotnet/bin/examples/Tao.Sdl.dll.config $(RELEASEDIR)
+	@cp sdldotnet-bin/*.dll $(RELEASEDIR)
+	@cp sdldotnet-bin/*.dll.config $(RELEASEDIR)
+	@cp NEWS $(RELEASEDIR)/NEWS
 	@cp RELEASE_README $(RELEASEDIR)/README
 	@cp AUTHORS $(RELEASEDIR)
 	tar -cvjf $(RELEASEDIR).tar.bz2 $(RELEASEDIR)

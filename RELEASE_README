@@ -11,7 +11,7 @@ Things you need to do to make this work:
    CD at the moment, due to the fact that the font code only works
    with the files on the BW cd for some reason.
 
-4) Edit the starcraft.exe.config file and point it at the directories
+4) Edit the scsharp.exe.config file and point it at the directories
    from 1) and 2).
 
 5) Make sure you have the following SDL packages installed (these
@@ -24,4 +24,4 @@ Things you need to do to make this work:
 
 7) That's it.  The following should be enough:
 
-	$ mono starcraft.exe
+	$ mono scsharp.exe

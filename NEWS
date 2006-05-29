@@ -1,0 +1,19 @@
+Changes from 0.0000007 to 0.0000008.
+
+	* inclusion of Foole's managed port of StormLib.  The
+          unmanaged version is still included, but is no longer built
+          by default.  Additionally, to use the unmanaged version even
+          after building it, you have to enable a configuration
+          option.  Look at scsharp.exe.config for more details.
+
+	* The ready room code is now in.  Barring glitches in audio
+          playback which seem legion, the mission briefings should
+          proceed as normal, including establishing shots.
+
+	* Text rendering is now (more or less) anti-aliased and
+          pretty.
+
+	* The code handles the distinction between "broodwar is
+          installed" and "user selected broodwars" better now.
+
+	* lots of misc fixes.

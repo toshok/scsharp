@@ -1,5 +1,23 @@
 2006-05-29  Chris Toshok  <toshok@hungry.com>
 
+	* Makefile.am (release): fix this target so that it works again.
+
+	* NEWS: include news for the first time.
+
+	* configure.ac: bump to 0.0000008.
+
+	* HACKING: fix up the .smk entry, with various options for
+	projects, and remove the managed stormlib project since Foole's is
+	working.
+
+	* RELEASE_README: s/starcraft/scsharp
+
+	* src/scsharp.exe.config-example: add the new options.
+
+	* src/scsharp.exe.config: can't put -- in the middle of comments.
+
+2006-05-29  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/Makefile.am (MCSFLAGS): define USE_STORM_DLL if
 	ENABLE_STORMLIB == true.
 

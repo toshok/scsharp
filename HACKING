@@ -14,7 +14,8 @@ eventually, but they're all free for the taking.  I've ordered them in
 terms of size/difficulty/coolness, from hardest to easiest (and
 therefore coolest to least cool):
 
-	1. Scrap/rewrite/fix/whatever the SMK (Smacker) decoder.
+	1. Smacker player:
+
 	   There are format docs up at:
 
 	   http://wiki.multimedia.cx/index.php?title=Smacker
@@ -29,28 +30,39 @@ therefore coolest to least cool):
 	   selection screen (pretty much anything that's animated
 	   that's not a unit/flingy) being visible.  It's not strictly
 	   necessary for the game, but it's definitely got eyecandy
-	   value.  Plus, to my knowledge noone has written an open
-	   source SMK decoder before.  Be the first :)
+	   value.
 
-	2. Convert StormLib to managed code.
+	   A couple of possible options are available here:
 
-	   I want scsharp to be completely managed, but don't want to
-	   roll my own MPQ library.  It's a sizeable amount of work,
-	   and StormLib works for our purposes.  That said, it's
-	   unmanaged code, requires Makefile futzing for different
-	   platforms, etc, etc.  Maintaining p/invoke dependencies on
-	   external libraries from within libstorm is fine (zlib,
-	   bzlib come to mind), but nothing that comes in an scsharp
-	   release should be unmanaged code.
+           One would be porting/wrapping the ffmpeg[1] .smk codec so
+           that we can use it.  I've done some preliminary work for
+           this, enough to get cinematics working without audio.  the
+           ffmpeg codec seems to have problems with the portrait and
+           main menu smk's, though (possibly because they loop?) so it
+           doesn't work for those yet.  I don't think this is a good
+           long-term solution though, as maintaining a player that can
+           deal with framerate/audio sync stuff seems like a pain in
+           the ass.
+
+           The second solution would be to take the gstreamer bindings
+           being worked on for this year's Mono Project SoC and use
+           them to build up a playback engine.  This would probably
+           require some native coding as well.  There's a sdl sink in
+           gstreamer now, but it appears to only target the YUV
+           overlays, not RGB surfaces, which is what we'd need to
+           integrate it into our painter.
+
+           Given that scsharp *should* run on windows as well, and
+           there's already a native .dll for decoding smacker video on
+           windows, an interesting side project would be p/invoke into
+           that library for doing playback when on the windows
+           platform.  Anyone up for it?
 
 	3. Figure out font rendering so that we can operate with either SC
 	   or BW assets.  the best solution would enable us to render
 	   fonts from the data contained in the
 	   Stardat.mpq/Broodat.mpq archives, but I'd settle for a
 	   solution that works with either CD's install.exe.
-
-	   And while you're at it, figure out why the rendered text
-	   look so bad.. alpha issues, I'm sure.  spacing issues as well.
 
 	4. The parallax (SPK) renderer used for the starfield
 	   background on platform levels renders a 2x2 white rectangle
