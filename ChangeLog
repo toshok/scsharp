@@ -1,5 +1,13 @@
 2006-05-29  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/TitleScreen.cs (LoadingFlasher): flash the
+	"Loading" text on the screen as we load things.  The managed
+	stormlib does take a little longer to load things, which is a
+	bonus - the title screen actually stays up long enough for this
+	string to be shown :)
+
+2006-05-29  Chris Toshok  <toshok@hungry.com>
+
 	* Makefile.am (release): make it a zip file instead of a tar.bz2.
 
 2006-05-29  Chris Toshok  <toshok@hungry.com>

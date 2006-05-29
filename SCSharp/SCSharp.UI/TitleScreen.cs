@@ -49,12 +49,34 @@ namespace SCSharp.UI
 			base.ResourceLoader ();
 			Cursor = null; /* clear out the cursor */
 
-			Elements[1].Text = "Copyright © 2006 Chris Toshok.  All rights reserved.";
-			Elements[2].Text = "Game assets Copyright © 1998 Blizzard Entertainment. All rights reserved.";
-			Elements[3].Text = "";
+			Elements[COPYRIGHT1_ELEMENT_INDEX].Text = "Copyright © 2006 Chris Toshok.  All rights reserved.";
+			Elements[COPYRIGHT2_ELEMENT_INDEX].Text = "Game assets Copyright © 1998 Blizzard Entertainment. All rights reserved.";
+			Elements[COPYRIGHT3_ELEMENT_INDEX].Text = "";
 
-			for (int i = 0; i < Elements.Count; i ++)
-				Console.WriteLine ("{0}.Text = {1}", i, Elements[i].Text);
+			Events.Tick += LoadingFlasher;
+		}
+
+		
+		const int COPYRIGHT1_ELEMENT_INDEX = 1;
+		const int COPYRIGHT2_ELEMENT_INDEX = 2;
+		const int COPYRIGHT3_ELEMENT_INDEX = 3;
+		const int LOADING_ELEMENT_INDEX = 4;
+
+		const int FLASH_ON_DURATION = 1000;
+		const int FLASH_OFF_DURATION = 500;
+		int totalElapsed;
+
+		void LoadingFlasher (object sender, TickEventArgs e)
+		{
+			totalElapsed += e.TicksElapsed;
+
+			if ((Elements[LOADING_ELEMENT_INDEX].Visible && (totalElapsed < FLASH_ON_DURATION)) ||
+			    (!Elements[LOADING_ELEMENT_INDEX].Visible && (totalElapsed < FLASH_OFF_DURATION)) )
+				return;
+
+			Elements[LOADING_ELEMENT_INDEX].Visible = !Elements[LOADING_ELEMENT_INDEX].Visible;
+
+			totalElapsed = 0;
 		}
 	}
 }
