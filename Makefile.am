@@ -1,5 +1,9 @@
 
-SUBDIRS= docs SCSharp StormLib src Tests
+SUBDIRS= docs SCSharp src Tests
+
+if ENABLE_STORMLIB
+SUBDIRS += StormLib
+endif
 
 EXTRA_DIST= HACKING RELEASE_README
 

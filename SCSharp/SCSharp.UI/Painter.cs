@@ -102,6 +102,27 @@ namespace SCSharp.UI
                         Events.Tick +=new TickEventHandler (Tick);
 		}
 
+		public Painter (Surface surf, int millis)
+		{
+			this.millis = millis;
+
+			this.paintingSurface = surf;
+
+			backbuffer = paintingSurface.CreateCompatibleSurface (paintingSurface.Size);
+			backbuffer.Fill (new Rectangle (new Point (0, 0), backbuffer.Size), Color.Black);
+
+			/* init our list of painter delegates */
+			layers = new List<PainterDelegate>[(int)Layer.Count];
+			for (Layer i = Layer.Background; i < Layer.Count; i ++)
+				layers[(int)i] = new List<PainterDelegate>();
+
+			pendingRemoves = new List<PainterDelegate>();
+			pendingAdds = new List<PainterDelegate>();
+
+			/* and set ourselves up to invalidate at a regular interval*/
+                        Events.Tick +=new TickEventHandler (Tick);
+		}
+
 		public bool Fullscreen {
 			get { return fullscreen; }
 			set {

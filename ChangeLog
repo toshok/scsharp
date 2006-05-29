@@ -1,4 +1,28 @@
-2006-05-29  Chris Toshok  <toshok@ximian.com>
+2006-05-29  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/Makefile.am (MCSFLAGS): define USE_STORM_DLL if
+	ENABLE_STORMLIB == true.
+
+	* src/scsharp.exe.config: add some comments about the debugging
+	options, and add a new one to enable the unmanaged mpq library.
+
+	* Tests/dump-iscript.cs (DumpIScript.ctor): we assume the mpq
+	passed in is the stardat.mpq.
+
+	* SCSharp/SCSharp.UI/Painter.cs (.ctor): add back in a constructor
+	taking a Surface so the font-foo test continues to work.
+
+	* SCSharp/SCSharp.Mpq/Mpq.cs: USE_STORM_DLL no longer switches
+	between managed/unmanaged implementations, but compiles in the
+	optional unmanaged version as well.
+
+	* Makefile.am (SUBDIRS): only build in StormLib if ENABLE_STORMLIB
+	== true.
+
+	* configure.ac: add AC_ARG_ENABLE for --enable-stormlib.  If it's
+	left out, only the managed version is built.
+
+2006-05-29  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/Game.cs (CreateWindow): switch to new Painter
 	ctor.

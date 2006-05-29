@@ -220,55 +220,69 @@ namespace SCSharp
 	public class MpqArchive : Mpq
 	{
 #if USE_STORM_DLL
+		static bool use_storm_dll;
+
+		static MpqArchive () {
+			use_storm_dll = Boolean.Parse (ConfigurationManager.AppSettings["UseUnmanagedMpqLibrary"]);
+		}
+
 		IntPtr mpqHandle;
 		string archive_path;
-#else
-		MpqReader.MpqArchive mpq;
 #endif
+
+		MpqReader.MpqArchive mpq;
 
 		public MpqArchive (string path)
 		{
 #if USE_STORM_DLL
-			archive_path = path;
-			if (!Storm.SFileOpenArchive (path, 0, 0, out mpqHandle))
-				throw new Exception (String.Format ("Could not load .mpq file at {0}", path));
+			if (use_storm_dll) {
+				archive_path = path;
+				if (!Storm.SFileOpenArchive (path, 0, 0, out mpqHandle))
+					throw new Exception (String.Format ("Could not load .mpq file at {0}", path));
+			}
+			else
 #else
-			mpq = new MpqReader.MpqArchive (path);
+				mpq = new MpqReader.MpqArchive (path);
 #endif
 		}
 
 		public override Stream GetStreamForResource (string path)
 		{
 #if USE_STORM_DLL
-			IntPtr fileHandle;
-			uint fileSize;
-			uint numRead;
+			if (use_storm_dll) {
+				IntPtr fileHandle;
+				uint fileSize;
+				uint numRead;
 
-			if (!Storm.SFileOpenFileEx (mpqHandle, path, 0, out fileHandle))
-				return null;
+				if (!Storm.SFileOpenFileEx (mpqHandle, path, 0, out fileHandle))
+					return null;
 
-			fileSize = Storm.SFileGetFileInfo (fileHandle, SFileInfo.FileSize);
+				fileSize = Storm.SFileGetFileInfo (fileHandle, SFileInfo.FileSize);
 
-			byte[] buf = new byte[fileSize];
+				byte[] buf = new byte[fileSize];
 
-			if (!Storm.SFileReadFile (fileHandle, buf, fileSize, out numRead, (IntPtr)0)) {
+				if (!Storm.SFileReadFile (fileHandle, buf, fileSize, out numRead, (IntPtr)0)) {
+					Storm.SFileCloseFile (fileHandle);
+					return null;
+				}
+
+				if (fileSize != numRead) {
+					Storm.SFileCloseFile (fileHandle);
+					return null;
+				}
+
 				Storm.SFileCloseFile (fileHandle);
-				return null;
+				return new MemoryStream (buf);
 			}
-
-			if (fileSize != numRead) {
-				Storm.SFileCloseFile (fileHandle);
-				return null;
-			}
-
-			Storm.SFileCloseFile (fileHandle);
-			return new MemoryStream (buf);
+			else
 #else
-			try {
-				return mpq.OpenFile (path);
-			}
-			catch (FileNotFoundException) {
-				return null;
+			{
+				try {
+					return mpq.OpenFile (path);
+				}
+				catch (FileNotFoundException) {
+					return null;
+				}
 			}
 #endif
 		}

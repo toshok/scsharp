@@ -135,7 +135,7 @@ public class DumpIScript {
 
 	public DumpIScript (Mpq mpq)
 	{
-		new GlobalResources(mpq).LoadSingleThreaded ();
+		new GlobalResources(mpq, null).LoadSingleThreaded ();
 
 		bin = GlobalResources.Instance.IScriptBin;
 		buf = bin.Contents;
