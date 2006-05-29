@@ -1,5 +1,9 @@
 2006-05-29  Chris Toshok  <toshok@hungry.com>
 
+	* Makefile.am (release): make it a zip file instead of a tar.bz2.
+
+2006-05-29  Chris Toshok  <toshok@hungry.com>
+
 	* Makefile.am (release): fix this target so that it works again.
 
 	* NEWS: include news for the first time.

@@ -15,9 +15,11 @@ dist-hook:
 	cp sdldotnet-bin/* $(distdir)/sdldotnet-bin
 
 #dll configs?
-RELEASEDIR=$(PACKAGE)-$(VERSION)
+RELEASEDIR=$(PACKAGE)-release-$(VERSION)
 release: all
+	rm -rf $(RELEASEDIR)
 	-mkdir $(RELEASEDIR)
+	rm -f $(RELEASEDIR).zip
 	@cp src/scsharp.exe $(RELEASEDIR)
 	@cp src/scsharp.exe.config-example $(RELEASEDIR)/scsharp.exe.config
 	@cp SCSharp/*.dll $(RELEASEDIR)
@@ -26,5 +28,5 @@ release: all
 	@cp NEWS $(RELEASEDIR)/NEWS
 	@cp RELEASE_README $(RELEASEDIR)/README
 	@cp AUTHORS $(RELEASEDIR)
-	tar -cvjf $(RELEASEDIR).tar.bz2 $(RELEASEDIR)
+	zip -r $(RELEASEDIR).zip $(RELEASEDIR)
 	rm -rf $(RELEASEDIR)
