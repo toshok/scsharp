@@ -92,6 +92,8 @@ namespace SCSharp.UI
 			if (starcraftDir != null) {
 				foreach (string path in Directory.GetFileSystemEntries (starcraftDir)) {
 					if (Path.GetFileName (path).ToLower() == "broodat.mpq") {
+						if (broodatMpq != null)
+							throw new Exception ("You have multiple broodat.mpq files in your starcraft directory.");
 						try {
 							broodatMpq = GetMpq (path);
 							Console.WriteLine ("found BrooDat.mpq");
@@ -103,6 +105,8 @@ namespace SCSharp.UI
 						}
 					}
 					else if (Path.GetFileName (path).ToLower() == "stardat.mpq") {
+						if (stardatMpq != null)
+							throw new Exception ("You have multiple stardat.mpq files in your starcraft directory.");
 						try {
 							stardatMpq = GetMpq (path);
 							Console.WriteLine ("found StarDat.mpq");

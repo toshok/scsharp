@@ -1,5 +1,12 @@
 2006-05-30  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/Game.cs (.ctor): guard against having
+	multiple broodat.mpq/stardat.mpq files in a directory (since we
+	have to use ToLower() to do string comparisons, we can end up with
+	multiple matches.)
+
+2006-05-30  Chris Toshok  <toshok@hungry.com>
+
 	* src/scsharp.cs (Main): add a test to make sure
 	StarcraftCDDirectory and BroodwarCDDirectory have unique values.
 	I can't believe anyone would do that and expect it to work, but
