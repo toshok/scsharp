@@ -1,3 +1,9 @@
+2006-05-30  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/Sprite.cs (PaintSprite): the logic for the
+	clipping test wasn't taking into account the fact that the x,y of
+	a unit changed from top-left to center.  this fixes ticket #3.
+
 2006-05-29  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/TitleScreen.cs (LoadingFlasher): flash the

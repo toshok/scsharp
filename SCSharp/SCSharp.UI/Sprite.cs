@@ -296,8 +296,8 @@ namespace SCSharp.UI
 		void PaintSprite (Surface surf, DateTime now)
 		{
 			if (sprite_surface != null) {
-				if (x > SpriteManager.X - sprite_surface.Width && x <= SpriteManager.X + Painter.SCREEN_RES_X
-				    && y > SpriteManager.Y - sprite_surface.Height && y <= SpriteManager.Y + Painter.SCREEN_RES_Y) {
+				if ((x > SpriteManager.X - sprite_surface.Width / 2) && (x - sprite_surface.Width / 2 <= SpriteManager.X + Painter.SCREEN_RES_X)
+				    && (y > SpriteManager.Y - sprite_surface.Height / 2) && (y - sprite_surface.Height / 2 <= SpriteManager.Y + Painter.SCREEN_RES_Y)) {
 					surf.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
 									      y - SpriteManager.Y - sprite_surface.Height / 2));
 
