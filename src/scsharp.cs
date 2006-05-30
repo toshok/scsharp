@@ -42,9 +42,17 @@ public class Driver
 	{
 		bool fullscreen = false;
 
+		string sc_cd_dir = ConfigurationManager.AppSettings["StarcraftCDDirectory"];
+		string bw_cd_dir = ConfigurationManager.AppSettings["BroodwarCDDirectory"];
+
+		/* catch this pathological condition where someone has set the cd directories to the same location. */
+		if (sc_cd_dir != null && bw_cd_dir != null && bw_cd_dir == sc_cd_dir) {
+			Console.WriteLine ("The StarcraftCDDirectory and BroodwarCDDirectory configuration settings must have unique values.");
+			return;
+		}
+
 		Game g = new Game (ConfigurationManager.AppSettings["StarcraftDirectory"],
-				   ConfigurationManager.AppSettings["StarcraftCDDirectory"],
-				   ConfigurationManager.AppSettings["BroodwarCDDirectory"]);
+				   sc_cd_dir, bw_cd_dir);
 
 		if (args.Length > 0)
 			if (args[0] == "/fullscreen")

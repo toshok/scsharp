@@ -1,5 +1,12 @@
 2006-05-30  Chris Toshok  <toshok@hungry.com>
 
+	* src/scsharp.cs (Main): add a test to make sure
+	StarcraftCDDirectory and BroodwarCDDirectory have unique values.
+	I can't believe anyone would do that and expect it to work, but
+	what have you... fixes ticket #2.
+
+2006-05-30  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/Sprite.cs (PaintSprite): the logic for the
 	clipping test wasn't taking into account the fact that the x,y of
 	a unit changed from top-left to center.  this fixes ticket #3.
