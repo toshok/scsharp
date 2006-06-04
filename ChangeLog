@@ -1,3 +1,10 @@
+2006-06-04  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/SpriteManager.cs: when we're executing inside
+	Tick, don't modify the sprite list.  store off pending
+	removes/adds and process them after we're done with the tick
+	handler.  Should fix ticket #4.
+
 2006-05-30  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/Game.cs (.ctor): guard against having

@@ -47,6 +47,10 @@ namespace SCSharp.UI
 		public static int X;
 		public static int Y;
 
+		static bool in_tick;
+		static List<Sprite> pendingAdds = new List<Sprite>();
+		static List<Sprite> pendingRemoves = new List<Sprite>();
+		
 		public static Sprite CreateSprite (Mpq mpq, int sprite_number, byte[] palette, int x, int y)
 		{
 			our_mpq = mpq;
@@ -64,25 +68,41 @@ namespace SCSharp.UI
 			return sprite;
 		}
 
-		public static Sprite CreateSprite (int sprite_number, byte[] palette, int x, int y)
+		public static void AddSprite (Sprite sprite)
 		{
-			Sprite sprite = new Sprite (our_mpq, sprite_number, palette, x, y);
 			sprites.Add (sprite);
 			if (painter != null)
 				sprite.AddToPainter (painter);
+		}
+
+		public static Sprite CreateSprite (int sprite_number, byte[] palette, int x, int y)
+		{
+			Sprite sprite = new Sprite (our_mpq, sprite_number, palette, x, y);
+
+			if (in_tick)
+				pendingAdds.Add (sprite);
+			else
+				AddSprite (sprite);
 
 			return sprite;
 		}
 
 		public static void RemoveSprite (Sprite sprite)
 		{
-			if (painter != null)
-				sprite.RemoveFromPainter (painter);
-			sprites.Remove (sprite);
+			if (in_tick)
+				pendingRemoves.Add (sprite);
+			else {
+				if (painter != null)
+					sprite.RemoveFromPainter (painter);
+
+				sprites.Remove (sprite);
+			}
 		}
 
 		static void SpriteManagerPainterTick (Surface surf, DateTime now)
 		{
+			in_tick = true;
+
 			IEnumerator<Sprite> e = sprites.GetEnumerator();
 			
 			while (e.MoveNext ()) {
@@ -91,6 +111,16 @@ namespace SCSharp.UI
 					RemoveSprite (e.Current);
 				}
 			}
+
+			in_tick = false;
+
+			foreach (Sprite s in pendingAdds)
+				AddSprite (s);
+			pendingAdds.Clear ();
+
+			foreach (Sprite s in pendingRemoves)
+				RemoveSprite (s);
+			pendingRemoves.Clear ();
 		}
 
 		public static void AddToPainter (Painter p)
