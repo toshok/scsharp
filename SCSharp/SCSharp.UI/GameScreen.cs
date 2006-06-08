@@ -86,6 +86,11 @@ namespace SCSharp.UI
 
 		CursorAnimator[] MagCursors;
 
+		Tbl statTxt;
+		Grp wireframe;
+		Grp cmdicons;
+		byte[] cmdicon_palette;
+
 		//byte[] unit_palette;
 		byte[] tileset_palette;
 
@@ -98,9 +103,9 @@ namespace SCSharp.UI
 				   Chk scenario,
 				   Got template) : base (mpq)
 		{
-			this.effectpal_path = "game\\tblink.pcx";
-			this.arrowgrp_path = "cursor\\arrow.grp";
-			this.fontpal_path = "game\\tfontgam.pcx";
+			effectpal_path = "game\\tblink.pcx";
+			arrowgrp_path = "cursor\\arrow.grp";
+			fontpal_path = "game\\tfontgam.pcx";
 			//this.scenario_mpq = scenario_mpq;
 			this.scenario = scenario;
 			this.template = template;
@@ -182,9 +187,92 @@ namespace SCSharp.UI
 							    Painter.SCREEN_RES_Y)));
 		}
 
+		int[] button_xs = new int[] { 506, 552, 598 };
+		int[] button_ys = new int[] { 360, 400, 440 };
+
 		void PaintHud (Surface surf, DateTime dt)
 		{
+			/* first blit the hud surface */
 			surf.Blit (hud);
+
+			/* then fill in the center section (wireframe and selected unit info) */
+			if (selectedUnit != null) {
+				Surface s;
+
+				/* the wireframe */
+				s = GuiUtil.CreateSurfaceFromBitmap (wireframe.GetFrame (selectedUnit.UnitId),
+								     wireframe.Width, wireframe.Height,
+								     cmdicon_palette,
+								     true);
+				surf.Blit (s, new Point (170, 390));
+
+				/* the unit name */
+				s = GuiUtil.ComposeText (statTxt[selectedUnit.UnitId],
+							 GuiUtil.GetFonts (Mpq)[1],
+							 fontpal.Palette);
+				surf.Blit (s, new Point (254, 390));
+
+				if (true /* XXX unit is a building */) {
+					/* $RESOURCE used */
+					s = GuiUtil.ComposeText (statTxt[820+(int)Game.Instance.Race],
+								 GuiUtil.GetFonts (Mpq)[0],
+								 fontpal.Palette);
+					surf.Blit (s, new Point (292, 420)); /* XXX */
+
+					/* $RESOURCE provided */
+					s = GuiUtil.ComposeText (statTxt[814+(int)Game.Instance.Race],
+								 GuiUtil.GetFonts (Mpq)[0],
+								 fontpal.Palette);
+					surf.Blit (s, new Point (292, 434)); /* XXX */
+
+					/* Total $RESOURCE */
+					s = GuiUtil.ComposeText (statTxt[817+(int)Game.Instance.Race],
+								 GuiUtil.GetFonts (Mpq)[0],
+								 fontpal.Palette);
+					surf.Blit (s, new Point (292, 448)); /* XXX */
+
+					/* $RESOURCE Max */
+					s = GuiUtil.ComposeText (statTxt[823+(int)Game.Instance.Race],
+								 GuiUtil.GetFonts (Mpq)[0],
+								 fontpal.Palette);
+					surf.Blit (s, new Point (292, 462)); /* XXX */
+				}
+
+			}
+
+			/* then fill in the command buttons */
+			if (selectedUnit != null) {
+				int[] cmd_indices;
+
+				switch (selectedUnit.UnitId) {
+				case 106:
+					cmd_indices = new int[] { 7, -1, -1, -1, -1, 286, -1, -1, 282 };
+					break;
+				default:
+					cmd_indices = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+					break;
+				}
+
+				int x = 0;
+				int y = 0;
+				for (int i = 0; i < cmd_indices.Length; i ++) {
+					if (cmd_indices[i] != -1) {
+						Surface s;
+
+						s = GuiUtil.CreateSurfaceFromBitmap (cmdicons.GetFrame (cmd_indices[i]),
+										     cmdicons.Width, cmdicons.Height,
+										     cmdicon_palette,
+										     true);
+
+						surf.Blit (s, new Point (button_xs[x], button_ys[y]));
+					}
+					x++;
+					if (x == 3) {
+						x = 0;
+						y++;
+					}
+				}
+			}
 		}
 
 		void PaintMinimap (Surface surf, DateTime dt)
@@ -307,6 +395,18 @@ namespace SCSharp.UI
 				TargetCursors[i].SetHotSpot (60, 60);
 			}
 
+			/* the following could be made global to speed up the entry to the game screen.. */
+			statTxt = (Tbl)mpq.GetResource ("rez\\stat_txt.tbl");
+
+			// load the wireframe image info
+			wireframe = (Grp)mpq.GetResource ("unit\\wirefram\\wirefram.grp");
+
+			// load the command icons
+			cmdicons = (Grp)mpq.GetResource ("unit\\cmdbtns\\cmdicons.grp");
+			pcx = new Pcx ();
+			pcx.ReadFromStream ((Stream)mpq.GetResource ("unit\\cmdbtns\\ticon.pcx"), 0, 0);
+			cmdicon_palette = pcx.Palette;
+
 			PlaceInitialUnits ();
 		}
 
@@ -356,6 +456,7 @@ namespace SCSharp.UI
 
 		bool buttonDownInMinimap;
 		Unit unitUnderCursor;
+		Unit selectedUnit;
 
 		void Recenter (int x, int y)
 		{
@@ -384,6 +485,8 @@ namespace SCSharp.UI
 				if (unitUnderCursor != null) {
 					Console.WriteLine ("selected unit: {0}", unitUnderCursor);
 					Console.WriteLine ("selectioncircle = {0}", unitUnderCursor.SelectionCircleOffset);
+
+					selectedUnit = unitUnderCursor;
 				}
 			}
 		}

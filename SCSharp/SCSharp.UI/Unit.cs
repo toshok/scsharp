@@ -92,6 +92,10 @@ namespace SCSharp.UI
 			get { return sprite; }
 		}
 
+		public int UnitId {
+			get { return unit_id; }
+		}
+
 		public int FlingyId {
 			get { return units.GetFlingyId (unit_id); }
 		}

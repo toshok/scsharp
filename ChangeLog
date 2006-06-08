@@ -1,3 +1,19 @@
+2006-06-08  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/GameScreen.cs: add rendering of wireframe,
+	some of the text strings, and (if you click on the terran command
+	center) the cmd icons.  Cmd icons need to be in a table in the
+	.exe, I think (unless someone can find where they exist in the
+	.mpq file).  The colors in the rendered text/icons are wrong at
+	the moment.
+
+	* SCSharp/SCSharp.UI/Race.cs: reorder this to match some strings
+	in stat_txt.tbl.
+
+	* SCSharp/SCSharp.Util/Util.cs: reorder RaceChar and RaceCharLower to match Race.cs.
+
+	* SCSharp/SCSharp.UI/Unit.cs (UnitId): add a new accessor.
+
 2006-06-04  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/SpriteManager.cs: when we're executing inside

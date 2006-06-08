@@ -76,8 +76,8 @@ namespace SCSharp {
 			return Encoding.UTF8.GetString (bs);
 		}
 
-		public static char[] RaceChar = { 'P','T','Z' };
-		public static char[] RaceCharLower = { 'p','t','z' };
+		public static char[] RaceChar = { 'Z','T','P' };
+		public static char[] RaceCharLower = { 'z','t','p' };
 
 
 		public static string[] TilesetNames = {

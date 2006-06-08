@@ -31,8 +31,8 @@
 namespace SCSharp.UI
 {
 	public enum Race {
-		Protoss,
+		Zerg,
 		Terran,
-		Zerg
+		Protoss
 	}
 }
