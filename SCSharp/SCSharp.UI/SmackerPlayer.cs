@@ -53,6 +53,8 @@ namespace SCSharp.UI
 		SmackerFile file;
 		SmackerDecoder decoder;
 
+		AutoResetEvent waitEvent;
+
 		SDLPCMStream audioStream;
 		public SmackerPlayer (Stream smk_stream)
 		{
@@ -67,7 +69,7 @@ namespace SCSharp.UI
 			//SDLPCMStream.SDLPCMStreamFormat format = new SDLPCMStream.SDLPCMStreamFormat(SDLPCMStream.SDLPCMStreamFormat.PCMFormat.UnSigned16BitLE, file.Header.GetSampleRate(0), (file.Header.IsStereoTrack(0)) ? 2 : 1);
 			//audioStream = new SDLPCMStream(format);
 
-			//Init threads
+			waitEvent = new AutoResetEvent (false);
 		}
 
 		public int Width {
@@ -98,8 +100,8 @@ namespace SCSharp.UI
 
 				EmitFrameReady ();
 
-				if (frameQueue.Count < BUFFERED_FRAMES / 2 && decoderThread.ThreadState == ThreadState.Suspended)
-					decoderThread.Resume();
+				if (frameQueue.Count < BUFFERED_FRAMES / 2)
+					waitEvent.Set ();
 			}
 		}
 
@@ -116,7 +118,7 @@ namespace SCSharp.UI
 					//if (firstRun) audioStream.Play();
 					// memAudioStream.Write(decoder.GetAudioData(0), 0, decoder.GetAudioData(0).Length);
 					if (frameQueue.Count >= BUFFERED_FRAMES)
-						Thread.CurrentThread.Suspend();
+						waitEvent.WaitOne ();
 				}
 			}
 			firstRun = false;

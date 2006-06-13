@@ -75,38 +75,39 @@ namespace SCSharp.UI
 			Painter.Instance.Remove (Layer.Background, VideoPainter);
 		}
 
+		Surface surf;
+
 		void PlayerFrameReady ()
 		{
+			if (surf != null)
+				surf.Dispose ();
+
+			surf = new Surface (player.Surface);
+
+			if (player.Width != Painter.Instance.Width
+			    || player.Height != Painter.Instance.Height) {
+				double horiz_zoom = (double)Painter.Instance.Width / player.Width;
+				double vert_zoom = (double)Painter.Instance.Height / player.Height;
+				double zoom;
+
+				if (horiz_zoom < vert_zoom)
+					zoom = horiz_zoom;
+				else
+					zoom = vert_zoom;
+
+				surf.Scale (zoom);
+			}
+
 			/* signal to the painter to redraw the screen */
 			Painter.Instance.Invalidate ();
 		}
 
 		void VideoPainter (DateTime dt)
 		{
-			if (player != null && player.Surface != null) {
-				Surface surf = null;
-
-				if (player.Width != Painter.Instance.Width
-				    || player.Height != Painter.Instance.Height) {
-					double horiz_zoom = (double)Painter.Instance.Width / player.Width;
-					double vert_zoom = (double)Painter.Instance.Height / player.Height;
-					double zoom;
-
-					if (horiz_zoom < vert_zoom)
-						zoom = horiz_zoom;
-					else
-						zoom = vert_zoom;
-					
-					surf = new Surface (player.Surface);
-					surf.Scale (zoom);
-				}
-				else
-					surf = player.Surface;
-
+			if (surf != null)
 				Painter.Instance.Blit (surf,
 						       new Point ((Painter.Instance.Width - surf.Width) / 2,
 								  (Painter.Instance.Height - surf.Height) / 2));
-			}
 		}
 
 		public event PlayerEvent Finished;

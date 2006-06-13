@@ -1,5 +1,20 @@
 2006-06-13  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/SmackerPlayer.cs: switch from using
+	Thread.Suspend/Thread.Resume to using an AutoResetEvent.  the
+	decoder calls .WaitOne when the queue is full, and the player
+	thread calls .Set when the queue is less than half full.  This
+	fixes the hanging of the player.  It also seems to fix the Ctrl-q
+	behavior during playback.
+
+	* SCSharp/SCSharp.UI/Cinematic.cs (PlayerFrameReady): move the
+	scaling code here so we don't scale on every repaint.  also,
+	dispose of the previously scaled surface.
+	(VideoPainter): simplify this method to just a check and Blit
+	call.
+
+2006-06-13  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/Game.cs (.ctor): fix c&p error.
 
 2006-06-13  Chris Toshok  <toshok@hungry.com>
