@@ -1,5 +1,10 @@
 2006-06-13  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.Mpq/MpqArchive.cs (DecryptBlock): decrypt the
+	block in place instead of repeatedly allocating a 4 byte array.
+
+2006-06-13  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/SmackerPlayer.cs: switch from using
 	Thread.Suspend/Thread.Resume to using an AutoResetEvent.  the
 	decoder calls .WaitOne when the queue is full, and the player

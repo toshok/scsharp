@@ -204,8 +204,19 @@ namespace MpqReader
 
 				Seed1 = ((~Seed1 << 21) + 0x11111111) | (Seed1 >> 11);
 				seed2 = result + seed2 + (seed2 << 5) + 3;
-				byte[] bytes = BitConverter.GetBytes(result);
-				Array.Copy(bytes, 0, Data, i, 4);
+
+				if (BitConverter.IsLittleEndian) {
+					Data[i + 0] = ((byte)(result & 0xff));
+					Data[i + 1] = ((byte)((result >> 8) & 0xff));
+					Data[i + 2] = ((byte)((result >> 16) & 0xff));
+					Data[i + 3] = ((byte)((result >> 24) & 0xff));
+				}
+				else {
+					Data[i + 3] = ((byte)(result & 0xff));
+					Data[i + 2] = ((byte)((result >> 8) & 0xff));
+					Data[i + 1] = ((byte)((result >> 16) & 0xff));
+					Data[i + 0] = ((byte)((result >> 24) & 0xff));
+				}
 			}
 		}
 		
