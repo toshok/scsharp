@@ -164,7 +164,7 @@ namespace SCSharp.UI
 			if (stardatMpq != null)
 				installedMpq.Add (stardatMpq);
 			if (scInstallExe != null)
-				installedMpq.Add (broodatMpq);
+				installedMpq.Add (scInstallExe);
 			
 			PlayingBroodWar = isBroodWar = (broodatMpq != null);
 			

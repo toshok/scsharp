@@ -1,5 +1,9 @@
 2006-06-13  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/Game.cs (.ctor): fix c&p error.
+
+2006-06-13  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.Mpq.Smk/SDLPCMStream.cs (Dispose): mark "new" to
 	fix compile error on windows.
 
