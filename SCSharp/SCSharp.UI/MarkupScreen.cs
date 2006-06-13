@@ -104,8 +104,9 @@ namespace SCSharp.UI
 				get { return lines != null && lines.Count > 0; }
 			}
 
-			public void Paint (Surface surf)
+			public void Paint ()
 			{
+				Painter p = Painter.Instance;
 				int y;
 
 				switch (location) {
@@ -113,47 +114,47 @@ namespace SCSharp.UI
 					y = 10;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null)
-							surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
+							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Bottom:
-					y = surf.Height - 10 - fnt.LineSize * lines.Count;
+					y = p.Height - 10 - fnt.LineSize * lines.Count;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null)
-							surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
+							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Left:
-					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
+					y = (p.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null)
-							surf.Blit (s, new Point (60, y));
+							p.Blit (s, new Point (60, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.LowerLeft:
-					y = surf.Height - 10 - fnt.LineSize * lines.Count;
+					y = p.Height - 10 - fnt.LineSize * lines.Count;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null)
-							surf.Blit (s, new Point (60, y));
+							p.Blit (s, new Point (60, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Right:
-					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
+					y = (p.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null)
-							surf.Blit (s, new Point (surf.Width - s.Width - 60, y));
+							p.Blit (s, new Point (p.Width - s.Width - 60, y));
 						y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Center:
-					y = (surf.Height - fnt.LineSize * lines.Count) / 2;
+					y = (p.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null)
-							surf.Blit (s, new Point ((surf.Width - s.Width) / 2, y));
+							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
 						y += fnt.LineSize;
 					}
 					break;
@@ -242,37 +243,37 @@ namespace SCSharp.UI
 		int millisDelay;
 		int totalElapsed;
 
-		public override void AddToPainter (Painter painter)
+		public override void AddToPainter ()
 		{
-			base.AddToPainter (painter);
-			painter.Add (Layer.Background, PaintBackground);
-			painter.Add (Layer.UI, PaintMarkup);
+			base.AddToPainter ();
+			Painter.Instance.Add (Layer.Background, PaintBackground);
+			Painter.Instance.Add (Layer.UI, PaintMarkup);
 		}
 
-		public override void RemoveFromPainter (Painter painter)
+		public override void RemoveFromPainter ()
 		{
-			base.RemoveFromPainter (painter);
-			painter.Remove (Layer.Background, PaintBackground);
-			painter.Remove (Layer.UI, PaintMarkup);
+			base.RemoveFromPainter ();
+			Painter.Instance.Remove (Layer.Background, PaintBackground);
+			Painter.Instance.Remove (Layer.UI, PaintMarkup);
 		}
 
-		protected override void FirstPaint (Surface surf, DateTime now)
+		protected override void FirstPaint (object sender, EventArgs args)
 		{
-			base.FirstPaint (surf, now);
+			base.FirstPaint (sender, args);
 
 			/* set ourselves up to invalidate at a regular interval*/
                         Events.Tick += FlipPage;
 		}
 
-		void PaintBackground (Surface surf, DateTime now)
+		void PaintBackground (DateTime now)
 		{
 			if (currentBackground != null)
-				surf.Blit (currentBackground);
+				Painter.Instance.Blit (currentBackground);
 		}
 
-		void PaintMarkup (Surface surf, DateTime now)
+		void PaintMarkup (DateTime now)
 		{
-			pageEnumerator.Current.Paint (surf);
+			pageEnumerator.Current.Paint ();
 		}
 
 		void FlipPage (object sender, TickEventArgs e)

@@ -40,17 +40,18 @@ namespace SCSharp.UI
 	{
 		Grp grp;
 
-		DateTime last;
-		TimeSpan delta_to_change = TimeSpan.FromMilliseconds (100);
+		int totalElapsed;
+		int millisDelay = 200;
+
 		int current_frame;
 
 		Surface[] surfaces;
 
-		uint x;
-		uint y;
+		int x;
+		int y;
 
-		uint hot_x;
-		uint hot_y;
+		int hot_x;
+		int hot_y;
 
 		byte[] palette;
 
@@ -63,45 +64,75 @@ namespace SCSharp.UI
 			surfaces = new Surface[grp.FrameCount];
 		}
 
-		public void SetHotSpot (uint hot_x, uint hot_y)
+		public void SetHotSpot (int hot_x, int hot_y)
 		{
+			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 			this.hot_x = hot_x;
 			this.hot_y = hot_y;
+			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 		}
 
-		public void SetPosition (uint x, uint y)
+		public void SetPosition (int x, int y)
 		{
+			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 			this.x = x;
 			this.y = y;
+			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 		}
 
-		public uint X {
+		public int X {
 			get { return x; }
 		}
 
-		public uint Y {
+		public int Y {
 			get { return y; }
 		}
 
-		public uint HotX {
+		public int HotX {
 			get { return hot_x; }
 		}
 
-		public uint HotY {
+		public int HotY {
 			get { return hot_y; }
 		}
 
-		public void Paint (Surface surf, DateTime now)
+		public void AddToPainter ()
 		{
-			delta_to_change -= now - last;
-			if (delta_to_change < TimeSpan.Zero) {
-				current_frame++;
-				delta_to_change = TimeSpan.FromMilliseconds (200);
-			}
-			last = now;
+			Painter.Instance.Add (Layer.Cursor, Paint);
+                        Events.Tick += CursorTick;
+		}
+
+		public void RemoveFromPainter ()
+		{
+			Painter.Instance.Remove (Layer.Cursor, Paint);
+                        Events.Tick -= CursorTick;
+		}
+
+		public void CursorTick (object sender, TickEventArgs e)
+		{
+			totalElapsed += e.TicksElapsed;
+
+			if (totalElapsed < millisDelay)
+				return;
+
+			totalElapsed = 0;
+			current_frame ++;
+			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
+		}
+
+		void Paint (DateTime now)
+		{
+			Rectangle dest = Rectangle.Intersect (Painter.Instance.Dirty,
+							      new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
+			if (dest.IsEmpty)
+				return;
 
 			int draw_x = (int)(x - hot_x);
 			int draw_y = (int)(y - hot_y);
+
+			Rectangle source = dest;
+			source.X -= draw_x;
+			source.Y -= draw_y;
 
 			if (current_frame == grp.FrameCount)
 				current_frame = 0;
@@ -112,7 +143,7 @@ namespace SCSharp.UI
 											   palette,
 											   true);
 
-			surf.Blit (surfaces[current_frame], new Point (draw_x, draw_y));
+			Painter.Instance.Blit (surfaces[current_frame], dest, source);
 		}
 	}
 }

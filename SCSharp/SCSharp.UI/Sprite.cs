@@ -290,41 +290,38 @@ namespace SCSharp.UI
 			return retval;
 		}
 
-		//Painter painter;
 		Surface sprite_surface;
 
-		void PaintSprite (Surface surf, DateTime now)
+		void PaintSprite (DateTime now)
 		{
 			if (sprite_surface != null) {
 				if ((x > SpriteManager.X - sprite_surface.Width / 2) && (x - sprite_surface.Width / 2 <= SpriteManager.X + Painter.SCREEN_RES_X)
 				    && (y > SpriteManager.Y - sprite_surface.Height / 2) && (y - sprite_surface.Height / 2 <= SpriteManager.Y + Painter.SCREEN_RES_Y)) {
-					surf.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-									      y - SpriteManager.Y - sprite_surface.Height / 2));
+					Painter.Instance.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+											  y - SpriteManager.Y - sprite_surface.Height / 2));
 
 					if (show_sprite_borders) {
-						surf.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-											y - SpriteManager.Y - sprite_surface.Height / 2),
-									     new Size (sprite_surface.Width - 1,
-										       sprite_surface.Height - 1)),
-							      Color.Green);
+						Painter.Instance.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+												    y - SpriteManager.Y - sprite_surface.Height / 2),
+											 new Size (sprite_surface.Width - 1,
+												   sprite_surface.Height - 1)),
+									  Color.Green);
 					}
 				}
 			}
 		}
 
-		public void AddToPainter (Painter painter)
+		public void AddToPainter ()
 		{
-			//this.painter = painter;
-			painter.Add (Layer.Unit, PaintSprite);
+			Painter.Instance.Add (Layer.Unit, PaintSprite);
 		}
 
-		public void RemoveFromPainter (Painter painter)
+		public void RemoveFromPainter ()
 		{
-			painter.Add (Layer.Unit, PaintSprite);
-			//this.painter = null;
+			Painter.Instance.Add (Layer.Unit, PaintSprite);
 		}
 
-		void DoPlayFrame (Surface painter_surface, int frame_num)
+		void DoPlayFrame (int frame_num)
 		{
 			if (current_frame != frame_num) {
 				current_frame = frame_num;
@@ -342,7 +339,7 @@ namespace SCSharp.UI
 
 		int waiting;
 
-		public bool Tick (Surface surf, DateTime now)
+		public bool Tick (DateTime now)
 		{
 			ushort warg1;
 			ushort warg2;
@@ -364,7 +361,7 @@ namespace SCSharp.UI
 			case PlayFrame:
 				warg1 = ReadWord (ref pc);
 				TraceLine ("PlayFrame: {0}", warg1);
-				DoPlayFrame (surf, warg1 + facing % 16);
+				DoPlayFrame (warg1 + facing % 16);
 				break;
 			case PlayTilesetFrame:
 				warg1 = ReadWord (ref pc);
@@ -453,7 +450,7 @@ namespace SCSharp.UI
 			case PlaySpecificFrame:
 				barg1 = ReadByte (ref pc);
 				TraceLine ("PlaySpecificFrame: {0}", barg1);
-				DoPlayFrame (surf, barg1);
+				DoPlayFrame (barg1);
 				break;
 			case PlaceIndependentUnderlay:
 				warg1 = ReadWord (ref pc);
@@ -495,7 +492,7 @@ namespace SCSharp.UI
 				break;
 			case FollowFrameChange:
 				if (parent_sprite != null)
-					DoPlayFrame (surf, parent_sprite.CurrentFrame);
+					DoPlayFrame (parent_sprite.CurrentFrame);
 				break;
 			case SwitchUnderlay:
 			case PlaceOverlay:

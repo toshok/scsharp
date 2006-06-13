@@ -40,7 +40,6 @@ namespace SCSharp.UI
 	public static class SpriteManager
 	{
 		public static List<Sprite> sprites = new List<Sprite>();
-		static Painter painter;
 
 		static Mpq our_mpq;
 
@@ -62,8 +61,7 @@ namespace SCSharp.UI
 			Sprite sprite = new Sprite (parentSprite, images_number, palette);
 			sprites.Add (sprite);
 
-			if (painter != null)
-				sprite.AddToPainter (painter);
+			sprite.AddToPainter ();
 
 			return sprite;
 		}
@@ -71,8 +69,7 @@ namespace SCSharp.UI
 		public static void AddSprite (Sprite sprite)
 		{
 			sprites.Add (sprite);
-			if (painter != null)
-				sprite.AddToPainter (painter);
+			sprite.AddToPainter ();
 		}
 
 		public static Sprite CreateSprite (int sprite_number, byte[] palette, int x, int y)
@@ -92,21 +89,20 @@ namespace SCSharp.UI
 			if (in_tick)
 				pendingRemoves.Add (sprite);
 			else {
-				if (painter != null)
-					sprite.RemoveFromPainter (painter);
+				sprite.RemoveFromPainter ();
 
 				sprites.Remove (sprite);
 			}
 		}
 
-		static void SpriteManagerPainterTick (Surface surf, DateTime now)
+		static void SpriteManagerPainterTick (DateTime now)
 		{
 			in_tick = true;
 
 			IEnumerator<Sprite> e = sprites.GetEnumerator();
 			
 			while (e.MoveNext ()) {
-				if (e.Current.Tick (surf, now) == false) {
+				if (e.Current.Tick (now) == false) {
 					Console.WriteLine ("removing sprite!!!!");
 					RemoveSprite (e.Current);
 				}
@@ -123,22 +119,20 @@ namespace SCSharp.UI
 			pendingRemoves.Clear ();
 		}
 
-		public static void AddToPainter (Painter p)
+		public static void AddToPainter ()
 		{
-			p.Add (Layer.Background, SpriteManagerPainterTick);
+			Painter.Instance.Add (Layer.Background, SpriteManagerPainterTick);
 
-			painter = p;
 			foreach (Sprite s in sprites)
-				s.AddToPainter (painter);
+				s.AddToPainter ();
 		}
 
-		public static void RemoveFromPainter (Painter p)
+		public static void RemoveFromPainter ()
 		{
-			p.Remove (Layer.Background, SpriteManagerPainterTick);
+			Painter.Instance.Remove (Layer.Background, SpriteManagerPainterTick);
 
 			foreach (Sprite s in sprites)
-				s.RemoveFromPainter (p);
-			painter = null;
+				s.RemoveFromPainter ();
 		}
 
 		public static void SetUpperLeft (int x, int y)

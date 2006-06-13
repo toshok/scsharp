@@ -81,7 +81,7 @@ namespace SCSharp.UI
 			}
 
 			if (selection_changed) {
-				ClearSurface ();
+				Invalidate ();
 				if (SelectionChanged != null)
 					SelectionChanged (cursor);
 			}
@@ -108,7 +108,7 @@ namespace SCSharp.UI
 			}
 
 			if (need_redraw)
-				ClearSurface ();
+				Invalidate ();
 		}
 
 		public override void MouseButtonDown (MouseButtonEventArgs args)
@@ -128,7 +128,7 @@ namespace SCSharp.UI
 			}
 
 			if (need_redraw)
-				ClearSurface ();
+				Invalidate ();
 		}
 
 		public override void PointerMotion (MouseMotionEventArgs args)
@@ -139,7 +139,7 @@ namespace SCSharp.UI
 			int index = (args.Y - Y1) / Font.LineSize + first_visible;
 			if (index < items.Count) {
 				selectionIndex = index;
-				ClearSurface ();
+				Invalidate ();
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace SCSharp.UI
 					SelectionChanged (cursor);
 			}
 
-			ClearSurface ();
+			Invalidate ();
 		}
 
 		public bool Selectable {
@@ -166,7 +166,7 @@ namespace SCSharp.UI
 		public int SelectedIndex {
 			get { return cursor; }
 			set { cursor = value;
-			      ClearSurface (); }
+			      Invalidate (); }
 		}
 
 		public string SelectedItem {
@@ -178,7 +178,7 @@ namespace SCSharp.UI
 			items.Add (item);
 			if (cursor == -1)
 				cursor = 0;
-			ClearSurface ();
+			Invalidate ();
 		}
 
 		public void RemoveAt (int index)
@@ -186,14 +186,14 @@ namespace SCSharp.UI
 			items.RemoveAt (index);
 			if (items.Count == 0)
 				cursor = -1;
-			ClearSurface ();
+			Invalidate ();
 		}
 
 		public void Clear ()
 		{
 			items.Clear ();
 			cursor = -1;
-			ClearSurface ();
+			Invalidate ();
 		}
 
 		public bool Contains (string item)

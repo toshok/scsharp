@@ -60,7 +60,6 @@ namespace SCSharp.UI
 
 		protected List<UIElement> Elements;
 
-		protected Painter painter;
 		protected UIDialog dialog; /* the currently popped up dialog */
 
 		protected UIScreen (Mpq mpq, string prefix, string binFile)
@@ -109,42 +108,40 @@ namespace SCSharp.UI
 			}
 		}
 
-		public virtual void AddToPainter (Painter painter)
+		public virtual void AddToPainter ()
 		{
-			this.painter = painter;
+			Painter.Instance.Painting += FirstPaint;
 
-			painter.Add (Layer.Background, FirstPaint);
-
-			if (background != null)
-				painter.Add (Layer.Background, BackgroundPainter);
+			if (background != null) {
+				Console.WriteLine ("adding background painter");
+				Painter.Instance.Add (Layer.Background, BackgroundPainter);
+			}
 
 			if (UIPainter != null)
-				painter.Add (Layer.UI, UIPainter.Paint);
+				Painter.Instance.Add (Layer.UI, UIPainter.Paint);
 
 			if (Cursor != null)
 				Game.Instance.Cursor = Cursor;
+
+			Painter.Instance.Invalidate ();
 		}
 
-		public virtual void RemoveFromPainter (Painter painter)
+		public virtual void RemoveFromPainter ()
 		{
-			painter.Remove (Layer.Background, FirstPaint);
+			Painter.Instance.Painting -= FirstPaint;
 
-			if (background != null)
-				painter.Remove (Layer.Background, BackgroundPainter);
+			if (background != null) {
+				Console.WriteLine ("removing background painter");
+				Painter.Instance.Remove (Layer.Background, BackgroundPainter);
+			}
 			if (UIPainter != null)
-				painter.Remove (Layer.UI, UIPainter.Paint);
+				Painter.Instance.Remove (Layer.UI, UIPainter.Paint);
 			if (Cursor != null)
 				Game.Instance.Cursor = null;
-
-			this.painter = null;
 		}
 
 		public virtual bool UseTiles {
 			get { return false; }
-		}
-
-		public virtual Painter Painter {
-			get { return painter; }
 		}
 
 		public Mpq Mpq {
@@ -330,12 +327,12 @@ namespace SCSharp.UI
 
 		bool loaded;
 
-		protected virtual void FirstPaint (Surface surf, DateTime now)
+		protected virtual void FirstPaint (object sender, EventArgs args)
 		{
 			if (FirstPainted != null)
 				FirstPainted ();
 
-			painter.Remove (Layer.Background, FirstPaint);
+			Painter.Instance.Painting -= FirstPaint;
 		}
 
 		protected void RaiseReadyEvent ()
@@ -350,12 +347,26 @@ namespace SCSharp.UI
 				DoneSwooshing ();
 		}
 
-		protected void BackgroundPainter (Surface surf, DateTime dt)
+		protected void BackgroundPainter (DateTime dt)
 		{
-			surf.Blit (background,
-				   new Point ((surf.Width - background.Width) / 2,
-					      (surf.Height - background.Height) / 2));
+			Painter p = Painter.Instance;
 
+			int background_x = (p.Width - background.Width) / 2;
+			int background_y = (p.Height - background.Height) / 2;
+
+			Rectangle background_rect = new Rectangle (background_x, background_y,
+								   background.Width, background.Height);
+
+			Rectangle dest = Rectangle.Intersect (Painter.Instance.Dirty, background_rect);
+
+			if (dest.IsEmpty)
+				return;
+
+			Rectangle source = dest;
+			source.X -= background_x;
+			source.Y -= background_y;
+
+			p.Blit (background, dest, source);
 		}
 
 		protected virtual void ResourceLoader ()
@@ -487,7 +498,7 @@ namespace SCSharp.UI
 			this.dialog = dialog;
 
 			dialog.Load ();
-			dialog.Ready += delegate () { dialog.AddToPainter (painter); };
+			dialog.Ready += delegate () { dialog.AddToPainter (); };
 		}
 
 		public virtual void DismissDialog ()
@@ -495,7 +506,7 @@ namespace SCSharp.UI
 			if (dialog == null)
 				return;
 
-			dialog.RemoveFromPainter (painter);
+			dialog.RemoveFromPainter ();
 			dialog = null;
 		}
 	}

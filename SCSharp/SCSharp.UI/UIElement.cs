@@ -73,31 +73,32 @@ namespace SCSharp.UI
 		public string Background {
 			get { return background; }
 			set { background = value;
-			      background_surface = null; }
+			      background_surface = null;
+			      Invalidate (); }
 		}
 
 		public string Text {
 			get { return el.text; }
 			set { el.text = value;
-			      ClearSurface (); }
+			      Invalidate (); }
 		}
 
 		public bool Sensitive {
 			get { return sensitive; }
 			set { sensitive = value;
-			      ClearSurface (); }
+			      Invalidate (); }
 		}
 
 		public bool Visible {
 			get { return visible; }
 			set { visible = value;
-			      ClearSurface (); }
+			      Invalidate (); }
 		}
 
 		public byte[] Palette {
 			get { return palette; }
 			set { palette = value;
-			      ClearSurface (); }
+			      Invalidate (); }
 		}
 
 		public Surface Surface {
@@ -131,7 +132,7 @@ namespace SCSharp.UI
 				return fnt;
 			}
 			set { fnt = value;
-			      ClearSurface (); }
+			      Invalidate (); }
 		}
 
 		public ElementFlags Flags { get { return el.flags; } }
@@ -174,9 +175,14 @@ namespace SCSharp.UI
 				MouseLeaveEvent ();
 		}
 
-		protected void ClearSurface ()
+		protected void Invalidate ()
 		{
+			Painter.Instance.Invalidate (Bounds);
 			surface = null;
+		}
+
+		public Rectangle Bounds {
+			get { return new Rectangle (X1, Y1, Width, Height); }
 		}
 
 		Surface CreateBackgroundSurface ()
@@ -198,7 +204,7 @@ namespace SCSharp.UI
 			}
 		}
 
-		public void Paint (Surface surf, DateTime now)
+		public void Paint (DateTime now)
 		{
 			if (!visible)
 				return;
@@ -206,9 +212,17 @@ namespace SCSharp.UI
 			if (Surface == null)
 				return;
 
-			if (background_surface != null)
-				surf.Blit (background_surface, new Point (X1, Y1));
-			surf.Blit (surface, new Point (X1, Y1));
+			Rectangle dest = Rectangle.Intersect (Bounds, Painter.Instance.Dirty);
+			if (!dest.IsEmpty) {
+				Rectangle source = dest;
+				source.X -= X1;
+				source.Y -= Y1;
+
+				if (background_surface != null)
+					Painter.Instance.Blit (background_surface, dest, source);
+			
+				Painter.Instance.Blit (surface, dest, source);
+			}
 		}
 		
 		public virtual bool PointInside (int x, int y)

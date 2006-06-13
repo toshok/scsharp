@@ -56,7 +56,7 @@ namespace SCSharp.UI
 		public int SelectedIndex {
 			get { return cursor; }
 			set { cursor = value;
-			      ClearSurface (); }
+			      Invalidate (); }
 		}
 
 		public string SelectedItem {
@@ -73,7 +73,7 @@ namespace SCSharp.UI
 			items.Add (item);
 			if (select || cursor == -1)
 				cursor = items.IndexOf (item);
-			ClearSurface ();
+			Invalidate ();
 		}
 
 		public void RemoveAt (int index)
@@ -81,14 +81,14 @@ namespace SCSharp.UI
 			items.RemoveAt (index);
 			if (items.Count == 0)
 				cursor = -1;
-			ClearSurface ();
+			Invalidate ();
 		}
 
 		public void Clear ()
 		{
 			items.Clear ();
 			cursor = -1;
-			ClearSurface ();
+			Invalidate ();
 		}
 
 		public bool Contains (string item)
@@ -127,9 +127,9 @@ namespace SCSharp.UI
 			}
 		}
 
-		void PaintDropdown (Surface surf, DateTime dt)
+		void PaintDropdown (DateTime dt)
 		{
-			surf.Blit (dropdownSurface, new Point (X1, Y1 + Height));
+			Painter.Instance.Blit (dropdownSurface, new Point (X1, Y1 + Height));
 		}
 
 		void ShowDropdown ()
@@ -137,7 +137,7 @@ namespace SCSharp.UI
 			dropdown_visible = true;
 			selected_item = cursor;
 			CreateDropdownSurface ();
-			ParentScreen.Painter.Add (Layer.Popup, PaintDropdown);
+			Painter.Instance.Add (Layer.Popup, PaintDropdown);
 		}
 
 		void HideDropdown ()
@@ -147,9 +147,9 @@ namespace SCSharp.UI
 				cursor = selected_item;
 				if (SelectionChanged != null)
 					SelectionChanged (cursor);
-				ClearSurface ();
+				Invalidate ();
 			}
-			ParentScreen.Painter.Remove (Layer.Popup, PaintDropdown);
+			Painter.Instance.Remove (Layer.Popup, PaintDropdown);
 		}
 
 		protected override Surface CreateSurface ()

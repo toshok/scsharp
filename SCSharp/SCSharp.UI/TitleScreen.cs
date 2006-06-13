@@ -53,10 +53,20 @@ namespace SCSharp.UI
 			Elements[COPYRIGHT2_ELEMENT_INDEX].Text = "Game assets Copyright © 1998 Blizzard Entertainment. All rights reserved.";
 			Elements[COPYRIGHT3_ELEMENT_INDEX].Text = "";
 
-			Events.Tick += LoadingFlasher;
 		}
 
+		public override void AddToPainter ()
+		{
+			base.AddToPainter ();
+			Events.Tick += LoadingFlasher;
+		}
 		
+		public override void RemoveFromPainter ()
+		{
+			base.RemoveFromPainter ();
+			Events.Tick -= LoadingFlasher;
+		}
+
 		const int COPYRIGHT1_ELEMENT_INDEX = 1;
 		const int COPYRIGHT2_ELEMENT_INDEX = 2;
 		const int COPYRIGHT3_ELEMENT_INDEX = 3;
@@ -73,6 +83,8 @@ namespace SCSharp.UI
 			if ((Elements[LOADING_ELEMENT_INDEX].Visible && (totalElapsed < FLASH_ON_DURATION)) ||
 			    (!Elements[LOADING_ELEMENT_INDEX].Visible && (totalElapsed < FLASH_OFF_DURATION)) )
 				return;
+
+			Console.WriteLine ("Flashing");
 
 			Elements[LOADING_ELEMENT_INDEX].Visible = !Elements[LOADING_ELEMENT_INDEX].Visible;
 

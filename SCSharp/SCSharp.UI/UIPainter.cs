@@ -59,15 +59,16 @@ namespace SCSharp.UI
 			this.elements = elements;
 		}
 
-		public void Paint (Surface surf, DateTime now)
+		public void Paint (DateTime now)
 		{
 			for (int i = 0; i < elements.Count; i ++) {
 				UIElement e = elements[i];
 
-				e.Paint (surf, now);
+				e.Paint (now);
 
 				if (showBorders) {
-					surf.DrawBox (new Rectangle (new Point (e.X1,e.Y1), new Size (e.Width - 1, e.Height - 1)), e.Visible ? Color.Green : Color.Yellow);
+					Painter.Instance.DrawBox (new Rectangle (new Point (e.X1,e.Y1), new Size (e.Width - 1, e.Height - 1)),
+								  e.Visible ? Color.Green : Color.Yellow);
 					if (e.Text == "")
 						e.Text = i.ToString();
 				}

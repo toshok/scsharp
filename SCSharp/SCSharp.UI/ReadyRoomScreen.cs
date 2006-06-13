@@ -135,9 +135,9 @@ namespace SCSharp.UI
 			runner.Play ();
 		}
 
-		protected override void FirstPaint (Surface surf, DateTime now)
+		protected override void FirstPaint (object sender, EventArgs args)
 		{
-			base.FirstPaint (surf, now);
+			base.FirstPaint (sender, args);
 
 			Events.Tick += runner.Tick;
 		}

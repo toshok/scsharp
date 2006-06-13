@@ -53,7 +53,7 @@ namespace SCSharp.UI
 	{
 		UIScreen[] screens;
 		
-		const int GAME_ANIMATION_TICK = 50; // number of milliseconds between animation updates
+		const int GAME_ANIMATION_TICK = 20; // number of milliseconds between animation updates
 
 		bool isBroodWar;
 		bool playingBroodWar;
@@ -68,10 +68,8 @@ namespace SCSharp.UI
 		MpqContainer installedMpq;
 		MpqContainer playingMpq;
 
-		Painter painter;
-
-		uint cached_cursor_x;
-		uint cached_cursor_y;
+		int cached_cursor_x;
+		int cached_cursor_y;
 
 		string rootDir;
 
@@ -218,6 +216,8 @@ namespace SCSharp.UI
 			/* create our window and hook up to the events we care about */
 			CreateWindow (fullscreen);
 
+			Mouse.ShowCursor = false;
+
 			Events.UserEvent += UserEvent;
 			Events.MouseMotion += PointerMotion;
 			Events.MouseButtonDown += MouseButtonDown;
@@ -251,7 +251,7 @@ namespace SCSharp.UI
 			Video.WindowIcon ();
 			Video.WindowCaption = "SCSharp";
 
-			painter = new Painter (fullscreen, GAME_ANIMATION_TICK);
+			Painter.InitializePainter (fullscreen, GAME_ANIMATION_TICK);
 		}
 
 		void UserEvent (object sender, UserEventArgs args)
@@ -262,8 +262,8 @@ namespace SCSharp.UI
 
 		void PointerMotion (object o, MouseMotionEventArgs args)
 		{
-			cached_cursor_x = (uint)args.X;
-			cached_cursor_y = (uint)args.Y;
+			cached_cursor_x = args.X;
+			cached_cursor_y = args.Y;
 			
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
@@ -274,8 +274,8 @@ namespace SCSharp.UI
 
 		void MouseButtonDown (object o, MouseButtonEventArgs args)
 		{
-			cached_cursor_x = (uint)args.X;
-			cached_cursor_y = (uint)args.Y;
+			cached_cursor_x = args.X;
+			cached_cursor_y = args.Y;
 			
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
@@ -286,8 +286,8 @@ namespace SCSharp.UI
 
 		void MouseButtonUp (object o, MouseButtonEventArgs args)
 		{
-			cached_cursor_x = (uint)args.X;
-			cached_cursor_y = (uint)args.Y;
+			cached_cursor_x = args.X;
+			cached_cursor_y = args.Y;
 			
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
@@ -310,15 +310,11 @@ namespace SCSharp.UI
 					Quit ();
 				}
 				else if (args.Key == Key.F) {
-					painter.Fullscreen = !painter.Fullscreen;
+					Painter.Instance.Fullscreen = !Painter.Instance.Fullscreen;
 				}
 #endif
 			if (currentScreen != null)
 				currentScreen.HandleKeyboardDown (args);
-		}
-
-		public Painter Painter {
-			get { return painter; }
 		}
 
 		public Race Race {
@@ -332,15 +328,11 @@ namespace SCSharp.UI
 			get { return cursor; }
 			set {
 				if (cursor != null)
-					painter.Remove (Layer.Cursor, cursor.Paint);
+					cursor.RemoveFromPainter ();
 				cursor = value;
-				if (cursor == null) {
-					Mouse.ShowCursor = true;
-				}
-				else {
-					painter.Add (Layer.Cursor, cursor.Paint);
+				if (cursor != null) {
+					cursor.AddToPainter ();
 					cursor.SetPosition (cached_cursor_x, cached_cursor_y);
-					Mouse.ShowCursor = false;
 				}
 			}
 		}
@@ -349,11 +341,15 @@ namespace SCSharp.UI
 
 		public void SetGameScreen (UIScreen screen)
 		{
+			Painter.Instance.Pause ();
+
 			if (currentScreen != null)
-				currentScreen.RemoveFromPainter (painter);
+				currentScreen.RemoveFromPainter ();
 			currentScreen = screen;
 			if (currentScreen != null)
-				currentScreen.AddToPainter (painter);
+				currentScreen.AddToPainter ();
+
+			Painter.Instance.Resume ();
 		}
 
 		UIScreen screenToSwitchTo;

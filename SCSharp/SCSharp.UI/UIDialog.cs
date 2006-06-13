@@ -59,38 +59,41 @@ namespace SCSharp.UI
 			dimScreenSurface.AlphaBlending = true;
 		}
 
-		public override void AddToPainter (Painter painter)
+		public override void AddToPainter ()
 		{
-			this.painter = painter;
-
 			if (Background != null)
-				painter.Add (Layer.DialogBackground, BackgroundPainter);
+				Painter.Instance.Add (Layer.DialogBackground, BackgroundPainter);
 
 			if (UIPainter != null)
-				painter.Add (Layer.DialogUI, UIPainter.Paint);
+				Painter.Instance.Add (Layer.DialogUI, UIPainter.Paint);
 
 			if (dimScreen)
-				painter.Add (Layer.DialogDimScreenHack, DimScreenPainter);
+				Painter.Instance.Add (Layer.DialogDimScreenHack, DimScreenPainter);
+
+			Painter.Instance.Invalidate ();
 		}
 
 
-		public override void RemoveFromPainter (Painter painter)
+		public override void RemoveFromPainter ()
 		{
 			if (Background != null)
-				painter.Remove (Layer.DialogBackground, BackgroundPainter);
+				Painter.Instance.Remove (Layer.DialogBackground, BackgroundPainter);
 
 			if (UIPainter != null)
-				painter.Remove (Layer.DialogUI, UIPainter.Paint);
+				Painter.Instance.Remove (Layer.DialogUI, UIPainter.Paint);
 
 			if (dimScreen)
-				painter.Remove (Layer.DialogDimScreenHack, DimScreenPainter);
+				Painter.Instance.Remove (Layer.DialogDimScreenHack, DimScreenPainter);
 
-			this.painter = null;
+			Painter.Instance.Invalidate ();
 		}
 
-		void DimScreenPainter (Surface surf, DateTime dt)
+		void DimScreenPainter (DateTime dt)
 		{
-			surf.Blit (dimScreenSurface);
+			if (Painter.Instance.Dirty.IsEmpty)
+				return;
+
+			Painter.Instance.Blit (dimScreenSurface, Painter.Instance.Dirty, Painter.Instance.Dirty);
 		}
 
 		protected override void ResourceLoader ()
@@ -123,10 +126,6 @@ namespace SCSharp.UI
 			get { return true; }
 		}
 
-		public override Painter Painter {
-			get { return painter; }
-		}
-
 		public UIScreen Parent {
 			get { return parent; }
 		}
@@ -136,7 +135,6 @@ namespace SCSharp.UI
 			set { dimScreen = value; }
 		}
 
-		Painter rememberedPainter;
 		public override void ShowDialog (UIDialog dialog)
 		{
 			Console.WriteLine ("showing {0}", dialog);
@@ -147,9 +145,8 @@ namespace SCSharp.UI
 
 			dialog.Load ();
 			dialog.Ready += delegate () { 
-				dialog.AddToPainter (painter);
-				rememberedPainter = painter;
-				RemoveFromPainter (painter);
+				dialog.AddToPainter ();
+				RemoveFromPainter ();
 			};
 		}
 
@@ -158,9 +155,9 @@ namespace SCSharp.UI
 			if (dialog == null)
 				return;
 
-			dialog.RemoveFromPainter (rememberedPainter);
+			dialog.RemoveFromPainter ();
 			dialog = null;
-			AddToPainter (rememberedPainter);
+			AddToPainter ();
 		}
 	}
 

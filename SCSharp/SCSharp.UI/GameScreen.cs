@@ -126,8 +126,9 @@ namespace SCSharp.UI
 
 		Surface[] starfield_layers;
 
-		void PaintStarfield (Surface surf, DateTime dt)
+		void PaintStarfield (DateTime dt)
 		{
+			Painter p = Painter.Instance;
 			float scroll_factor = 1.0f;
 			float[] factors = new float[starfield_layers.Length];
 
@@ -143,57 +144,64 @@ namespace SCSharp.UI
 				if (scroll_x > Painter.SCREEN_RES_X) scroll_x %= Painter.SCREEN_RES_X;
 				if (scroll_y > Painter.SCREEN_RES_Y) scroll_y %= Painter.SCREEN_RES_Y;
 
-				surf.Blit (starfield_layers[i],
-					   new Rectangle (new Point (0,0),
-							  new Size (Painter.SCREEN_RES_X - scroll_x,
-								    Painter.SCREEN_RES_Y - scroll_y)),
-					   new Rectangle (new Point (scroll_x, scroll_y),
-							  new Size (Painter.SCREEN_RES_X - scroll_x,
-								    Painter.SCREEN_RES_Y - scroll_y)));
+				p.Blit (starfield_layers[i],
+					new Rectangle (new Point (0,0),
+						       new Size (Painter.SCREEN_RES_X - scroll_x,
+								 Painter.SCREEN_RES_Y - scroll_y)),
+					new Rectangle (new Point (scroll_x, scroll_y),
+						       new Size (Painter.SCREEN_RES_X - scroll_x,
+								 Painter.SCREEN_RES_Y - scroll_y)));
 
 				if (scroll_x != 0)
-					surf.Blit (starfield_layers[i],
-						   new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
-								  new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)),
-						   new Rectangle (new Point (0, scroll_y),
-								  new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)));
+					p.Blit (starfield_layers[i],
+						new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
+							       new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)),
+						new Rectangle (new Point (0, scroll_y),
+							       new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)));
 
 				if (scroll_y != 0)
-					surf.Blit (starfield_layers[i],
-						   new Rectangle (new Point (0, Painter.SCREEN_RES_Y - scroll_y),
-								  new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)),
-						   new Rectangle (new Point (scroll_x, 0),
-								  new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)));
+					p.Blit (starfield_layers[i],
+						new Rectangle (new Point (0, Painter.SCREEN_RES_Y - scroll_y),
+							       new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)),
+						new Rectangle (new Point (scroll_x, 0),
+							       new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)));
 
 				if (scroll_x != 0 || scroll_y != 0)
-					surf.Blit (starfield_layers[i],
-						   new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, Painter.SCREEN_RES_Y - scroll_y),
-								  new Size (scroll_x, scroll_y)),
-						   new Rectangle (new Point (0, 0),
-								  new Size (scroll_x, scroll_y)));
+					p.Blit (starfield_layers[i],
+						new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, Painter.SCREEN_RES_Y - scroll_y),
+							       new Size (scroll_x, scroll_y)),
+						new Rectangle (new Point (0, 0),
+							       new Size (scroll_x, scroll_y)));
 			}
 		}
 
 		Surface map_surf;
 
-		void PaintMap (Surface surf, DateTime dt)
+		void PaintMap (DateTime dt)
 		{
-			surf.Blit (map_surf,
-				   new Rectangle (new Point (0,0),
-						  new Size (Painter.SCREEN_RES_X - topleft_x,
-							    Painter.SCREEN_RES_Y - topleft_y)),
-				   new Rectangle (new Point (topleft_x, topleft_y),
-						  new Size (Painter.SCREEN_RES_X,
-							    Painter.SCREEN_RES_Y)));
+			Painter.Instance.Invalidate (new Rectangle (new Point (topleft_x, topleft_y),
+								    new Size (Painter.SCREEN_RES_X,
+									      Painter.SCREEN_RES_Y)));
+
+
+			Painter.Instance.Blit (map_surf,
+					       new Rectangle (new Point (0,0),
+							      new Size (Painter.SCREEN_RES_X - topleft_x,
+									Painter.SCREEN_RES_Y - topleft_y)),
+					       new Rectangle (new Point (topleft_x, topleft_y),
+							      new Size (Painter.SCREEN_RES_X,
+									Painter.SCREEN_RES_Y)));
 		}
 
 		int[] button_xs = new int[] { 506, 552, 598 };
 		int[] button_ys = new int[] { 360, 400, 440 };
 
-		void PaintHud (Surface surf, DateTime dt)
+		void PaintHud (DateTime dt)
 		{
+			Painter p = Painter.Instance;
+
 			/* first blit the hud surface */
-			surf.Blit (hud);
+			p.Blit (hud);
 
 			/* then fill in the center section (wireframe and selected unit info) */
 			if (selectedUnit != null) {
@@ -204,38 +212,38 @@ namespace SCSharp.UI
 								     wireframe.Width, wireframe.Height,
 								     cmdicon_palette,
 								     true);
-				surf.Blit (s, new Point (170, 390));
+				p.Blit (s, new Point (170, 390));
 
 				/* the unit name */
 				s = GuiUtil.ComposeText (statTxt[selectedUnit.UnitId],
 							 GuiUtil.GetFonts (Mpq)[1],
 							 fontpal.Palette);
-				surf.Blit (s, new Point (254, 390));
+				p.Blit (s, new Point (254, 390));
 
 				if (true /* XXX unit is a building */) {
 					/* $RESOURCE used */
 					s = GuiUtil.ComposeText (statTxt[820+(int)Game.Instance.Race],
 								 GuiUtil.GetFonts (Mpq)[0],
 								 fontpal.Palette);
-					surf.Blit (s, new Point (292, 420)); /* XXX */
+					p.Blit (s, new Point (292, 420)); /* XXX */
 
 					/* $RESOURCE provided */
 					s = GuiUtil.ComposeText (statTxt[814+(int)Game.Instance.Race],
 								 GuiUtil.GetFonts (Mpq)[0],
 								 fontpal.Palette);
-					surf.Blit (s, new Point (292, 434)); /* XXX */
+					p.Blit (s, new Point (292, 434)); /* XXX */
 
 					/* Total $RESOURCE */
 					s = GuiUtil.ComposeText (statTxt[817+(int)Game.Instance.Race],
 								 GuiUtil.GetFonts (Mpq)[0],
 								 fontpal.Palette);
-					surf.Blit (s, new Point (292, 448)); /* XXX */
+					p.Blit (s, new Point (292, 448)); /* XXX */
 
 					/* $RESOURCE Max */
 					s = GuiUtil.ComposeText (statTxt[823+(int)Game.Instance.Race],
 								 GuiUtil.GetFonts (Mpq)[0],
 								 fontpal.Palette);
-					surf.Blit (s, new Point (292, 462)); /* XXX */
+					p.Blit (s, new Point (292, 462)); /* XXX */
 				}
 
 			}
@@ -264,7 +272,7 @@ namespace SCSharp.UI
 										     cmdicon_palette,
 										     true);
 
-						surf.Blit (s, new Point (button_xs[x], button_ys[y]));
+						p.Blit (s, new Point (button_xs[x], button_ys[y]));
 					}
 					x++;
 					if (x == 3) {
@@ -275,44 +283,44 @@ namespace SCSharp.UI
 			}
 		}
 
-		void PaintMinimap (Surface surf, DateTime dt)
+		void PaintMinimap (DateTime dt)
 		{
 			Rectangle rect = new Rectangle (new Point ((int)((float)topleft_x / (float)map_surf.Width * MINIMAP_WIDTH + MINIMAP_X),
 								   (int)((float)topleft_y / (float)map_surf.Height * MINIMAP_HEIGHT + MINIMAP_Y)),
 							new Size ((int)((float)Painter.SCREEN_RES_X / (float)map_surf.Width * MINIMAP_WIDTH),
 								  (int)((float)Painter.SCREEN_RES_Y / (float)map_surf.Height * MINIMAP_HEIGHT)));
 
-			surf.DrawBox (rect, Color.Green);
+			Painter.Instance.DrawBox (rect, Color.Green);
 		}
 
-		public override void AddToPainter (Painter painter)
+		public override void AddToPainter ()
 		{
-			base.AddToPainter (painter);
+			base.AddToPainter ();
 
-			painter.Add (Layer.Hud, PaintHud);
-			painter.Add (Layer.Hud, PaintMinimap);
+			Painter.Instance.Add (Layer.Hud, PaintHud);
+			Painter.Instance.Add (Layer.Hud, PaintMinimap);
 
 			if (scenario.Tileset == Tileset.Platform)
-				painter.Add (Layer.Background, PaintStarfield);
+				Painter.Instance.Add (Layer.Background, PaintStarfield);
 
-			painter.Add (Layer.Map, PaintMap);
-			SpriteManager.AddToPainter (painter);
-			painter.Add (Layer.Background, ScrollPainter);
+			Painter.Instance.Add (Layer.Map, PaintMap);
+			SpriteManager.AddToPainter ();
+			Painter.Instance.Add (Layer.Background, ScrollPainter);
 		}
 
-		public override void RemoveFromPainter (Painter painter)
+		public override void RemoveFromPainter ()
 		{
-			base.RemoveFromPainter (painter);
-			painter.Remove (Layer.Hud, PaintHud);
-			painter.Remove (Layer.Hud, PaintMinimap);
+			base.RemoveFromPainter ();
+			Painter.Instance.Remove (Layer.Hud, PaintHud);
+			Painter.Instance.Remove (Layer.Hud, PaintMinimap);
 
 			if (scenario.Tileset == Tileset.Platform)
-				painter.Remove (Layer.Background, PaintStarfield);
+				Painter.Instance.Remove (Layer.Background, PaintStarfield);
 
-			painter.Remove (Layer.Map, PaintMap);
-			SpriteManager.RemoveFromPainter (painter);
+			Painter.Instance.Remove (Layer.Map, PaintMap);
+			SpriteManager.RemoveFromPainter ();
 
-			painter.Remove (Layer.Background, ScrollPainter);
+			Painter.Instance.Remove (Layer.Background, ScrollPainter);
 		}
 
 		protected override void ResourceLoader ()
@@ -442,7 +450,7 @@ namespace SCSharp.UI
 			}
 		}
 
-		public void ScrollPainter (Surface surf, DateTime dt)
+		public void ScrollPainter (DateTime dt)
 		{
 			topleft_x += horiz_delta;
 			topleft_y += vert_delta;
