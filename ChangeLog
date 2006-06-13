@@ -1,5 +1,13 @@
 2006-06-13  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.Mpq.Smk/SDLPCMStream.cs (Dispose): mark "new" to
+	fix compile error on windows.
+
+	* SCSharp/SCSharp.UI/SpriteManager.cs (CreateSprite): Commit
+	Foole's fix for ticket #7.
+
+2006-06-13  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/Game.cs: Fix ticket #8, use ToLower() to
 	check for the SC install.exe filename.
 

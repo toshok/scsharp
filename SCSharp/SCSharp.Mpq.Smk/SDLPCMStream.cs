@@ -242,7 +242,7 @@ public bool Playing
         {
 
         }
-		public void Dispose()
+		public new void Dispose()
 		{
 			base.Dispose();
 			Stop();
