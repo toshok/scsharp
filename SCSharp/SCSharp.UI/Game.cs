@@ -124,7 +124,7 @@ namespace SCSharp.UI
 
 			if (scCDDir != null) {
 				foreach (string path in Directory.GetFileSystemEntries (scCDDir)) {
-					if (Path.GetFileName (path) == "install.exe") {
+					if (Path.GetFileName (path).ToLower() == "install.exe") {
 						try {
 							scInstallExe = GetMpq (path);
 							Console.WriteLine ("found SC install.exe");

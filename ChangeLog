@@ -1,5 +1,10 @@
 2006-06-13  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/Game.cs: Fix ticket #8, use ToLower() to
+	check for the SC install.exe filename.
+
+2006-06-13  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/SmackerPlayer.cs: mostly adapt daxxar's
 	SmkTest player here.  Remove the (missing) ffmpeg glu library
 	dependency.
