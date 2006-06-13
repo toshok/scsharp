@@ -1,5 +1,5 @@
 //
-// SCSharp.UI.OptionsPainter
+// SCSharp.UI.OptionsDialog
 //
 // Authors:
 //	Chris Toshok (toshok@hungry.com)
