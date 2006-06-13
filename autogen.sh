@@ -9,7 +9,7 @@ test -z "$srcdir" && srcdir=.
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`autoconf' installed to compile Mono."
+  echo "**Error**: You must have \`autoconf' installed to compile SCSharp."
   echo "Download the appropriate package for your distribution,"
   echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
   DIE=1
@@ -25,7 +25,7 @@ fi
 (grep "^AC_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
   ($LIBTOOL --version) < /dev/null > /dev/null 2>&1 || {
     echo
-    echo "**Error**: You must have \`libtool' installed to compile Mono."
+    echo "**Error**: You must have \`libtool' installed to compile SCSharp."
     echo "Get ftp://ftp.gnu.org/pub/gnu/libtool-1.2d.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
@@ -36,7 +36,7 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
   grep "sed.*POTFILES" $srcdir/configure.ac >/dev/null || \
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
-    echo "**Error**: You must have \`gettext' installed to compile Mono."
+    echo "**Error**: You must have \`gettext' installed to compile SCSharp."
     echo "Get ftp://alpha.gnu.org/gnu/gettext-0.10.35.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
@@ -45,7 +45,7 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`automake' installed to compile Mono."
+  echo "**Error**: You must have \`automake' installed to compile SCSharp."
   echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
@@ -58,7 +58,7 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
   echo
   echo "**Error**: Missing \`aclocal'.  The version of \`automake'"
   echo "installed doesn't appear recent enough."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.9.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
 }
