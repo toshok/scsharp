@@ -1,0 +1,5 @@
+SCSharp.Mpq.Smk/BitStream.cs
+SCSharp.Mpq.Smk/Huffmantree.cs
+SCSharp.Mpq.Smk/SDLPCMStream.cs
+SCSharp.Mpq.Smk/Smk.cs
+SCSharp.Mpq.Smk/SmkDecoder.cs
