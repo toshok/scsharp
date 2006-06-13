@@ -43,7 +43,8 @@
 	* SCSharp/SCSharp.UI/Race.cs: reorder this to match some strings
 	in stat_txt.tbl.
 
-	* SCSharp/SCSharp.Util/Util.cs: reorder RaceChar and RaceCharLower to match Race.cs.
+	* SCSharp/SCSharp.Util/Util.cs: reorder RaceChar and RaceCharLower
+	to match Race.cs.
 
 	* SCSharp/SCSharp.UI/Unit.cs (UnitId): add a new accessor.
 
