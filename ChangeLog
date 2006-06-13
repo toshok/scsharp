@@ -13,7 +13,7 @@
 
 2006-06-13  Chris Toshok  <toshok@hungry.com>
 
-	* SCSharp/SCSharp.UI/SmackerPlayer.cs: mostly adapt daxxar's
+	* SCSharp/SCSharp.UI/SmackerPlayer.cs: mostly adapt MtPOI's
 	SmkTest player here.  Remove the (missing) ffmpeg glu library
 	dependency.
 
@@ -27,7 +27,7 @@
 	needs redrawing.  This isn't the final iteration, but it's a lot
 	closer to the "right" solution.
 
-	* SCSharp/SCSharp.Util/Util.cs: add MakeTag from daxxar's SmkLib.
+	* SCSharp/SCSharp.Util/Util.cs: add MakeTag from MtPOI's SmkLib.
 	it should probably live in that code instead of here, but leave it
 	here for now.
 
