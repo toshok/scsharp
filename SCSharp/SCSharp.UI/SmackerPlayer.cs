@@ -29,222 +29,143 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using SdlDotNet;
 using System.Drawing;
 
+using SCSharp.Smk;
+
 namespace SCSharp.UI
 {
 	public class SmackerPlayer
 	{
-		enum State {
-			STOPPED,
-			PLAYING,
-			PAUSED
+		//Buffer this many frames
+		private  const int BUFFERED_FRAMES = 100;
+
+		Thread decoderThread;
+		bool firstRun = true;
+
+		Queue<byte[]> frameQueue = new Queue<byte[]>();
+
+		SmackerFile file;
+		SmackerDecoder decoder;
+
+		SDLPCMStream audioStream;
+		public SmackerPlayer (Stream smk_stream)
+		{
+			file = SmackerFile.OpenFromStream(smk_stream);
+			decoder= file.Decoder;
+    
+			//stream.Close();
+
+			surf = new Surface((int)file.Header.Width, (int)file.Header.Height);
+            
+			//Init audio
+			//SDLPCMStream.SDLPCMStreamFormat format = new SDLPCMStream.SDLPCMStreamFormat(SDLPCMStream.SDLPCMStreamFormat.PCMFormat.UnSigned16BitLE, file.Header.GetSampleRate(0), (file.Header.IsStereoTrack(0)) ? 2 : 1);
+			//audioStream = new SDLPCMStream(format);
+
+			//Init threads
 		}
 
-		string filename;
-		byte[] buf;
-		Surface surface;
-		State state;
-		Thread decoderThread;
-		FFmpeg decoder;
-		int width;
-		int height;
+		public int Width {
+			get { return (int)file.Header.Width; }
+		}
 
-		static object sync = new object();
+		public int Height {
+			get { return (int)file.Header.Height; }
+		}
 
-		public SmackerPlayer (string filename,
-				      Stream smk_stream,
-				      int width, int height)
+		float timeElapsed=0;
+		Surface surf;
+		void Events_Tick(object sender, TickEventArgs e)
 		{
-			this.filename = filename;
-			this.width = width;
-			this.height = height;
+			//decoder.ReadNextFrame();
 
-			this.buf = GuiUtil.ReadStream (smk_stream);
+			//There should be an easier way to get the video data to SDL
+            
+			timeElapsed += (e.SecondsElapsed);
+			while (timeElapsed > 1.0 / file.Header.Fps && frameQueue.Count > 0)
+			{
+				timeElapsed -= (float)(1.0f / file.Header.Fps);
+				byte[] rgbData = frameQueue.Dequeue();
+				surf.Lock();
+				Marshal.Copy(rgbData, 0, surf.Pixels, rgbData.Length);
+				surf.Unlock();
+				surf.Update();
+
+				EmitFrameReady ();
+
+				if (frameQueue.Count < BUFFERED_FRAMES / 2 && decoderThread.ThreadState == ThreadState.Suspended)
+					decoderThread.Resume();
+			}
+		}
+
+		void DecoderThread()
+		{
+			while (firstRun || file.Header.HasRingFrame())
+			{
+				decoder.Reset();
+				while (decoder.CurrentFrame < file.Header.NbFrames)
+				{
+					decoder.ReadNextFrame();
+					frameQueue.Enqueue(decoder.BGRAData);
+					//audioStream.WritePCM(decoder.GetAudioData(0));
+					//if (firstRun) audioStream.Play();
+					// memAudioStream.Write(decoder.GetAudioData(0), 0, decoder.GetAudioData(0).Length);
+					if (frameQueue.Count >= BUFFERED_FRAMES)
+						Thread.CurrentThread.Suspend();
+				}
+			}
+			firstRun = false;
+			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (EmitFinished)));
 		}
 
 		public void Play ()
 		{
-			if (state == State.PAUSED) {
-				state = State.PLAYING;
-				decoderThread.Resume ();
-			}
-			else if (state == State.STOPPED) {
-				state = State.PLAYING;
-				decoderThread = new Thread (DecoderThread);
-				decoderThread.IsBackground = true;
-				decoderThread.Start();
-			}
+			Console.WriteLine ("Play");
+			if (decoderThread != null)
+				throw new Exception ();
+
+			decoderThread = new Thread (DecoderThread);
+			decoderThread.IsBackground = true;
+			decoderThread.Start();
+
+			Events.Tick += Events_Tick;
 		}
 
 		public void Stop ()
 		{
-			if (state == State.STOPPED)
-				return;
-
-			state = State.STOPPED;
-			decoderThread.Abort ();
-			decoder.Stop ();
+			if (decoderThread != null)
+				decoderThread.Abort ();
 			decoderThread = null;
 			decoder = null;
-			surface = null;
+			surf = null;
+
+			Events.Tick -= Events_Tick;
 		}
 
-		public void Pause ()
-		{
-			if (state == State.PAUSED || state == State.STOPPED)
-				return;
-
-			state = State.PAUSED;
-			decoderThread.Suspend();
-		}
-
-		public void BlitSurface (Surface dest)
-		{
-			lock (sync) {
-				if (surface != null)
-					dest.Blit (surface,
-						   new Point ((dest.Width - surface.Width) / 2,
-							      (dest.Height - surface.Height) / 2));
-			}
-		}
-
-		Surface ScaleSurface (Surface surf)
-		{
-			double horiz_zoom = (double)width / surf.Width;
-			double vert_zoom = (double)height / surf.Height;
-			double zoom;
-
-			if (horiz_zoom < vert_zoom)
-				zoom = horiz_zoom;
-			else
-				zoom = vert_zoom;
-
-			if (zoom != 1.0)
-				surf.Scale (zoom);
-
-			return surf;
-		}
-
-		void DecoderThread ()
-		{
-			try {
-				decoder = new FFmpeg (filename, buf);
-
-				decoder.Start ();
-
-				Console.WriteLine ("animation is {0}x{1}, we're displaying at {2}x{3}",
-						   decoder.Width, decoder.Height,
-						   width, height);
-				byte[] frame_buf = new byte [decoder.Width * decoder.Height * 3];
-				while (decoder.GetNextFrame (frame_buf)) {
-					lock (sync) {
-						if (surface != null)
-							surface.Dispose ();
-						surface = ScaleSurface (GuiUtil.CreateSurface (frame_buf,
-											       (ushort)decoder.Width,
-											       (ushort)decoder.Height,
-											       24, decoder.Width * 3,
-											       (int)0x000000ff,
-											       (int)0x0000ff00,
-											       (int)0x00ff0000,
-											       (int)0x00000000));
-					}
-					Thread.Sleep (100);
-				}
-
-				decoder.Stop ();
-			}
-			finally {
-				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (EmitFinished)));
-			}
-
+		public Surface Surface {
+			get { return surf; }
 		}
 
 		public event PlayerEvent Finished;
+		public event PlayerEvent FrameReady;
 
 		void EmitFinished ()
 		{
 			if (Finished != null)
 				Finished ();
 		}
+
+		void EmitFrameReady ()
+		{
+			if (FrameReady != null)
+				FrameReady ();
+		}
 	}
 
 	public delegate void PlayerEvent ();
-
-	class FFmpeg
-	{
-		static bool init_succeeded;
-
-		static FFmpeg ()
-		{
-			try {
-				ffmpeg_init();
-				init_succeeded = true;
-			}
-			catch (DllNotFoundException) {
-				init_succeeded = false;
-			}
-		}
-
-		GCHandle handle;
-		string filename;
-		byte[] buf;
-		int width, height;
-
-		public FFmpeg (string filename, byte[] buf)
-		{
-			if (!init_succeeded)
-				throw new Exception ("initialization of ffmpegglue library failed");
-
-			this.filename = filename;
-			this.buf = buf;
-		}
-
-		public void Start ()
-		{
-			handle = start_decoder (filename, buf, buf.Length);
-			get_dimensions (handle, out width, out height);
-		}
-
-		public void Stop ()
-		{
-			if (handle.Target != null) {
-				stop_decoder (handle);
-				handle.Target = null;
-			}
-		}
-
-		public bool GetNextFrame (byte[] buf)
-		{
-			return get_next_frame (handle, buf);
-		}
-
-		public int Width {
-			get { return width; }
-		}
-
-		public int Height {
-			get { return height; }
-		}
-
-		[DllImport ("ffmpegglue.dll")]
-		extern static void ffmpeg_init ();
-
-		[DllImport ("ffmpegglue.dll")]
-		public extern static GCHandle start_decoder (string filename, byte[] buf, int buf_size);
-
-		[DllImport ("ffmpegglue.dll")]
-		public extern static void get_dimensions (GCHandle handle, out int width, out int height);
-
-		[DllImport ("ffmpegglue.dll")]
-		public extern static bool get_next_frame (GCHandle handle, byte[] buf);
-
-		[DllImport ("ffmpegglue.dll")]
-		public extern static void stop_decoder (GCHandle handle);
-	}
 }

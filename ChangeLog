@@ -1,3 +1,23 @@
+2006-06-13  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/SmackerPlayer.cs: mostly adapt daxxar's
+	SmkTest player here.  Remove the (missing) ffmpeg glu library
+	dependency.
+
+	* SCSharp/SCSharp.UI/Cinematic.cs: move the frame scaling stuff
+	here.
+
+	* SCSharp/SCSharp.UI/Painter.cs: rewrite things such that we only
+	have one Painter (accessed via Painter.Instance).  Also, now we
+	only paint if there's a dirty rectangle.  We rely on the various
+	UI elements to tell us when a region on the screen is invalid and
+	needs redrawing.  This isn't the final iteration, but it's a lot
+	closer to the "right" solution.
+
+	* SCSharp/SCSharp.Util/Util.cs: add MakeTag from daxxar's SmkLib.
+	it should probably live in that code instead of here, but leave it
+	here for now.
+
 2006-06-08  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GameScreen.cs: add rendering of wireframe,

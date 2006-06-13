@@ -29,6 +29,7 @@
 //
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -59,7 +60,7 @@ namespace SCSharp.UI
 		Count
 	}
 
-	public delegate void PainterDelegate (Surface surf, DateTime now);
+	public delegate void PainterDelegate (DateTime now);
 
 	public class Painter 
 	{
@@ -72,7 +73,7 @@ namespace SCSharp.UI
 		Surface paintingSurface;
 		Surface backbuffer;
 
-		Layer paintingLayer;
+		Layer paintingLayer = Layer.Count;
 
 		bool fullscreen;
 
@@ -83,8 +84,35 @@ namespace SCSharp.UI
 		public const int SCREEN_RES_X = 640;
 		public const int SCREEN_RES_Y = 480;
 
-		public Painter (bool fullscreen, int millis)
+#if !RELEASE
+		DateTime last_time;
+		byte[] fontpal;
+		double fps;
+		int frame_count;
+#endif
+
+		static Painter instance;
+
+		public static void InitializePainter (bool fullscreen, int millis)
 		{
+			if (instance != null)
+				throw new Exception ("only one painter instance allowed");
+
+			instance = new Painter (fullscreen, millis);
+		}
+
+		public static Painter Instance {
+			get { return instance; }
+		}
+
+		private Painter (bool fullscreen, int millis)
+		{
+#if !RELEASE
+			Pcx pcx = new Pcx ();
+			pcx.ReadFromStream ((Stream)Game.Instance.PlayingMpq.GetResource ("game\\tfontgam.pcx"), 0, 0);
+			fontpal = pcx.Palette;
+#endif
+
 			this.millis = millis;
 
 			this.fullscreen = fullscreen;
@@ -102,8 +130,14 @@ namespace SCSharp.UI
                         Events.Tick +=new TickEventHandler (Tick);
 		}
 
+#if false
 		public Painter (Surface surf, int millis)
 		{
+#if !RELEASE
+			Pcx pcx = new Pcx ();
+			pcx.ReadFromStream ((Stream)Game.Instance.PlayingMpq.GetResource ("game\\tfontgam.pcx"), 0, 0);
+			fontpal = pcx.Palette;
+#endif
 			this.millis = millis;
 
 			this.paintingSurface = surf;
@@ -122,6 +156,7 @@ namespace SCSharp.UI
 			/* and set ourselves up to invalidate at a regular interval*/
                         Events.Tick +=new TickEventHandler (Tick);
 		}
+#endif
 
 		public bool Fullscreen {
 			get { return fullscreen; }
@@ -135,7 +170,7 @@ namespace SCSharp.UI
 						paintingSurface = Video.SetVideoModeWindow (SCREEN_RES_X, SCREEN_RES_Y);
 
 					backbuffer = paintingSurface.CreateCompatibleSurface (paintingSurface.Size);
-					backbuffer.Fill (new Rectangle (new Point (0, 0), backbuffer.Size), Color.Black);
+					Invalidate ();
 				}
 			}
 		}
@@ -147,6 +182,7 @@ namespace SCSharp.UI
 			}
 			else {
 				layers[(int)layer].Add (painter);
+				Invalidate ();
 			}
 		}
 
@@ -154,8 +190,10 @@ namespace SCSharp.UI
 		{
 			if (layer == paintingLayer)
 				pendingRemoves.Add (painter);
-			else
+			else {
 				layers[(int)layer].Remove (painter);
+				Invalidate ();
+			}
 		}
 
 		public void Clear (Layer layer)
@@ -170,6 +208,18 @@ namespace SCSharp.UI
 			}
 		}
 
+		int paused;
+
+		public void Pause ()
+		{
+			paused++;
+		}
+
+		public void Resume ()
+		{
+			paused--;
+		}
+
 		void Tick (object sender, TickEventArgs e)
 		{
 			total_elapsed += e.TicksElapsed;
@@ -177,16 +227,43 @@ namespace SCSharp.UI
 			if (total_elapsed < millis)
 				return;
 
+			if (paused == 0)
+				Redraw ();
+		}
+
+		public event EventHandler Painting;
+
+		public void Redraw ()
+		{
+#if !RELEASE
+			/* make sure we invalidate the region where we're going to draw the fps/related info */
+			Invalidate (new Rectangle (new Point (10, 10), new Size (150, 50)));
+#endif
+			//Console.WriteLine ("Redraw");
+
+			if (Painting != null)
+				Painting (this, EventArgs.Empty);
+
+			if (dirty.IsEmpty)
+				return;
+
+			//Console.WriteLine (" + dirty = {0}", dirty);
+
 			total_elapsed = 0;
 
 			now = DateTime.Now;
 
-                        backbuffer.Fill(new Rectangle(new Point(0, 0), backbuffer.Size), Color.Black);
+                        backbuffer.Fill(dirty, Color.Black);
 			
 			for (Layer i = Layer.Background; i < Layer.Count; i ++) {
 				paintingLayer = i;
 
 				DrawLayer (layers[(int)i]);
+
+				if (pendingClear ||
+				    pendingAdds.Count != 0 ||
+				    pendingRemoves.Count != 0)
+					Invalidate ();
 
 				if (pendingClear)
 					layers[(int)i].Clear ();
@@ -200,15 +277,89 @@ namespace SCSharp.UI
 
 			paintingLayer = Layer.Count;
 
+#if !RELEASE
+			frame_count ++;
+			if (frame_count == 30) {
+
+				DateTime after = DateTime.Now;
+
+				fps = 1.0 / (after - last_time).TotalSeconds * 30;
+
+				last_time = after;
+				frame_count = 0;
+			}
+
+			Surface s;
+
+			s = GuiUtil.ComposeText (String.Format ("fps: {0,2:F}", fps),
+						 GuiUtil.GetFonts (Game.Instance.PlayingMpq)[1],
+						 fontpal);
+
+			backbuffer.Blit (s, new Point (10, 10));
+
+#endif
 			paintingSurface.Blit (backbuffer);
 
 			paintingSurface.Flip ();
+
+			dirty = Rectangle.Empty;
 		}
 
-		void DrawLayer (List<PainterDelegate> painters)
+		public void DrawLayer (List<PainterDelegate> painters)
 		{
-			foreach (PainterDelegate p in painters)
-				p (backbuffer, now);
+			foreach (PainterDelegate p in painters) {
+				p (now);
+			}
+		}
+
+		public void Blit (Surface surf, Point p)
+		{
+			backbuffer.Blit (surf, p);
+		}
+
+		public void Blit (Surface surf)
+		{
+			backbuffer.Blit (surf);
+		}
+
+		public void Blit (Surface surf, Rectangle r1, Rectangle r2)
+		{
+			backbuffer.Blit (surf, r1, r2);
+		}
+
+		public void DrawBox (Rectangle rect, Color color)
+		{
+			backbuffer.DrawBox (rect, color);
+		}
+
+		Rectangle dirty = Rectangle.Empty;
+
+		public Rectangle Dirty {
+			get { return dirty; }
+		}
+
+		public void Invalidate (Rectangle r)
+		{
+			//Console.WriteLine ("invalidating {0}", r);
+			if (dirty.IsEmpty)
+				dirty = r;
+			else if (dirty.Contains (r))
+				return;
+			else
+				dirty = Rectangle.Union (dirty, r);
+		}
+
+		public void Invalidate ()
+		{
+			Invalidate (new Rectangle (0, 0, Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y));
+		}
+
+		public int Width {
+			get { return backbuffer.Width; }
+		}
+
+		public int Height {
+			get { return backbuffer.Height; }
 		}
 	}
 }

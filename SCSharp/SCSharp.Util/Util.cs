@@ -90,6 +90,16 @@ namespace SCSharp {
 			"ice",
 			"twilight"
 		};
+
+		/// <summary>
+		/// Make a magic number from the specified chars
+		/// </summary>
+		public  static UInt32 MakeTag(params char[] chars)
+		{
+			if (chars.Length != 4)
+				throw new ArgumentException("We need 4 chars");
+			return (uint)(chars[0] | (chars[1] << 8) | (chars[2] << 16) | (chars[3] << 24));
+		}
 	}
 }
 
