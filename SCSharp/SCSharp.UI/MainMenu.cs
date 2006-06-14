@@ -29,6 +29,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -67,6 +68,25 @@ namespace SCSharp.UI
 				}
 			};
 			ShowDialog (d);
+		}
+
+		List<UIElement> smkElements;
+		UIPainter smkPainter;
+
+		public override void AddToPainter ()
+		{
+			base.AddToPainter ();
+			foreach (MovieElement el in smkElements)
+				el.Play ();
+			Painter.Instance.Add (Layer.Background, smkPainter.Paint);
+		}
+
+		public override void RemoveFromPainter ()
+		{
+			base.RemoveFromPainter ();
+			foreach (MovieElement el in smkElements)
+				el.Stop ();
+			Painter.Instance.Remove (Layer.Background, smkPainter.Paint);
 		}
 
 		protected override void ResourceLoader ()
@@ -125,6 +145,44 @@ namespace SCSharp.UI
 				delegate () {
 					Game.Instance.Quit ();
 				};
+
+			smkElements = new List<UIElement>();
+
+			AddMovieElements (SINGLEPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Single.smk", "glue\\mainmenu\\SingleOn.smk");
+			AddMovieElements (MULTIPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Multi.smk", "glue\\mainmenu\\MultiOn.smk");
+			AddMovieElements (CAMPAIGNEDITOR_ELEMENT_INDEX, "glue\\mainmenu\\Editor.smk", "glue\\mainmenu\\EditorOn.smk");
+			AddMovieElements (EXIT_ELEMENT_INDEX, "glue\\mainmenu\\Exit.smk", "glue\\mainmenu\\ExitOn.smk");
+
+			smkPainter = new UIPainter (smkElements);
 		}
+
+		void AddMovieElements (int elementIndex, string normalMovie, string onMovie)
+		{
+			UIElement normalElement, onElement;
+
+			normalElement = new MovieElement (this,
+							  Elements[elementIndex].BinElement,
+							  Elements[elementIndex].Palette,
+							  normalMovie, true);
+			onElement = new MovieElement (this,
+						      Elements[elementIndex].BinElement,
+						      Elements[elementIndex].Palette,
+						      onMovie, true);
+
+			smkElements.Add (normalElement);
+			smkElements.Add (onElement);
+			onElement.Visible = false;
+
+			Elements[elementIndex].MouseEnterEvent += 
+				delegate () {
+					onElement.Visible = true;
+				};
+			Elements[elementIndex].MouseLeaveEvent += 
+				delegate () {
+					onElement.Visible = false;
+				};
+		}
+
+
 	}
 }

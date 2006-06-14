@@ -21,6 +21,7 @@ SCSharp.UI/LoginScreen.cs
 SCSharp.UI/MainMenu.cs
 SCSharp.UI/MapRenderer.cs
 SCSharp.UI/MarkupScreen.cs
+SCSharp.UI/MovieElement.cs
 SCSharp.UI/OkCancelDialog.cs
 SCSharp.UI/OkDialog.cs
 SCSharp.UI/OptionsDialog.cs

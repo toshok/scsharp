@@ -47,6 +47,7 @@ namespace SCSharp.UI
 
 		Thread decoderThread;
 		bool firstRun = true;
+		int buffered_frames;
 
 		Queue<byte[]> frameQueue = new Queue<byte[]>();
 
@@ -56,15 +57,18 @@ namespace SCSharp.UI
 		AutoResetEvent waitEvent;
 
 		SDLPCMStream audioStream;
-		public SmackerPlayer (Stream smk_stream)
+		public SmackerPlayer (Stream smk_stream) : this (smk_stream, BUFFERED_FRAMES)
+		{
+		}
+
+		public SmackerPlayer (Stream smk_stream, int buffered_frames)
 		{
 			file = SmackerFile.OpenFromStream(smk_stream);
 			decoder= file.Decoder;
+			this.buffered_frames = buffered_frames;
     
 			//stream.Close();
 
-			surf = new Surface((int)file.Header.Width, (int)file.Header.Height);
-            
 			//Init audio
 			//SDLPCMStream.SDLPCMStreamFormat format = new SDLPCMStream.SDLPCMStreamFormat(SDLPCMStream.SDLPCMStreamFormat.PCMFormat.UnSigned16BitLE, file.Header.GetSampleRate(0), (file.Header.IsStereoTrack(0)) ? 2 : 1);
 			//audioStream = new SDLPCMStream(format);
@@ -93,14 +97,25 @@ namespace SCSharp.UI
 			{
 				timeElapsed -= (float)(1.0f / file.Header.Fps);
 				byte[] rgbData = frameQueue.Dequeue();
-				surf.Lock();
-				Marshal.Copy(rgbData, 0, surf.Pixels, rgbData.Length);
-				surf.Unlock();
-				surf.Update();
+
+				if (surf == null) {
+					surf = GuiUtil.CreateSurface (rgbData, (ushort)file.Header.Width, (ushort)file.Header.Height,
+								      32, (int)file.Header.Width * 4,
+								      (int)0x00ff0000,
+								      (int)0x0000ff00,
+								      (int)0x000000ff,
+								      unchecked ((int)0xff000000));
+				}
+				else {
+					surf.Lock();
+					Marshal.Copy(rgbData, 0, surf.Pixels, rgbData.Length);
+					surf.Unlock();
+					surf.Update();
+				}
 
 				EmitFrameReady ();
 
-				if (frameQueue.Count < BUFFERED_FRAMES / 2)
+				if (frameQueue.Count < (buffered_frames / 2) + 1)
 					waitEvent.Set ();
 			}
 		}
@@ -112,15 +127,21 @@ namespace SCSharp.UI
 				decoder.Reset();
 				while (decoder.CurrentFrame < file.Header.NbFrames)
 				{
-					decoder.ReadNextFrame();
-					frameQueue.Enqueue(decoder.BGRAData);
-					//audioStream.WritePCM(decoder.GetAudioData(0));
-					//if (firstRun) audioStream.Play();
-					// memAudioStream.Write(decoder.GetAudioData(0), 0, decoder.GetAudioData(0).Length);
-					if (frameQueue.Count >= BUFFERED_FRAMES)
-						waitEvent.WaitOne ();
+					try {
+						decoder.ReadNextFrame();
+						frameQueue.Enqueue(decoder.BGRAData);
+						//audioStream.WritePCM(decoder.GetAudioData(0));
+						//if (firstRun) audioStream.Play();
+						// memAudioStream.Write(decoder.GetAudioData(0), 0, decoder.GetAudioData(0).Length);
+						if (frameQueue.Count >= buffered_frames)
+							waitEvent.WaitOne ();
+					}
+					catch {
+						break;
+					}
 				}
 			}
+
 			firstRun = false;
 			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (EmitFinished)));
 		}
@@ -143,8 +164,6 @@ namespace SCSharp.UI
 			if (decoderThread != null)
 				decoderThread.Abort ();
 			decoderThread = null;
-			decoder = null;
-			surf = null;
 
 			Events.Tick -= Events_Tick;
 		}

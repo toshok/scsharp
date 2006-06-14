@@ -624,8 +624,8 @@ namespace SCSharp.Smk
                     result[j] = CurrentPalette[lastFrameData[i]].B;
                     result[j + 1] = CurrentPalette[lastFrameData[i]].G;
                     result[j + 2] = CurrentPalette[lastFrameData[i]].R;
-                    result[j + 3] = 0xFF;
-
+		    if (result[j] != 0 || result[j+1] != 0 || result[j+2] != 0)
+			    result[j + 3] = 0xFF;
                 }
                 return result;
             }

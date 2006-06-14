@@ -62,6 +62,10 @@ namespace SCSharp.UI
 			this.visible = (el.flags & ElementFlags.Visible) != 0;
 		}
 
+		public BinElement BinElement {
+			get { return el; }
+		}
+
 		public UIScreen ParentScreen {
 			get { return screen; }
 		}
@@ -177,7 +181,8 @@ namespace SCSharp.UI
 
 		protected void Invalidate ()
 		{
-			Painter.Instance.Invalidate (Bounds);
+			if (visible)
+				Painter.Instance.Invalidate (Bounds);
 			surface = null;
 		}
 
