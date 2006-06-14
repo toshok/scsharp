@@ -1,3 +1,31 @@
+2006-06-14  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs: add in the movies,
+	and try to position them correctly.  the first campaign (the
+	center one) doesn't isn't positioned correctly, I don't think.
+	Another thing that needs fixing is the fact that we create 3
+	separate disk.smk players.  Maybe multiple MovieElements should be
+	able to share the same SmackerPlayer?
+
+	* SCSharp/SCSharp.Mpq/Bin.cs: we're using
+	ElementFlags.Unused02000000 to mean ElementFlags.BottonAlignText.
+
+	* SCSharp/SCSharp.UI/MainMenu.cs: update the version (finally) to
+	"v0.0000008".  force the single player button's text to be right
+	aligned and centered vertically.  Also, remove the scaling flag
+	from the MovieElement ctor.
+
+	* SCSharp/SCSharp.UI/ButtonElement.cs: split out the text surface
+	creation from CreateSurface() so we can use it for the new
+	TextPosition getter.
+
+	* SCSharp/SCSharp.UI/UIElement.cs: add a setter for Flags.
+
+	* SCSharp/SCSharp.UI/MovieElement.cs: remove the scaling feature
+	(i don't think any movies in the UI are scaled), and add in
+	support for "dimming" a movie (which gets used in the race
+	selection screen).
+
 2006-06-13  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/ImageElement.cs: just always create the

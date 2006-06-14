@@ -45,19 +45,46 @@ namespace SCSharp.UI
 		{
 		}
 
+		Surface text_surf;
+		int text_x, text_y;
+
+		void CalculateTextPosition ()
+		{
+			if (text_surf == null)
+				text_surf = GuiUtil.ComposeText (Text, Font, Palette, -1, -1,
+								 Sensitive ? 4 : 24);
+
+			if ((Flags & ElementFlags.CenterTextHoriz) == ElementFlags.CenterTextHoriz)
+				text_x = (Width - text_surf.Width) / 2;
+			else if ((Flags & ElementFlags.RightAlignText) == ElementFlags.RightAlignText)
+				text_x = (Width - text_surf.Width);
+			else
+				text_x = 0;
+
+			if ((Flags & ElementFlags.CenterTextVert) == ElementFlags.CenterTextVert)
+				text_y = (Height - text_surf.Height) / 2;
+			else if ((Flags & ElementFlags.BottomAlignText) == ElementFlags.BottomAlignText)
+				text_y = (Height - text_surf.Height);
+			else
+				text_y = 0;
+		}
+
 		protected override Surface CreateSurface ()
 		{
 			Surface surf = new Surface (Width, Height);
 
 			surf.TransparentColor = Color.Black; /* XXX */
 
-			Surface text_surf = GuiUtil.ComposeText (Text, Font, Palette, -1, -1,
-								 Sensitive ? 4 : 24);
-			
-			surf.Blit (text_surf, new Point ((surf.Width - text_surf.Width) / 2,
-							 (surf.Height - text_surf.Height) / 2));
+			text_surf = null;
+			CalculateTextPosition ();
+
+			surf.Blit (text_surf, new Point (text_x, text_y));
 
 			return surf;
+		}
+
+		public Point TextPosition {
+			get { CalculateTextPosition (); return new Point (text_x, text_y); }
 		}
 
 		public override void MouseButtonDown (MouseButtonEventArgs args)

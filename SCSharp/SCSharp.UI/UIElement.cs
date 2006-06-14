@@ -139,7 +139,10 @@ namespace SCSharp.UI
 			      Invalidate (); }
 		}
 
-		public ElementFlags Flags { get { return el.flags; } }
+		public ElementFlags Flags {
+			get { return el.flags; }
+			set { el.flags = value; }
+		}
 		public ElementType Type { get { return el.type; } }
 
 		ushort x1;

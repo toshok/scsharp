@@ -93,7 +93,12 @@ namespace SCSharp.UI
 		{
 			base.ResourceLoader ();
 
-			Elements[VERSION_ELEMENT_INDEX].Text = "v0.0000004";
+			for (int i = 0; i < Elements.Count; i ++)
+				Console.WriteLine ("{0}: {1} '{2}' : {3}", i, Elements[i].Type, Elements[i].Text, Elements[i].Flags);
+
+			Elements[VERSION_ELEMENT_INDEX].Text = "v0.0000008";
+
+			Elements[SINGLEPLAYER_ELEMENT_INDEX].Flags |= ElementFlags.RightAlignText | ElementFlags.CenterTextVert;
 
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
@@ -163,11 +168,11 @@ namespace SCSharp.UI
 			normalElement = new MovieElement (this,
 							  Elements[elementIndex].BinElement,
 							  Elements[elementIndex].Palette,
-							  normalMovie, true);
+							  normalMovie);
 			onElement = new MovieElement (this,
 						      Elements[elementIndex].BinElement,
 						      Elements[elementIndex].Palette,
-						      onMovie, true);
+						      onMovie);
 
 			smkElements.Add (normalElement);
 			smkElements.Add (onElement);

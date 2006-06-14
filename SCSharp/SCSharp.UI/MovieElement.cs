@@ -40,11 +40,12 @@ namespace SCSharp.UI
 {
 	public class MovieElement : UIElement
 	{
-		public MovieElement (UIScreen screen, BinElement el, byte[] palette, string resource, bool scale)
+		public MovieElement (UIScreen screen, BinElement el, byte[] palette, string resource)
 			: base (screen, el, palette)
 		{
 			resource_path = resource;
-			this.scale = scale;
+
+			Sensitive = false;
 
 			player = new SmackerPlayer ((Stream)Mpq.GetResource (resource_path), 1);
 			player.FrameReady += PlayerFrameReady;
@@ -60,35 +61,34 @@ namespace SCSharp.UI
 			player.Stop ();
 		}
 
+		public Size MovieSize {
+			get { return new Size (player.Width, player.Height); }
+		}
+
+		public void Dim (byte dimness)
+		{
+			dim = dimness;
+			Invalidate ();
+		}
+
 		SmackerPlayer player;
 		string resource_path;
-		bool scale;
-
-		Surface surf;
+		byte dim = 0;
 
 		protected override Surface CreateSurface ()
 		{
-			if (surf != null)
-				surf.Dispose ();
-
 			if (player.Surface == null)
 				return null;
 
-			surf = new Surface (player.Surface);
-
-			if (scale &&
-			    player.Width != Width
-			    || player.Height != Height) {
-				double horiz_zoom = (double)Width / player.Width;
-				double vert_zoom = (double)Height / player.Height;
-				double zoom;
-
-				if (horiz_zoom < vert_zoom)
-					zoom = horiz_zoom;
-				else
-					zoom = vert_zoom;
-
-				surf.Scale (zoom);
+			Surface surf;
+			if (dim == 0) {
+				surf = player.Surface;
+			}
+			else {
+				surf = new Surface (player.Surface.Size);
+				surf.Alpha = dim;
+				surf.AlphaBlending = true;
+				surf.Blit (player.Surface);
 			}
 
 			return surf;

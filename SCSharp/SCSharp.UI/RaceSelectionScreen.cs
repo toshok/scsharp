@@ -29,6 +29,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -40,34 +41,38 @@ namespace SCSharp.UI
 	public class RaceSelectionScreen : UIScreen
 	{
 		public RaceSelectionScreen (Mpq mpq) 
-			: base (mpq, "glue\\PalNl",
+			: base (mpq, "glue\\PalCs",
 				Game.Instance.PlayingBroodWar ? Builtins.rez_GluExpcmpgnBin : Builtins.rez_GluCmpgnBin)
 		{
-			background_path = null;
 		}
 
-		int[] BroodwarCampaigns_MapDataStart = new int[] {
-			31,
-			40,
-			49
+		struct RaceData {
+			public Race race;
+			public string normalMovie;
+			public string onMovie;
+			public string diskMovie;
+			public int mapDataStart;
+
+			public RaceData (Race race, string normalMovie, string onMovie, string diskMovie, int mapDataStart) {
+				this.race = race;
+				this.normalMovie = normalMovie;
+				this.onMovie = onMovie;
+				this.diskMovie = diskMovie;
+				this.mapDataStart = mapDataStart;
+			}
+		}
+
+		RaceData[] StarcraftCampaigns = new RaceData[] {
+			new RaceData ( Race.Terran, "glue\\campaign\\terr.smk", "glue\\campaign\\terron.smk", "glue\\campaign\\disk.smk", 0 ),
+			new RaceData ( Race.Zerg, "glue\\campaign\\zerg.smk", "glue\\campaign\\zergon.smk", "glue\\campaign\\disk.smk", 11 ),
+			new RaceData ( Race.Protoss, "glue\\campaign\\prot.smk", "glue\\campaign\\proton.smk", "glue\\campaign\\disk.smk", 21 ),
+
 		};
 
-		Race[] BroodWarRaces = new Race[] {
-			Race.Protoss,
-			Race.Terran,
-			Race.Zerg
-		};
-
-		int[] StarcraftCampaigns_MapDataStart = new int[] {
-			0,
-			11,
-			21
-		};
-
-		Race[] StarcraftRaces = new Race[] {
-			Race.Terran,
-			Race.Zerg,
-			Race.Protoss
+		RaceData[] BroodwarCampaigns = new RaceData[] {
+			new RaceData ( Race.Protoss, "glue\\Expcampaign\\XProt.smk", "glue\\Expcampaign\\XProtOn.smk", "glue\\Expcampaign\\disk.smk", 31 ),
+			new RaceData ( Race.Terran, "glue\\Expcampaign\\XTerr.smk", "glue\\Expcampaign\\XTerrOn.smk", "glue\\Expcampaign\\disk.smk", 40 ),
+			new RaceData ( Race.Zerg, "glue\\Expcampaign\\XZerg.smk", "glue\\Expcampaign\\XZergOn.smk", "glue\\Expcampaign\\disk.smk", 49 ),
 		};
 
 		const int LOADSAVED_ELEMENT_INDEX = 3;
@@ -80,12 +85,35 @@ namespace SCSharp.UI
 		const int THIRD_BUT_FIRST_INCOMPLETE_INDEX = 10;
 		const int THIRD_BUT_SECOND_INCOMPLETE_INDEX = 11;
 
+		List<UIElement> smkElements;
+		UIPainter smkPainter;
+
+		public override void AddToPainter ()
+		{
+			base.AddToPainter ();
+			foreach (MovieElement el in smkElements)
+				el.Play ();
+			Painter.Instance.Add (Layer.Background, smkPainter.Paint);
+		}
+
+		public override void RemoveFromPainter ()
+		{
+			base.RemoveFromPainter ();
+			foreach (MovieElement el in smkElements)
+				el.Stop ();
+			Painter.Instance.Remove (Layer.Background, smkPainter.Paint);
+		}
+
 		protected override void ResourceLoader ()
 		{
 			base.ResourceLoader ();
 
 			for (int i = 0; i < Elements.Count; i ++)
-				Console.WriteLine ("{0}: {1} '{2}'", i, Elements[i].Type, Elements[i].Text);
+				Console.WriteLine ("{0}: {1} '{2}' : {3}", i, Elements[i].Type, Elements[i].Text, Elements[i].Flags);
+
+			Elements[FIRST_CAMPAIGN_ELEMENT_INDEX].Flags |= ElementFlags.BottomAlignText;
+			Elements[SECOND_CAMPAIGN_ELEMENT_INDEX].Flags |= ElementFlags.BottomAlignText;
+			Elements[THIRD_CAMPAIGN_ELEMENT_INDEX].Flags |= ElementFlags.BottomAlignText;
 
 			Elements[THIRD_CAMPAIGN_ELEMENT_INDEX].MouseEnterEvent += 
 				delegate () {
@@ -147,6 +175,14 @@ namespace SCSharp.UI
 				delegate () {
 					Game.Instance.SwitchToScreen (new PlayCustomScreen (mpq));
 				};
+
+			smkElements = new List<UIElement>();
+
+			AddMovieElements (FIRST_CAMPAIGN_ELEMENT_INDEX, 0);
+			AddMovieElements (SECOND_CAMPAIGN_ELEMENT_INDEX, 1);
+			AddMovieElements (THIRD_CAMPAIGN_ELEMENT_INDEX, 2);
+
+			smkPainter = new UIPainter (smkElements);
 		}
 
 		void SelectCampaign (int campaign)
@@ -155,9 +191,9 @@ namespace SCSharp.UI
 			string prefix;
 			string markup;
 
-			Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodWarRaces : StarcraftRaces)[campaign];
+			Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].race;
 			
-			mapdata_index = GlobalResources.Instance.MapDataDat.GetFileIndex ((uint)(Game.Instance.PlayingBroodWar ? BroodwarCampaigns_MapDataStart : StarcraftCampaigns_MapDataStart)[campaign]);
+			mapdata_index = GlobalResources.Instance.MapDataDat.GetFileIndex ((uint)(Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].mapDataStart);
 
 			prefix = GlobalResources.Instance.MapDataTbl [(int)mapdata_index];
 			markup = String.Format ("rez\\Est{0}{1}{2}.txt",
@@ -166,6 +202,53 @@ namespace SCSharp.UI
 						Game.Instance.PlayingBroodWar ? "x" : "");
 
 			Game.Instance.SwitchToScreen (new EstablishingShot (markup, prefix, mpq));
+		}
+
+		void AddMovieElements (int elementIndex, int campaign)
+		{
+			MovieElement normalElement, onElement, diskElement;
+
+			diskElement = new MovieElement (this,
+							Elements[elementIndex].BinElement,
+							Elements[elementIndex].Palette,
+							(Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].diskMovie);
+
+			diskElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - diskElement.MovieSize.Width) / 2));
+			diskElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - diskElement.MovieSize.Height);
+
+			normalElement = new MovieElement (this,
+							  Elements[elementIndex].BinElement,
+							  Elements[elementIndex].Palette,
+							  (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].normalMovie);
+
+			normalElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - normalElement.MovieSize.Width) / 2));
+			normalElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - normalElement.MovieSize.Height);
+
+			onElement = new MovieElement (this,
+						      Elements[elementIndex].BinElement,
+						      Elements[elementIndex].Palette,
+						      (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].onMovie);
+
+			onElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - onElement.MovieSize.Width) / 2));
+			onElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - onElement.MovieSize.Height);
+
+			smkElements.Add (diskElement);
+			smkElements.Add (normalElement);
+			smkElements.Add (onElement);
+
+			onElement.Visible = false;
+			normalElement.Dim (100);
+
+			Elements[elementIndex].MouseEnterEvent += 
+				delegate () {
+					normalElement.Dim (0);
+					onElement.Visible = true;
+				};
+			Elements[elementIndex].MouseLeaveEvent += 
+				delegate () {
+					normalElement.Dim (100);
+					onElement.Visible = false;
+				};
 		}
 	}
 }
