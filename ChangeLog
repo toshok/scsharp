@@ -1,4 +1,10 @@
-2006-06-13  Chris Toshok  <toshok@ximian.com>
+2006-06-13  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/ImageElement.cs: just always create the
+	surface with 254/0 as translucent/transparent.  This fixes the
+	"tail" of the multi player graphic.
+
+2006-06-13  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI.dll.sources: add MovieElement.cs
 
