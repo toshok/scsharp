@@ -148,7 +148,6 @@ namespace SCSharp.UI
 
 		public void Play ()
 		{
-			Console.WriteLine ("Play");
 			if (decoderThread != null)
 				throw new Exception ();
 
