@@ -50,29 +50,27 @@ namespace SCSharp.UI
 			public Race race;
 			public string normalMovie;
 			public string onMovie;
-			public string diskMovie;
 			public int mapDataStart;
 
-			public RaceData (Race race, string normalMovie, string onMovie, string diskMovie, int mapDataStart) {
+			public RaceData (Race race, string normalMovie, string onMovie, int mapDataStart) {
 				this.race = race;
 				this.normalMovie = normalMovie;
 				this.onMovie = onMovie;
-				this.diskMovie = diskMovie;
 				this.mapDataStart = mapDataStart;
 			}
 		}
 
 		RaceData[] StarcraftCampaigns = new RaceData[] {
-			new RaceData ( Race.Terran, "glue\\campaign\\terr.smk", "glue\\campaign\\terron.smk", "glue\\campaign\\disk.smk", 0 ),
-			new RaceData ( Race.Zerg, "glue\\campaign\\zerg.smk", "glue\\campaign\\zergon.smk", "glue\\campaign\\disk.smk", 11 ),
-			new RaceData ( Race.Protoss, "glue\\campaign\\prot.smk", "glue\\campaign\\proton.smk", "glue\\campaign\\disk.smk", 21 ),
+			new RaceData ( Race.Terran, "glue\\campaign\\terr.smk", "glue\\campaign\\terron.smk", 0 ),
+			new RaceData ( Race.Zerg, "glue\\campaign\\zerg.smk", "glue\\campaign\\zergon.smk", 11 ),
+			new RaceData ( Race.Protoss, "glue\\campaign\\prot.smk", "glue\\campaign\\proton.smk", 21 ),
 
 		};
 
 		RaceData[] BroodwarCampaigns = new RaceData[] {
-			new RaceData ( Race.Protoss, "glue\\Expcampaign\\XProt.smk", "glue\\Expcampaign\\XProtOn.smk", "glue\\Expcampaign\\disk.smk", 31 ),
-			new RaceData ( Race.Terran, "glue\\Expcampaign\\XTerr.smk", "glue\\Expcampaign\\XTerrOn.smk", "glue\\Expcampaign\\disk.smk", 40 ),
-			new RaceData ( Race.Zerg, "glue\\Expcampaign\\XZerg.smk", "glue\\Expcampaign\\XZergOn.smk", "glue\\Expcampaign\\disk.smk", 49 ),
+			new RaceData ( Race.Protoss, "glue\\Expcampaign\\XProt.smk", "glue\\Expcampaign\\XProtOn.smk", 31 ),
+			new RaceData ( Race.Terran, "glue\\Expcampaign\\XTerr.smk", "glue\\Expcampaign\\XTerrOn.smk", 40 ),
+			new RaceData ( Race.Zerg, "glue\\Expcampaign\\XZerg.smk", "glue\\Expcampaign\\XZergOn.smk", 49 ),
 		};
 
 		const int LOADSAVED_ELEMENT_INDEX = 3;
@@ -102,6 +100,8 @@ namespace SCSharp.UI
 			foreach (MovieElement el in smkElements)
 				el.Stop ();
 			Painter.Instance.Remove (Layer.Background, smkPainter.Paint);
+
+			diskPlayer = null;
 		}
 
 		protected override void ResourceLoader ()
@@ -204,14 +204,19 @@ namespace SCSharp.UI
 			Game.Instance.SwitchToScreen (new EstablishingShot (markup, prefix, mpq));
 		}
 
+		SmackerPlayer diskPlayer;
+
 		void AddMovieElements (int elementIndex, int campaign)
 		{
 			MovieElement normalElement, onElement, diskElement;
 
+			if (diskPlayer == null)
+				diskPlayer = new SmackerPlayer ((Stream)Mpq.GetResource (Game.Instance.PlayingBroodWar ? "glue\\Expcampaign\\disk.smk" : "glue\\campaign\\disk.smk"), 1);
+
 			diskElement = new MovieElement (this,
 							Elements[elementIndex].BinElement,
 							Elements[elementIndex].Palette,
-							(Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].diskMovie);
+							diskPlayer);
 
 			diskElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - diskElement.MovieSize.Width) / 2));
 			diskElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - diskElement.MovieSize.Height);

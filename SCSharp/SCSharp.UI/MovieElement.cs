@@ -51,6 +51,15 @@ namespace SCSharp.UI
 			player.FrameReady += PlayerFrameReady;
 		}
 
+		public MovieElement (UIScreen screen, BinElement el, byte[] palette, SmackerPlayer player)
+			: base (screen, el, palette)
+		{
+			Sensitive = false;
+
+			this.player = player;
+			player.FrameReady += PlayerFrameReady;
+		}
+
 		public void Play ()
 		{
 			player.Play ();

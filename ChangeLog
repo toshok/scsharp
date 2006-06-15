@@ -1,4 +1,15 @@
-2006-06-14  Chris Toshok  <toshok@ximian.com>
+2006-06-15  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs: share the same
+	SmackerPlayer between the three disk elements.
+
+	* SCSharp/SCSharp.UI/SmackerPlayer.cs: don't throw if we call Play
+	or Stop multiple times, just ignore the extra calls.
+
+	* SCSharp/SCSharp.UI/MovieElement.cs: add a ctor that takes a
+	SmackerPlayer.
+
+2006-06-14  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs: add in the movies,
 	and try to position them correctly.  the first campaign (the

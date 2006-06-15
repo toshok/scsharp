@@ -149,7 +149,7 @@ namespace SCSharp.UI
 		public void Play ()
 		{
 			if (decoderThread != null)
-				throw new Exception ();
+				return;
 
 			decoderThread = new Thread (DecoderThread);
 			decoderThread.IsBackground = true;
@@ -160,8 +160,10 @@ namespace SCSharp.UI
 
 		public void Stop ()
 		{
-			if (decoderThread != null)
-				decoderThread.Abort ();
+			if (decoderThread == null)
+				return;
+
+			decoderThread.Abort ();
 			decoderThread = null;
 
 			Events.Tick -= Events_Tick;
