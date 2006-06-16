@@ -1,5 +1,5 @@
 //
-// SCSharp.UI.UIPainter
+// SCSharp.Mpq.PortDataDat
 //
 // Authors:
 //	Chris Toshok (toshok@hungry.com)
@@ -29,53 +29,46 @@
 //
 
 using System;
-using System.Configuration;
-using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Collections.Generic;
 
-using SdlDotNet;
-using System.Drawing;
+/* offsets:
 
-namespace SCSharp.UI
+portrait animation index at 0x0000. DWORD
+?                        at 0x02d0. BYTE
+?                        at 0x0384. BYTE
+
+*/
+
+namespace SCSharp
 {
-	public class UIPainter
+	public class PortDataDat : MpqResource
 	{
-		static bool showBorders;
+		byte[] buf;
 
-		static UIPainter()
+		public PortDataDat ()
 		{
-#if DEBUG
-			string sb = ConfigurationManager.AppSettings ["ShowElementBorders"];
-			if (sb != null) {
-				showBorders = Boolean.Parse (sb);
-			}
-#endif
 		}
 
-		List<UIElement> elements;
-
-		public UIPainter (List<UIElement> elements)
+		public void ReadFromStream (Stream stream)
 		{
-			this.elements = elements;
+			buf = new byte [stream.Length];
+			stream.Read (buf, 0, buf.Length);
 		}
 
-		public void Paint (DateTime now)
+		public uint GetIdlePortraitIndex (uint index)
 		{
-			for (int i = 0; i < elements.Count; i ++) {
-				UIElement e = elements[i];
+			return Util.ReadDWord (buf, (int)index * 4);
+		}
 
-				if (e == null)
-					continue;
+		public uint GetTalkingPortraitIndex (uint index)
+		{
+			return Util.ReadDWord (buf, (int)(buf.Length / 2 + index * 4)) - 1;
+		}
 
-				e.Paint (now);
-
-				if (showBorders) {
-					Painter.Instance.DrawBox (new Rectangle (new Point (e.X1,e.Y1), new Size (e.Width - 1, e.Height - 1)),
-								  e.Visible ? Color.Green : Color.Yellow);
-					if (e.Text == "")
-						e.Text = i.ToString();
-				}
-			}
+		public int NumIndices {
+			get { return buf.Length / (2 * 4); }
 		}
 	}
 

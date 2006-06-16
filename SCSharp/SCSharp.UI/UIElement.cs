@@ -48,8 +48,7 @@ namespace SCSharp.UI
 		bool sensitive;
 		bool visible;
 		Fnt fnt;
-		string background;
-		Surface background_surface;
+		string text;
 
 		public UIElement (UIScreen screen, BinElement el, byte[] palette)
 		{
@@ -57,8 +56,11 @@ namespace SCSharp.UI
 			this.el = el;
 			this.x1 = el.x1;
 			this.y1 = el.y1;
+			this.width = el.width;
+			this.height = el.height;
 			this.palette = palette;
 			this.sensitive = true;
+			this.text = el.text;
 			this.visible = (el.flags & ElementFlags.Visible) != 0;
 		}
 
@@ -74,16 +76,9 @@ namespace SCSharp.UI
 			get { return screen.Mpq; }
 		}
 
-		public string Background {
-			get { return background; }
-			set { background = value;
-			      background_surface = null;
-			      Invalidate (); }
-		}
-
 		public string Text {
-			get { return el.text; }
-			set { el.text = value;
+			get { return text; }
+			set { text = value;
 			      Invalidate (); }
 		}
 
@@ -110,10 +105,6 @@ namespace SCSharp.UI
 				if (surface == null)
 					surface = CreateSurface ();
 
-				if (background != null && background != ""
-				    && background_surface == null)
-					background_surface = CreateBackgroundSurface ();
-					
 				return surface;
 			}
 		}
@@ -156,8 +147,18 @@ namespace SCSharp.UI
 			get { return y1; }
 			set { y1 = value; }
 		}
-		public ushort Width { get { return el.width; } }
-		public ushort Height { get { return el.height; } }
+
+		ushort width;
+		public ushort Width {
+			get { return width; }
+			set { width = value; }
+		}
+
+		ushort height;
+		public ushort Height {
+			get { return height; }
+			set { height = value; }
+		}
 
 		public Key Hotkey { get { return (Key)el.hotkey; } }
 
@@ -193,12 +194,6 @@ namespace SCSharp.UI
 			get { return new Rectangle (X1, Y1, Width, Height); }
 		}
 
-		Surface CreateBackgroundSurface ()
-		{
-			return GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (background),
-							  254, 0);
-		}
-
 		protected virtual Surface CreateSurface ()
 		{
 			switch (Type) {
@@ -226,9 +221,6 @@ namespace SCSharp.UI
 				source.X -= X1;
 				source.Y -= Y1;
 
-				if (background_surface != null)
-					Painter.Instance.Blit (background_surface, dest, source);
-			
 				Painter.Instance.Blit (surface, dest, source);
 			}
 		}

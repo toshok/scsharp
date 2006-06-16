@@ -29,6 +29,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
@@ -80,12 +81,18 @@ namespace SCSharp.UI
 		int objectives_element_index;
 		int first_portrait_element_index;
 
+		List<MovieElement> portraits;
+		List<ImageElement> hframes;
+		List<ImageElement> frames;
+
 		protected override void ResourceLoader ()
 		{
+			TranslucentIndex = 138;
+
 			base.ResourceLoader ();
 
 			for (int i = 0; i < Elements.Count; i ++)
-				Console.WriteLine ("{0}: {1} '{2}'", i, Elements[i].Type, Elements[i].Text);
+				Console.WriteLine ("{0}: {1} '{2}' {3}", i, Elements[i].Type, Elements[i].Text, Elements[i].Flags);
 
 			if (scenario_prefix.EndsWith ("tutorial")) {
 				Elements[skiptutorial_element_index].Visible = true;
@@ -111,6 +118,50 @@ namespace SCSharp.UI
 				};
 
 			runner = new BriefingRunner (this, scenario, scenario_prefix);
+
+			portraits = new List<MovieElement> ();
+			hframes = new List<ImageElement> ();
+			frames = new List<ImageElement> ();
+
+			for (int i = 0; i < 4; i ++) {
+				MovieElement m = new MovieElement (this,
+								   Elements[first_portrait_element_index + i].BinElement,
+								   Elements[first_portrait_element_index + i].Palette,
+								   true);
+
+				m.X1 += 3;
+				m.Y1 += 3;
+				m.Width -= 6;
+				m.Height -= 6;
+
+				ImageElement f = new ImageElement (this,
+								   Elements[first_portrait_element_index + i].BinElement,
+								   Elements[first_portrait_element_index + i].Palette,
+								   TranslucentIndex);
+				f.Text = String.Format ("glue\\Ready{0}\\{0}Frame{1}.pcx",
+							Util.RaceChar[(int)Game.Instance.Race],
+							i + 1);
+
+				ImageElement h = new ImageElement (this,
+								   Elements[first_portrait_element_index + i].BinElement,
+								   Elements[first_portrait_element_index + i].Palette,
+								   TranslucentIndex);
+				h.Text = String.Format ("glue\\Ready{0}\\{0}FrameH{1}.pcx",
+							Util.RaceChar[(int)Game.Instance.Race],
+							i + 1);
+
+				f.Visible = false;
+				h.Visible = false;
+				m.Visible = false;
+				
+				portraits.Add (m);
+				hframes.Add (h);
+				frames.Add (f);
+
+				Elements.Add (m);
+				Elements.Add (h);
+				Elements.Add (f);
+			}
 		}
 
 		void StopBriefing ()
@@ -125,14 +176,29 @@ namespace SCSharp.UI
 			Elements[objectives_element_index].Text = "";
 
 			for (int i = 0; i < 4; i ++) {
-				Elements[first_portrait_element_index + i].Background = null;
 				Elements[first_portrait_element_index + i].Visible = false;
+				portraits[i].Visible = false;
 			}
 		}
 
 		void PlayBriefing ()
 		{
 			runner.Play ();
+		}
+
+		public override void AddToPainter ()
+		{
+			base.AddToPainter ();
+		}
+
+		public override void RemoveFromPainter ()
+		{
+			base.RemoveFromPainter ();
+
+			foreach (UIElement el in Elements) {
+				if (el is MovieElement)
+					((MovieElement)el).Stop ();
+			}
 		}
 
 		protected override void FirstPaint (object sender, EventArgs args)
@@ -160,31 +226,48 @@ namespace SCSharp.UI
 			if (highlightedPortrait != -1)
 				UnhighlightPortrait (highlightedPortrait);
 
-			Elements[first_portrait_element_index + slot].Background = String.Format ("glue\\Ready{0}\\{0}FrameH{1}.pcx",
-												  Util.RaceChar[(int)Game.Instance.Race],
-												  slot + 1);
+			hframes[slot].Visible = true;
+			frames[slot].Visible = false;
 			highlightedPortrait = slot;
+			portraits[highlightedPortrait].Dim (0);
 		}
 		public void UnhighlightPortrait (int slot)
 		{
-			if (Elements[first_portrait_element_index + slot].Visible)
-				Elements[first_portrait_element_index + slot].Background = String.Format ("glue\\Ready{0}\\{0}Frame{1}.pcx",
-													  Util.RaceChar[(int)Game.Instance.Race],
-													  slot + 1);
+			if (portraits[slot].Visible) {
+				hframes[slot].Visible = false;
+				frames[slot].Visible = true;
+				portraits[highlightedPortrait].Dim (100);
+			}
 		}
 
-		public void ShowPortrait (int slot)
+		public void ShowPortrait (int unit, int slot)
 		{
-			Elements[first_portrait_element_index + slot].Visible = true;
-			Elements[first_portrait_element_index + slot].Background = String.Format ("glue\\Ready{0}\\{0}Frame{1}.pcx",
-												  Util.RaceChar[(int)Game.Instance.Race],
-												  slot + 1);
+			Console.WriteLine ("showing portrait {0} (unit {1}, portrait index {2}) in slot {3}",
+					   "" /*portrait_resource*/, unit,
+					   GlobalResources.Instance.PortDataDat.GetIdlePortraitIndex ((uint)unit),
+					   slot);
+
+			uint portraitIndex = GlobalResources.Instance.UnitsDat.GetPortraitId (unit);
+			
+			string portrait_resource = String.Format ("portrait\\{0}0.smk",
+								  GlobalResources.Instance.PortDataTbl[(int)GlobalResources.Instance.PortDataDat.GetIdlePortraitIndex (portraitIndex)]);
+
+			portraits[slot].Player = new SmackerPlayer ((Stream)Mpq.GetResource (portrait_resource), 1);
+
+			portraits[slot].Dim (100);
+			portraits[slot].Play ();
+			portraits[slot].Visible = true;
+			hframes[slot].Visible = false;
+			frames[slot].Visible = true;
 		}
 
 		public void HidePortrait (int slot)
 		{
-			Elements[first_portrait_element_index + slot].Visible = false;
-			Elements[first_portrait_element_index + slot].Background = null;
+			portraits[slot].Visible = false;
+			hframes[slot].Visible = false;
+			frames[slot].Visible = true;
+
+			portraits[slot].Stop ();
 		}
 
 		public static ReadyRoomScreen Create (Mpq mpq,
@@ -347,13 +430,27 @@ namespace SCSharp.UI
 					screen.SetObjectives (scenario.GetMapString ((int)action.TextIndex));
 					break;
 				case 5:
-					screen.ShowPortrait ((int)action.Group1);
+					Console.WriteLine ("show portrait:");
+					Console.WriteLine ("location = {0}, textindex = {1}, wavindex = {2}, delay = {3}, group1 = {4}, group2 = {5}, unittype = {6}, action = {7}, switch = {8}, flags = {9}",
+							   action.Location,
+							   action.TextIndex,
+							   action.WavIndex,
+							   action.Delay,
+							   action.Group1,
+							   action.Group2,
+							   action.UnitType,
+							   action.Action,
+							   action.Switch,
+							   action.Flags);
+					screen.ShowPortrait ((int)action.UnitType, (int)action.Group1);
+					Console.WriteLine (scenario.GetMapString ((int)action.TextIndex));
 					break;
 				case 6:
 					screen.HidePortrait ((int)action.Group1);
 					break;
 				case 7:
 					Console.WriteLine ("Display Speaking Portrait(Slot, Time)");
+					Console.WriteLine (scenario.GetMapString ((int)action.TextIndex));
 					break;
 				case 8:
 					Console.WriteLine ("Transmission(Text, Slot, Time, Modifier, Wave, WavTime)");

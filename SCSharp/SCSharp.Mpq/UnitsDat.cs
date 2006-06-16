@@ -29,19 +29,23 @@
 //
 
 /*
+227 units
+
 general flingy   at 0x0000.  BYTE   - index into flingy.dat
-overlay          at 0x00e3.  WORD
+overlay          at 0x00e4.  WORD
       ?          at 0x02ab.
 construct sprite at 0x0534.  DWORD  - index into images.dat
 shields          at 0x0a8c.  WORD 
 hitpoints        at 0x0c54.  DWORD
 animation level  at 0x0fe4.  BYTE
 movement flags   at 0x10c8.  BYTE
-      ?          at 0x11ac.
+ground weapon?   at 0x11ac.  BYTE?
 
 subunit range    at 0x1d40.  BYTE
 sight range      at 0x1e24.  BYTE
-      ?          at 0x1f08
+      ?          at 0x1f08.  BYTE
+
+portraits        at 0x367c?  WORD
 
 mineral cost at 0x3844. WORD
 gas cost at 0x3a0c. WORD
@@ -93,6 +97,7 @@ namespace SCSharp
 		const int destroy_score_offset = 0x45a0;
 		const int shield_offset = 0x0a8c;
 		const int hitpoint_offset = 0x0c54;
+		const int portrait_offset = 0x367c;
 
 		public byte GetFlingyId (int unit_id)
 		{
@@ -127,6 +132,11 @@ namespace SCSharp
 		public uint GetHitpoints (int unit_id)
 		{
 			return Util.ReadWord (buf, hitpoint_offset + unit_id * 2);
+		}
+
+		public uint GetPortraitId (int unit_id)
+		{
+			return Util.ReadWord (buf, portrait_offset + unit_id * 2);
 		}
 
 	}

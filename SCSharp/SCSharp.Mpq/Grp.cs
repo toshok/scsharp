@@ -159,7 +159,7 @@ namespace SCSharp
 							grid[line,x--] = line_data[i++];
 					}
 				}
-			} catch (Exception e) { Console.WriteLine ("EXCEPTION on line {0}, x = {2}, i = {3}, line length = {2} (line data length = {4}):", line, x, line_length, i, line_data.Length); }
+			} catch (Exception) { Console.WriteLine ("EXCEPTION on line {0}, x = {2}, i = {3}, line length = {2} (line data length = {4}):", line, x, line_length, i, line_data.Length); }
 		}
 	}
 

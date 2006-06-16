@@ -91,6 +91,8 @@ namespace SCSharp
 					return typeof (UnitsDat);
 				else if (path.ToLower().EndsWith ("mapdata.dat"))
 					return typeof (MapDataDat);
+				else if (path.ToLower().EndsWith ("portdata.dat"))
+					return typeof (PortDataDat);
 			}
 			else if (ext.ToLower () == ".spk") {
 				return typeof (Spk);

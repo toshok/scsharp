@@ -1,3 +1,53 @@
+2006-06-16  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.Mpq/PortDataDat.cs: new class.
+
+	* SCSharp/SCSharp.UI/Builtins.cs: make PortData* capitalization
+	consistent.
+
+	* SCSharp/SCSharp.Mpq/Mpq.cs: handle "portdata.dat".
+
+	* SCSharp/SCSharp.UI/ReadyRoomScreen.cs: rewrite most of this
+	class.  We now show portraits correctly (in original campaigns,
+	not expansion.) and we get rid of the hacked Background UIElement
+	support.
+
+	* SCSharp/SCSharp.Mpq/UnitsDat.cs: add portrait support.
+
+	* SCSharp/SCSharp.UI/GlobalResources.cs: add
+	portdata.dat/portdata.tbl support.
+
+	* SCSharp/SCSharp.UI/MovieElement.cs: add back in the scaling, and
+	also allow the SmackerPlayer to be set instead of just created in
+	the ctor.  We use this in the ready room screen to switch
+	portraits in/out.
+
+	* SCSharp/SCSharp.UI/Painter.cs: add a Prepend call to add
+	painters to the beginning of the list.
+
+	* SCSharp/SCSharp.UI/UIPainter.cs: Allow null UIElements to exist
+	in the Paint method.  just skip them as we iterate over the list.
+
+	* SCSharp/SCSharp.UI/UIElement.cs: allow changing of the Text as
+	well Width/Height properties.  Also, remove the "background" hack
+	that was used in the ready room.  A much better solution is now in
+	place.
+
+	* SCSharp/SCSharp.UI/ImageElement.cs: allow specification of the
+	colormap index used for translucency.  Transparency seems to
+	always be index 0.
+
+	* SCSharp/SCSharp.UI/UIScreen.cs: add a protected property so
+	subclasses can alter the colormap index used for translucent
+	images.  Defaults to 254, which is used for most screens it seems.
+	Pass this index to the ImageElement constructor.
+
+	* SCSharp/SCSharp.Util/Util.cs: quiet the compiler.
+
+	* SCSharp/SCSharp.Mpq/Grp.cs: quiet the compiler.
+
+	* SCSharp/SCSharp.Mpq/Chk.cs: quiet the compiler.
+
 2006-06-15  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs: share the same

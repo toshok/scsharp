@@ -63,8 +63,6 @@ namespace SCSharp {
 
 		public static string ReadUntilNull (byte[] buf, int position)
 		{
-			StringBuilder sb = new StringBuilder();
-
 			int i = position;
 
 			while (buf[i] != 0)

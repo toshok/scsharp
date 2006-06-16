@@ -175,6 +175,11 @@ namespace SCSharp.UI
 			}
 		}
 
+		public void Prepend (Layer layer, PainterDelegate painter)
+		{
+			layers[(int)layer].Insert (0, painter);
+		}
+
 		public void Add (Layer layer, PainterDelegate painter)
 		{
 			if (layer == paintingLayer) {

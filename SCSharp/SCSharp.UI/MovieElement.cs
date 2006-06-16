@@ -40,15 +40,24 @@ namespace SCSharp.UI
 {
 	public class MovieElement : UIElement
 	{
+		public MovieElement (UIScreen screen, BinElement el, byte[] palette, bool scale)
+			: base (screen, el, palette)
+		{
+			this.scale = scale;
+		}
+
+		public MovieElement (UIScreen screen, BinElement el, byte[] palette, string resource, bool scale)
+			: this (screen, el, palette, resource)
+		{
+			this.scale = scale;
+		}
+
 		public MovieElement (UIScreen screen, BinElement el, byte[] palette, string resource)
 			: base (screen, el, palette)
 		{
-			resource_path = resource;
-
 			Sensitive = false;
 
-			player = new SmackerPlayer ((Stream)Mpq.GetResource (resource_path), 1);
-			player.FrameReady += PlayerFrameReady;
+			Player = new SmackerPlayer ((Stream)Mpq.GetResource (resource), 1);
 		}
 
 		public MovieElement (UIScreen screen, BinElement el, byte[] palette, SmackerPlayer player)
@@ -56,22 +65,42 @@ namespace SCSharp.UI
 		{
 			Sensitive = false;
 
-			this.player = player;
-			player.FrameReady += PlayerFrameReady;
+			Player = player;
+		}
+
+		public SmackerPlayer Player {
+			get { return player; }
+			set {
+				if (player != null) {
+					player.FrameReady -= PlayerFrameReady;
+					player.Stop ();
+				}
+
+				player = value;
+				if (player != null)
+					player.FrameReady += PlayerFrameReady;
+			}
 		}
 
 		public void Play ()
 		{
-			player.Play ();
+			if (player != null)
+				player.Play ();
 		}
 
 		public void Stop ()
 		{
-			player.Stop ();
+			if (player != null)
+				player.Stop ();
 		}
 
 		public Size MovieSize {
-			get { return new Size (player.Width, player.Height); }
+			get {
+				if (player == null)
+					return new Size (0, 0);
+				else
+					return new Size (player.Width, player.Height);
+			}
 		}
 
 		public void Dim (byte dimness)
@@ -81,23 +110,40 @@ namespace SCSharp.UI
 		}
 
 		SmackerPlayer player;
-		string resource_path;
 		byte dim = 0;
+		bool scale;
 
 		protected override Surface CreateSurface ()
 		{
-			if (player.Surface == null)
+			if (player == null || player.Surface == null)
 				return null;
 
 			Surface surf;
-			if (dim == 0) {
-				surf = player.Surface;
+
+			surf = new Surface (player.Surface);
+
+			if (scale
+			    && (player.Width != Width
+				|| player.Height != Height)) {
+				double horiz_zoom = (double)Width / player.Width;
+				double vert_zoom = (double)Height / player.Height;
+				double zoom;
+
+				if (horiz_zoom < vert_zoom)
+					zoom = horiz_zoom;
+				else
+					zoom = vert_zoom;
+
+				surf.Scale (zoom);
 			}
-			else {
-				surf = new Surface (player.Surface.Size);
-				surf.Alpha = dim;
-				surf.AlphaBlending = true;
-				surf.Blit (player.Surface);
+
+			if (dim != 0) {
+				Surface dim_surf = new Surface (surf.Size);
+				dim_surf.Alpha = dim;
+				dim_surf.AlphaBlending = true;
+				dim_surf.Blit (surf);
+				surf.Dispose ();
+				surf = dim_surf;
 			}
 
 			return surf;

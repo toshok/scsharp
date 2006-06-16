@@ -369,6 +369,12 @@ namespace SCSharp.UI
 			p.Blit (background, dest, source);
 		}
 
+		int translucentIndex = 254;
+		protected int TranslucentIndex {
+			get { return translucentIndex; }
+			set { translucentIndex = value; }
+		} 
+
 		protected virtual void ResourceLoader ()
 		{
 			Stream s;
@@ -426,7 +432,7 @@ namespace SCSharp.UI
 						ui_el = new DialogBoxElement (this, el, fontpal.RgbData);
 						break;
 					case ElementType.Image:
-						ui_el = new ImageElement (this, el, fontpal.RgbData);
+						ui_el = new ImageElement (this, el, fontpal.RgbData, translucentIndex);
 						break;
 					case ElementType.TextBox:
 						ui_el = new TextBoxElement (this, el, fontpal.RgbData);

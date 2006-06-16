@@ -72,7 +72,6 @@ namespace SCSharp
 		{
 			this.stream = stream;
 
-			long stream_length = stream.Length;
 			byte[] section_name_buf = new byte[4];
 			string section_name;
 

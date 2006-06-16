@@ -44,12 +44,14 @@ namespace SCSharp.UI
 		public UnitsDat UnitsDat;
 		public FlingyDat FlingyDat;
 		public MapDataDat MapDataDat;
+		public PortDataDat PortDataDat;
 
 		public Tbl ImagesTbl;
 		public Tbl SfxDataTbl;
 		public Tbl SpritesTbl;
 		public Tbl GluAllTbl;
 		public Tbl MapDataTbl;
+		public Tbl PortDataTbl;
 	}
 
 	public class GlobalResources
@@ -137,8 +139,16 @@ namespace SCSharp.UI
 			get { return Resources.MapDataDat; }
 		}
 
+		public PortDataDat PortDataDat {
+			get { return Resources.PortDataDat; }
+		}
+
 		public Tbl MapDataTbl {
 			get { return Resources.MapDataTbl; }
+		}
+
+		public Tbl PortDataTbl {
+			get { return Resources.PortDataTbl; }
 		}
 
 		public Resources StarDat {
@@ -157,6 +167,7 @@ namespace SCSharp.UI
 				starcraftResources.SpritesTbl = (Tbl)stardatMpq.GetResource (Builtins.SpritesTbl);
 				starcraftResources.GluAllTbl = (Tbl)stardatMpq.GetResource (Builtins.rez_GluAllTbl);
 				starcraftResources.MapDataTbl = (Tbl)stardatMpq.GetResource (Builtins.MapDataTbl);
+				starcraftResources.PortDataTbl = (Tbl)stardatMpq.GetResource (Builtins.PortDataTbl);
 				starcraftResources.ImagesDat = (ImagesDat)stardatMpq.GetResource (Builtins.ImagesDat);
 				starcraftResources.SfxDataDat = (SfxDataDat)stardatMpq.GetResource (Builtins.SfxDataDat);
 				starcraftResources.SpritesDat = (SpritesDat)stardatMpq.GetResource (Builtins.SpritesDat);
@@ -164,6 +175,7 @@ namespace SCSharp.UI
 				starcraftResources.UnitsDat = (UnitsDat)stardatMpq.GetResource (Builtins.UnitsDat);
 				starcraftResources.FlingyDat = (FlingyDat)stardatMpq.GetResource (Builtins.FlingyDat);
 				starcraftResources.MapDataDat = (MapDataDat)stardatMpq.GetResource (Builtins.MapDataDat);
+				starcraftResources.PortDataDat = (PortDataDat)stardatMpq.GetResource (Builtins.PortDataDat);
 
 				if (broodatMpq != null) {
 					broodwarResources.ImagesTbl = (Tbl)broodatMpq.GetResource (Builtins.ImagesTbl);
@@ -171,6 +183,7 @@ namespace SCSharp.UI
 					broodwarResources.SpritesTbl = (Tbl)broodatMpq.GetResource (Builtins.SpritesTbl);
 					broodwarResources.GluAllTbl = (Tbl)broodatMpq.GetResource (Builtins.rez_GluAllTbl);
 					broodwarResources.MapDataTbl = (Tbl)broodatMpq.GetResource (Builtins.MapDataTbl);
+					broodwarResources.PortDataTbl = (Tbl)broodatMpq.GetResource (Builtins.PortDataTbl);
 					broodwarResources.ImagesDat = (ImagesDat)broodatMpq.GetResource (Builtins.ImagesDat);
 					broodwarResources.SfxDataDat = (SfxDataDat)broodatMpq.GetResource (Builtins.SfxDataDat);
 					broodwarResources.SpritesDat = (SpritesDat)broodatMpq.GetResource (Builtins.SpritesDat);
@@ -178,6 +191,7 @@ namespace SCSharp.UI
 					broodwarResources.UnitsDat = (UnitsDat)broodatMpq.GetResource (Builtins.UnitsDat);
 					broodwarResources.FlingyDat = (FlingyDat)broodatMpq.GetResource (Builtins.FlingyDat);
 					broodwarResources.MapDataDat = (MapDataDat)broodatMpq.GetResource (Builtins.MapDataDat);
+					broodwarResources.PortDataDat = (PortDataDat)broodatMpq.GetResource (Builtins.PortDataDat);
 				}
 
 				// notify we're ready to roll
