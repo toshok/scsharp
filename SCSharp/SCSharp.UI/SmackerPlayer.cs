@@ -56,7 +56,7 @@ namespace SCSharp.UI
 
 		AutoResetEvent waitEvent;
 
-		SDLPCMStream audioStream;
+		//SDLPCMStream audioStream;
 		public SmackerPlayer (Stream smk_stream) : this (smk_stream, BUFFERED_FRAMES)
 		{
 		}

@@ -41,7 +41,7 @@ namespace SCSharp.UI
 		Grp grp;
 
 		int totalElapsed;
-		int millisDelay = 200;
+		int millisDelay = 100;
 
 		int current_frame;
 

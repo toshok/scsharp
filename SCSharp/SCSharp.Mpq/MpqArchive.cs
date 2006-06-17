@@ -35,7 +35,6 @@ namespace MpqReader
 	public class MpqArchive
 	{
 		private Stream mStream;
-		private string mFilename;
 
 		private MpqHeader mHeader;
 		private long mHeaderOffset;
@@ -52,7 +51,6 @@ namespace MpqReader
 
 		public MpqArchive(string Filename)
 		{
-			mFilename = Filename;
 			mStream = File.Open(Filename, FileMode.Open, FileAccess.Read);
 			Init();
 		}

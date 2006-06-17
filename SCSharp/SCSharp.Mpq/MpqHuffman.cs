@@ -291,7 +291,6 @@ namespace MpqReader
 		private static LinkedNode BuildTree(LinkedNode Tail)
 		{
 			LinkedNode current = Tail;
-			LinkedNode head = null;
 
 			while(current != null)
 			{
@@ -305,7 +304,6 @@ namespace MpqReader
 				child1.Parent = parent;
 
 				current.Insert(parent);
-				head = current;
 				current = current.Prev.Prev;
 			}
 			return current;

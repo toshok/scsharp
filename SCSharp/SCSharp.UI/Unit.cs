@@ -56,8 +56,8 @@ namespace SCSharp.UI
 			this.unit_id = unit_id;
 			units = GlobalResources.Instance.UnitsDat;
 
-			hitpoints = units.GetHitpoints (unit_id);
-			shields = units.GetShields (unit_id);
+			hitpoints = units.Hitpoints [unit_id];
+			shields = units.Shields [unit_id];
 		}
 
 		public Unit (UnitInfo info) : this (info.unit_id)
@@ -97,19 +97,19 @@ namespace SCSharp.UI
 		}
 
 		public int FlingyId {
-			get { return units.GetFlingyId (unit_id); }
+			get { return units.FlingyIds [unit_id]; }
 		}
 
 		public int SpriteId {
-			get { return GlobalResources.Instance.FlingyDat.GetSpriteId (FlingyId); }
+			get { return GlobalResources.Instance.FlingyDat.SpriteIds[FlingyId]; }
 		}
 
 		public uint ConstructSpriteId {
-			get { return units.GetConstructSpriteId (unit_id); }
+			get { return units.ConstructSpriteIds [unit_id]; }
 		}
 
 		public int AnimationLevel {
-			get { return units.GetAnimationLevel (unit_id); }
+			get { return units.AnimationLevels [unit_id]; }
 		}
 
 		public uint HitPoints {
@@ -123,19 +123,19 @@ namespace SCSharp.UI
 		}
 
 		public int CreateScore {
-			get { return units.GetCreateScore (unit_id); }
+			get { return units.CreateScores [unit_id]; }
 		}
 
 		public int DestroyScore {
-			get { return units.GetDestroyScore (unit_id); }
+			get { return units.DestroyScores [unit_id]; }
 		}
 
 		public int SelectionCircle {
-			get { return GlobalResources.Instance.SpritesDat.GetSelectionCircle (SpriteId); }
+			get { return GlobalResources.Instance.SpritesDat.SelectionCircles [SpriteId]; }
 		}
 
 		public int SelectionCircleOffset {
-			get { return GlobalResources.Instance.SpritesDat.GetSelectionCircleOffset (SpriteId); }
+			get { return GlobalResources.Instance.SpritesDat.SelectionCircleOffsets [SpriteId]; }
 		}
 	}
 }

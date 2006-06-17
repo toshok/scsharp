@@ -39,13 +39,13 @@ namespace SCSharp
 	public class IScriptBin : MpqResource
 	{
 		byte[] buf;
-		Dictionary<ushort,ushort> entries;
+		Dictionary<uint,ushort> entries;
 
 		const int entry_table_offset = 0x0082e0;
 
 		public IScriptBin ()
 		{
-			entries = new Dictionary<ushort,ushort>();
+			entries = new Dictionary<uint,ushort>();
 		}
 
 		public void ReadFromStream (Stream stream)
@@ -71,7 +71,7 @@ namespace SCSharp
 			get { return buf; }
 		}
 
-		public ushort GetScriptEntryOffset (ushort images_id) {
+		public ushort GetScriptEntryOffset (uint images_id) {
 			if (!entries.ContainsKey (images_id))
 				return 0;
 			return entries[images_id];

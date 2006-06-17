@@ -60,6 +60,9 @@ namespace SCSharp.UI
 
 		class MarkupPage
 		{
+			const int X_OFFSET = 60;
+			const int Y_OFFSET = 10;
+
 			PageLocation location;
 			List<string> lines;
 			List<Surface> lineSurfaces;
@@ -92,7 +95,7 @@ namespace SCSharp.UI
 					if (l.Trim() == "")
 						lineSurfaces.Add (null);
 					else
-						lineSurfaces.Add (GuiUtil.ComposeText (l, fnt, pal));
+						lineSurfaces.Add (GuiUtil.ComposeText (l, fnt, pal, Painter.SCREEN_RES_X - X_OFFSET * 2, -1, 4));
 				}
 			}
 
@@ -111,51 +114,69 @@ namespace SCSharp.UI
 
 				switch (location) {
 				case PageLocation.Top:
-					y = 10;
+					y = Y_OFFSET;
 					foreach (Surface s in lineSurfaces) {
-						if (s != null)
+						if (s != null) {
 							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
-						y += fnt.LineSize;
+							y += s.Height;
+						}
+						else 
+							y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Bottom:
-					y = p.Height - 10 - fnt.LineSize * lines.Count;
+					y = p.Height - Y_OFFSET - fnt.LineSize * lines.Count;
 					foreach (Surface s in lineSurfaces) {
-						if (s != null)
+						if (s != null) {
 							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
-						y += fnt.LineSize;
+							y += s.Height;
+						}
+						else
+							y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Left:
 					y = (p.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
-						if (s != null)
-							p.Blit (s, new Point (60, y));
-						y += fnt.LineSize;
+						if (s != null) {
+							p.Blit (s, new Point (X_OFFSET, y));
+							y += s.Height;
+						}
+						else 
+							y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.LowerLeft:
-					y = p.Height - 10 - fnt.LineSize * lines.Count;
+					y = p.Height - Y_OFFSET - fnt.LineSize * lines.Count;
 					foreach (Surface s in lineSurfaces) {
-						if (s != null)
-							p.Blit (s, new Point (60, y));
-						y += fnt.LineSize;
+						if (s != null) {
+							p.Blit (s, new Point (X_OFFSET, y));
+							y += s.Height;
+						}
+						else
+							y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Right:
 					y = (p.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
-						if (s != null)
-							p.Blit (s, new Point (p.Width - s.Width - 60, y));
-						y += fnt.LineSize;
+						if (s != null) {
+							p.Blit (s, new Point (p.Width - s.Width - X_OFFSET, y));
+							y += s.Height;
+						}
+						else
+							y += fnt.LineSize;
 					}
 					break;
 				case PageLocation.Center:
 					y = (p.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
-						if (s != null)
+						if (s != null) {
 							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
-						y += fnt.LineSize;
+							y += s.Height;
+						}
+						else
+							y += fnt.LineSize;
 					}
 					break;
 				}

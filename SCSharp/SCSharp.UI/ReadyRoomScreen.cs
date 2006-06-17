@@ -244,13 +244,13 @@ namespace SCSharp.UI
 		{
 			Console.WriteLine ("showing portrait {0} (unit {1}, portrait index {2}) in slot {3}",
 					   "" /*portrait_resource*/, unit,
-					   GlobalResources.Instance.PortDataDat.GetIdlePortraitIndex ((uint)unit),
+					   GlobalResources.Instance.PortDataDat.PortraitIndexes [unit],
 					   slot);
 
-			uint portraitIndex = GlobalResources.Instance.UnitsDat.GetPortraitId (unit);
-			
+			uint portraitIndex = GlobalResources.Instance.UnitsDat.Portraits [unit];
+
 			string portrait_resource = String.Format ("portrait\\{0}0.smk",
-								  GlobalResources.Instance.PortDataTbl[(int)GlobalResources.Instance.PortDataDat.GetIdlePortraitIndex (portraitIndex)]);
+								  GlobalResources.Instance.PortDataTbl[(int)GlobalResources.Instance.PortDataDat.PortraitIndexes [(int)portraitIndex]]);
 
 			portraits[slot].Player = new SmackerPlayer ((Stream)Mpq.GetResource (portrait_resource), 1);
 

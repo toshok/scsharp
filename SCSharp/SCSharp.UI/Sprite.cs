@@ -60,7 +60,7 @@ namespace SCSharp.UI
 		byte[] buf;
 		ushort script_start; /* the pc of the script that started us off */
 		ushort pc;
-		ushort iscript_entry;
+		uint iscript_entry;
 		ushort script_entry_offset;
 
 		int current_frame = -1;
@@ -92,12 +92,12 @@ namespace SCSharp.UI
 			this.mpq = mpq;
 			this.palette = palette;
 
-			images_entry = GlobalResources.Instance.SpritesDat.GetImagesDatEntry (sprite_entry);
+			images_entry = GlobalResources.Instance.SpritesDat.ImagesDatEntries [sprite_entry];
 			//			Console.WriteLine ("image_dat_entry == {0}", images_entry);
 
-			ushort grp_index = GlobalResources.Instance.ImagesDat.GetGrpIndex (images_entry);
+			uint grp_index = GlobalResources.Instance.ImagesDat.GrpIndexes [images_entry];
 			//			Console.WriteLine ("grp_index = {0}", grp_index);
-			grp_path = GlobalResources.Instance.ImagesTbl[grp_index-1];
+			grp_path = GlobalResources.Instance.ImagesTbl[(int)grp_index-1];
 			//			Console.WriteLine ("grp_path = {0}", grp_path);
 
 			grp = (Grp)mpq.GetResource ("unit\\" + grp_path);
@@ -105,7 +105,7 @@ namespace SCSharp.UI
 			Console.WriteLine ("new sprite: unit\\{0} @ {1}x{2} (image {3})", grp_path, x, y, images_entry);
 
 			this.buf = GlobalResources.Instance.IScriptBin.Contents;
-			iscript_entry = GlobalResources.Instance.ImagesDat.GetIScriptIndex (images_entry);
+			iscript_entry = GlobalResources.Instance.ImagesDat.IScriptIndexes [images_entry];
 
 			script_entry_offset = GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry);
 			/* make sure the offset points to "SCEP" */
@@ -122,14 +122,14 @@ namespace SCSharp.UI
 			this.palette = palette;
 			this.images_entry = images_entry;
 
-			ushort grp_index = GlobalResources.Instance.ImagesDat.GetGrpIndex (images_entry);
+			uint grp_index = GlobalResources.Instance.ImagesDat.GrpIndexes [images_entry];
 
-			grp_path = GlobalResources.Instance.ImagesTbl[grp_index-1];
+			grp_path = GlobalResources.Instance.ImagesTbl[(int)grp_index-1];
 
 			grp = (Grp)mpq.GetResource ("unit\\" + grp_path);
 
 			this.buf = GlobalResources.Instance.IScriptBin.Contents;
-			iscript_entry = GlobalResources.Instance.ImagesDat.GetIScriptIndex (images_entry);
+			iscript_entry = GlobalResources.Instance.ImagesDat.IScriptIndexes [images_entry];
 
 			script_entry_offset = GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry);
 			/* make sure the offset points to "SCEP" */
@@ -440,7 +440,7 @@ namespace SCSharp.UI
 				break;
 			case PlaySound:
 				warg1 = ReadWord (ref pc);
-				TraceLine ("Play sound: {0} ({1})", warg1 - 1, GlobalResources.Instance.SfxDataTbl[GlobalResources.Instance.SfxDataDat.GetFileIndex ((uint)(warg1 - 1))]);
+				TraceLine ("Play sound: {0} ({1})", warg1 - 1, GlobalResources.Instance.SfxDataTbl[(int)GlobalResources.Instance.SfxDataDat.FileIndexes [warg1 - 1]]);
 				break;
 			case PlayRandomSoundRange:
 				warg1 = ReadWord (ref pc);

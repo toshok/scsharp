@@ -193,7 +193,7 @@ namespace SCSharp.UI
 
 			Game.Instance.Race = (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].race;
 			
-			mapdata_index = GlobalResources.Instance.MapDataDat.GetFileIndex ((uint)(Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].mapDataStart);
+			mapdata_index = GlobalResources.Instance.MapDataDat.FileIndexes [(Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].mapDataStart];
 
 			prefix = GlobalResources.Instance.MapDataTbl [(int)mapdata_index];
 			markup = String.Format ("rez\\Est{0}{1}{2}.txt",

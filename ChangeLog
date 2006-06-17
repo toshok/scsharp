@@ -1,3 +1,14 @@
+2006-06-17  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.Mpq/Dat.cs: new superclass for all *.dat files.
+	Makes managing the variable blocks a little easier.  probably a
+	little less performant, but I think overall it'll be a win.
+
+	* SCSharp/SCSharp.Mpq/*Dat.cs: port to the new Dat.cs superclass.
+
+	* SCSharp/SCSharp.UI/*.cs: same.  Also, clean up some compiler
+	warnings and (CursorAnimator.cs) speed up the cursor animation.
+	
 2006-06-16  Chris Toshok  <toshok@ximian.com>
 
 	* SCSharp/SCSharp.Mpq/PortDataDat.cs: new class.

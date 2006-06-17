@@ -36,34 +36,27 @@ using System.Collections.Generic;
 namespace SCSharp
 {
 
-	public class ImagesDat : MpqResource
+	public class ImagesDat : Dat
 	{
-		const uint grpindex_offset = 0x00;
-		const uint iscript_offset = 0x1d7e;
+		const int iscript_offset = 0x1d7e;
 
 		const int NUM_RECORDS = 755;
-		const int NUM_FIELDS = 14;
 
-		byte[] buf;
+		int grpIndexBlockId;
+		int iscriptIndexBlockId;
 
 		public ImagesDat ()
 		{
+			grpIndexBlockId = AddVariableBlock (NUM_RECORDS, DatVariableType.DWord);
+			iscriptIndexBlockId = AddPlacedVariableBlock (iscript_offset, NUM_RECORDS, DatVariableType.DWord);
 		}
 
-		public void ReadFromStream (Stream stream)
-		{
-			buf = new byte [NUM_RECORDS * NUM_FIELDS * 4];
-			stream.Read (buf, 0, buf.Length);
+		public DatCollection<uint> GrpIndexes {
+			get { return (DatCollection<uint>)GetCollection (grpIndexBlockId); }
 		}
 
-		public ushort GetGrpIndex (uint index)
-		{
-			return Util.ReadWord (buf, (int)(grpindex_offset + index * 4));
-		}
-
-		public ushort GetIScriptIndex (uint index)
-		{
-			return Util.ReadWord (buf, (int)(iscript_offset + index * 4));
+		public DatCollection<uint> IScriptIndexes {
+			get { return (DatCollection<uint>)GetCollection (iscriptIndexBlockId); }
 		}
 	}
 

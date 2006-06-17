@@ -44,32 +44,39 @@ using System.Collections.Generic;
 
 namespace SCSharp
 {
-	public class FlingyDat : MpqResource
+	public class FlingyDat : Dat
 	{
+		int spriteBlockId;
+		int speedBlockId;
+		int turnStyleBlockId;
+		int accelBlockId;
+		//int turnRadiusBlockId;
+
+		const int NUM_ENTRIES = 184;
+
 		public FlingyDat ()
 		{
+			spriteBlockId = AddVariableBlock (NUM_ENTRIES, DatVariableType.Word);
+			speedBlockId = AddVariableBlock (NUM_ENTRIES, DatVariableType.DWord);
+			turnStyleBlockId = AddVariableBlock (NUM_ENTRIES, DatVariableType.Word);
+			accelBlockId = AddVariableBlock (NUM_ENTRIES, DatVariableType.DWord);
+			/* XXX turnRadiusBlockId */
 		}
 
-		byte[] buf;
-
-		public void ReadFromStream (Stream stream)
-		{
-			buf = new byte[(int)stream.Length];
-
-			stream.Read (buf, 0, buf.Length);
+		public DatCollection<ushort> SpriteIds {
+			get { return (DatCollection<ushort>)GetCollection (spriteBlockId); }
 		}
 
-		/* offsets from the stardat.mpq version */
+		public DatCollection<uint> Speeds {
+			get { return (DatCollection<uint>)GetCollection (speedBlockId); }
+		}
 
-		const int sprite_offset = 0x0000;
-		const int speed_offset = 0x0170;
-		const int turnstyle_offset = 0x0450;
-		const int accel_offset = 0x05c0;
-		const int turnradius_offset = 0x08a0;
+		public DatCollection<ushort> TurnStyles {
+			get { return (DatCollection<ushort>)GetCollection (turnStyleBlockId); }
+		}
 
-		public int GetSpriteId (int index)
-		{
-			return Util.ReadWord (buf, sprite_offset + index * 2);
+		public DatCollection<uint> Accels {
+			get { return (DatCollection<uint>)GetCollection (accelBlockId); }
 		}
 	}
 }

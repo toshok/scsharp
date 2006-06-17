@@ -35,27 +35,17 @@ using System.Collections.Generic;
 
 namespace SCSharp
 {
-	public class MapDataDat : MpqResource
+	public class MapDataDat : Dat
 	{
-		byte[] buf;
+		int indexBlockId;
 
 		public MapDataDat ()
 		{
+			indexBlockId = AddVariableBlock (32, DatVariableType.DWord);
 		}
 
-		public void ReadFromStream (Stream stream)
-		{
-			buf = new byte [stream.Length];
-			stream.Read (buf, 0, buf.Length);
-		}
-
-		public uint GetFileIndex (uint index)
-		{
-			return Util.ReadDWord (buf, (int)(index * 4));
-		}
-
-		public int NumIndices {
-			get { return buf.Length / 4; }
+		public DatCollection<uint> FileIndexes {
+			get { return (DatCollection<uint>)GetCollection (indexBlockId); }
 		}
 	}
 

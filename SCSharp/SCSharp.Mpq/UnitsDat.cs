@@ -72,22 +72,9 @@ using System.Collections.Generic;
 
 namespace SCSharp
 {
-	public class UnitsDat : MpqResource
+	public class UnitsDat : Dat
 	{
-		public UnitsDat ()
-		{
-		}
-
-		byte[] buf;
-
-		public void ReadFromStream (Stream stream)
-		{
-			buf = new byte[(int)stream.Length];
-
-			stream.Read (buf, 0, buf.Length);
-		}
-
-		/* offsets from the stardat.mpq version */
+		const int NUM_UNITS = 227;
 
 		const int flingy_offset = 0x0000;
 		const int overlay_offset = 0x00e3;
@@ -99,45 +86,61 @@ namespace SCSharp
 		const int hitpoint_offset = 0x0c54;
 		const int portrait_offset = 0x367c;
 
-		public byte GetFlingyId (int unit_id)
+		int flingyBlockId;
+		//int overlayBlockId;
+		int constructSpriteBlockId;
+		int animationLevelBlockId;
+		int createScoreBlockId;
+		int destroyScoreBlockId;
+		int shieldBlockId;
+		int hitpointsBlockId;
+		int portraitBlockId;
+
+		public UnitsDat ()
 		{
-			return buf[flingy_offset + unit_id];
+			flingyBlockId = AddPlacedVariableBlock (flingy_offset, NUM_UNITS, DatVariableType.Byte);
+			//overlayBlockId = AddPlacedVariableBlock (overlay_offset, NUM_UNITS, DatVariableType.Word);
+			constructSpriteBlockId = AddPlacedVariableBlock (construct_sprite_offset, NUM_UNITS, DatVariableType.DWord);
+			animationLevelBlockId = AddPlacedVariableBlock (animation_level_offset, NUM_UNITS, DatVariableType.Byte);
+			createScoreBlockId = AddPlacedVariableBlock (create_score_offset, NUM_UNITS, DatVariableType.Word);
+			destroyScoreBlockId = AddPlacedVariableBlock (destroy_score_offset, NUM_UNITS, DatVariableType.Word);
+			shieldBlockId = AddPlacedVariableBlock (shield_offset, NUM_UNITS, DatVariableType.Word);
+			hitpointsBlockId = AddPlacedVariableBlock (hitpoint_offset, NUM_UNITS, DatVariableType.DWord);
+			portraitBlockId = AddPlacedVariableBlock (portrait_offset, NUM_UNITS, DatVariableType.Word);
 		}
 
-		public uint GetConstructSpriteId (int unit_id)
-		{
-			return Util.ReadDWord (buf, construct_sprite_offset + unit_id * 4);
+		/* offsets from the stardat.mpq version */
+
+		public DatCollection<byte> FlingyIds {
+			get { return (DatCollection<byte>)GetCollection (flingyBlockId); }
 		}
 
-		public byte GetAnimationLevel (int unit_id)
-		{
-			return buf[animation_level_offset + unit_id];
+		public DatCollection<uint> ConstructSpriteIds {
+			get { return (DatCollection<uint>)GetCollection (constructSpriteBlockId); }
 		}
 
-		public ushort GetCreateScore (int unit_id)
-		{
-			return Util.ReadWord (buf, create_score_offset + unit_id * 2);
+		public DatCollection<byte> AnimationLevels {
+			get { return (DatCollection<byte>)GetCollection (animationLevelBlockId); }
 		}
 
-		public ushort GetDestroyScore (int unit_id)
-		{
-			return Util.ReadWord (buf, destroy_score_offset + unit_id * 2);
+		public DatCollection<ushort> CreateScores {
+			get { return (DatCollection<ushort>)GetCollection (createScoreBlockId); }
 		}
 
-		public ushort GetShields (int unit_id)
-		{
-			return Util.ReadWord (buf, shield_offset + unit_id * 2);
+		public DatCollection<ushort> DestroyScores {
+			get { return (DatCollection<ushort>)GetCollection (destroyScoreBlockId); }
 		}
 
-		public uint GetHitpoints (int unit_id)
-		{
-			return Util.ReadWord (buf, hitpoint_offset + unit_id * 2);
+		public DatCollection<ushort> Shields {
+			get { return (DatCollection<ushort>)GetCollection (shieldBlockId); }
 		}
 
-		public uint GetPortraitId (int unit_id)
-		{
-			return Util.ReadWord (buf, portrait_offset + unit_id * 2);
+		public DatCollection<uint> Hitpoints {
+			get { return (DatCollection<uint>)GetCollection (hitpointsBlockId); }
 		}
 
+		public DatCollection<ushort> Portraits {
+			get { return (DatCollection<ushort>)GetCollection (portraitBlockId); }
+		}
 	}
 }

@@ -43,32 +43,17 @@ portrait animation index at 0x0000. DWORD
 
 namespace SCSharp
 {
-	public class PortDataDat : MpqResource
+	public class PortDataDat : Dat
 	{
-		byte[] buf;
+		int portraitIndexBlock;
 
 		public PortDataDat ()
 		{
+			portraitIndexBlock = AddVariableBlock (360, DatVariableType.DWord);
 		}
 
-		public void ReadFromStream (Stream stream)
-		{
-			buf = new byte [stream.Length];
-			stream.Read (buf, 0, buf.Length);
-		}
-
-		public uint GetIdlePortraitIndex (uint index)
-		{
-			return Util.ReadDWord (buf, (int)index * 4);
-		}
-
-		public uint GetTalkingPortraitIndex (uint index)
-		{
-			return Util.ReadDWord (buf, (int)(buf.Length / 2 + index * 4)) - 1;
-		}
-
-		public int NumIndices {
-			get { return buf.Length / (2 * 4); }
+		public DatCollection<uint> PortraitIndexes {
+			get { return (DatCollection<uint>)GetCollection (portraitIndexBlock); }
 		}
 	}
 
