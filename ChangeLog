@@ -1,4 +1,16 @@
-2006-06-18  Chris Toshok  <toshok@ximian.com>
+2006-06-18  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/GameScreen.cs: use the new MapRenderer code.
+
+	* SCSharp/SCSharp.UI/MapRenderer.cs: move this to code that
+	renders the map a piece at a time (and composites the tiles onto a
+	surface that's the size of the paintable screen instead of the
+	size of the map).  Right now it just uses a Dictionary for a
+	cache, so eventually (by scrolling all over the map) the memory
+	usage ends up being just as bad (worse, probably) than it was
+	before.  This should be fixed to use a LRU scheme, probably.
+
+2006-06-18  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GameScreen.cs: lots of changes.  make almost
 	everything work with the Painter's Invalidate/Dirty stuff.  Also,
@@ -38,7 +50,7 @@
 	UIScreens that don't have a .bin file associated with them (like
 	the game screen.)
 
-2006-06-17  Chris Toshok  <toshok@ximian.com>
+2006-06-17  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.Mpq/Dat.cs: new superclass for all *.dat files.
 	Makes managing the variable blocks a little easier.  probably a
@@ -49,7 +61,7 @@
 	* SCSharp/SCSharp.UI/*.cs: same.  Also, clean up some compiler
 	warnings and (CursorAnimator.cs) speed up the cursor animation.
 	
-2006-06-16  Chris Toshok  <toshok@ximian.com>
+2006-06-16  Chris Toshok  <toshok@hungry<.com>
 
 	* SCSharp/SCSharp.Mpq/PortDataDat.cs: new class.
 

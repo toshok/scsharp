@@ -98,6 +98,7 @@ namespace SCSharp.UI
 		List<Unit> units;
 
 		MovieElement portraitElement;
+		MapRenderer mapRenderer;
 
 		public GameScreen (Mpq mpq,
 				   Mpq scenario_mpq,
@@ -206,26 +207,6 @@ namespace SCSharp.UI
 			}
 		}
 
-		Surface map_surf;
-
-		void PaintMap (DateTime dt)
-		{
-			Rectangle dest = new Rectangle (new Point (0, 0),
-							new Size (Painter.SCREEN_RES_X,
-								  Painter.SCREEN_RES_Y));
-
-			dest = Rectangle.Intersect (dest, Painter.Instance.Dirty);
-
-			if (dest.IsEmpty)
-				return;
-
-			Rectangle source = dest;
-			source.X += topleft_x;
-			source.Y += topleft_y;
-
-			Painter.Instance.Blit (map_surf, dest, source);
-		}
-
 		int[] button_xs = new int[] { 506, 552, 598 };
 		int[] button_ys = new int[] { 360, 400, 440 };
 
@@ -311,10 +292,10 @@ namespace SCSharp.UI
 		/* XXX this needs porting to the new Invalidate/Dirty scheme of things */
 		void PaintMinimap (DateTime dt)
 		{
-			Rectangle rect = new Rectangle (new Point ((int)((float)topleft_x / (float)map_surf.Width * MINIMAP_WIDTH + MINIMAP_X),
-								   (int)((float)topleft_y / (float)map_surf.Height * MINIMAP_HEIGHT + MINIMAP_Y)),
-							new Size ((int)((float)Painter.SCREEN_RES_X / (float)map_surf.Width * MINIMAP_WIDTH),
-								  (int)((float)Painter.SCREEN_RES_Y / (float)map_surf.Height * MINIMAP_HEIGHT)));
+			Rectangle rect = new Rectangle (new Point ((int)((float)topleft_x / (float)mapRenderer.MapWidth * MINIMAP_WIDTH + MINIMAP_X),
+								   (int)((float)topleft_y / (float)mapRenderer.MapHeight * MINIMAP_HEIGHT + MINIMAP_Y)),
+							new Size ((int)((float)Painter.SCREEN_RES_X / (float)mapRenderer.MapWidth * MINIMAP_WIDTH),
+								  (int)((float)Painter.SCREEN_RES_Y / (float)mapRenderer.MapHeight * MINIMAP_HEIGHT)));
 
 			Painter.Instance.DrawBox (rect, Color.Green);
 		}
@@ -329,7 +310,7 @@ namespace SCSharp.UI
 			if (scenario.Tileset == Tileset.Platform)
 				Painter.Instance.Add (Layer.Background, PaintStarfield);
 
-			Painter.Instance.Add (Layer.Map, PaintMap);
+			Painter.Instance.Add (Layer.Map, mapRenderer.Paint);
 			SpriteManager.AddToPainter ();
 		}
 
@@ -343,7 +324,7 @@ namespace SCSharp.UI
 			if (scenario.Tileset == Tileset.Platform)
 				Painter.Instance.Remove (Layer.Background, PaintStarfield);
 
-			Painter.Instance.Remove (Layer.Map, PaintMap);
+			Painter.Instance.Remove (Layer.Map, mapRenderer.Paint);
 			SpriteManager.RemoveFromPainter ();
 		}
 
@@ -388,8 +369,8 @@ namespace SCSharp.UI
 				}
 			}
 
-			map_surf = MapRenderer.RenderToSurface (mpq, scenario);
-
+			mapRenderer = new MapRenderer (mpq, scenario, Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y);
+			
 			// load the cursors we'll show when scrolling with the mouse
 			string[] cursornames = new string[] {
 				"cursor\\ScrollUL.grp",
@@ -456,8 +437,8 @@ namespace SCSharp.UI
 			if (topleft_x < 0) topleft_x = 0;
 			if (topleft_y < 0) topleft_y = 0;
 
-			if (topleft_x > map_surf.Width - Painter.SCREEN_RES_X) topleft_x = map_surf.Width - Painter.SCREEN_RES_X;
-			if (topleft_y > map_surf.Height - Painter.SCREEN_RES_Y) topleft_y = map_surf.Height - Painter.SCREEN_RES_Y;
+			if (topleft_x > mapRenderer.MapWidth - Painter.SCREEN_RES_X) topleft_x = mapRenderer.MapWidth - Painter.SCREEN_RES_X;
+			if (topleft_y > mapRenderer.MapHeight - Painter.SCREEN_RES_Y) topleft_y = mapRenderer.MapHeight - Painter.SCREEN_RES_Y;
 		}
 
 		void UpdateCursor ()
@@ -503,6 +484,7 @@ namespace SCSharp.UI
 			ClipTopLeft ();
 
 			SpriteManager.SetUpperLeft (topleft_x, topleft_y);
+			mapRenderer.SetUpperLeft (topleft_x, topleft_y);
 
 			UpdateCursor ();
 
@@ -522,6 +504,7 @@ namespace SCSharp.UI
 			ClipTopLeft ();
 
 			SpriteManager.SetUpperLeft (topleft_x, topleft_y);
+			mapRenderer.SetUpperLeft (topleft_x, topleft_y);
 
 			UpdateCursor ();
 
@@ -532,8 +515,8 @@ namespace SCSharp.UI
 
 		void RecenterFromMinimap (int x, int y)
 		{
-			int map_x = (int)((float)(x - MINIMAP_X) / MINIMAP_WIDTH * map_surf.Width);
-			int map_y = (int)((float)(y - MINIMAP_Y) / MINIMAP_HEIGHT * map_surf.Height);
+			int map_x = (int)((float)(x - MINIMAP_X) / MINIMAP_WIDTH * mapRenderer.MapWidth);
+			int map_y = (int)((float)(y - MINIMAP_Y) / MINIMAP_HEIGHT * mapRenderer.MapHeight);
 
 			Recenter (map_x, map_y);
 		}
