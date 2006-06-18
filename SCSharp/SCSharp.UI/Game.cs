@@ -305,13 +305,16 @@ namespace SCSharp.UI
 		void KeyboardDown (object o, KeyboardEventArgs args)
 		{
 #if !RELEASE
-			if ((args.Mod & ModifierKeys.LeftControl) != 0)
+			if ((args.Mod & ModifierKeys.LeftControl) != 0) {
 				if (args.Key == Key.Q) {
 					Quit ();
+					return;
 				}
 				else if (args.Key == Key.F) {
 					Painter.Instance.Fullscreen = !Painter.Instance.Fullscreen;
+					return;
 				}
+			}
 #endif
 			if (currentScreen != null)
 				currentScreen.HandleKeyboardDown (args);

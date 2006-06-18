@@ -50,6 +50,17 @@ namespace SCSharp.UI
 		Fnt fnt;
 		string text;
 
+		public UIElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height)
+		{
+			this.screen = screen;
+			this.x1 = x1;
+			this.y1 = y1;
+			this.width = width;
+			this.height = height;
+			this.sensitive = true;
+			this.visible = false;
+		}
+
 		public UIElement (UIScreen screen, BinElement el, byte[] palette)
 		{
 			this.screen = screen;

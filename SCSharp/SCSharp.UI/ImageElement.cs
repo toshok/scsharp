@@ -48,6 +48,12 @@ namespace SCSharp.UI
 			this.translucent_index = translucent_index;
 		}
 
+		public ImageElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height, int translucent_index)
+			: base (screen, x1, y1, width, height)
+		{
+			this.translucent_index = translucent_index;
+		}
+
 		protected override Surface CreateSurface ()
 		{
 			return GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text),

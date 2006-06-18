@@ -48,8 +48,8 @@ namespace SCSharp.UI
 		Selection,
 		Unit,
 		Health,
-		Hud,
 		UI,
+		Hud,
 		Popup,
 		DialogDimScreenHack,
 		DialogBackground,
@@ -71,15 +71,8 @@ namespace SCSharp.UI
 		DateTime now; /* the time of the last animation tick */
 
 		Surface paintingSurface;
-		Surface backbuffer;
-
-		Layer paintingLayer = Layer.Count;
 
 		bool fullscreen;
-
-		List<PainterDelegate> pendingRemoves;
-		List<PainterDelegate> pendingAdds;
-		bool pendingClear;
 
 		public const int SCREEN_RES_X = 640;
 		public const int SCREEN_RES_Y = 480;
@@ -89,6 +82,7 @@ namespace SCSharp.UI
 		byte[] fontpal;
 		double fps;
 		int frame_count;
+		Surface fps_surface;
 #endif
 
 		static Painter instance;
@@ -115,7 +109,6 @@ namespace SCSharp.UI
 
 			this.millis = millis;
 
-			this.fullscreen = fullscreen;
 			Fullscreen = fullscreen;
 			
 			/* init our list of painter delegates */
@@ -123,40 +116,9 @@ namespace SCSharp.UI
 			for (Layer i = Layer.Background; i < Layer.Count; i ++)
 				layers[(int)i] = new List<PainterDelegate>();
 
-			pendingRemoves = new List<PainterDelegate>();
-			pendingAdds = new List<PainterDelegate>();
-
 			/* and set ourselves up to invalidate at a regular interval*/
-                        Events.Tick +=new TickEventHandler (Tick);
+                        Events.Tick += Tick;
 		}
-
-#if false
-		public Painter (Surface surf, int millis)
-		{
-#if !RELEASE
-			Pcx pcx = new Pcx ();
-			pcx.ReadFromStream ((Stream)Game.Instance.PlayingMpq.GetResource ("game\\tfontgam.pcx"), 0, 0);
-			fontpal = pcx.Palette;
-#endif
-			this.millis = millis;
-
-			this.paintingSurface = surf;
-
-			backbuffer = paintingSurface.CreateCompatibleSurface (paintingSurface.Size);
-			backbuffer.Fill (new Rectangle (new Point (0, 0), backbuffer.Size), Color.Black);
-
-			/* init our list of painter delegates */
-			layers = new List<PainterDelegate>[(int)Layer.Count];
-			for (Layer i = Layer.Background; i < Layer.Count; i ++)
-				layers[(int)i] = new List<PainterDelegate>();
-
-			pendingRemoves = new List<PainterDelegate>();
-			pendingAdds = new List<PainterDelegate>();
-
-			/* and set ourselves up to invalidate at a regular interval*/
-                        Events.Tick +=new TickEventHandler (Tick);
-		}
-#endif
 
 		public bool Fullscreen {
 			get { return fullscreen; }
@@ -169,7 +131,6 @@ namespace SCSharp.UI
 					else
 						paintingSurface = Video.SetVideoModeWindow (SCREEN_RES_X, SCREEN_RES_Y);
 
-					backbuffer = paintingSurface.CreateCompatibleSurface (paintingSurface.Size);
 					Invalidate ();
 				}
 			}
@@ -182,35 +143,19 @@ namespace SCSharp.UI
 
 		public void Add (Layer layer, PainterDelegate painter)
 		{
-			if (layer == paintingLayer) {
-				pendingAdds.Add (painter);
-			}
-			else {
-				layers[(int)layer].Add (painter);
-				Invalidate ();
-			}
+			layers[(int)layer].Add (painter);
+			Invalidate ();
 		}
 
 		public void Remove (Layer layer, PainterDelegate painter)
 		{
-			if (layer == paintingLayer)
-				pendingRemoves.Add (painter);
-			else {
-				layers[(int)layer].Remove (painter);
-				Invalidate ();
-			}
+			layers[(int)layer].Remove (painter);
+			Invalidate ();
 		}
 
 		public void Clear (Layer layer)
 		{
-			if (layer == paintingLayer) {
-				pendingClear = true;
-				pendingAdds.Clear ();
-				pendingRemoves.Clear ();
-			}
-			else {
-				layers[(int)layer].Clear ();
-			}
+			layers[(int)layer].Clear ();
 		}
 
 		int paused;
@@ -243,6 +188,16 @@ namespace SCSharp.UI
 #if !RELEASE
 			/* make sure we invalidate the region where we're going to draw the fps/related info */
 			Invalidate (new Rectangle (new Point (10, 10), new Size (150, 50)));
+
+			frame_count ++;
+			if (frame_count == 50) {
+
+				DateTime after = DateTime.Now;
+
+				fps = 1.0 / (after - last_time).TotalSeconds * 50;
+				last_time = after;
+				frame_count = 0;
+			}
 #endif
 			//Console.WriteLine ("Redraw");
 
@@ -258,83 +213,55 @@ namespace SCSharp.UI
 
 			now = DateTime.Now;
 
-                        backbuffer.Fill(dirty, Color.Black);
+                        paintingSurface.Fill(dirty, Color.Black);
 			
-			for (Layer i = Layer.Background; i < Layer.Count; i ++) {
-				paintingLayer = i;
-
+			for (Layer i = Layer.Background; i < Layer.Count; i ++)
 				DrawLayer (layers[(int)i]);
 
-				if (pendingClear ||
-				    pendingAdds.Count != 0 ||
-				    pendingRemoves.Count != 0)
-					Invalidate ();
-
-				if (pendingClear)
-					layers[(int)i].Clear ();
-				for (int j = 0; j < pendingAdds.Count; j ++)
-					layers[(int)i].Add (pendingAdds[j]);
-				pendingAdds.Clear ();
-				for (int j = 0; j < pendingRemoves.Count; j ++)
-					layers[(int)i].Remove (pendingRemoves[j]);
-				pendingRemoves.Clear ();
-			}
-
-			paintingLayer = Layer.Count;
-
 #if !RELEASE
-			frame_count ++;
-			if (frame_count == 30) {
 
-				DateTime after = DateTime.Now;
+			if (fps_surface != null)
+				fps_surface.Dispose ();
 
-				fps = 1.0 / (after - last_time).TotalSeconds * 30;
+			fps_surface = GuiUtil.ComposeText (String.Format ("fps: {0,0:F}", fps),
+							   GuiUtil.GetFonts (Game.Instance.PlayingMpq)[1],
+							   fontpal);
 
-				last_time = after;
-				frame_count = 0;
-			}
-
-			Surface s;
-
-			s = GuiUtil.ComposeText (String.Format ("fps: {0,2:F}", fps),
-						 GuiUtil.GetFonts (Game.Instance.PlayingMpq)[1],
-						 fontpal);
-
-			backbuffer.Blit (s, new Point (10, 10));
-
+			paintingSurface.Blit (fps_surface, new Point (10, 10));
 #endif
-			paintingSurface.Blit (backbuffer);
+			paintingSurface.Blit (paintingSurface);
 
 			paintingSurface.Flip ();
 
 			dirty = Rectangle.Empty;
+
+			total_elapsed = (DateTime.Now - now).Milliseconds;
 		}
 
 		public void DrawLayer (List<PainterDelegate> painters)
 		{
-			foreach (PainterDelegate p in painters) {
-				p (now);
-			}
+			for (int i = 0; i < painters.Count; i ++)
+				painters[i] (now);
 		}
 
 		public void Blit (Surface surf, Point p)
 		{
-			backbuffer.Blit (surf, p);
+			paintingSurface.Blit (surf, p);
 		}
 
 		public void Blit (Surface surf)
 		{
-			backbuffer.Blit (surf);
+			paintingSurface.Blit (surf);
 		}
 
 		public void Blit (Surface surf, Rectangle r1, Rectangle r2)
 		{
-			backbuffer.Blit (surf, r1, r2);
+			paintingSurface.Blit (surf, r1, r2);
 		}
 
 		public void DrawBox (Rectangle rect, Color color)
 		{
-			backbuffer.DrawBox (rect, color);
+			paintingSurface.DrawBox (rect, color);
 		}
 
 		Rectangle dirty = Rectangle.Empty;
@@ -360,11 +287,11 @@ namespace SCSharp.UI
 		}
 
 		public int Width {
-			get { return backbuffer.Width; }
+			get { return paintingSurface.Width; }
 		}
 
 		public int Height {
-			get { return backbuffer.Height; }
+			get { return paintingSurface.Height; }
 		}
 	}
 }

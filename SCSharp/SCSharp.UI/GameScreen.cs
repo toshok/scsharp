@@ -43,7 +43,6 @@ namespace SCSharp.UI
 	{
 		//Mpq scenario_mpq;
 
-		Surface hud;
 		Chk scenario;
 		Got template;
 
@@ -98,6 +97,8 @@ namespace SCSharp.UI
 
 		List<Unit> units;
 
+		MovieElement portraitElement;
+
 		public GameScreen (Mpq mpq,
 				   Mpq scenario_mpq,
 				   Chk scenario,
@@ -137,41 +138,71 @@ namespace SCSharp.UI
 				scroll_factor *= 0.75f;
 			}
 
+			Rectangle dest;
+			Rectangle source;
+
 			for (int i = starfield_layers.Length - 1; i >= 0; i --) {
 				int scroll_x = (int)(topleft_x * factors[i]);
 				int scroll_y = (int)(topleft_y * factors[i]);
 
 				if (scroll_x > Painter.SCREEN_RES_X) scroll_x %= Painter.SCREEN_RES_X;
-				if (scroll_y > Painter.SCREEN_RES_Y) scroll_y %= Painter.SCREEN_RES_Y;
+				if (scroll_y > 375) scroll_y %= 375;
 
-				p.Blit (starfield_layers[i],
-					new Rectangle (new Point (0,0),
-						       new Size (Painter.SCREEN_RES_X - scroll_x,
-								 Painter.SCREEN_RES_Y - scroll_y)),
-					new Rectangle (new Point (scroll_x, scroll_y),
-						       new Size (Painter.SCREEN_RES_X - scroll_x,
-								 Painter.SCREEN_RES_Y - scroll_y)));
+				
+				dest = new Rectangle (new Point (0,0),
+						      new Size (Painter.SCREEN_RES_X - scroll_x,
+								375 - scroll_y));
+				dest = Rectangle.Intersect (dest, p.Dirty);
+				if (!dest.IsEmpty) {
+					source = dest;
+					source.X += scroll_x;
+					source.Y += scroll_y;
 
-				if (scroll_x != 0)
 					p.Blit (starfield_layers[i],
-						new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
-							       new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)),
-						new Rectangle (new Point (0, scroll_y),
-							       new Size (scroll_x, Painter.SCREEN_RES_Y - scroll_y)));
+						dest, source);
+				}
 
-				if (scroll_y != 0)
-					p.Blit (starfield_layers[i],
-						new Rectangle (new Point (0, Painter.SCREEN_RES_Y - scroll_y),
-							       new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)),
-						new Rectangle (new Point (scroll_x, 0),
-							       new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y)));
+				if (scroll_x != 0) {
+					dest = new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
+							      new Size (scroll_x, 375 - scroll_y));
+					dest = Rectangle.Intersect (dest, p.Dirty);
+					if (!dest.IsEmpty) {
+						source = dest;
+						source.X -= Painter.SCREEN_RES_X - scroll_x;
+						source.Y += scroll_y;
 
-				if (scroll_x != 0 || scroll_y != 0)
-					p.Blit (starfield_layers[i],
-						new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, Painter.SCREEN_RES_Y - scroll_y),
-							       new Size (scroll_x, scroll_y)),
-						new Rectangle (new Point (0, 0),
-							       new Size (scroll_x, scroll_y)));
+						p.Blit (starfield_layers[i],
+							dest, source);
+					}
+				}
+
+				if (scroll_y != 0) {
+					dest = new Rectangle (new Point (0, 375 - scroll_y),
+							      new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y));
+					dest = Rectangle.Intersect (dest, p.Dirty);
+					if (!dest.IsEmpty) {
+						source = dest;
+						source.X += scroll_x;
+						source.Y -= 375 - scroll_y;
+
+						p.Blit (starfield_layers[i],
+							dest, source);
+					}
+				}
+
+				if (scroll_x != 0 || scroll_y != 0) {
+					dest = new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 375 - scroll_y),
+							      new Size (scroll_x, scroll_y));
+					dest = Rectangle.Intersect (dest, p.Dirty);
+					if (!dest.IsEmpty) {
+						source = dest;
+						source.X -= Painter.SCREEN_RES_X - scroll_x;
+						source.Y -= 375 - scroll_y;
+
+						p.Blit (starfield_layers[i],
+							dest, source);
+					}
+				}
 			}
 		}
 
@@ -179,18 +210,20 @@ namespace SCSharp.UI
 
 		void PaintMap (DateTime dt)
 		{
-			Painter.Instance.Invalidate (new Rectangle (new Point (topleft_x, topleft_y),
-								    new Size (Painter.SCREEN_RES_X,
-									      Painter.SCREEN_RES_Y)));
+			Rectangle dest = new Rectangle (new Point (0, 0),
+							new Size (Painter.SCREEN_RES_X,
+								  Painter.SCREEN_RES_Y));
 
+			dest = Rectangle.Intersect (dest, Painter.Instance.Dirty);
 
-			Painter.Instance.Blit (map_surf,
-					       new Rectangle (new Point (0,0),
-							      new Size (Painter.SCREEN_RES_X - topleft_x,
-									Painter.SCREEN_RES_Y - topleft_y)),
-					       new Rectangle (new Point (topleft_x, topleft_y),
-							      new Size (Painter.SCREEN_RES_X,
-									Painter.SCREEN_RES_Y)));
+			if (dest.IsEmpty)
+				return;
+
+			Rectangle source = dest;
+			source.X += topleft_x;
+			source.Y += topleft_y;
+
+			Painter.Instance.Blit (map_surf, dest, source);
 		}
 
 		int[] button_xs = new int[] { 506, 552, 598 };
@@ -200,11 +233,8 @@ namespace SCSharp.UI
 		{
 			Painter p = Painter.Instance;
 
-			/* first blit the hud surface */
-			p.Blit (hud);
-
-			/* then fill in the center section (wireframe and selected unit info) */
 			if (selectedUnit != null) {
+				/* then fill in the center section (wireframe and selected unit info) */
 				Surface s;
 
 				/* the wireframe */
@@ -246,10 +276,7 @@ namespace SCSharp.UI
 					p.Blit (s, new Point (292, 462)); /* XXX */
 				}
 
-			}
-
-			/* then fill in the command buttons */
-			if (selectedUnit != null) {
+				/* then fill in the command buttons */
 				int[] cmd_indices;
 
 				switch (selectedUnit.UnitId) {
@@ -265,8 +292,6 @@ namespace SCSharp.UI
 				int y = 0;
 				for (int i = 0; i < cmd_indices.Length; i ++) {
 					if (cmd_indices[i] != -1) {
-						Surface s;
-
 						s = GuiUtil.CreateSurfaceFromBitmap (cmdicons.GetFrame (cmd_indices[i]),
 										     cmdicons.Width, cmdicons.Height,
 										     cmdicon_palette,
@@ -283,6 +308,7 @@ namespace SCSharp.UI
 			}
 		}
 
+		/* XXX this needs porting to the new Invalidate/Dirty scheme of things */
 		void PaintMinimap (DateTime dt)
 		{
 			Rectangle rect = new Rectangle (new Point ((int)((float)topleft_x / (float)map_surf.Width * MINIMAP_WIDTH + MINIMAP_X),
@@ -305,12 +331,12 @@ namespace SCSharp.UI
 
 			Painter.Instance.Add (Layer.Map, PaintMap);
 			SpriteManager.AddToPainter ();
-			Painter.Instance.Add (Layer.Background, ScrollPainter);
 		}
 
 		public override void RemoveFromPainter ()
 		{
 			base.RemoveFromPainter ();
+
 			Painter.Instance.Remove (Layer.Hud, PaintHud);
 			Painter.Instance.Remove (Layer.Hud, PaintMinimap);
 
@@ -319,13 +345,22 @@ namespace SCSharp.UI
 
 			Painter.Instance.Remove (Layer.Map, PaintMap);
 			SpriteManager.RemoveFromPainter ();
-
-			Painter.Instance.Remove (Layer.Background, ScrollPainter);
 		}
 
 		protected override void ResourceLoader ()
 		{
 			base.ResourceLoader ();
+
+			/* create the element corresponding to the hud */
+			ImageElement hudElement = new ImageElement (this, 0, 0, 640, 480, TranslucentIndex);
+			hudElement.Text = String.Format (Builtins.Game_ConsolePcx, Util.RaceCharLower[(int)Game.Instance.Race]);
+			hudElement.Visible = true;
+			Elements.Add (hudElement);
+
+			/* create the portrait playing area */
+			portraitElement = new MovieElement (this, 415, 415, 48, 48, false);
+			portraitElement.Visible = true;
+			Elements.Add (portraitElement);
 
 			Pcx pcx = new Pcx ();
 			pcx.ReadFromStream ((Stream)mpq.GetResource ("game\\tunit.pcx"), -1, -1);
@@ -334,10 +369,6 @@ namespace SCSharp.UI
 			pcx = new Pcx ();
 			pcx.ReadFromStream ((Stream)mpq.GetResource ("tileset\\badlands\\dark.pcx"), 0, 0);
 			tileset_palette = pcx.Palette;
-
-			hud = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (String.Format (Builtins.Game_ConsolePcx,
-												 Util.RaceCharLower[(int)Game.Instance.Race])),
-							 254, 0);
 
 			if (scenario.Tileset == Tileset.Platform) {
 				Spk starfield = (Spk)mpq.GetResource ("parallax\\star.spk");
@@ -416,6 +447,8 @@ namespace SCSharp.UI
 			cmdicon_palette = pcx.Palette;
 
 			PlaceInitialUnits ();
+
+			Events.Tick += ScrollTick;
 		}
 
 		void ClipTopLeft ()
@@ -450,8 +483,20 @@ namespace SCSharp.UI
 			}
 		}
 
-		public void ScrollPainter (DateTime dt)
+		int scroll_elapsed;
+
+		public void ScrollTick (object sender, TickEventArgs e)
 		{
+			scroll_elapsed += e.TicksElapsed;
+
+			if (scroll_elapsed < 20)
+				return;
+
+			scroll_elapsed = 0;
+
+			if (horiz_delta == 0 && vert_delta == 0)
+				return;
+
 			topleft_x += horiz_delta;
 			topleft_y += vert_delta;
 
@@ -460,6 +505,9 @@ namespace SCSharp.UI
 			SpriteManager.SetUpperLeft (topleft_x, topleft_y);
 
 			UpdateCursor ();
+
+			Painter.Instance.Invalidate (new Rectangle (new Point (0,0),
+								    new Size (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y)));
 		}
 
 		bool buttonDownInMinimap;
@@ -472,6 +520,14 @@ namespace SCSharp.UI
 			topleft_y = y - Painter.SCREEN_RES_Y / 2;
 
 			ClipTopLeft ();
+
+			SpriteManager.SetUpperLeft (topleft_x, topleft_y);
+
+			UpdateCursor ();
+
+
+			Painter.Instance.Invalidate (new Rectangle (new Point (0,0),
+								    new Size (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y)));
 		}
 
 		void RecenterFromMinimap (int x, int y)
@@ -490,11 +546,20 @@ namespace SCSharp.UI
 				buttonDownInMinimap = true;
 			}
 			else {
-				if (unitUnderCursor != null) {
-					Console.WriteLine ("selected unit: {0}", unitUnderCursor);
-					Console.WriteLine ("selectioncircle = {0}", unitUnderCursor.SelectionCircleOffset);
+				if (selectedUnit != unitUnderCursor) {
+					portraitElement.Stop ();
 
 					selectedUnit = unitUnderCursor;
+
+					if (selectedUnit != null) {
+						Console.WriteLine ("selected unit: {0}", selectedUnit);
+						Console.WriteLine ("selectioncircle = {0}", selectedUnit.SelectionCircleOffset);
+
+						string portrait_resource = String.Format ("portrait\\{0}0.smk",
+											  selectedUnit.Portrait);
+						portraitElement.Player = new SmackerPlayer ((Stream)mpq.GetResource (portrait_resource), 1);
+						portraitElement.Play ();
+					}
 				}
 			}
 		}

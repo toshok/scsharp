@@ -68,6 +68,13 @@ namespace SCSharp.UI
 			Player = player;
 		}
 
+		public MovieElement (UIScreen screen, int x, int y, int width, int height, bool scale)
+			: base (screen, (ushort)x, (ushort)y, (ushort)width, (ushort)height)
+		{
+			Sensitive = false;
+			this.scale = scale;
+		}
+
 		public SmackerPlayer Player {
 			get { return player; }
 			set {

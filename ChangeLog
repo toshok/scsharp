@@ -1,3 +1,43 @@
+2006-06-18  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.UI/GameScreen.cs: lots of changes.  make almost
+	everything work with the Painter's Invalidate/Dirty stuff.  Also,
+	add the portrait for the currently selected unit.
+
+	* SCSharp/SCSharp.UI/Game.cs: for the ctrl-key handling return
+	after handling it, so it doesn't also hit the UIScreen's keyboard
+	handler.
+
+	* SCSharp/SCSharp.UI/Sprite.cs: do the proper thing wrt
+	Invalidate/Dirty.
+
+	* SCSharp/SCSharp.UI/Painter.cs: get rid of backsurface.  since
+	we're double buffered anyway there's no need for the extra blit
+	and additional 640x480x4 bytes.  Also, remove the
+	pending{Add,Clear,Remove} stuff.  this shouldn't be a problem
+	anymore, as we're iterating using a for loop instead of anything
+	requiring an enumerator.  Lastly, change the way fps is calculated
+	- we were skipping frames that didnt require drawing in the case
+	where we weren't showing fps.  Also, dispose of the previous
+	fps_surface before creating a new one.
+
+	* SCSharp/SCSharp.UI/MovieElement.cs: add a ctor for the
+	non-BinElement case.
+
+	* SCSharp/SCSharp.UI/ImageElement.cs: same.
+
+	* SCSharp/SCSharp.UI/UIElement.cs: add a ctor that doesn't take a
+	BinElement, useful for creating UIElements which don't correspond
+	to something in a .bin file.
+
+	* SCSharp/SCSharp.UI/Unit.cs: add Portrait property.
+
+	* SCSharp/SCSharp.UI/UIScreen.cs: remove some spew about the
+	background painter.  Also, always create the Elements collection
+	and UIPainter, so we can programmatically add to it, even for
+	UIScreens that don't have a .bin file associated with them (like
+	the game screen.)
+
 2006-06-17  Chris Toshok  <toshok@ximian.com>
 
 	* SCSharp/SCSharp.Mpq/Dat.cs: new superclass for all *.dat files.

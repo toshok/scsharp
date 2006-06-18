@@ -294,21 +294,45 @@ namespace SCSharp.UI
 
 		void PaintSprite (DateTime now)
 		{
+			if (sprite_surface == null)
+				return;
+
+			/* make sure the sprite is on screen before doing the rectangle intersection/blit stuff */
 			if (sprite_surface != null) {
 				if ((x > SpriteManager.X - sprite_surface.Width / 2) && (x - sprite_surface.Width / 2 <= SpriteManager.X + Painter.SCREEN_RES_X)
-				    && (y > SpriteManager.Y - sprite_surface.Height / 2) && (y - sprite_surface.Height / 2 <= SpriteManager.Y + Painter.SCREEN_RES_Y)) {
-					Painter.Instance.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-											  y - SpriteManager.Y - sprite_surface.Height / 2));
+				    && (y > SpriteManager.Y - sprite_surface.Height / 2) && (y - sprite_surface.Height / 2 <= SpriteManager.Y + 375)) {
 
-					if (show_sprite_borders) {
-						Painter.Instance.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-												    y - SpriteManager.Y - sprite_surface.Height / 2),
-											 new Size (sprite_surface.Width - 1,
-												   sprite_surface.Height - 1)),
-									  Color.Green);
+					Rectangle dest = new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+										   y - SpriteManager.Y - sprite_surface.Height / 2),
+									new Size (sprite_surface.Width, sprite_surface.Height));
+
+					dest = Rectangle.Intersect (dest, Painter.Instance.Dirty);
+
+					if (!dest.IsEmpty) {
+						Rectangle source = dest;
+						source.X -= x - SpriteManager.X - sprite_surface.Width / 2;
+						source.Y -= y - SpriteManager.Y - sprite_surface.Height / 2;
+
+						Painter.Instance.Blit (sprite_surface, dest, source);
+
+						if (show_sprite_borders) {
+							Painter.Instance.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+													    y - SpriteManager.Y - sprite_surface.Height / 2),
+												 new Size (sprite_surface.Width - 1,
+													   sprite_surface.Height - 1)),
+										  Color.Green);
+						}
 					}
 				}
 			}
+
+#if false
+					Painter.Instance.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+											  y - SpriteManager.Y - sprite_surface.Height / 2));
+
+				}
+			}
+#endif
 		}
 
 		public void AddToPainter ()
@@ -334,6 +358,11 @@ namespace SCSharp.UI
 										  grp.Width, grp.Height,
 										  palette,
 										  true);
+
+				Painter.Instance.Invalidate (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+										       y - SpriteManager.Y - sprite_surface.Height / 2),
+									    new Size (sprite_surface.Width,
+										      sprite_surface.Height)));
 			}
 		}
 

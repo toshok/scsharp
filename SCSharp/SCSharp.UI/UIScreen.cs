@@ -112,10 +112,8 @@ namespace SCSharp.UI
 		{
 			Painter.Instance.Painting += FirstPaint;
 
-			if (background != null) {
-				Console.WriteLine ("adding background painter");
+			if (background != null)
 				Painter.Instance.Add (Layer.Background, BackgroundPainter);
-			}
 
 			if (UIPainter != null)
 				Painter.Instance.Add (Layer.UI, UIPainter.Paint);
@@ -130,10 +128,8 @@ namespace SCSharp.UI
 		{
 			Painter.Instance.Painting -= FirstPaint;
 
-			if (background != null) {
-				Console.WriteLine ("removing background painter");
+			if (background != null)
 				Painter.Instance.Remove (Layer.Background, BackgroundPainter);
-			}
 			if (UIPainter != null)
 				Painter.Instance.Remove (Layer.UI, UIPainter.Paint);
 			if (Cursor != null)
@@ -413,6 +409,7 @@ namespace SCSharp.UI
 									background_translucent, background_transparent);
 			}
 
+			Elements = new List<UIElement> ();
 			if (binFile != null) {
 				Console.WriteLine ("loading ui elements");
 				Bin = (Bin)mpq.GetResource (binFile);
@@ -422,7 +419,6 @@ namespace SCSharp.UI
 									    binFile));
 
 				/* convert all the BinElements to UIElements for our subclasses to use */
-				Elements = new List<UIElement> ();
 				foreach (BinElement el in Bin.Elements) {
 					//					Console.WriteLine ("{0}: {1}", el.text, el.flags);
 
@@ -466,9 +462,9 @@ namespace SCSharp.UI
 
 					Elements.Add (ui_el);
 				}
-
-				UIPainter = new UIPainter (Elements);
 			}
+
+			UIPainter = new UIPainter (Elements);
 		}
 
 		void LoadResources ()

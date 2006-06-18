@@ -137,5 +137,9 @@ namespace SCSharp.UI
 		public int SelectionCircleOffset {
 			get { return GlobalResources.Instance.SpritesDat.SelectionCircleOffsets [SpriteId]; }
 		}
+
+		public string Portrait {
+			get { return GlobalResources.Instance.PortDataTbl[(int)GlobalResources.Instance.PortDataDat.PortraitIndexes [(int)units.Portraits [unit_id]]]; }
+		}
 	}
 }
