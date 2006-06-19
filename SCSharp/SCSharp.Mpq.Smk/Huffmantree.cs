@@ -76,22 +76,6 @@ namespace SCSharp.Smk
             m.ReadBits(1);
 
         }
-        #region "Ignore this"
-        public void TestDecodeTree(BitStream m)
-        {
-
-            //Read tag
-            //int tag = m.ReadBits(1);
-            //If tag is zero, finish
-            //if (tag == 0) return;
-
-            //Init tree
-            
-            BuildTree(m, null);
-
-
-        }
-        #endregion
 
         /// <summary>
         /// Decodes a value using this tree based on the next bits in the specified stream
@@ -182,7 +166,24 @@ namespace SCSharp.Smk
         /// <param name="m">The stream to read bits from</param>
         public override int Decode(BitStream m)
         {
-            int v = base.Decode(m);
+            //int v = base.Decode(m);
+            Node currentNode = RootNode;
+            if (currentNode == null)
+                return 0;
+            while (!currentNode.isLeaf)
+            {
+                int bit = m.ReadBits(1);
+                if (bit == 0)
+                {
+                    currentNode = currentNode.Left;
+                }
+                else
+                {
+                    currentNode = currentNode.Right;
+                }
+            }
+      
+            int v = currentNode.Value;
 
             if (v != iMarker1)
             {
@@ -197,6 +198,20 @@ namespace SCSharp.Smk
             }
             return v;
         }
+        /// <summary>
+        /// Resets the dynamic decoder markers to zero
+        /// </summary>
+        public void ResetDecoder()
+        {
+            marker1.Value = 0;
+            marker2.Value = 0;
+            marker3.Value = 0;
+
+            iMarker1 = 0;
+            iMarker2 = 0;
+            iMarker3 = 0;
+        }
+
         Huffmantree highByteTree;
         Huffmantree lowByteTree;
 
@@ -219,13 +234,12 @@ namespace SCSharp.Smk
             highByteTree.BuildTree(m);
 
            
-
             iMarker1 = m.ReadBits(16);
-            System.Console.WriteLine("M1:" + iMarker1);
+            //System.Console.WriteLine("M1:" + iMarker1);
             iMarker2 = m.ReadBits(16);
-            System.Console.WriteLine("M2:" + iMarker2);
+            //System.Console.WriteLine("M2:" + iMarker2);
             iMarker3 = m.ReadBits(16);
-            System.Console.WriteLine("M3:" + iMarker3);
+            //System.Console.WriteLine("M3:" + iMarker3);
             RootNode = new Node();
             BuildTree(m, RootNode);
 
@@ -233,11 +247,20 @@ namespace SCSharp.Smk
             m.ReadBits(1);
 
             if (marker1 == null)
+	    {
+               // System.Console.WriteLine("Not using marker 1");
                 marker1 = new Node();
+	    }
             if (marker2 == null)
+            {
+              //  System.Console.WriteLine("Not using marker 2");
                 marker2 = new Node();
+            }
             if (marker3 == null)
+            {
+             //   System.Console.WriteLine("Not using marker 3");
                 marker3 = new Node();
+	    }
 
         }
         protected override void BuildTree(BitStream m, Node current)

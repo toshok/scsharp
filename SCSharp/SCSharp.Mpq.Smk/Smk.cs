@@ -159,15 +159,19 @@ namespace SCSharp.Smk
 
 
             //MMap 
+           // System.Console.WriteLine("Mono map tree");
             file.MMap = new BigHuffmanTree();
             file.MMap.BuildTree(m);
             //MClr (color map)
+          //  System.Console.WriteLine("Mono Color tree");
             file.MClr = new BigHuffmanTree();
             file.MClr.BuildTree(m);
             //Full (full block stuff)
+           // System.Console.WriteLine("Full tree");
             file.Full = new BigHuffmanTree();
             file.Full.BuildTree(m);
             //Type (full block stuff)
+           // System.Console.WriteLine("Type descriptor tree");
             file.Type = new BigHuffmanTree();
             file.Type.BuildTree(m);
 

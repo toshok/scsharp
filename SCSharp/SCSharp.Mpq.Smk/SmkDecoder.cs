@@ -179,7 +179,7 @@ namespace SCSharp.Smk
                             tree[k].BuildTree(m);
 
                         }
-                        int val, res;
+                        int  res;
                         if (is16Bit)
                         {
                             Int16 rightBaseMSB = 0, rightBaseLSB = 0, leftBaseMSB = 0, leftBaseLSB = 0;
@@ -269,8 +269,14 @@ namespace SCSharp.Smk
             }
 
             //Video data
-
-            DecodeVideo();
+            try
+            {
+                DecodeVideo();
+            }
+            catch (IOException exc)
+            {
+                Console.WriteLine("Exception caught while decoding frame:" + exc.ToString());
+            }
 
             //Seek to the next frame
             File.Stream.Seek(currentPos + File.FrameSizes[CurrentFrame], SeekOrigin.Begin);
@@ -291,10 +297,17 @@ namespace SCSharp.Smk
 
         private void DecodeVideo()
         {
-            uint x, y, mask, bitmask, runLength, colors, blockHeader, blockType, posX, posY, index, pix, pix1, pix2;
+            uint x, y, mask, bitmask, offset, currentBlock = 0, runLength, colors, blockHeader, blockType=0, posX, posY, index, pix, pix1, pix2;
+            uint i, j;
             byte color, color1, color2;
 
-            //Allocate a new frame data
+            //Reset all huffman decoders
+            File.MClr.ResetDecoder();
+            File.MMap.ResetDecoder();
+            File.Type.ResetDecoder();
+            File.Full.ResetDecoder();
+
+            //Allocate a new frame's data
             byte[] currentFrameData = new byte[File.Header.Width * File.Header.Height];
             BitStream m = new BitStream(File.Stream);
 
@@ -302,23 +315,25 @@ namespace SCSharp.Smk
             uint nbBlocksX = File.Header.Width / 4;
             uint nbBlocksY = File.Header.Height / 4;
             uint nbBlocks = nbBlocksX * nbBlocksY;
-            uint offset;
-            uint currentBlock = 0;
+
+            long runLengthNotComplete = 0;
+            uint lastType = 0;
             while (currentBlock < nbBlocks)
             {
 
                 blockHeader = (uint)File.Type.Decode(m);
                 runLength = sizetable[(blockHeader >> 2) & 0x3F];
-                if (runLength == 0) runLength = 1;
+
                 blockType = blockHeader & 3;
                 //   System.Console.Write("BLOCK " + currentBlock + " " + runLength + " ");
+
                 switch (blockType)
                 {
                     case 2: //VOID BLOCK
                         //  System.Console.WriteLine("VOID - ");
 
                         //Get block address
-                        for (int i = 0; i < runLength && currentBlock < nbBlocks; i++)
+                        for (i = 0; i < runLength && currentBlock < nbBlocks; i++)
                         {
                             //Get current block coordinates
                             posX = 4 * (currentBlock % nbBlocksX);
@@ -336,13 +351,14 @@ namespace SCSharp.Smk
 
                             currentBlock++;
                         }
+                        runLengthNotComplete = runLength - i;
                         break;
                     case 3: //SOLID BLOCK
                         //     System.Console.WriteLine("SOLID - ");
                         color = (byte)(blockHeader >> 8);
 
                         //Get block address
-                        for (int i = 0; i < runLength && currentBlock < nbBlocks; i++)
+                        for (i = 0; i < runLength && currentBlock < nbBlocks; i++)
                         {
                             //Get current block coordinates
                             posX = 4 * (currentBlock % nbBlocksX);
@@ -358,11 +374,11 @@ namespace SCSharp.Smk
 
                             currentBlock++;
                         }
-
+                        runLengthNotComplete = runLength - i;
                         break;
                     case 0: //MONO BLOCK
                         //    System.Console.WriteLine("MONO - ");
-                        for (int i = 0; i < runLength && currentBlock < nbBlocks; i++)
+                        for (i = 0; i < runLength && currentBlock < nbBlocks; i++)
                         {
                             colors = (uint)File.MClr.Decode(m);
                             color1 = (byte)(colors >> 8);
@@ -416,6 +432,7 @@ namespace SCSharp.Smk
                             }
                             currentBlock++;
                         }
+                      //  runLengthNotComplete = runLength - i;
                         break;
                     case 1:
                         //    System.Console.WriteLine("FULL - ");
@@ -438,7 +455,7 @@ namespace SCSharp.Smk
                         {
                             case 0://v2 Full block
 
-                                for (int i = 0; i < runLength && currentBlock < nbBlocks; i++)
+                                for (i = 0; i < runLength && currentBlock < nbBlocks; i++)
                                 {
                                     posX = (currentBlock % nbBlocksX) * 4;
                                     posY = (currentBlock / nbBlocksX) * 4;
@@ -463,7 +480,7 @@ namespace SCSharp.Smk
                                 }
                                 break;
                             case 1:
-                                for (int i = 0; i < runLength && currentBlock < nbBlocks; i++)
+                                for ( i = 0; i < runLength && currentBlock < nbBlocks; i++)
                                 {
                                     posX = (currentBlock % nbBlocksX) * 4;
                                     posY = (currentBlock / nbBlocksX) * 4;
@@ -497,13 +514,14 @@ namespace SCSharp.Smk
 
                                     currentBlock++;
                                 }
+                      //          runLengthNotComplete = runLength - i;
                                 break;
                             case 2:
-                                for (int j = 0; j < runLength && currentBlock < nbBlocks; j++)
+                                for ( j = 0; j < runLength && currentBlock < nbBlocks; j++)
                                 {
                                     posX = (currentBlock % nbBlocksX) << 2;
                                     posY = (currentBlock / nbBlocksX) << 2;
-                                    for (uint i = 0; i < 2; i++)
+                                    for ( i = 0; i < 2; i++)
                                     {
 
                                         pix1 = (uint)File.Full.Decode(m);
@@ -532,6 +550,7 @@ namespace SCSharp.Smk
                                     }
                                     currentBlock++;
                                 }
+                      //          runLengthNotComplete = runLength - j;
                                 break;
                             default:
                                 break;
@@ -543,11 +562,14 @@ namespace SCSharp.Smk
 
 
             }
+            //if (runLengthNotComplete > 0)
+            //{
+            //    Console.WriteLine("Warning: frame ended before runlength has reached zero");
+            //}
 
 
 
             lastFrameData = currentFrameData;
-
         }
         /// <summary>
         /// Encapsulates the video data from the last decoded frame in a System.Drawing.Bitmap
@@ -679,6 +701,22 @@ namespace SCSharp.Smk
                 CurrentFrame = 1;
             }
             firstTime = false;
+        }
+        /// <summary>
+        /// Set the decoder to decode the specified frame next
+        /// </summary>
+        /// <param name="i">the index of the next frame the decoder should decode </param>
+        public void SeekTo(int i)
+        {
+            Reset(); //Seek to frame 0
+            if (i >= File.Header.NbFrames  ) throw new IndexOutOfRangeException("Not a valid frame number!");
+            uint total = 0;
+            for (int j = 0; j < i; j++)
+            {
+                total += File.FrameSizes[j];
+            }
+            CurrentFrame += i - 1 ;
+            file.Stream.Seek(total, SeekOrigin.Current);
         }
     }
 
