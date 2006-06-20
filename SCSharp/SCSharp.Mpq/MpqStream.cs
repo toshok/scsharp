@@ -28,8 +28,12 @@
 //
 using System;
 using System.IO;
+#if WITH_ZLIB
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+#endif
+#if WITH_BZIP
 using ICSharpCode.SharpZipLib.BZip2;
+#endif
 
 namespace MpqReader
 {
@@ -270,6 +274,7 @@ namespace MpqReader
 
 			byte comptype = (byte)sinput.ReadByte();
 
+#if WITH_BZIP
 			// BZip2
 			if ((comptype & 0x10) != 0)
 			{
@@ -278,6 +283,7 @@ namespace MpqReader
 				if (comptype == 0) return result;
 				sinput = new MemoryStream(result);
 			}
+#endif
 			
 			// PKLib
 			if ((comptype & 8) != 0)
@@ -288,6 +294,7 @@ namespace MpqReader
 				sinput = new MemoryStream(result);
 			}
 
+#if WITH_ZLIB
 			// ZLib
 			if ((comptype & 2) != 0)
 			{
@@ -296,6 +303,7 @@ namespace MpqReader
 				if (comptype == 0) return result;
 				sinput = new MemoryStream(result);
 			}
+#endif
 			
 			if ((comptype & 1) != 0)
 			{
@@ -323,12 +331,14 @@ namespace MpqReader
 			throw new Exception(String.Format("Unhandled compression flags: 0x{0:X}", comptype));
 		}
 		
+#if WITH_BZIP
 		private static byte[] BZip2Decompress(Stream Data, int ExpectedLength)
 		{
 			MemoryStream output = new MemoryStream();
 			BZip2.Decompress(Data, output);
 			return output.ToArray();
 		}
+#endif
 
 		private static byte[] PKDecompress(Stream Data, int ExpectedLength)
 		{
@@ -336,6 +346,7 @@ namespace MpqReader
 			return pk.Explode(ExpectedLength);
 		}
 
+#if WITH_ZLIB
 		private static byte[] ZlibDecompress(Stream Data, int ExpectedLength)
 		{
 			// This assumes that Zlib won't be used in combination with another compression type
@@ -350,5 +361,6 @@ namespace MpqReader
 			}
 			return Output;
 		}
+#endif
 	}
 }
