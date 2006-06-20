@@ -77,7 +77,7 @@ namespace SCSharp
 		const int NUM_UNITS = 227;
 
 		const int flingy_offset = 0x0000;
-		const int overlay_offset = 0x00e3;
+		const int overlay_offset = 0x00e4;
 		const int construct_sprite_offset = 0x0534;
 		const int animation_level_offset = 0x0fe4;
 		const int create_score_offset = 0x43d8;
