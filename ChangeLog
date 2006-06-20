@@ -1,3 +1,10 @@
+2006-06-20  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/MainMenu.cs: reposition the hover movie
+	elements to better align them with the normal movies.  The single
+	player one is still unaligned, since there's no cue to tell where
+	it should go.  I need a screenshot :)
+
 2006-06-18  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/GameScreen.cs: use the new MapRenderer code.

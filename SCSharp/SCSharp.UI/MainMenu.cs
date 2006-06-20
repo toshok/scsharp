@@ -153,15 +153,15 @@ namespace SCSharp.UI
 
 			smkElements = new List<UIElement>();
 
-			AddMovieElements (SINGLEPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Single.smk", "glue\\mainmenu\\SingleOn.smk");
-			AddMovieElements (MULTIPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Multi.smk", "glue\\mainmenu\\MultiOn.smk");
-			AddMovieElements (CAMPAIGNEDITOR_ELEMENT_INDEX, "glue\\mainmenu\\Editor.smk", "glue\\mainmenu\\EditorOn.smk");
-			AddMovieElements (EXIT_ELEMENT_INDEX, "glue\\mainmenu\\Exit.smk", "glue\\mainmenu\\ExitOn.smk");
+			AddMovieElements (SINGLEPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Single.smk", "glue\\mainmenu\\SingleOn.smk", 20, 18); // XXX
+			AddMovieElements (MULTIPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Multi.smk", "glue\\mainmenu\\MultiOn.smk", 20, 12);
+			AddMovieElements (CAMPAIGNEDITOR_ELEMENT_INDEX, "glue\\mainmenu\\Editor.smk", "glue\\mainmenu\\EditorOn.smk", 20, 18);
+			AddMovieElements (EXIT_ELEMENT_INDEX, "glue\\mainmenu\\Exit.smk", "glue\\mainmenu\\ExitOn.smk", 15, 0);
 
 			smkPainter = new UIPainter (smkElements);
 		}
 
-		void AddMovieElements (int elementIndex, string normalMovie, string onMovie)
+		void AddMovieElements (int elementIndex, string normalMovie, string onMovie, ushort off_x, ushort off_y)
 		{
 			UIElement normalElement, onElement;
 
@@ -173,6 +173,9 @@ namespace SCSharp.UI
 						      Elements[elementIndex].BinElement,
 						      Elements[elementIndex].Palette,
 						      onMovie);
+
+			onElement.X1 += off_x;
+			onElement.Y1 += off_y;
 
 			smkElements.Add (normalElement);
 			smkElements.Add (onElement);
