@@ -1,4 +1,8 @@
-2006-06-25  Chris Toshok  <toshok@ximian.com>
+2006-06-25  Chris Toshok  <toshok@hungry.com>
+
+	* src/scsharp.exe.config: add new config settings.
+
+2006-06-25  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI.dll.sources: add GrpElement/GrpButtonElement.
 
@@ -64,6 +68,8 @@
 	the GameScreen, the wireframe unit display is a GrpElement, and
 	the command buttons are GrpButtonElements.
 	
+2006-06-25  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.Mpq/Tbl.cs: add Count property.
 
 	* SCSharp/SCSharp.Mpq/Dat.cs: add a few methods/properties of
