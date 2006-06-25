@@ -62,38 +62,38 @@ namespace SCSharp.UI
 		public override void AddToPainter ()
 		{
 			if (Background != null)
-				Painter.Instance.Add (Layer.DialogBackground, BackgroundPainter);
+				Painter.Add (Layer.DialogBackground, BackgroundPainter);
 
 			if (UIPainter != null)
-				Painter.Instance.Add (Layer.DialogUI, UIPainter.Paint);
+				Painter.Add (Layer.DialogUI, UIPainter.Paint);
 
 			if (dimScreen)
-				Painter.Instance.Add (Layer.DialogDimScreenHack, DimScreenPainter);
+				Painter.Add (Layer.DialogDimScreenHack, DimScreenPainter);
 
-			Painter.Instance.Invalidate ();
+			Painter.Invalidate ();
 		}
 
 
 		public override void RemoveFromPainter ()
 		{
 			if (Background != null)
-				Painter.Instance.Remove (Layer.DialogBackground, BackgroundPainter);
+				Painter.Remove (Layer.DialogBackground, BackgroundPainter);
 
 			if (UIPainter != null)
-				Painter.Instance.Remove (Layer.DialogUI, UIPainter.Paint);
+				Painter.Remove (Layer.DialogUI, UIPainter.Paint);
 
 			if (dimScreen)
-				Painter.Instance.Remove (Layer.DialogDimScreenHack, DimScreenPainter);
+				Painter.Remove (Layer.DialogDimScreenHack, DimScreenPainter);
 
-			Painter.Instance.Invalidate ();
+			Painter.Invalidate ();
 		}
 
 		void DimScreenPainter (DateTime dt)
 		{
-			if (Painter.Instance.Dirty.IsEmpty)
+			if (Painter.Dirty.IsEmpty)
 				return;
 
-			Painter.Instance.Blit (dimScreenSurface, Painter.Instance.Dirty, Painter.Instance.Dirty);
+			Painter.Blit (dimScreenSurface, Painter.Dirty, Painter.Dirty);
 		}
 
 		protected override void ResourceLoader ()

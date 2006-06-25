@@ -109,7 +109,6 @@ namespace SCSharp.UI
 
 			public void Paint ()
 			{
-				Painter p = Painter.Instance;
 				int y;
 
 				switch (location) {
@@ -117,7 +116,7 @@ namespace SCSharp.UI
 					y = Y_OFFSET;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null) {
-							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
+							Painter.Blit (s, new Point ((Painter.Width - s.Width) / 2, y));
 							y += s.Height;
 						}
 						else 
@@ -125,10 +124,10 @@ namespace SCSharp.UI
 					}
 					break;
 				case PageLocation.Bottom:
-					y = p.Height - Y_OFFSET - fnt.LineSize * lines.Count;
+					y = Painter.Height - Y_OFFSET - fnt.LineSize * lines.Count;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null) {
-							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
+							Painter.Blit (s, new Point ((Painter.Width - s.Width) / 2, y));
 							y += s.Height;
 						}
 						else
@@ -136,10 +135,10 @@ namespace SCSharp.UI
 					}
 					break;
 				case PageLocation.Left:
-					y = (p.Height - fnt.LineSize * lines.Count) / 2;
+					y = (Painter.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null) {
-							p.Blit (s, new Point (X_OFFSET, y));
+							Painter.Blit (s, new Point (X_OFFSET, y));
 							y += s.Height;
 						}
 						else 
@@ -147,10 +146,10 @@ namespace SCSharp.UI
 					}
 					break;
 				case PageLocation.LowerLeft:
-					y = p.Height - Y_OFFSET - fnt.LineSize * lines.Count;
+					y = Painter.Height - Y_OFFSET - fnt.LineSize * lines.Count;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null) {
-							p.Blit (s, new Point (X_OFFSET, y));
+							Painter.Blit (s, new Point (X_OFFSET, y));
 							y += s.Height;
 						}
 						else
@@ -158,10 +157,10 @@ namespace SCSharp.UI
 					}
 					break;
 				case PageLocation.Right:
-					y = (p.Height - fnt.LineSize * lines.Count) / 2;
+					y = (Painter.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null) {
-							p.Blit (s, new Point (p.Width - s.Width - X_OFFSET, y));
+							Painter.Blit (s, new Point (Painter.Width - s.Width - X_OFFSET, y));
 							y += s.Height;
 						}
 						else
@@ -169,10 +168,10 @@ namespace SCSharp.UI
 					}
 					break;
 				case PageLocation.Center:
-					y = (p.Height - fnt.LineSize * lines.Count) / 2;
+					y = (Painter.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (Surface s in lineSurfaces) {
 						if (s != null) {
-							p.Blit (s, new Point ((p.Width - s.Width) / 2, y));
+							Painter.Blit (s, new Point ((Painter.Width - s.Width) / 2, y));
 							y += s.Height;
 						}
 						else
@@ -267,15 +266,15 @@ namespace SCSharp.UI
 		public override void AddToPainter ()
 		{
 			base.AddToPainter ();
-			Painter.Instance.Add (Layer.Background, PaintBackground);
-			Painter.Instance.Add (Layer.UI, PaintMarkup);
+			Painter.Add (Layer.Background, PaintBackground);
+			Painter.Add (Layer.UI, PaintMarkup);
 		}
 
 		public override void RemoveFromPainter ()
 		{
 			base.RemoveFromPainter ();
-			Painter.Instance.Remove (Layer.Background, PaintBackground);
-			Painter.Instance.Remove (Layer.UI, PaintMarkup);
+			Painter.Remove (Layer.Background, PaintBackground);
+			Painter.Remove (Layer.UI, PaintMarkup);
 		}
 
 		protected override void FirstPaint (object sender, EventArgs args)
@@ -289,7 +288,7 @@ namespace SCSharp.UI
 		void PaintBackground (DateTime now)
 		{
 			if (currentBackground != null)
-				Painter.Instance.Blit (currentBackground);
+				Painter.Blit (currentBackground);
 		}
 
 		void PaintMarkup (DateTime now)
@@ -330,7 +329,7 @@ namespace SCSharp.UI
 
 		void AdvanceToNextPage ()
 		{
-			Painter.Instance.Invalidate ();
+			Painter.Invalidate ();
 			while (pageEnumerator.MoveNext ()) {
 				if (pageEnumerator.Current.Background != null)
 					currentBackground = pageEnumerator.Current.Background;

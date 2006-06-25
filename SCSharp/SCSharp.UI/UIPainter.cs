@@ -70,8 +70,8 @@ namespace SCSharp.UI
 				e.Paint (now);
 
 				if (showBorders) {
-					Painter.Instance.DrawBox (new Rectangle (new Point (e.X1,e.Y1), new Size (e.Width - 1, e.Height - 1)),
-								  e.Visible ? Color.Green : Color.Yellow);
+					Painter.DrawBox (new Rectangle (new Point (e.X1,e.Y1), new Size (e.Width - 1, e.Height - 1)),
+							 e.Visible ? Color.Green : Color.Yellow);
 					if (e.Text == "")
 						e.Text = i.ToString();
 				}

@@ -213,7 +213,7 @@ namespace SCSharp.UI
 		protected void Invalidate ()
 		{
 			if (visible)
-				Painter.Instance.Invalidate (Bounds);
+				Painter.Invalidate (Bounds);
 			surface = null;
 		}
 
@@ -242,13 +242,13 @@ namespace SCSharp.UI
 			if (Surface == null)
 				return;
 
-			Rectangle dest = Rectangle.Intersect (Bounds, Painter.Instance.Dirty);
+			Rectangle dest = Rectangle.Intersect (Bounds, Painter.Dirty);
 			if (!dest.IsEmpty) {
 				Rectangle source = dest;
 				source.X -= X1;
 				source.Y -= Y1;
 
-				Painter.Instance.Blit (surface, dest, source);
+				Painter.Blit (surface, dest, source);
 			}
 		}
 		

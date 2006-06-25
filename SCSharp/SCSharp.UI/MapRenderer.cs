@@ -116,15 +116,13 @@ namespace SCSharp.UI
 				}
 			}
 
-			Painter.Instance.Invalidate (new Rectangle (new Point (0,0),
-								    new Size (width, height)));
+			Painter.Invalidate (new Rectangle (new Point (0,0),
+							   new Size (width, height)));
 		}
 
 		public void Paint (DateTime dt)
 		{
-			Painter p = Painter.Instance;
-
-			p.Blit (mapSurface, p.Dirty, p.Dirty);
+			Painter.Blit (mapSurface, Painter.Dirty, Painter.Dirty);
 		}
 
 		byte[] image;

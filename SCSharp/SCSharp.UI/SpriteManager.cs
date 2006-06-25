@@ -123,7 +123,7 @@ namespace SCSharp.UI
 
 		public static void AddToPainter ()
 		{
-			Painter.Instance.Add (Layer.Background, SpriteManagerPainterTick);
+			Painter.Add (Layer.Background, SpriteManagerPainterTick);
 
 			foreach (Sprite s in sprites)
 				s.AddToPainter ();
@@ -131,7 +131,7 @@ namespace SCSharp.UI
 
 		public static void RemoveFromPainter ()
 		{
-			Painter.Instance.Remove (Layer.Background, SpriteManagerPainterTick);
+			Painter.Remove (Layer.Background, SpriteManagerPainterTick);
 
 			foreach (Sprite s in sprites)
 				s.RemoveFromPainter ();

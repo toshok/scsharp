@@ -311,7 +311,7 @@ namespace SCSharp.UI
 					return;
 				}
 				else if (args.Key == Key.F) {
-					Painter.Instance.Fullscreen = !Painter.Instance.Fullscreen;
+					Painter.Fullscreen = !Painter.Fullscreen;
 					return;
 				}
 			}
@@ -347,7 +347,7 @@ namespace SCSharp.UI
 
 		public void SetGameScreen (UIScreen screen)
 		{
-			Painter.Instance.Pause ();
+			Painter.Pause ();
 
 			if (currentScreen != null)
 				currentScreen.RemoveFromPainter ();
@@ -355,7 +355,7 @@ namespace SCSharp.UI
 			if (currentScreen != null)
 				currentScreen.AddToPainter ();
 
-			Painter.Instance.Resume ();
+			Painter.Resume ();
 		}
 
 		UIScreen screenToSwitchTo;

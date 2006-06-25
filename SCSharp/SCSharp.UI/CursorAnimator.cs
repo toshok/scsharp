@@ -66,18 +66,18 @@ namespace SCSharp.UI
 
 		public void SetHotSpot (int hot_x, int hot_y)
 		{
-			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
+			Painter.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 			this.hot_x = hot_x;
 			this.hot_y = hot_y;
-			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
+			Painter.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 		}
 
 		public void SetPosition (int x, int y)
 		{
-			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
+			Painter.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 			this.x = x;
 			this.y = y;
-			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
+			Painter.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 		}
 
 		public int X {
@@ -98,13 +98,13 @@ namespace SCSharp.UI
 
 		public void AddToPainter ()
 		{
-			Painter.Instance.Add (Layer.Cursor, Paint);
+			Painter.Add (Layer.Cursor, Paint);
                         Events.Tick += CursorTick;
 		}
 
 		public void RemoveFromPainter ()
 		{
-			Painter.Instance.Remove (Layer.Cursor, Paint);
+			Painter.Remove (Layer.Cursor, Paint);
                         Events.Tick -= CursorTick;
 		}
 
@@ -117,12 +117,12 @@ namespace SCSharp.UI
 
 			totalElapsed = 0;
 			current_frame ++;
-			Painter.Instance.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
+			Painter.Invalidate (new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 		}
 
 		void Paint (DateTime now)
 		{
-			Rectangle dest = Rectangle.Intersect (Painter.Instance.Dirty,
+			Rectangle dest = Rectangle.Intersect (Painter.Dirty,
 							      new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
 			if (dest.IsEmpty)
 				return;
@@ -143,7 +143,7 @@ namespace SCSharp.UI
 											   palette,
 											   true);
 
-			Painter.Instance.Blit (surfaces[current_frame], dest, source);
+			Painter.Blit (surfaces[current_frame], dest, source);
 		}
 	}
 }

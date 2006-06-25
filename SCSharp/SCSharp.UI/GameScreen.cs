@@ -143,7 +143,6 @@ namespace SCSharp.UI
 
 		void PaintStarfield (DateTime dt)
 		{
-			Painter p = Painter.Instance;
 			float scroll_factor = 1.0f;
 			float[] factors = new float[starfield_layers.Length];
 
@@ -166,55 +165,55 @@ namespace SCSharp.UI
 				dest = new Rectangle (new Point (0,0),
 						      new Size (Painter.SCREEN_RES_X - scroll_x,
 								375 - scroll_y));
-				dest = Rectangle.Intersect (dest, p.Dirty);
+				dest = Rectangle.Intersect (dest, Painter.Dirty);
 				if (!dest.IsEmpty) {
 					source = dest;
 					source.X += scroll_x;
 					source.Y += scroll_y;
 
-					p.Blit (starfield_layers[i],
-						dest, source);
+					Painter.Blit (starfield_layers[i],
+						      dest, source);
 				}
 
 				if (scroll_x != 0) {
 					dest = new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
 							      new Size (scroll_x, 375 - scroll_y));
-					dest = Rectangle.Intersect (dest, p.Dirty);
+					dest = Rectangle.Intersect (dest, Painter.Dirty);
 					if (!dest.IsEmpty) {
 						source = dest;
 						source.X -= Painter.SCREEN_RES_X - scroll_x;
 						source.Y += scroll_y;
 
-						p.Blit (starfield_layers[i],
-							dest, source);
+						Painter.Blit (starfield_layers[i],
+							      dest, source);
 					}
 				}
 
 				if (scroll_y != 0) {
 					dest = new Rectangle (new Point (0, 375 - scroll_y),
 							      new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y));
-					dest = Rectangle.Intersect (dest, p.Dirty);
+					dest = Rectangle.Intersect (dest, Painter.Dirty);
 					if (!dest.IsEmpty) {
 						source = dest;
 						source.X += scroll_x;
 						source.Y -= 375 - scroll_y;
 
-						p.Blit (starfield_layers[i],
-							dest, source);
+						Painter.Blit (starfield_layers[i],
+							      dest, source);
 					}
 				}
 
 				if (scroll_x != 0 || scroll_y != 0) {
 					dest = new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 375 - scroll_y),
 							      new Size (scroll_x, scroll_y));
-					dest = Rectangle.Intersect (dest, p.Dirty);
+					dest = Rectangle.Intersect (dest, Painter.Dirty);
 					if (!dest.IsEmpty) {
 						source = dest;
 						source.X -= Painter.SCREEN_RES_X - scroll_x;
 						source.Y -= 375 - scroll_y;
 
-						p.Blit (starfield_layers[i],
-							dest, source);
+						Painter.Blit (starfield_layers[i],
+							      dest, source);
 					}
 				}
 			}
@@ -231,19 +230,19 @@ namespace SCSharp.UI
 							new Size ((int)((float)Painter.SCREEN_RES_X / (float)mapRenderer.MapWidth * MINIMAP_WIDTH),
 								  (int)((float)Painter.SCREEN_RES_Y / (float)mapRenderer.MapHeight * MINIMAP_HEIGHT)));
 
-			Painter.Instance.DrawBox (rect, Color.Green);
+			Painter.DrawBox (rect, Color.Green);
 		}
 
 		public override void AddToPainter ()
 		{
 			base.AddToPainter ();
 
-			Painter.Instance.Add (Layer.Hud, PaintMinimap);
+			Painter.Add (Layer.Hud, PaintMinimap);
 
 			if (scenario.Tileset == Tileset.Platform)
-				Painter.Instance.Add (Layer.Background, PaintStarfield);
+				Painter.Add (Layer.Background, PaintStarfield);
 
-			Painter.Instance.Add (Layer.Map, mapRenderer.Paint);
+			Painter.Add (Layer.Map, mapRenderer.Paint);
 			SpriteManager.AddToPainter ();
 		}
 
@@ -251,12 +250,12 @@ namespace SCSharp.UI
 		{
 			base.RemoveFromPainter ();
 
-			Painter.Instance.Remove (Layer.Hud, PaintMinimap);
+			Painter.Remove (Layer.Hud, PaintMinimap);
 
 			if (scenario.Tileset == Tileset.Platform)
-				Painter.Instance.Remove (Layer.Background, PaintStarfield);
+				Painter.Remove (Layer.Background, PaintStarfield);
 
-			Painter.Instance.Remove (Layer.Map, mapRenderer.Paint);
+			Painter.Remove (Layer.Map, mapRenderer.Paint);
 			SpriteManager.RemoveFromPainter ();
 		}
 
@@ -471,8 +470,8 @@ namespace SCSharp.UI
 
 			UpdateCursor ();
 
-			Painter.Instance.Invalidate (new Rectangle (new Point (0,0),
-								    new Size (Painter.SCREEN_RES_X, 375)));
+			Painter.Invalidate (new Rectangle (new Point (0,0),
+							   new Size (Painter.SCREEN_RES_X, 375)));
 		}
 
 		bool buttonDownInMinimap;
@@ -492,8 +491,8 @@ namespace SCSharp.UI
 			UpdateCursor ();
 
 
-			Painter.Instance.Invalidate (new Rectangle (new Point (0,0),
-								    new Size (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y)));
+			Painter.Invalidate (new Rectangle (new Point (0,0),
+							   new Size (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y)));
 		}
 
 		void RecenterFromMinimap (int x, int y)

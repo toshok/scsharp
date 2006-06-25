@@ -91,7 +91,7 @@ namespace SCSharp.UI
 			base.AddToPainter ();
 			foreach (MovieElement el in smkElements)
 				el.Play ();
-			Painter.Instance.Add (Layer.Background, smkPainter.Paint);
+			Painter.Add (Layer.Background, smkPainter.Paint);
 		}
 
 		public override void RemoveFromPainter ()
@@ -99,7 +99,7 @@ namespace SCSharp.UI
 			base.RemoveFromPainter ();
 			foreach (MovieElement el in smkElements)
 				el.Stop ();
-			Painter.Instance.Remove (Layer.Background, smkPainter.Paint);
+			Painter.Remove (Layer.Background, smkPainter.Paint);
 
 			diskPlayer = null;
 		}

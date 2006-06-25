@@ -63,32 +63,30 @@ namespace SCSharp.UI
 
 	public delegate void PainterDelegate (DateTime now);
 
-	public class Painter 
+	public static class Painter 
 	{
-		List<PainterDelegate>[] layers;
-		int millis;
-		int total_elapsed;
+		static List<PainterDelegate>[] layers;
+		static int millis;
+		static int total_elapsed;
 
-		DateTime now; /* the time of the last animation tick */
+		static DateTime now; /* the time of the last animation tick */
 
-		Surface paintingSurface;
+		static Surface paintingSurface;
 
-		bool fullscreen;
+		static bool fullscreen;
 
 		public const int SCREEN_RES_X = 640;
 		public const int SCREEN_RES_Y = 480;
 
 #if !RELEASE
-		DateTime last_time;
-		byte[] fontpal;
-		double fps;
-		int frame_count;
-		Surface fps_surface;
+		static DateTime last_time;
+		static byte[] fontpal;
+		static double fps;
+		static int frame_count;
+		static Surface fps_surface;
 		static bool debug_dirty;
 		static bool show_fps;
 #endif
-
-		static Painter instance;
 
 #if !RELEASE
 		static Painter ()
@@ -104,20 +102,15 @@ namespace SCSharp.UI
 		}
 #endif
 
-		public static void InitializePainter (bool fullscreen, int millis)
+		static bool init_done;
+
+		public static void InitializePainter (bool fullscreen, int milli)
 		{
-			if (instance != null)
-				throw new Exception ("only one painter instance allowed");
+			if (init_done)
+				throw new Exception ("painter can only be initialized once");
 
-			instance = new Painter (fullscreen, millis);
-		}
+			init_done = true;
 
-		public static Painter Instance {
-			get { return instance; }
-		}
-
-		private Painter (bool fullscreen, int millis)
-		{
 #if !RELEASE
 			if (show_fps) {
 				Pcx pcx = new Pcx ();
@@ -126,7 +119,7 @@ namespace SCSharp.UI
 			}
 #endif
 
-			this.millis = millis;
+			millis = milli;
 
 			Fullscreen = fullscreen;
 			
@@ -139,7 +132,7 @@ namespace SCSharp.UI
                         Events.Tick += Tick;
 		}
 
-		public bool Fullscreen {
+		public static bool Fullscreen {
 			get { return fullscreen; }
 			set {
 				if (fullscreen != value || paintingSurface == null) {
@@ -155,39 +148,39 @@ namespace SCSharp.UI
 			}
 		}
 
-		public void Prepend (Layer layer, PainterDelegate painter)
+		public static void Prepend (Layer layer, PainterDelegate painter)
 		{
 			layers[(int)layer].Insert (0, painter);
 		}
 
-		public void Add (Layer layer, PainterDelegate painter)
+		public static void Add (Layer layer, PainterDelegate painter)
 		{
 			layers[(int)layer].Add (painter);
 		}
 
-		public void Remove (Layer layer, PainterDelegate painter)
+		public static void Remove (Layer layer, PainterDelegate painter)
 		{
 			layers[(int)layer].Remove (painter);
 		}
 
-		public void Clear (Layer layer)
+		public static void Clear (Layer layer)
 		{
 			layers[(int)layer].Clear ();
 		}
 
-		int paused;
+		static int paused;
 
-		public void Pause ()
+		public static void Pause ()
 		{
 			paused++;
 		}
 
-		public void Resume ()
+		public static void Resume ()
 		{
 			paused--;
 		}
 
-		void Tick (object sender, TickEventArgs e)
+		static void Tick (object sender, TickEventArgs e)
 		{
 			total_elapsed += e.TicksElapsed;
 
@@ -198,9 +191,9 @@ namespace SCSharp.UI
 				Redraw ();
 		}
 
-		public event EventHandler Painting;
+		public static event EventHandler Painting;
 
-		public void Redraw ()
+		public static void Redraw ()
 		{
 #if !RELEASE
 			Rectangle fps_rect = Rectangle.Empty;
@@ -223,7 +216,7 @@ namespace SCSharp.UI
 			//Console.WriteLine ("Redraw");
 
 			if (Painting != null)
-				Painting (this, EventArgs.Empty);
+				Painting (null, EventArgs.Empty);
 
 			if (dirty.IsEmpty)
 				return;
@@ -265,39 +258,39 @@ namespace SCSharp.UI
 			total_elapsed = (DateTime.Now - now).Milliseconds;
 		}
 
-		public void DrawLayer (List<PainterDelegate> painters)
+		public static void DrawLayer (List<PainterDelegate> painters)
 		{
 			for (int i = 0; i < painters.Count; i ++)
 				painters[i] (now);
 		}
 
-		public void Blit (Surface surf, Point p)
+		public static void Blit (Surface surf, Point p)
 		{
 			paintingSurface.Blit (surf, p);
 		}
 
-		public void Blit (Surface surf)
+		public static void Blit (Surface surf)
 		{
 			paintingSurface.Blit (surf);
 		}
 
-		public void Blit (Surface surf, Rectangle r1, Rectangle r2)
+		public static void Blit (Surface surf, Rectangle r1, Rectangle r2)
 		{
 			paintingSurface.Blit (surf, r1, r2);
 		}
 
-		public void DrawBox (Rectangle rect, Color color)
+		public static void DrawBox (Rectangle rect, Color color)
 		{
 			paintingSurface.DrawBox (rect, color);
 		}
 
-		Rectangle dirty = Rectangle.Empty;
+		static Rectangle dirty = Rectangle.Empty;
 
-		public Rectangle Dirty {
+		public static Rectangle Dirty {
 			get { return dirty; }
 		}
 
-		public void Invalidate (Rectangle r)
+		public static void Invalidate (Rectangle r)
 		{
 			if (r.X >= Painter.SCREEN_RES_X
 			    || r.Y >= Painter.SCREEN_RES_Y
@@ -328,16 +321,16 @@ namespace SCSharp.UI
 				dirty = Rectangle.Union (dirty, r);
 		}
 
-		public void Invalidate ()
+		public static void Invalidate ()
 		{
 			Invalidate (new Rectangle (0, 0, Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y));
 		}
 
-		public int Width {
+		public static int Width {
 			get { return paintingSurface.Width; }
 		}
 
-		public int Height {
+		public static int Height {
 			get { return paintingSurface.Height; }
 		}
 	}

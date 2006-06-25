@@ -129,7 +129,7 @@ namespace SCSharp.UI
 
 		void PaintDropdown (DateTime dt)
 		{
-			Painter.Instance.Blit (dropdownSurface, new Point (X1, Y1 + Height));
+			Painter.Blit (dropdownSurface, new Point (X1, Y1 + Height));
 		}
 
 		void ShowDropdown ()
@@ -137,7 +137,7 @@ namespace SCSharp.UI
 			dropdown_visible = true;
 			selected_item = cursor;
 			CreateDropdownSurface ();
-			Painter.Instance.Add (Layer.Popup, PaintDropdown);
+			Painter.Add (Layer.Popup, PaintDropdown);
 		}
 
 		void HideDropdown ()
@@ -149,7 +149,7 @@ namespace SCSharp.UI
 					SelectionChanged (cursor);
 				Invalidate ();
 			}
-			Painter.Instance.Remove (Layer.Popup, PaintDropdown);
+			Painter.Remove (Layer.Popup, PaintDropdown);
 		}
 
 		protected override Surface CreateSurface ()

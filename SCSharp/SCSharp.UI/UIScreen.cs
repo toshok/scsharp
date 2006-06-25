@@ -110,28 +110,28 @@ namespace SCSharp.UI
 
 		public virtual void AddToPainter ()
 		{
-			Painter.Instance.Painting += FirstPaint;
+			Painter.Painting += FirstPaint;
 
 			if (background != null)
-				Painter.Instance.Add (Layer.Background, BackgroundPainter);
+				Painter.Add (Layer.Background, BackgroundPainter);
 
 			if (UIPainter != null)
-				Painter.Instance.Add (Layer.UI, UIPainter.Paint);
+				Painter.Add (Layer.UI, UIPainter.Paint);
 
 			if (Cursor != null)
 				Game.Instance.Cursor = Cursor;
 
-			Painter.Instance.Invalidate ();
+			Painter.Invalidate ();
 		}
 
 		public virtual void RemoveFromPainter ()
 		{
-			Painter.Instance.Painting -= FirstPaint;
+			Painter.Painting -= FirstPaint;
 
 			if (background != null)
-				Painter.Instance.Remove (Layer.Background, BackgroundPainter);
+				Painter.Remove (Layer.Background, BackgroundPainter);
 			if (UIPainter != null)
-				Painter.Instance.Remove (Layer.UI, UIPainter.Paint);
+				Painter.Remove (Layer.UI, UIPainter.Paint);
 			if (Cursor != null)
 				Game.Instance.Cursor = null;
 		}
@@ -328,7 +328,7 @@ namespace SCSharp.UI
 			if (FirstPainted != null)
 				FirstPainted ();
 
-			Painter.Instance.Painting -= FirstPaint;
+			Painter.Painting -= FirstPaint;
 		}
 
 		protected void RaiseReadyEvent ()
@@ -345,15 +345,13 @@ namespace SCSharp.UI
 
 		protected void BackgroundPainter (DateTime dt)
 		{
-			Painter p = Painter.Instance;
-
-			int background_x = (p.Width - background.Width) / 2;
-			int background_y = (p.Height - background.Height) / 2;
+			int background_x = (Painter.Width - background.Width) / 2;
+			int background_y = (Painter.Height - background.Height) / 2;
 
 			Rectangle background_rect = new Rectangle (background_x, background_y,
 								   background.Width, background.Height);
 
-			Rectangle dest = Rectangle.Intersect (Painter.Instance.Dirty, background_rect);
+			Rectangle dest = Rectangle.Intersect (Painter.Dirty, background_rect);
 
 			if (dest.IsEmpty)
 				return;
@@ -362,7 +360,7 @@ namespace SCSharp.UI
 			source.X -= background_x;
 			source.Y -= background_y;
 
-			p.Blit (background, dest, source);
+			Painter.Blit (background, dest, source);
 		}
 
 		int translucentIndex = 254;

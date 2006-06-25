@@ -306,20 +306,20 @@ namespace SCSharp.UI
 										   y - SpriteManager.Y - sprite_surface.Height / 2),
 									new Size (sprite_surface.Width, sprite_surface.Height));
 
-					dest = Rectangle.Intersect (dest, Painter.Instance.Dirty);
+					dest = Rectangle.Intersect (dest, Painter.Dirty);
 
 					if (!dest.IsEmpty) {
 						Rectangle source = dest;
 						source.X -= x - SpriteManager.X - sprite_surface.Width / 2;
 						source.Y -= y - SpriteManager.Y - sprite_surface.Height / 2;
 
-						Painter.Instance.Blit (sprite_surface, dest, source);
+						Painter.Blit (sprite_surface, dest, source);
 
 						if (show_sprite_borders) {
-							Painter.Instance.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-													    y - SpriteManager.Y - sprite_surface.Height / 2),
-												 new Size (sprite_surface.Width - 1,
-													   sprite_surface.Height - 1)),
+							Painter.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+												   y - SpriteManager.Y - sprite_surface.Height / 2),
+											new Size (sprite_surface.Width - 1,
+												  sprite_surface.Height - 1)),
 										  Color.Green);
 						}
 					}
@@ -327,8 +327,8 @@ namespace SCSharp.UI
 			}
 
 #if false
-					Painter.Instance.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-											  y - SpriteManager.Y - sprite_surface.Height / 2));
+					Painter.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+										 y - SpriteManager.Y - sprite_surface.Height / 2));
 
 				}
 			}
@@ -337,12 +337,12 @@ namespace SCSharp.UI
 
 		public void AddToPainter ()
 		{
-			Painter.Instance.Add (Layer.Unit, PaintSprite);
+			Painter.Add (Layer.Unit, PaintSprite);
 		}
 
 		public void RemoveFromPainter ()
 		{
-			Painter.Instance.Add (Layer.Unit, PaintSprite);
+			Painter.Add (Layer.Unit, PaintSprite);
 		}
 
 		void DoPlayFrame (int frame_num)
@@ -359,10 +359,10 @@ namespace SCSharp.UI
 										  palette,
 										  true);
 
-				Painter.Instance.Invalidate (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-										       y - SpriteManager.Y - sprite_surface.Height / 2),
-									    new Size (sprite_surface.Width,
-										      sprite_surface.Height)));
+				Painter.Invalidate (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+									      y - SpriteManager.Y - sprite_surface.Height / 2),
+								   new Size (sprite_surface.Width,
+									     sprite_surface.Height)));
 			}
 		}
 
