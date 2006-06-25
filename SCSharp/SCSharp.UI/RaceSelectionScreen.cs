@@ -178,9 +178,9 @@ namespace SCSharp.UI
 
 			smkElements = new List<UIElement>();
 
-			AddMovieElements (FIRST_CAMPAIGN_ELEMENT_INDEX, 0);
-			AddMovieElements (SECOND_CAMPAIGN_ELEMENT_INDEX, 1);
-			AddMovieElements (THIRD_CAMPAIGN_ELEMENT_INDEX, 2);
+			AddMovieElements (FIRST_CAMPAIGN_ELEMENT_INDEX, 0, -40, 0);
+			AddMovieElements (SECOND_CAMPAIGN_ELEMENT_INDEX, 1, 0, 0);
+			AddMovieElements (THIRD_CAMPAIGN_ELEMENT_INDEX, 2, 0, 0);
 
 			smkPainter = new UIPainter (smkElements);
 		}
@@ -206,7 +206,7 @@ namespace SCSharp.UI
 
 		SmackerPlayer diskPlayer;
 
-		void AddMovieElements (int elementIndex, int campaign)
+		void AddMovieElements (int elementIndex, int campaign, int off_x, int off_y)
 		{
 			MovieElement normalElement, onElement, diskElement;
 
@@ -226,8 +226,8 @@ namespace SCSharp.UI
 							  Elements[elementIndex].Palette,
 							  (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].normalMovie);
 
-			normalElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - normalElement.MovieSize.Width) / 2));
-			normalElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - normalElement.MovieSize.Height);
+			normalElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - normalElement.MovieSize.Width) / 2) + off_x);
+			normalElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - normalElement.MovieSize.Height + off_y);
 
 			onElement = new MovieElement (this,
 						      Elements[elementIndex].BinElement,

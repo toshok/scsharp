@@ -1,5 +1,5 @@
 //
-// SCSharp.UI.ImageElement
+// SCSharp.UI.GrpElement
 //
 // Authors:
 //	Chris Toshok (toshok@hungry.com)
@@ -38,30 +38,31 @@ using System.Drawing;
 
 namespace SCSharp.UI
 {
-	public class ImageElement : UIElement
+	public class GrpElement : UIElement
 	{
-		int translucent_index;
+		Grp grp;
+		int frame;
 
-		public ImageElement (UIScreen screen, BinElement el, byte[] palette, int translucent_index)
-			: base (screen, el, palette)
+		public GrpElement (UIScreen screen, Grp grp, byte[] palette, ushort x, ushort y)
+			: base (screen, x, y, grp.Width, grp.Height)
 		{
-			this.translucent_index = translucent_index;
-		}
-
-		public ImageElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height, int translucent_index)
-			: base (screen, x1, y1, width, height)
-		{
-			this.translucent_index = translucent_index;
+			this.Palette = palette;
+			this.grp = grp;
+			this.frame = 0;
 		}
 
 		protected override Surface CreateSurface ()
 		{
-			return GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text),
-							  translucent_index, 0);
+			return GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (frame),
+								grp.Width, grp.Height,
+								Palette,
+								true);
 		}
 
-		public override ElementType Type {
-			get { return ElementType.Image; }
+		public int Frame {
+			get { return frame; }
+			set { frame = value;
+			      Invalidate (); }
 		}
 	}
 

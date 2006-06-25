@@ -51,12 +51,17 @@ namespace SCSharp.UI
 		string text;
 
 		public UIElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height)
+			: this (screen, x1, y1)
+		{
+			this.width = width;
+			this.height = height;
+		}
+
+		public UIElement (UIScreen screen, ushort x1, ushort y1)
 		{
 			this.screen = screen;
 			this.x1 = x1;
 			this.y1 = y1;
-			this.width = width;
-			this.height = height;
 			this.sensitive = true;
 			this.visible = false;
 		}
@@ -95,14 +100,25 @@ namespace SCSharp.UI
 
 		public bool Sensitive {
 			get { return sensitive; }
-			set { sensitive = value;
-			      Invalidate (); }
+			set {
+				if (sensitive == value)
+					return;
+				sensitive = value;
+				Invalidate ();
+			}
 		}
 
 		public bool Visible {
 			get { return visible; }
-			set { visible = value;
-			      Invalidate (); }
+			set {
+				if (visible == value)
+					return;
+				if (visible)
+					Invalidate ();
+				visible = value;
+				if (visible)
+					Invalidate ();
+			}
 		}
 
 		public byte[] Palette {
@@ -145,7 +161,7 @@ namespace SCSharp.UI
 			get { return el.flags; }
 			set { el.flags = value; }
 		}
-		public ElementType Type { get { return el.type; } }
+		public virtual ElementType Type { get { return el == null ? ElementType.UserElement : el.type; } }
 
 		ushort x1;
 		public ushort X1 {

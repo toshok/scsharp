@@ -40,29 +40,49 @@ namespace SCSharp.UI
 {
 	public class LabelElement : UIElement
 	{
+		bool calc_width;
+
 		public LabelElement (UIScreen screen, BinElement el, byte[] palette)
 			: base (screen, el, palette)
 		{
 		}
 
+		public LabelElement (UIScreen screen, byte[] palette, Fnt font, ushort x, ushort y)
+			: base (screen, x, y)
+		{
+			this.Palette = palette;
+			this.Font = font;
+			calc_width = true;
+		}
+
 		protected override Surface CreateSurface ()
 		{
-			/* this is wrong */
-			Surface surf = new Surface (Width, Height);
+			if (calc_width) {
+				Surface textSurf = GuiUtil.ComposeText (Text, Font, Palette, -1, -1,
+									Sensitive ? 4 : 24);
+				Width = (ushort)textSurf.Width;
+				Height = (ushort)textSurf.Height;
 
-			Surface textSurf = GuiUtil.ComposeText (Text, Font, Palette, Width, Height,
-								Sensitive ? 4 : 24);;
+				return textSurf;
+			}
+			else {
+				/* this is wrong */
+				Surface surf = new Surface (Width, Height);
 
-			int x = 0;
-			if (Type == ElementType.LabelRightAlign)
-				x += Width - textSurf.Width;
-			else if (Type == ElementType.LabelCenterAlign)
-				x += (Width - textSurf.Width) / 2;
+				Surface textSurf = GuiUtil.ComposeText (Text, Font, Palette, Width, Height,
+									Sensitive ? 4 : 24);
 
-			surf.Blit (textSurf, new Point (x, 0));
+				int x = 0;
+				if (Type == ElementType.LabelRightAlign)
+					x += Width - textSurf.Width;
+				else if (Type == ElementType.LabelCenterAlign)
+					x += (Width - textSurf.Width) / 2;
 
-			surf.TransparentColor = Color.Black /* XXX */;
-			return surf;
+				surf.Blit (textSurf, new Point (x, 0));
+
+				surf.TransparentColor = Color.Black /* XXX */;
+				return surf;
+			}
 		}
 	}
 

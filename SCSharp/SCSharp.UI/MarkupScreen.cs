@@ -330,6 +330,7 @@ namespace SCSharp.UI
 
 		void AdvanceToNextPage ()
 		{
+			Painter.Instance.Invalidate ();
 			while (pageEnumerator.MoveNext ()) {
 				if (pageEnumerator.Current.Background != null)
 					currentBackground = pageEnumerator.Current.Background;

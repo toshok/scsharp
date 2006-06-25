@@ -330,6 +330,9 @@ namespace SCSharp.UI
 		public CursorAnimator Cursor {
 			get { return cursor; }
 			set {
+				if (cursor == value)
+					return;
+
 				if (cursor != null)
 					cursor.RemoveFromPainter ();
 				cursor = value;

@@ -1,5 +1,69 @@
 2006-06-25  Chris Toshok  <toshok@ximian.com>
 
+	* SCSharp/SCSharp.UI.dll.sources: add GrpElement/GrpButtonElement.
+
+	* SCSharp/SCSharp.UI/Painter.cs (.cctor): get
+	ShowFps/DebugPainterDirty configuration settings if !RELEASE.
+	(Redraw): redraw the fps if the setting says so, and only
+	invalidate the rectangle every 50 frames.  Also, if debug_dirty is
+	on, fill the invalidated areas with red and flip the screen to
+	give a visual indication of what is being redrawn.
+	(Add, Remove): remove the calls to Invalidate from here.
+	(Invalidate): clip the rectangle to 0,0-640,480.
+
+	* SCSharp/SCSharp.UI/GameScreen.cs: biggest change is the removal
+	of PaintHud.  We no longer rasterize the text screens on every
+	redraw, and now modify UIElements when a unit is clicked and let
+	the UIElement machinery take care of surface creation/blitting.
+
+	(ScrollTick): check the new topleft coordinates against the old
+	ones, and don't bother invalidating due to scrolling if they're
+	the same.  Also, if we *do* invalidate, only invalidate the area
+	used by the map (height = 375, not 640).
+	(MouseButtonDown): make this work for both UI elements (like the
+	GrpButtonElements) as well as units on the map.
+	(MouseButtonUp): same.
+	(PointerMotion): same.
+	
+	* SCSharp/SCSharp.UI/MainMenu.cs: fix the hover animation for
+	Single Player, which needed to be offset, and also (unlike the
+	other animations) appears beneath the normal animation.
+
+	* SCSharp/SCSharp.UI/MarkupScreen.cs (AdvanceToNextPage):
+	invalidate the painter so we'll draw the new page.
+
+	* SCSharp/SCSharp.UI/ImageElement.cs: override Type to return
+	ElementType.Image.
+
+	* SCSharp/SCSharp.UI/LabelElement.cs: allow this class to be used
+	for positioning arbitrary, resizable text elements.  The
+	GameScreen uses it for text displayed in the HUD.
+
+	* SCSharp/SCSharp.UI/RaceSelectionScreen.cs: add offsets for the
+	animations, and shift the terran over so that it's centered
+	properly.
+
+	* SCSharp/SCSharp.UI/UIScreen.cs: make mouseDownElement and
+	mouseOverElement protected.
+
+	* SCSharp/SCSharp.UI/Game.cs (set_Cursor): only remove the cursor
+	painter and add the new one if the value has changed.
+
+	* SCSharp/SCSharp.UI/UIElement.cs (.ctor): add a new constructor
+	which just takes a position.
+	(set_Sensitive): only invalidate if the value has changed.
+	(set_Visible): same.
+	(get_ElementType): if the BinElement == null, return UserElement.
+	
+	* SCSharp/SCSharp.UI/Unit.cs: add lots of checks when looking up a
+	unit's Portrait, return null if any of them fail.
+
+	* SCSharp/SCSharp.UI/GrpElement.cs,
+	SCSharp/SCSharp.UI/GrpButtonElement.cs: add two new UIElement
+	subclasses which take a grp file and display a specific frame.  On
+	the GameScreen, the wireframe unit display is a GrpElement, and
+	the command buttons are GrpButtonElements.
+	
 	* SCSharp/SCSharp.Mpq/Tbl.cs: add Count property.
 
 	* SCSharp/SCSharp.Mpq/Dat.cs: add a few methods/properties of

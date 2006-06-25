@@ -1,5 +1,5 @@
 //
-// SCSharp.UI.ImageElement
+// SCSharp.UI.GrpButtonElement
 //
 // Authors:
 //	Chris Toshok (toshok@hungry.com)
@@ -38,30 +38,23 @@ using System.Drawing;
 
 namespace SCSharp.UI
 {
-	public class ImageElement : UIElement
+	public class GrpButtonElement : GrpElement
 	{
-		int translucent_index;
-
-		public ImageElement (UIScreen screen, BinElement el, byte[] palette, int translucent_index)
-			: base (screen, el, palette)
+		public GrpButtonElement (UIScreen screen, Grp grp, byte[] palette, ushort x, ushort y)
+			: base (screen, grp, palette, x, y)
 		{
-			this.translucent_index = translucent_index;
 		}
 
-		public ImageElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height, int translucent_index)
-			: base (screen, x1, y1, width, height)
+		public override void MouseButtonDown (MouseButtonEventArgs args)
 		{
-			this.translucent_index = translucent_index;
 		}
 
-		protected override Surface CreateSurface ()
+		public override void MouseButtonUp (MouseButtonEventArgs args)
 		{
-			return GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text),
-							  translucent_index, 0);
-		}
-
-		public override ElementType Type {
-			get { return ElementType.Image; }
+			if (PointInside (args.X, args.Y)) {
+				Console.WriteLine ("Activating!");
+				OnActivate ();
+			}
 		}
 	}
 

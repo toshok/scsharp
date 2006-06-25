@@ -12,6 +12,8 @@ SCSharp.UI/GameMenuDialog.cs
 SCSharp.UI/GameModeDialog.cs
 SCSharp.UI/GameScreen.cs
 SCSharp.UI/GlobalResources.cs
+SCSharp.UI/GrpElement.cs
+SCSharp.UI/GrpButtonElement.cs
 SCSharp.UI/GuiUtil.cs
 SCSharp.UI/ImageElement.cs
 SCSharp.UI/LabelElement.cs

@@ -29,6 +29,7 @@
 //
 
 using System;
+using System.Configuration;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading;
@@ -83,9 +84,25 @@ namespace SCSharp.UI
 		double fps;
 		int frame_count;
 		Surface fps_surface;
+		static bool debug_dirty;
+		static bool show_fps;
 #endif
 
 		static Painter instance;
+
+#if !RELEASE
+		static Painter ()
+		{
+			string v;
+			v = ConfigurationManager.AppSettings ["ShowFps"];
+			if (v != null)
+				show_fps = Boolean.Parse (v);
+
+			v = ConfigurationManager.AppSettings ["DebugPainterDirty"];
+			if (v != null)
+				debug_dirty = Boolean.Parse (v);
+		}
+#endif
 
 		public static void InitializePainter (bool fullscreen, int millis)
 		{
@@ -102,9 +119,11 @@ namespace SCSharp.UI
 		private Painter (bool fullscreen, int millis)
 		{
 #if !RELEASE
-			Pcx pcx = new Pcx ();
-			pcx.ReadFromStream ((Stream)Game.Instance.PlayingMpq.GetResource ("game\\tfontgam.pcx"), 0, 0);
-			fontpal = pcx.Palette;
+			if (show_fps) {
+				Pcx pcx = new Pcx ();
+				pcx.ReadFromStream ((Stream)Game.Instance.PlayingMpq.GetResource ("game\\tfontgam.pcx"), 0, 0);
+				fontpal = pcx.Palette;
+			}
 #endif
 
 			this.millis = millis;
@@ -144,13 +163,11 @@ namespace SCSharp.UI
 		public void Add (Layer layer, PainterDelegate painter)
 		{
 			layers[(int)layer].Add (painter);
-			Invalidate ();
 		}
 
 		public void Remove (Layer layer, PainterDelegate painter)
 		{
 			layers[(int)layer].Remove (painter);
-			Invalidate ();
 		}
 
 		public void Clear (Layer layer)
@@ -186,17 +203,21 @@ namespace SCSharp.UI
 		public void Redraw ()
 		{
 #if !RELEASE
-			/* make sure we invalidate the region where we're going to draw the fps/related info */
-			Invalidate (new Rectangle (new Point (10, 10), new Size (150, 50)));
+			Rectangle fps_rect = Rectangle.Empty;
+			if (show_fps) {
+				fps_rect = new Rectangle (new Point (10, 10), new Size (80, 30));
+				frame_count ++;
+				if (frame_count == 50) {
 
-			frame_count ++;
-			if (frame_count == 50) {
+					DateTime after = DateTime.Now;
 
-				DateTime after = DateTime.Now;
+					fps = 1.0 / (after - last_time).TotalSeconds * 50;
+					last_time = after;
+					frame_count = 0;
 
-				fps = 1.0 / (after - last_time).TotalSeconds * 50;
-				last_time = after;
-				frame_count = 0;
+					/* make sure we invalidate the region where we're going to draw the fps/related info */
+					Invalidate (fps_rect);
+				}
 			}
 #endif
 			//Console.WriteLine ("Redraw");
@@ -213,24 +234,30 @@ namespace SCSharp.UI
 
 			now = DateTime.Now;
 
-                        paintingSurface.Fill(dirty, Color.Black);
-			
-			for (Layer i = Layer.Background; i < Layer.Count; i ++)
+#if !RELEASE
+			if (debug_dirty) {
+				paintingSurface.Fill (dirty, Color.Red);
+				paintingSurface.Flip ();
+			}
+#endif
+			paintingSurface.Fill(dirty, Color.Black);
+
+			for (Layer i = Layer.Background; i < Layer.Count; i ++) {
 				DrawLayer (layers[(int)i]);
+			}
 
 #if !RELEASE
+			if (show_fps) {
+				if (fps_surface != null)
+					fps_surface.Dispose ();
 
-			if (fps_surface != null)
-				fps_surface.Dispose ();
+				fps_surface = GuiUtil.ComposeText (String.Format ("fps: {0,0:F}", fps),
+								   GuiUtil.GetFonts (Game.Instance.PlayingMpq)[1],
+								   fontpal);
 
-			fps_surface = GuiUtil.ComposeText (String.Format ("fps: {0,0:F}", fps),
-							   GuiUtil.GetFonts (Game.Instance.PlayingMpq)[1],
-							   fontpal);
-
-			paintingSurface.Blit (fps_surface, new Point (10, 10));
+				paintingSurface.Blit (fps_surface, new Point (10,10));
+			}
 #endif
-			paintingSurface.Blit (paintingSurface);
-
 			paintingSurface.Flip ();
 
 			dirty = Rectangle.Empty;
@@ -272,7 +299,27 @@ namespace SCSharp.UI
 
 		public void Invalidate (Rectangle r)
 		{
-			//Console.WriteLine ("invalidating {0}", r);
+			if (r.X >= Painter.SCREEN_RES_X
+			    || r.Y >= Painter.SCREEN_RES_Y
+			    || r.X + r.Width <= 0
+			    || r.Y + r.Height <= 0)
+				return;
+
+			if (r.X < 0) {
+				r.Width += r.X;
+				r.X = 0;
+			}
+			if (r.Y < 0) {
+				r.Height += r.Y;
+				r.Y = 0;
+			}
+
+			if (r.X + r.Width > Painter.SCREEN_RES_X)
+				r.Width = Painter.SCREEN_RES_X - r.X;
+
+			if (r.Y + r.Height > Painter.SCREEN_RES_Y)
+				r.Height = Painter.SCREEN_RES_Y - r.Y;
+			
 			if (dirty.IsEmpty)
 				dirty = r;
 			else if (dirty.Contains (r))

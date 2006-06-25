@@ -41,6 +41,16 @@ namespace SCSharp.UI
 
 	public class GameScreen : UIScreen
 	{
+		enum HudLabels {
+			UnitName,
+			ResourceUsed,
+			ResourceProvided,
+			ResourceTotal,
+			ResourceMax,
+
+			Count
+		}
+
 		//Mpq scenario_mpq;
 
 		Chk scenario;
@@ -97,8 +107,11 @@ namespace SCSharp.UI
 
 		List<Unit> units;
 
+		GrpElement wireframeElement;
 		MovieElement portraitElement;
 		MapRenderer mapRenderer;
+		GrpButtonElement[] cmdButtonElements;
+		LabelElement[] labelElements;
 
 		public GameScreen (Mpq mpq,
 				   Mpq scenario_mpq,
@@ -207,87 +220,8 @@ namespace SCSharp.UI
 			}
 		}
 
-		int[] button_xs = new int[] { 506, 552, 598 };
-		int[] button_ys = new int[] { 360, 400, 440 };
-
-		void PaintHud (DateTime dt)
-		{
-			Painter p = Painter.Instance;
-
-			if (selectedUnit != null) {
-				/* then fill in the center section (wireframe and selected unit info) */
-				Surface s;
-
-				/* the wireframe */
-				s = GuiUtil.CreateSurfaceFromBitmap (wireframe.GetFrame (selectedUnit.UnitId),
-								     wireframe.Width, wireframe.Height,
-								     cmdicon_palette,
-								     true);
-				p.Blit (s, new Point (170, 390));
-
-				/* the unit name */
-				s = GuiUtil.ComposeText (statTxt[selectedUnit.UnitId],
-							 GuiUtil.GetFonts (Mpq)[1],
-							 fontpal.Palette);
-				p.Blit (s, new Point (254, 390));
-
-				if (true /* XXX unit is a building */) {
-					/* $RESOURCE used */
-					s = GuiUtil.ComposeText (statTxt[820+(int)Game.Instance.Race],
-								 GuiUtil.GetFonts (Mpq)[0],
-								 fontpal.Palette);
-					p.Blit (s, new Point (292, 420)); /* XXX */
-
-					/* $RESOURCE provided */
-					s = GuiUtil.ComposeText (statTxt[814+(int)Game.Instance.Race],
-								 GuiUtil.GetFonts (Mpq)[0],
-								 fontpal.Palette);
-					p.Blit (s, new Point (292, 434)); /* XXX */
-
-					/* Total $RESOURCE */
-					s = GuiUtil.ComposeText (statTxt[817+(int)Game.Instance.Race],
-								 GuiUtil.GetFonts (Mpq)[0],
-								 fontpal.Palette);
-					p.Blit (s, new Point (292, 448)); /* XXX */
-
-					/* $RESOURCE Max */
-					s = GuiUtil.ComposeText (statTxt[823+(int)Game.Instance.Race],
-								 GuiUtil.GetFonts (Mpq)[0],
-								 fontpal.Palette);
-					p.Blit (s, new Point (292, 462)); /* XXX */
-				}
-
-				/* then fill in the command buttons */
-				int[] cmd_indices;
-
-				switch (selectedUnit.UnitId) {
-				case 106:
-					cmd_indices = new int[] { 7, -1, -1, -1, -1, 286, -1, -1, 282 };
-					break;
-				default:
-					cmd_indices = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
-					break;
-				}
-
-				int x = 0;
-				int y = 0;
-				for (int i = 0; i < cmd_indices.Length; i ++) {
-					if (cmd_indices[i] != -1) {
-						s = GuiUtil.CreateSurfaceFromBitmap (cmdicons.GetFrame (cmd_indices[i]),
-										     cmdicons.Width, cmdicons.Height,
-										     cmdicon_palette,
-										     true);
-
-						p.Blit (s, new Point (button_xs[x], button_ys[y]));
-					}
-					x++;
-					if (x == 3) {
-						x = 0;
-						y++;
-					}
-				}
-			}
-		}
+		ushort[] button_xs = new ushort[] { 506, 552, 598 };
+		ushort[] button_ys = new ushort[] { 360, 400, 440 };
 
 		/* XXX this needs porting to the new Invalidate/Dirty scheme of things */
 		void PaintMinimap (DateTime dt)
@@ -304,7 +238,6 @@ namespace SCSharp.UI
 		{
 			base.AddToPainter ();
 
-			Painter.Instance.Add (Layer.Hud, PaintHud);
 			Painter.Instance.Add (Layer.Hud, PaintMinimap);
 
 			if (scenario.Tileset == Tileset.Platform)
@@ -318,7 +251,6 @@ namespace SCSharp.UI
 		{
 			base.RemoveFromPainter ();
 
-			Painter.Instance.Remove (Layer.Hud, PaintHud);
 			Painter.Instance.Remove (Layer.Hud, PaintMinimap);
 
 			if (scenario.Tileset == Tileset.Platform)
@@ -342,7 +274,7 @@ namespace SCSharp.UI
 			portraitElement = new MovieElement (this, 415, 415, 48, 48, false);
 			portraitElement.Visible = true;
 			Elements.Add (portraitElement);
-
+			
 			Pcx pcx = new Pcx ();
 			pcx.ReadFromStream ((Stream)mpq.GetResource ("game\\tunit.pcx"), -1, -1);
 			//unit_palette = pcx.Palette;
@@ -427,6 +359,46 @@ namespace SCSharp.UI
 			pcx.ReadFromStream ((Stream)mpq.GetResource ("unit\\cmdbtns\\ticon.pcx"), 0, 0);
 			cmdicon_palette = pcx.Palette;
 
+			// create the wireframe display element
+			wireframeElement = new GrpElement (this, wireframe, cmdicon_palette, 170, 390);
+			wireframeElement.Visible = false;
+			Elements.Add (wireframeElement);
+
+			labelElements = new LabelElement [(int)HudLabels.Count];
+
+			labelElements[(int)HudLabels.UnitName] = new LabelElement (this, fontpal.Palette,
+										   GuiUtil.GetFonts (Mpq)[1],
+										   254, 390);
+			labelElements[(int)HudLabels.ResourceUsed] = new LabelElement (this, fontpal.Palette,
+										       GuiUtil.GetFonts (Mpq)[0],
+										       292, 420);
+			labelElements[(int)HudLabels.ResourceProvided] = new LabelElement (this, fontpal.Palette,
+											   GuiUtil.GetFonts (Mpq)[0],
+											   292, 434);
+			labelElements[(int)HudLabels.ResourceTotal] = new LabelElement (this, fontpal.Palette,
+											GuiUtil.GetFonts (Mpq)[0],
+											292, 448);
+			labelElements[(int)HudLabels.ResourceMax] = new LabelElement (this, fontpal.Palette,
+										      GuiUtil.GetFonts (Mpq)[0],
+										      292, 462);
+
+			for (int i = 0; i < labelElements.Length; i ++)
+				Elements.Add (labelElements[i]);
+
+			cmdButtonElements = new GrpButtonElement[9];
+			int x = 0;
+			int y = 0;
+			for (int i = 0; i < cmdButtonElements.Length; i ++) {
+				cmdButtonElements[i] = new GrpButtonElement (this, cmdicons, cmdicon_palette, button_xs[x], button_ys[y]);
+				x++;
+				if (x == 3) {
+					x = 0;
+					y++;
+				}
+				cmdButtonElements[i].Visible = false;
+				Elements.Add (cmdButtonElements[i]);
+			}
+
 			PlaceInitialUnits ();
 
 			Events.Tick += ScrollTick;
@@ -451,12 +423,16 @@ namespace SCSharp.UI
 
 				int sx, sy;
 
-				s.GetTopLeftPosition (out sx, out sy);
+				s.GetPosition (out sx, out sy);
 
-				CursorAnimator c = Game.Instance.Cursor;
+				int cursor_x = Game.Instance.Cursor.X + topleft_x;
+				int cursor_y = Game.Instance.Cursor.Y + topleft_y;
 
-				if (c.X + topleft_x > sx && c.X + topleft_x <= sx + 100 /* XXX */
-				    && c.Y + topleft_y > sy && c.Y + topleft_y <= sy + 100 /* XXX */) {
+				int half_width = u.Width / 2;
+				int half_height = u.Height / 2;
+
+				if (cursor_x < sx + half_width && cursor_x > sx - half_width
+				    && cursor_y < sy + half_height && cursor_y > sy - half_height) {
 					Game.Instance.Cursor = MagCursors[MAG_CURSOR_G];
 					unitUnderCursor = u;
 					break;
@@ -478,10 +454,17 @@ namespace SCSharp.UI
 			if (horiz_delta == 0 && vert_delta == 0)
 				return;
 
+			int old_topleft_x = topleft_x;
+			int old_topleft_y = topleft_y;
+
 			topleft_x += horiz_delta;
 			topleft_y += vert_delta;
 
 			ClipTopLeft ();
+
+			if (old_topleft_x == topleft_x
+			    && old_topleft_y == topleft_y)
+				return;
 
 			SpriteManager.SetUpperLeft (topleft_x, topleft_y);
 			mapRenderer.SetUpperLeft (topleft_x, topleft_y);
@@ -489,7 +472,7 @@ namespace SCSharp.UI
 			UpdateCursor ();
 
 			Painter.Instance.Invalidate (new Rectangle (new Point (0,0),
-								    new Size (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y)));
+								    new Size (Painter.SCREEN_RES_X, 375)));
 		}
 
 		bool buttonDownInMinimap;
@@ -523,7 +506,9 @@ namespace SCSharp.UI
 
 		public override void MouseButtonDown (MouseButtonEventArgs args)
 		{
-			if (args.X > MINIMAP_X && args.X < MINIMAP_X + MINIMAP_WIDTH &&
+			if (mouseOverElement != null)
+				base.MouseButtonDown (args);
+			else if (args.X > MINIMAP_X && args.X < MINIMAP_X + MINIMAP_WIDTH &&
 			    args.Y > MINIMAP_Y && args.Y < MINIMAP_Y + MINIMAP_HEIGHT) {
 				RecenterFromMinimap (args.X, args.Y);
 				buttonDownInMinimap = true;
@@ -534,14 +519,66 @@ namespace SCSharp.UI
 
 					selectedUnit = unitUnderCursor;
 
-					if (selectedUnit != null) {
+					if (selectedUnit == null) {
+						portraitElement.Visible = false;
+						wireframeElement.Visible = false;
+						for (int i = 0; i < (int)HudLabels.Count; i ++)
+							labelElements[i].Visible = false;
+					}
+					else {
 						Console.WriteLine ("selected unit: {0}", selectedUnit);
 						Console.WriteLine ("selectioncircle = {0}", selectedUnit.SelectionCircleOffset);
 
-						string portrait_resource = String.Format ("portrait\\{0}0.smk",
-											  selectedUnit.Portrait);
-						portraitElement.Player = new SmackerPlayer ((Stream)mpq.GetResource (portrait_resource), 1);
-						portraitElement.Play ();
+						if (selectedUnit.Portrait == null) {
+							portraitElement.Visible = false;
+						}
+						else {
+							string portrait_resource = String.Format ("portrait\\{0}0.smk",
+												  selectedUnit.Portrait);
+
+							portraitElement.Player = new SmackerPlayer ((Stream)mpq.GetResource (portrait_resource), 1);
+							portraitElement.Play ();
+							portraitElement.Visible = true;
+						}
+
+						/* set up the wireframe */
+						wireframeElement.Frame = selectedUnit.UnitId;
+						wireframeElement.Visible = true;
+
+						/* then display info about the selected unit */
+						labelElements[(int)HudLabels.UnitName].Text = statTxt[selectedUnit.UnitId];
+						if (true /* XXX unit is a building */) {
+							labelElements[(int)HudLabels.ResourceUsed].Text = statTxt[820+(int)Game.Instance.Race];
+							labelElements[(int)HudLabels.ResourceProvided].Text = statTxt[814+(int)Game.Instance.Race];
+							labelElements[(int)HudLabels.ResourceTotal].Text = statTxt[817+(int)Game.Instance.Race];
+							labelElements[(int)HudLabels.ResourceMax].Text = statTxt[823+(int)Game.Instance.Race];
+
+							for (int i = 0; i < (int)HudLabels.Count; i ++)
+								labelElements[i].Visible = true;
+						}
+
+						/* then fill in the command buttons */
+						int[] cmd_indices;
+
+						switch (selectedUnit.UnitId) {
+						case 106:
+							cmd_indices = new int[] { 7, -1, -1, -1, -1, 286, -1, -1, 282 };
+							break;
+						default:
+							Console.WriteLine ("cmd_indices == -1");
+							cmd_indices = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+							break;
+						}
+
+						for (int i = 0; i < cmd_indices.Length; i ++) {
+							if (cmd_indices[i] == -1) {
+								cmdButtonElements[i].Visible = false;
+							}
+							else {
+								cmdButtonElements[i].Visible = true;
+								cmdButtonElements[i].Frame = cmd_indices[i];
+							}
+						}
 					}
 				}
 			}
@@ -549,7 +586,9 @@ namespace SCSharp.UI
 		
 		public override void MouseButtonUp (MouseButtonEventArgs args)
 		{
-			if (buttonDownInMinimap)
+			if (mouseDownElement != null)
+				base.MouseButtonUp (args);
+			else if (buttonDownInMinimap)
 				buttonDownInMinimap = false;
 		}
 
@@ -559,6 +598,8 @@ namespace SCSharp.UI
 				RecenterFromMinimap (args.X, args.Y);
 			}
 			else {
+				base.PointerMotion (args);
+
 				if (args.X < MOUSE_MOVE_BORDER) {
 					horiz_delta = -SCROLL_DELTA;
 				}

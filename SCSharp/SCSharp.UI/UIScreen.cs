@@ -167,8 +167,8 @@ namespace SCSharp.UI
 			return null;
 		}
 
-		UIElement mouseDownElement;
-		UIElement mouseOverElement;
+		protected UIElement mouseDownElement;
+		protected UIElement mouseOverElement;
 		public virtual void MouseEnterElement (UIElement element)
 		{
 			element.MouseEnter ();

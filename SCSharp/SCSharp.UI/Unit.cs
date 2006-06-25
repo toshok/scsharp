@@ -139,7 +139,25 @@ namespace SCSharp.UI
 		}
 
 		public string Portrait {
-			get { return GlobalResources.Instance.PortDataTbl[(int)GlobalResources.Instance.PortDataDat.PortraitIndexes [(int)units.Portraits [unit_id]]]; }
+			get {
+				if (unit_id >= units.Portraits.Count)
+					return null;
+				int idx = (int)units.Portraits [unit_id];
+				if (idx >= GlobalResources.Instance.PortDataDat.PortraitIndexes.Count)
+					return null;
+				int portidx = (int)GlobalResources.Instance.PortDataDat.PortraitIndexes [idx];
+				if (portidx >= GlobalResources.Instance.PortDataTbl.Count)
+					return null;
+				return GlobalResources.Instance.PortDataTbl[portidx];
+			}
+		}
+
+		public int Width {
+			get { return units.Widths [unit_id]; }
+		}
+
+		public int Height {
+			get { return units.Heights [unit_id]; }
 		}
 	}
 }
