@@ -1,4 +1,39 @@
-2006-06-25  Chris Toshok  <toshok@ximian.com>
+2006-06-25  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/Painter.cs: set the clip rectangle for
+	paintingSurface to Dirty when redrawing.  this means we no longer
+	need to do all the complicated intersection tests in the various
+	paint methods.
+
+	* SCSharp/SCSharp.UI/GameScreen.cs: no need for the clip rectangle
+	calculation in the starfield painter.
+
+	* SCSharp/SCSharp.UI/CursorAnimator.cs: no need for the clip
+	rectangle calculation.
+
+	* SCSharp/SCSharp.UI/SpriteManager.cs: clean this up a
+	bunch. We're no longer using the painter hack, and are called
+	directly from an Events.Tick delegate.  Also, since we're now
+	using a for loop (not an enumerator) to loop over the sprites, we
+	don't need the pendingAdds/pendingRemoves crap anymore.
+
+	* SCSharp/SCSharp.UI/PlayCustomScreen.cs: dispose of the
+	selectedScenario mpq when the cursor moves to another one.
+
+	* SCSharp/SCSharp.UI/UIDialog.cs: remove the clip retangle tests
+	for the dim painter.
+
+	* SCSharp/SCSharp.UI/Sprite.cs: remove the clip rectangle tests
+	for the sprite.  Also, change the Tick method signature, since
+	SpriteManager now calls us from an Events.Tick delegate.
+
+	* SCSharp/SCSharp.UI/UIElement.cs: remove clip rectangle tests for
+	the element's surface.
+
+	* SCSharp/SCSharp.UI/UIScreen.cs: remove clip rectangle tests for
+	background painter.
+
+2006-06-25  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.Mpq/Mpq.cs: make Mpq implement IDisposable, and
 	override it in the subclasses are needed.

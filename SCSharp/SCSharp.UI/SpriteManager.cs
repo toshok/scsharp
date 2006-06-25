@@ -46,10 +46,11 @@ namespace SCSharp.UI
 		public static int X;
 		public static int Y;
 
-		static bool in_tick;
-		static List<Sprite> pendingAdds = new List<Sprite>();
-		static List<Sprite> pendingRemoves = new List<Sprite>();
-		
+		static SpriteManager ()
+		{
+			Events.Tick += SpriteManagerPainterTick;
+		}
+
 		public static Sprite CreateSprite (Mpq mpq, int sprite_number, byte[] palette, int x, int y)
 		{
 			our_mpq = mpq;
@@ -60,10 +61,7 @@ namespace SCSharp.UI
 		{
 			Sprite sprite = new Sprite (parentSprite, images_number, palette);
 
-			if (in_tick)
-				pendingAdds.Add (sprite);
-			else
-				AddSprite (sprite);
+			AddSprite (sprite);
 
 			return sprite;
 		}
@@ -78,61 +76,37 @@ namespace SCSharp.UI
 		{
 			Sprite sprite = new Sprite (our_mpq, sprite_number, palette, x, y);
 
-			if (in_tick)
-				pendingAdds.Add (sprite);
-			else
-				AddSprite (sprite);
+			AddSprite (sprite);
 
 			return sprite;
 		}
 
 		public static void RemoveSprite (Sprite sprite)
 		{
-			if (in_tick)
-				pendingRemoves.Add (sprite);
-			else {
-				sprite.RemoveFromPainter ();
+			sprite.RemoveFromPainter ();
 
-				sprites.Remove (sprite);
-			}
+			sprites.Remove (sprite);
 		}
 
-		static void SpriteManagerPainterTick (DateTime now)
+		static void SpriteManagerPainterTick (object sender, TickEventArgs args)
 		{
-			in_tick = true;
-
-			IEnumerator<Sprite> e = sprites.GetEnumerator();
-			
-			while (e.MoveNext ()) {
-				if (e.Current.Tick (now) == false) {
+			for (int i = 0; i < sprites.Count; i ++) {
+				Sprite s = sprites[i];
+				if (s.Tick (args.TicksElapsed) == false) {
 					Console.WriteLine ("removing sprite!!!!");
-					RemoveSprite (e.Current);
+					sprites.RemoveAt (i);
 				}
 			}
-
-			in_tick = false;
-
-			foreach (Sprite s in pendingAdds)
-				AddSprite (s);
-			pendingAdds.Clear ();
-
-			foreach (Sprite s in pendingRemoves)
-				RemoveSprite (s);
-			pendingRemoves.Clear ();
 		}
 
 		public static void AddToPainter ()
 		{
-			Painter.Add (Layer.Background, SpriteManagerPainterTick);
-
 			foreach (Sprite s in sprites)
 				s.AddToPainter ();
 		}
 
 		public static void RemoveFromPainter ()
 		{
-			Painter.Remove (Layer.Background, SpriteManagerPainterTick);
-
 			foreach (Sprite s in sprites)
 				s.RemoveFromPainter ();
 		}

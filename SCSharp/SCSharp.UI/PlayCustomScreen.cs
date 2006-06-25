@@ -321,6 +321,9 @@ namespace SCSharp.UI
 		{
 			string map_path = Path.Combine (curdir, file_listbox.SelectedItem);
 
+			if (selectedScenario !=null)
+				selectedScenario.Dispose ();
+
 			if (selectedIndex < directories.Length) {
 				selectedScenario = null;
 				selectedChk = null;

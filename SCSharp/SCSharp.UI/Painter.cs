@@ -227,6 +227,8 @@ namespace SCSharp.UI
 
 			now = DateTime.Now;
 
+			paintingSurface.ClipRectangle = dirty;
+
 #if !RELEASE
 			if (debug_dirty) {
 				paintingSurface.Fill (dirty, Color.Red);
@@ -251,8 +253,10 @@ namespace SCSharp.UI
 				paintingSurface.Blit (fps_surface, new Point (10,10));
 			}
 #endif
+
 			paintingSurface.Flip ();
 
+			paintingSurface.ClipRectangle = paintingSurface.Rectangle;
 			dirty = Rectangle.Empty;
 
 			total_elapsed = (DateTime.Now - now).Milliseconds;

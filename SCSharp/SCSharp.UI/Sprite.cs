@@ -301,38 +301,19 @@ namespace SCSharp.UI
 			if (sprite_surface != null) {
 				if ((x > SpriteManager.X - sprite_surface.Width / 2) && (x - sprite_surface.Width / 2 <= SpriteManager.X + Painter.SCREEN_RES_X)
 				    && (y > SpriteManager.Y - sprite_surface.Height / 2) && (y - sprite_surface.Height / 2 <= SpriteManager.Y + 375)) {
+					Painter.Blit (sprite_surface,
+						      new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+								 y - SpriteManager.Y - sprite_surface.Height / 2));
 
-					Rectangle dest = new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-										   y - SpriteManager.Y - sprite_surface.Height / 2),
-									new Size (sprite_surface.Width, sprite_surface.Height));
-
-					dest = Rectangle.Intersect (dest, Painter.Dirty);
-
-					if (!dest.IsEmpty) {
-						Rectangle source = dest;
-						source.X -= x - SpriteManager.X - sprite_surface.Width / 2;
-						source.Y -= y - SpriteManager.Y - sprite_surface.Height / 2;
-
-						Painter.Blit (sprite_surface, dest, source);
-
-						if (show_sprite_borders) {
-							Painter.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-												   y - SpriteManager.Y - sprite_surface.Height / 2),
-											new Size (sprite_surface.Width - 1,
-												  sprite_surface.Height - 1)),
-										  Color.Green);
-						}
+					if (show_sprite_borders) {
+						Painter.DrawBox (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+											   y - SpriteManager.Y - sprite_surface.Height / 2),
+										new Size (sprite_surface.Width - 1,
+											  sprite_surface.Height - 1)),
+								 Color.Green);
 					}
 				}
 			}
-
-#if false
-					Painter.Blit (sprite_surface, new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-										 y - SpriteManager.Y - sprite_surface.Height / 2));
-
-				}
-			}
-#endif
 		}
 
 		public void AddToPainter ()
@@ -361,14 +342,13 @@ namespace SCSharp.UI
 
 				Painter.Invalidate (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
 									      y - SpriteManager.Y - sprite_surface.Height / 2),
-								   new Size (sprite_surface.Width,
-									     sprite_surface.Height)));
+								   sprite_surface.Size));
 			}
 		}
 
 		int waiting;
 
-		public bool Tick (DateTime now)
+		public bool Tick (int millis_elapsed)
 		{
 			ushort warg1;
 			ushort warg2;

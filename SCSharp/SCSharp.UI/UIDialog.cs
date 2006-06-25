@@ -90,9 +90,6 @@ namespace SCSharp.UI
 
 		void DimScreenPainter (DateTime dt)
 		{
-			if (Painter.Dirty.IsEmpty)
-				return;
-
 			Painter.Blit (dimScreenSurface, Painter.Dirty, Painter.Dirty);
 		}
 

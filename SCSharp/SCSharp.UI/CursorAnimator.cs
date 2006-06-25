@@ -122,17 +122,8 @@ namespace SCSharp.UI
 
 		void Paint (DateTime now)
 		{
-			Rectangle dest = Rectangle.Intersect (Painter.Dirty,
-							      new Rectangle (x - hot_x, y - hot_y, grp.Width, grp.Height));
-			if (dest.IsEmpty)
-				return;
-
 			int draw_x = (int)(x - hot_x);
 			int draw_y = (int)(y - hot_y);
-
-			Rectangle source = dest;
-			source.X -= draw_x;
-			source.Y -= draw_y;
 
 			if (current_frame == grp.FrameCount)
 				current_frame = 0;
@@ -143,7 +134,7 @@ namespace SCSharp.UI
 											   palette,
 											   true);
 
-			Painter.Blit (surfaces[current_frame], dest, source);
+			Painter.Blit (surfaces[current_frame], new Point (draw_x, draw_y));
 		}
 	}
 }

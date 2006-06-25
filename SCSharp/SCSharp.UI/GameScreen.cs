@@ -165,56 +165,44 @@ namespace SCSharp.UI
 				dest = new Rectangle (new Point (0,0),
 						      new Size (Painter.SCREEN_RES_X - scroll_x,
 								375 - scroll_y));
-				dest = Rectangle.Intersect (dest, Painter.Dirty);
-				if (!dest.IsEmpty) {
+				source = dest;
+				source.X += scroll_x;
+				source.Y += scroll_y;
+
+				Painter.Blit (starfield_layers[i],
+					      dest, source);
+
+				if (scroll_x != 0) {
+					dest = new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
+							      new Size (scroll_x, 375 - scroll_y));
 					source = dest;
-					source.X += scroll_x;
+					source.X -= Painter.SCREEN_RES_X - scroll_x;
 					source.Y += scroll_y;
 
 					Painter.Blit (starfield_layers[i],
 						      dest, source);
 				}
 
-				if (scroll_x != 0) {
-					dest = new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 0),
-							      new Size (scroll_x, 375 - scroll_y));
-					dest = Rectangle.Intersect (dest, Painter.Dirty);
-					if (!dest.IsEmpty) {
-						source = dest;
-						source.X -= Painter.SCREEN_RES_X - scroll_x;
-						source.Y += scroll_y;
-
-						Painter.Blit (starfield_layers[i],
-							      dest, source);
-					}
-				}
-
 				if (scroll_y != 0) {
 					dest = new Rectangle (new Point (0, 375 - scroll_y),
 							      new Size (Painter.SCREEN_RES_X - scroll_x, scroll_y));
-					dest = Rectangle.Intersect (dest, Painter.Dirty);
-					if (!dest.IsEmpty) {
-						source = dest;
-						source.X += scroll_x;
-						source.Y -= 375 - scroll_y;
+					source = dest;
+					source.X += scroll_x;
+					source.Y -= 375 - scroll_y;
 
-						Painter.Blit (starfield_layers[i],
-							      dest, source);
-					}
+					Painter.Blit (starfield_layers[i],
+						      dest, source);
 				}
 
 				if (scroll_x != 0 || scroll_y != 0) {
 					dest = new Rectangle (new Point (Painter.SCREEN_RES_X - scroll_x, 375 - scroll_y),
 							      new Size (scroll_x, scroll_y));
-					dest = Rectangle.Intersect (dest, Painter.Dirty);
-					if (!dest.IsEmpty) {
-						source = dest;
-						source.X -= Painter.SCREEN_RES_X - scroll_x;
-						source.Y -= 375 - scroll_y;
+					source = dest;
+					source.X -= Painter.SCREEN_RES_X - scroll_x;
+					source.Y -= 375 - scroll_y;
 
-						Painter.Blit (starfield_layers[i],
-							      dest, source);
-					}
+					Painter.Blit (starfield_layers[i],
+						      dest, source);
 				}
 			}
 		}
@@ -222,7 +210,6 @@ namespace SCSharp.UI
 		ushort[] button_xs = new ushort[] { 506, 552, 598 };
 		ushort[] button_ys = new ushort[] { 360, 400, 440 };
 
-		/* XXX this needs porting to the new Invalidate/Dirty scheme of things */
 		void PaintMinimap (DateTime dt)
 		{
 			Rectangle rect = new Rectangle (new Point ((int)((float)topleft_x / (float)mapRenderer.MapWidth * MINIMAP_WIDTH + MINIMAP_X),

@@ -348,19 +348,7 @@ namespace SCSharp.UI
 			int background_x = (Painter.Width - background.Width) / 2;
 			int background_y = (Painter.Height - background.Height) / 2;
 
-			Rectangle background_rect = new Rectangle (background_x, background_y,
-								   background.Width, background.Height);
-
-			Rectangle dest = Rectangle.Intersect (Painter.Dirty, background_rect);
-
-			if (dest.IsEmpty)
-				return;
-
-			Rectangle source = dest;
-			source.X -= background_x;
-			source.Y -= background_y;
-
-			Painter.Blit (background, dest, source);
+			Painter.Blit (background, new Point (background_x, background_y));
 		}
 
 		int translucentIndex = 254;

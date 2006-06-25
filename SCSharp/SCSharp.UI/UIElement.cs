@@ -242,14 +242,7 @@ namespace SCSharp.UI
 			if (Surface == null)
 				return;
 
-			Rectangle dest = Rectangle.Intersect (Bounds, Painter.Dirty);
-			if (!dest.IsEmpty) {
-				Rectangle source = dest;
-				source.X -= X1;
-				source.Y -= Y1;
-
-				Painter.Blit (surface, dest, source);
-			}
+			Painter.Blit (Surface, new Point (X1, Y1));
 		}
 		
 		public virtual bool PointInside (int x, int y)
