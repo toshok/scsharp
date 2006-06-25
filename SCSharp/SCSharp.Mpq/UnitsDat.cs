@@ -74,7 +74,7 @@ namespace SCSharp
 {
 	public class UnitsDat : Dat
 	{
-		const int NUM_UNITS = 227;
+		const int NUM_UNITS = 228;
 
 		const int flingy_offset = 0x0000;
 		const int overlay_offset = 0x00e4;
@@ -85,6 +85,8 @@ namespace SCSharp
 		const int shield_offset = 0x0a8c;
 		const int hitpoint_offset = 0x0c54;
 		const int portrait_offset = 0x367c;
+		const int width_offset = 0x2f5c;
+		const int height_offset = 0x30ac;
 
 		int flingyBlockId;
 		//int overlayBlockId;
@@ -95,6 +97,8 @@ namespace SCSharp
 		int shieldBlockId;
 		int hitpointsBlockId;
 		int portraitBlockId;
+		int widthBlockId;
+		int heightBlockId;
 
 		public UnitsDat ()
 		{
@@ -107,6 +111,8 @@ namespace SCSharp
 			shieldBlockId = AddPlacedVariableBlock (shield_offset, NUM_UNITS, DatVariableType.Word);
 			hitpointsBlockId = AddPlacedVariableBlock (hitpoint_offset, NUM_UNITS, DatVariableType.DWord);
 			portraitBlockId = AddPlacedVariableBlock (portrait_offset, NUM_UNITS, DatVariableType.Word);
+			widthBlockId = AddPlacedVariableBlock (width_offset, NUM_UNITS, DatVariableType.Word);
+			heightBlockId = AddPlacedVariableBlock (height_offset, NUM_UNITS, DatVariableType.Word);
 		}
 
 		/* offsets from the stardat.mpq version */
@@ -141,6 +147,14 @@ namespace SCSharp
 
 		public DatCollection<ushort> Portraits {
 			get { return (DatCollection<ushort>)GetCollection (portraitBlockId); }
+		}
+
+		public DatCollection<ushort> Widths {
+			get { return (DatCollection<ushort>)GetCollection (widthBlockId); }
+		}
+
+		public DatCollection<ushort> Heights {
+			get { return (DatCollection<ushort>)GetCollection (heightBlockId); }
 		}
 	}
 }

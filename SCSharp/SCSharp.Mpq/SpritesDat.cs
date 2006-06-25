@@ -37,7 +37,7 @@ namespace SCSharp
 {
 	public class SpritesDat : Dat
 	{
-		const int NUM_SPRITES = 517;
+		const int NUM_SPRITES = 386;
 		const int NUM_DOODADS = 130;
 
 		int imageIndexBlockId;
@@ -47,10 +47,16 @@ namespace SCSharp
 
 		public SpritesDat ()
 		{
-			imageIndexBlockId = AddVariableBlock (NUM_SPRITES, DatVariableType.Word);
+			Console.WriteLine ("SpritesDat");
+			imageIndexBlockId = AddVariableBlock (386, DatVariableType.Word);
 			barLengthBlockId = AddVariableBlock (NUM_SPRITES - NUM_DOODADS, DatVariableType.Byte);
 			selectionCircleBlockId = AddVariableBlock (NUM_SPRITES - NUM_DOODADS, DatVariableType.Byte);
 			selectionCircleOffsetBlockId = AddVariableBlock (NUM_SPRITES - NUM_DOODADS, DatVariableType.Byte);
+
+			Console.WriteLine ("imageIndexBlockId = {0}", GetVariableOffset (imageIndexBlockId));
+			Console.WriteLine ("barLengthBlockId = {0}", GetVariableOffset (barLengthBlockId));
+			Console.WriteLine ("selectionCircleBlockId = {0}", GetVariableOffset (selectionCircleBlockId));
+			Console.WriteLine ("selectionCircleOffsetBlockId = {0}", GetVariableOffset (selectionCircleOffsetBlockId));
 		}
 
 		public DatCollection<ushort> ImagesDatEntries {

@@ -86,7 +86,9 @@ namespace SCSharp
 		LabelRightAlign = 11,
 		ListBox = 12,
 		ComboBox = 13,
-		ButtonWithoutBorder = 14
+		ButtonWithoutBorder = 14,
+
+		UserElement = 128
 	}
 
 	public class BinElement

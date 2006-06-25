@@ -1,3 +1,20 @@
+2006-06-25  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.Mpq/Tbl.cs: add Count property.
+
+	* SCSharp/SCSharp.Mpq/Dat.cs: add a few methods/properties of
+	getting some debugging information out of variable blocks.
+
+	* SCSharp/SCSharp.Mpq/Bin.cs: add a UserElement ElementType to
+	reflect a user specific type (i.e. not one that corresponds to
+	something we might find in a .bin file.)
+
+	* SCSharp/SCSharp.Mpq/UnitsDat.cs: add Widths/Heights collection.
+
+	* SCSharp/SCSharp.Mpq/SpritesDat.cs: ugh. modify NUM_SPRITES from
+	517 to 386 as this number makes things work out, it appears.  No
+	clue if this is actually *right* though.
+
 2006-06-20  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/MainMenu.cs: reposition the hover movie

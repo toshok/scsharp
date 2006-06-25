@@ -53,6 +53,8 @@ namespace SCSharp
 			buf = new byte[(int)stream.Length];
 
 			stream.Read (buf, 0, buf.Length);
+
+			//Console.WriteLine ("buf size = {0}, offset = {0}", buf.Length, offset);
 		}
 
 		int offset = 0;
@@ -90,6 +92,11 @@ namespace SCSharp
 			return rv;
 		}
 
+		public int GetVariableOffset (int variableId)
+		{
+			return variables[variableId].Offset;
+		}
+
 		protected DatCollection GetCollection (int variableId)
 		{
 			if (collections.ContainsKey (variableId))
@@ -123,6 +130,10 @@ namespace SCSharp
 			this.var = var;
 		}
 
+		public int Count {
+			get { return var.NumEntries; }
+		}
+
 		public T this [int index] {
 			get { return (T)var[buf, index]; }
 		}
@@ -138,6 +149,14 @@ namespace SCSharp
 			this.type = type;
 			this.offset = offset;
 			this.num_entries = num_entries;
+		}
+
+		public int Offset {
+			get { return offset; }
+		}
+
+		public int NumEntries {
+			get { return num_entries; }
 		}
 
 		public int BlockSize ()

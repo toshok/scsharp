@@ -75,6 +75,10 @@ namespace SCSharp
 			}
 		}
 
+		public int Count {
+			get { return strings.Length; }
+		}
+
 		public string this [int index] {
 			get { return strings[index]; }
 		}
