@@ -41,7 +41,7 @@ namespace SCSharp
 		void ReadFromStream (Stream stream);
 	}
 
-	public abstract class Mpq
+	public abstract class Mpq : IDisposable
 	{
 		Dictionary<string,object> cached_resources;
 
@@ -126,6 +126,10 @@ namespace SCSharp
 
 			return res;
 		}
+
+		public virtual void Dispose ()
+		{
+		}
 	}
 
 	public class MpqContainer : Mpq
@@ -154,6 +158,12 @@ namespace SCSharp
 		public void Clear ()
 		{
 			mpqs.Clear ();
+		}
+
+		public override void Dispose ()
+		{
+			foreach (Mpq mpq in mpqs)
+				mpq.Dispose ();
 		}
 
 		public override Stream GetStreamForResource (string path)
@@ -286,6 +296,15 @@ namespace SCSharp
 					return null;
 				}
 			}
+#endif
+		}
+
+		public override void Dispose ()
+		{
+#if USE_STORM_DLL
+			if (!use_storm_dll)
+#else
+				mpq.Dispose ();
 #endif
 		}
 	}

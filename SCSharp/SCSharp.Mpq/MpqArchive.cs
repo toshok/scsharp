@@ -32,7 +32,7 @@ using System.IO;
 
 namespace MpqReader
 {
-	public class MpqArchive
+	public class MpqArchive : IDisposable
 	{
 		private Stream mStream;
 
@@ -59,6 +59,12 @@ namespace MpqReader
 		{
 			mStream = SourceStream;
 			Init();
+		}
+
+		public void Dispose ()
+		{
+			if (mStream != null)
+				mStream.Close ();
 		}
 
 		private void Init()

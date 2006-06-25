@@ -1,3 +1,12 @@
+2006-06-25  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp/SCSharp.Mpq/Mpq.cs: make Mpq implement IDisposable, and
+	override it in the subclasses are needed.
+
+	* SCSharp/SCSharp.Mpq/MpqArchive.cs: implement IDisposable, and
+	add Dispose, which closes mStream.  This fixes the crash
+	navigating through the map file selector.
+
 2006-06-25  Chris Toshok  <toshok@hungry.com>
 
 	* src/scsharp.exe.config: add new config settings.
