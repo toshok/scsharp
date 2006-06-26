@@ -87,6 +87,8 @@ namespace SCSharp.UI
 
 			stream.Position = imageData;
 
+			Console.WriteLine ("imageData begins at {0}", imageData);
+
 			/* now read the image data */
 			data = new byte[width * height * 4];
 
@@ -107,6 +109,9 @@ namespace SCSharp.UI
 				}
 
 				for (int i = 0; i < count; i ++) {
+					if (idx + 4 > data.Length)
+						return;
+
 					/* this stuff is endian
 					 * dependent... for big endian
 					 * we need the "idx +"'s

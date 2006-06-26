@@ -60,6 +60,7 @@ namespace SCSharp.UI
 
 		Race race;
 
+		Mpq patchRtMpq;
 		Mpq broodatMpq;
 		Mpq stardatMpq;
 		Mpq bwInstallExe;
@@ -115,6 +116,19 @@ namespace SCSharp.UI
 									     e);
 						}
 					}
+					else if (Path.GetFileName (path).ToLower() == "patch_rt.mpq") {
+						if (patchRtMpq != null)
+							throw new Exception ("You have multiple patch_rt.mpq files in your starcraft directory.");
+						try {
+							patchRtMpq = GetMpq (path);
+							Console.WriteLine ("found patch_rt.mpq");
+						}
+						catch (Exception e) {
+							throw new Exception (String.Format ("could not read mpq archive {0}",
+											    path),
+									     e);
+						}
+					}
 				}
 			}
 
@@ -157,6 +171,8 @@ namespace SCSharp.UI
 			if (bwInstallExe == null)
 				throw new Exception ("unable to locate broodwar cd's install.exe, please check your BroodwarCDDirectory configuration setting");
 
+			if (patchRtMpq != null)
+				installedMpq.Add (patchRtMpq);
 			if (broodatMpq != null)
 				installedMpq.Add (broodatMpq);
 			if (bwInstallExe != null)
@@ -193,6 +209,7 @@ namespace SCSharp.UI
 				if (playingBroodWar) {
 					if (bwInstallExe == null)
 						throw new Exception ("you need the Broodwar CD to play Broodwar games.  Please check the BroodwarCDDirectory configuration setting.");
+					playingMpq.Add (patchRtMpq);
 					playingMpq.Add (bwInstallExe);
 					playingMpq.Add (broodatMpq);
 					playingMpq.Add (stardatMpq);
@@ -200,6 +217,7 @@ namespace SCSharp.UI
 				else {
 					if (scInstallExe == null)
 						throw new Exception ("you need the Starcraft CD to play original games.  Please check the StarcraftCDDirectory configuration setting.");
+					playingMpq.Add (patchRtMpq);
 					playingMpq.Add (scInstallExe);
 					playingMpq.Add (stardatMpq);
 				}

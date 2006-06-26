@@ -123,6 +123,8 @@ namespace SCSharp.UI
 				if (selected_item != new_selected_item) {
 					selected_item = new_selected_item;
 					CreateDropdownSurface ();
+					Painter.Invalidate (new Rectangle (new Point (X1, Y1 + Height),
+									   dropdownSurface.Size));
 				}
 			}
 		}
@@ -138,6 +140,8 @@ namespace SCSharp.UI
 			selected_item = cursor;
 			CreateDropdownSurface ();
 			Painter.Add (Layer.Popup, PaintDropdown);
+			Painter.Invalidate (new Rectangle (new Point (X1, Y1 + Height),
+							   dropdownSurface.Size));
 		}
 
 		void HideDropdown ()
@@ -150,6 +154,8 @@ namespace SCSharp.UI
 				Invalidate ();
 			}
 			Painter.Remove (Layer.Popup, PaintDropdown);
+			Painter.Invalidate (new Rectangle (new Point (X1, Y1 + Height),
+							   dropdownSurface.Size));
 		}
 
 		protected override Surface CreateSurface ()

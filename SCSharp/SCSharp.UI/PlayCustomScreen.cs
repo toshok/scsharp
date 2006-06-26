@@ -156,6 +156,8 @@ namespace SCSharp.UI
 				string t = l.Replace ("\"", "");
 
 				Got got = (Got)mpq.GetResource ("templates\\" + t);
+				if (got == null)
+					continue;
 
 				if (got.ComputerPlayersAllowed && got.NumberOfTeams == 0) {
 					Console.WriteLine ("adding template {0}:{1}", got.UIGameTypeName, got.UISubtypeLabel);

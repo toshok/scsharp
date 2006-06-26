@@ -1,5 +1,5 @@
 
-SUBDIRS= docs SCSharp src Tests
+SUBDIRS= docs SCSharp src tools Tests 
 
 if ENABLE_STORMLIB
 SUBDIRS += StormLib

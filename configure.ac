@@ -27,4 +27,5 @@ StormLib/Makefile
 StormLib/bzlib/Makefile
 docs/Makefile
 src/Makefile
+tools/Makefile
 Tests/Makefile])
