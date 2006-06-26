@@ -56,7 +56,6 @@ namespace SCSharp.UI
 
 		AutoResetEvent waitEvent;
 
-		//SDLPCMStream audioStream;
 		public SmackerPlayer (Stream smk_stream) : this (smk_stream, BUFFERED_FRAMES)
 		{
 		}
@@ -67,11 +66,6 @@ namespace SCSharp.UI
 			decoder= file.Decoder;
 			this.buffered_frames = buffered_frames;
     
-			//stream.Close();
-
-			//Init audio
-			//SDLPCMStream.SDLPCMStreamFormat format = new SDLPCMStream.SDLPCMStreamFormat(SDLPCMStream.SDLPCMStreamFormat.PCMFormat.UnSigned16BitLE, file.Header.GetSampleRate(0), (file.Header.IsStereoTrack(0)) ? 2 : 1);
-			//audioStream = new SDLPCMStream(format);
 
 			waitEvent = new AutoResetEvent (false);
 		}
@@ -88,7 +82,6 @@ namespace SCSharp.UI
 		Surface surf;
 		void Events_Tick(object sender, TickEventArgs e)
 		{
-			//decoder.ReadNextFrame();
 
 			//There should be an easier way to get the video data to SDL
             
@@ -130,9 +123,6 @@ namespace SCSharp.UI
 					try {
 						decoder.ReadNextFrame();
 						frameQueue.Enqueue(decoder.BGRAData);
-						//audioStream.WritePCM(decoder.GetAudioData(0));
-						//if (firstRun) audioStream.Play();
-						// memAudioStream.Write(decoder.GetAudioData(0), 0, decoder.GetAudioData(0).Length);
 						if (frameQueue.Count >= buffered_frames)
 							waitEvent.WaitOne ();
 					}
