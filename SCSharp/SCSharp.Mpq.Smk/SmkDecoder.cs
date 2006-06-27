@@ -20,30 +20,32 @@ namespace SCSharp.Smk
             lastAudioData = new byte[7][];
             lastFrameData = new byte[File.Header.Width * File.Header.Height];
         }
-        /* palette map used in Smacker */
-        byte[] smackerMap = new byte[] {
-    0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
-    0x20, 0x24, 0x28, 0x2C, 0x30, 0x34, 0x38, 0x3C,
-    0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x5D,
-    0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
-    0x82, 0x86, 0x8A, 0x8E, 0x92, 0x96, 0x9A, 0x9E,
-    0xA2, 0xA6, 0xAA, 0xAE, 0xB2, 0xB6, 0xBA, 0xBE,
-    0xC3, 0xC7, 0xCB, 0xCF, 0xD3, 0xD7, 0xDB, 0xDF,
-    0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF
-};
-        //Runlength map (used in block decoding)
-        uint[] sizetable = new uint[] {
-                  1,    2,    3,    4,    5,    6,    7,    8,
-                  9,   10,   11,   12,   13,   14,   15,   16,
-                 17,   18,   19,   20,   21,   22,   23,   24,
-                 25,   26,   27,   28,   29,   30,   31,   32,
-                 33,   34,   35,   36,   37,   38,   39,   40,
-                 41,   42,   43,   44,   45,   46,   47,   48,
-                 49,   50,   51,   52,   53,   54,   55,   56,
-                 57,   58,   59,  128,  256,  512, 1024, 2048
-            };
 
-        //Palette containts 256 byte triples
+        // palette map used in Smacker
+        byte[] smackerMap = new byte[] {
+            0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
+            0x20, 0x24, 0x28, 0x2C, 0x30, 0x34, 0x38, 0x3C,
+            0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x5D,
+            0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
+            0x82, 0x86, 0x8A, 0x8E, 0x92, 0x96, 0x9A, 0x9E,
+            0xA2, 0xA6, 0xAA, 0xAE, 0xB2, 0xB6, 0xBA, 0xBE,
+            0xC3, 0xC7, 0xCB, 0xCF, 0xD3, 0xD7, 0xDB, 0xDF,
+            0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF
+        };
+
+        // Runlength map (used in block decoding)
+        uint[] sizetable = new uint[] {
+               1,    2,    3,    4,    5,    6,    7,    8,
+               9,   10,   11,   12,   13,   14,   15,   16,
+              17,   18,   19,   20,   21,   22,   23,   24,
+              25,   26,   27,   28,   29,   30,   31,   32,
+              33,   34,   35,   36,   37,   38,   39,   40,
+              41,   42,   43,   44,   45,   46,   47,   48,
+              49,   50,   51,   52,   53,   54,   55,   56,
+              57,   58,   59,  128,  256,  512, 1024, 2048
+        };
+
+        // Palette containts 256 byte triples
         Color[] CurrentPalette = new Color[256];
 
         //File being decoded
@@ -54,7 +56,6 @@ namespace SCSharp.Smk
             get { return file; }
             set { file = value; }
         }
-
 
         //Current Frame being decoded
         private int currentFrame;
@@ -67,7 +68,7 @@ namespace SCSharp.Smk
 
         private void UpdatePalette()
         {
-            //                System.Console.WriteLine("Updating palette");
+            // System.Console.WriteLine("Updating palette");
             Stream s = File.Stream;
             Color[] OldPallette = (Color[])CurrentPalette.Clone();
             int size = (int)Util.ReadByte(s);
@@ -85,7 +86,8 @@ namespace SCSharp.Smk
             {
                 int t = (int)Util.ReadByte(s);
                 if ((t & 0x80) != 0)
-                { /* skip palette entries */
+                {
+                    /* skip palette entries */
                     sz += (t & 0x7F) + 1;
                     for (int i = 0; i < (t & 0x7F) + 1; i++)
                     {
@@ -94,7 +96,8 @@ namespace SCSharp.Smk
                     //palIndex += ((t & 0x7F) + 1) ;
                 }
                 else if ((t & 0x40) != 0)
-                { /* copy with offset */
+                {
+                    /* copy with offset */
                     int off = ((int)Util.ReadByte(s));
                     j = (t & 0x3F) + 1;
                     while ((j-- != 0) && sz < 256)
@@ -105,16 +108,13 @@ namespace SCSharp.Smk
                     }
                 }
                 else
-                { /* new entries */
+                {
+                    /* new entries */
                     CurrentPalette[palIndex++] = Color.FromArgb(smackerMap[t], smackerMap[(int)Util.ReadByte(s) & 0x3F], smackerMap[(int)Util.ReadByte(s) & 0x3F]);
-
-
                     sz++;
                 }
             }
             s.Seek(pos, SeekOrigin.Begin);
-
-
         }
 
         public uint GetIndex(uint x, uint y)
@@ -130,27 +130,25 @@ namespace SCSharp.Smk
         /// </summary>            
         public void ReadNextFrame()
         {
-            uint x, y;
+            uint mask = 1;
+
             if (CurrentFrame >= File.Header.NbFrames)
                 throw new EndOfStreamException("No more frames");
 
             long currentPos = File.Stream.Position;
 
-
             //If this frame has a palette record
-            if ((File.FrameTypes[CurrentFrame] & 1) > 0)
+            if ((File.FrameTypes[CurrentFrame] & mask) > 0)
             {
                 //Update the palette
                 UpdatePalette();
             }
 
             //Sound data
-
-
-            x = 2;
-            for (int i = 0; i < 7; i++)
+            mask <<= 1;
+            for (int i = 0; i < 7; i++, mask <<= 1)
             {
-                if ((file.FrameTypes[CurrentFrame] & x) > 0)
+                if ((file.FrameTypes[CurrentFrame] & mask) > 0)
                 {
                     long pos = File.Stream.Position;
                     uint length = Util.ReadDWord(File.Stream);
@@ -162,7 +160,6 @@ namespace SCSharp.Smk
                     {
                         bool stereo = m.ReadBits(1) > 0;
                         bool is16Bit = m.ReadBits(1) > 0;
-
 
                         //Next are some trees
                         uint nbTrees = 1;
@@ -177,9 +174,9 @@ namespace SCSharp.Smk
                         {
                             tree[k] = new Huffmantree();
                             tree[k].BuildTree(m);
-
                         }
-                        int  res;
+
+                        int res;
                         if (is16Bit)
                         {
                             Int16 rightBaseMSB = 0, rightBaseLSB = 0, leftBaseMSB = 0, leftBaseLSB = 0;
@@ -239,13 +236,12 @@ namespace SCSharp.Smk
                                 leftBase = (byte)m.ReadBits(8);
                                 //Add sample 
                                 audioData[audioDataIndex++] = leftBase;
-
                             }
+
                             for (int l = 0; l < unpackedLength; l++)
                             {
                                 if ((l & ((stereo) ? 1 : 0)) > 0)
                                 {
-
                                     leftBase += (byte)tree[1].Decode(m);
                                     //Add sample 
                                     audioData[audioDataIndex++] = leftBase;
@@ -261,11 +257,8 @@ namespace SCSharp.Smk
                         lastAudioData[i] = audioData;
                     }
 
-
-
                     File.Stream.Seek(pos + (long)length, SeekOrigin.Begin);
                 }
-                x <<= 1;
             }
 
             //Video data
@@ -281,8 +274,6 @@ namespace SCSharp.Smk
             //Seek to the next frame
             File.Stream.Seek(currentPos + File.FrameSizes[CurrentFrame], SeekOrigin.Begin);
             CurrentFrame++;
-
-
         }
 
         /// <summary>
@@ -297,8 +288,8 @@ namespace SCSharp.Smk
 
         private void DecodeVideo()
         {
-            uint x, y, mask, bitmask, offset, currentBlock = 0, runLength, colors, blockHeader, blockType=0, posX, posY, index, pix, pix1, pix2;
-            uint i, j;
+            uint x, y, mask, currentBlock = 0, runLength, colors, blockHeader, blockType = 0;
+            uint posX, posY, index, pix, pix1, pix2, i, j;
             byte color, color1, color2;
 
             //Reset all huffman decoders
@@ -311,16 +302,13 @@ namespace SCSharp.Smk
             byte[] currentFrameData = new byte[File.Header.Width * File.Header.Height];
             BitStream m = new BitStream(File.Stream);
 
-
             uint nbBlocksX = File.Header.Width / 4;
             uint nbBlocksY = File.Header.Height / 4;
             uint nbBlocks = nbBlocksX * nbBlocksY;
 
             long runLengthNotComplete = 0;
-            uint lastType = 0;
             while (currentBlock < nbBlocks)
             {
-
                 blockHeader = (uint)File.Type.Decode(m);
                 runLength = sizetable[(blockHeader >> 2) & 0x3F];
 
@@ -348,7 +336,6 @@ namespace SCSharp.Smk
                                 }
                             }
 
-
                             currentBlock++;
                         }
                         runLengthNotComplete = runLength - i;
@@ -371,7 +358,6 @@ namespace SCSharp.Smk
                                 }
                             }
 
-
                             currentBlock++;
                         }
                         runLengthNotComplete = runLength - i;
@@ -384,16 +370,11 @@ namespace SCSharp.Smk
                             color1 = (byte)(colors >> 8);
                             color2 = (byte)(colors & 0xFF);
 
-
                             mask = (uint)File.MMap.Decode(m);
-
-                            bitmask = 1;
-
                             posX = (currentBlock % nbBlocksX) * 4;
                             posY = (currentBlock / nbBlocksX) * 4;
                             for (y = 0; y < 4; y++)
                             {
-
                                 if ((mask & 1) > 0)
                                 {
                                     currentFrameData[GetIndex(posX, posY + y)] = color1;
@@ -426,13 +407,12 @@ namespace SCSharp.Smk
                                 {
                                     currentFrameData[GetIndex(posX + 3, posY + y)] = color2;
                                 }
+
                                 mask >>= 4;
-
-
                             }
                             currentBlock++;
                         }
-                      //  runLengthNotComplete = runLength - i;
+                        //  runLengthNotComplete = runLength - i;
                         break;
                     case 1:
                         //    System.Console.WriteLine("FULL - ");
@@ -451,6 +431,7 @@ namespace SCSharp.Smk
                             else
                                 mode = 1;
                         }
+
                         switch (mode)
                         {
                             case 0://v2 Full block
@@ -480,7 +461,7 @@ namespace SCSharp.Smk
                                 }
                                 break;
                             case 1:
-                                for ( i = 0; i < runLength && currentBlock < nbBlocks; i++)
+                                for (i = 0; i < runLength && currentBlock < nbBlocks; i++)
                                 {
                                     posX = (currentBlock % nbBlocksX) * 4;
                                     posY = (currentBlock / nbBlocksX) * 4;
@@ -514,14 +495,14 @@ namespace SCSharp.Smk
 
                                     currentBlock++;
                                 }
-                      //          runLengthNotComplete = runLength - i;
+                                //          runLengthNotComplete = runLength - i;
                                 break;
                             case 2:
-                                for ( j = 0; j < runLength && currentBlock < nbBlocks; j++)
+                                for (j = 0; j < runLength && currentBlock < nbBlocks; j++)
                                 {
                                     posX = (currentBlock % nbBlocksX) << 2;
                                     posY = (currentBlock / nbBlocksX) << 2;
-                                    for ( i = 0; i < 2; i++)
+                                    for (i = 0; i < 2; i++)
                                     {
 
                                         pix1 = (uint)File.Full.Decode(m);
@@ -550,27 +531,24 @@ namespace SCSharp.Smk
                                     }
                                     currentBlock++;
                                 }
-                      //          runLengthNotComplete = runLength - j;
+                                //          runLengthNotComplete = runLength - j;
                                 break;
                             default:
                                 break;
                         }
 
                         break;
-
                 }
-
-
             }
+
             //if (runLengthNotComplete > 0)
             //{
             //    Console.WriteLine("Warning: frame ended before runlength has reached zero");
             //}
 
-
-
             lastFrameData = currentFrameData;
         }
+
         /// <summary>
         /// Encapsulates the video data from the last decoded frame in a System.Drawing.Bitmap
         /// </summary>
@@ -600,6 +578,7 @@ namespace SCSharp.Smk
                 return lastFrameData;
             }
         }
+
         /// <summary>
         /// The pallette to use to render the frame
         /// </summary>
@@ -610,6 +589,7 @@ namespace SCSharp.Smk
                 return CurrentPalette;
             }
         }
+
         /// <summary>
         /// Returns the video data as RGB data
         /// </summary>
@@ -621,10 +601,10 @@ namespace SCSharp.Smk
                 int j = 0;
                 for (int i = 0; i < lastFrameData.Length; i++)
                 {
-                    j = i*3; 
+                    j = i * 3;
                     result[j] = CurrentPalette[lastFrameData[i]].R;
-                    result[j+1] = CurrentPalette[lastFrameData[i]].G;
-                    result[j+2] = CurrentPalette[lastFrameData[i]].B;
+                    result[j + 1] = CurrentPalette[lastFrameData[i]].G;
+                    result[j + 2] = CurrentPalette[lastFrameData[i]].B;
 
                 }
                 return result;
@@ -646,18 +626,19 @@ namespace SCSharp.Smk
                     result[j] = CurrentPalette[lastFrameData[i]].B;
                     result[j + 1] = CurrentPalette[lastFrameData[i]].G;
                     result[j + 2] = CurrentPalette[lastFrameData[i]].R;
-		    if (result[j] != 0 || result[j+1] != 0 || result[j+2] != 0)
-			    result[j + 3] = 0xFF;
+                    if (result[j] != 0 || result[j + 1] != 0 || result[j + 2] != 0)
+                        result[j + 3] = 0xFF;
                 }
                 return result;
             }
         }
-            /// <summary>
-            /// Hack as described on MSDN to get a clean palette
-            /// </summary>
-            /// <param name="nColors">the number of colors the palette should contain (between 2-256)</param>
-            /// <returns>An empty, clean ColorPalette structure, ready to be written to</returns>
-            protected ColorPalette GetColorPalette(uint nColors)
+
+        /// <summary>
+        /// Hack as described on MSDN to get a clean palette
+        /// </summary>
+        /// <param name="nColors">the number of colors the palette should contain (between 2-256)</param>
+        /// <returns>An empty, clean ColorPalette structure, ready to be written to</returns>
+        protected ColorPalette GetColorPalette(uint nColors)
         {
             // Assume monochrome image.
             PixelFormat bitscolordepth = PixelFormat.Format1bppIndexed;
@@ -679,6 +660,7 @@ namespace SCSharp.Smk
 
             return palette;             // Send the palette back
         }
+
         bool firstTime = true; //Indicates whether the animation is decoded for the first time
 
         /// <summary>
@@ -687,12 +669,16 @@ namespace SCSharp.Smk
         public void Reset()
         {
             uint nbFrames = file.Header.NbFrames;
-            if (file.Header.HasRingFrame()) nbFrames++;
+
+            if (file.Header.HasRingFrame())
+                nbFrames++;
+
             //Seek to the beginning of the frame data section
             //Header = 104 bytes, 5 bytes per frame (one dword + one byte) + trees
             int pos = (int)(104 + 5 * nbFrames + file.Header.TreesSize);
             file.Stream.Seek(pos, SeekOrigin.Begin);
             CurrentFrame = 0;
+
             //The ring frame replace the first frame on the second+ run.
             if (!firstTime && file.Header.HasRingFrame())
             {
@@ -700,8 +686,10 @@ namespace SCSharp.Smk
                 file.Stream.Seek(file.FrameSizes[0], SeekOrigin.Current);
                 CurrentFrame = 1;
             }
+
             firstTime = false;
         }
+
         /// <summary>
         /// Set the decoder to decode the specified frame next
         /// </summary>
@@ -709,15 +697,14 @@ namespace SCSharp.Smk
         public void SeekTo(int i)
         {
             Reset(); //Seek to frame 0
-            if (i >= File.Header.NbFrames  ) throw new IndexOutOfRangeException("Not a valid frame number!");
+            if (i >= File.Header.NbFrames) throw new IndexOutOfRangeException("Not a valid frame number!");
             uint total = 0;
             for (int j = 0; j < i; j++)
             {
                 total += File.FrameSizes[j];
             }
-            CurrentFrame += i - 1 ;
+            CurrentFrame += i - 1;
             file.Stream.Seek(total, SeekOrigin.Current);
         }
     }
-
 }

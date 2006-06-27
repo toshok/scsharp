@@ -14,14 +14,13 @@ namespace SCSharp.Smk
     public class BitStream
     {
         private Stream mStream;
-        private int mCurrent;
+        private int mCurrentByte;
         private int mCurrentBit;
-        private int mBitCount;
         private int nbBytes;
         //Raising this value causes more bytes to be cached in the stream and reduces the number of accesses to disk
-        private const  int MAX_BYTES = 512;
+        private const int MAX_BYTES = 512;
         private byte [] bytes = new byte[MAX_BYTES];
-        private int mCurrentByte;
+        
         public BitStream(Stream SourceStream)
         {
             mStream = SourceStream;
@@ -35,20 +34,21 @@ namespace SCSharp.Smk
         {
             if (BitCount > 16)
                 throw new ArgumentOutOfRangeException("BitCount", "Maximum BitCount is 16");
-         
-
+            
             //We need BitCount bits
-            int result =0 ;
-            int bitsRead=0;
-            while (BitCount > 0 )
+            int result = 0;
+            int bitsRead = 0;
+            while (BitCount > 0)
             {
                 if (mCurrentByte >= nbBytes)
                 {
-                    if (mStream.Position >= mStream.Length) throw new EndOfStreamException();
+                    if (mStream.Position >= mStream.Length)
+                        throw new EndOfStreamException();
                     nbBytes = mStream.Read(bytes, 0, MAX_BYTES);
                     mCurrentByte = 0;
                     mCurrentBit = 0;
                 }
+                
                 if (mCurrentBit + BitCount < 8)  //Everything fits in this byte
                 {
                     result |= (((int)bytes[mCurrentByte] >> mCurrentBit) & (0xffff >> (16 - BitCount))) << bitsRead;
@@ -66,7 +66,6 @@ namespace SCSharp.Smk
                 }
             }
             
-            
             return result;
         }
 
@@ -75,31 +74,27 @@ namespace SCSharp.Smk
         //   // if (EnsureBits(8) == false) return -1;
         //   // return mCurrent & 0xff;
         //}
-
+        
         //public void EnsureBits()
         //{
-         
-        
         //}
-
+        
         //private bool WasteBits(int BitCount)
         //{
         //    mCurrent >>= BitCount;
         //    mBitCount -= BitCount;
         //    return true;
         //}
-
+        
         public void Reset()
         {
             mStream.Seek(0, SeekOrigin.Begin);
-            mCurrent = 0;
-            mBitCount = 0;
+            mCurrentByte = 0;
+            mCurrentBit = 0;
         }
     }
-
-
-
-//This should move to another file
+    
+    //This should move to another file
     // [TestFixture]
     // public class BitStreamTest
     // {
@@ -118,5 +113,4 @@ namespace SCSharp.Smk
 
         // }
     // }
-
 }

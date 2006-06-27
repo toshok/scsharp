@@ -1,3 +1,30 @@
+2006-06-21  Jeffrey Stedfast  <fejj@novell.com>
+
+	* SCSharp/SCSharp.Mpq.Smk/BitStream.cs: Removed unused variables.
+	(Reset): Instead of resetting the unused variables mCurrent and
+	mBitCount variables to 0 (which aren't used anywhere else in the
+	code), set mCurrentByte and mCurrentBit to 0, which is probably
+	what the author originally intended.
+
+	* SCSharp/SCSharp.Mpq.Smk/Smk.cs: Reindented - some lines seemed
+	to use 8-space indents and others seemed to use 4, and even others
+	used tab. Made everything use a uniform 4-space indent like the
+	other files in this directory.
+
+	* SCSharp/SCSharp.Mpq.Smk/SmkDecoder.cs: Removed unused
+	variables. Reindented the tables at the top too, as they were
+	weirdly indented in all of my editors (Emacs and MSVS).
+
+	* SCSharp.sln: Microsoft Visual Studio Solution file for SCSharp
+
+	* SCSharp.csproj: Project file for scsharp.exe
+
+	* SCSharp/SCSharp.dll.csproj: Project file for SCSharp.dll
+
+	* SCSharp/SCSharp.Smk.dll.csproj: Project file for SCSharp.Smk.dll
+
+	* SCSharp/SCSharp.UI.dll.csproj: Project file for SCSharp.UI.dll
+
 2006-06-25  Chris Toshok  <toshok@hungry.com>
 
 	* tools/: add a couple of tools: lsmpq.exe to list the contents of

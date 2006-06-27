@@ -1,0 +1,36 @@
+<configuration>
+  <appSettings>
+    <!-- directory containing the StarDat.mpq and BrooDat.mpq files -->
+    <add key="StarcraftDirectory" value="C:\Program Files\Starcraft"/>
+
+    <!-- directory containing the install.exe file from the Starcraft CD -->
+    <add key="StarcraftCDDirectory" value="C:\StarcraftCD"/>
+
+    <!-- directory containing the install.exe file from the Brood Wars CD -->
+    <add key="BroodwarCDDirectory" value="C:\BroodwarCD"/>
+
+    <!-- debugging/development options.
+         ShowElementBorders:
+              puts a border around UI elements in the screens leading
+              up to the game screen.  A green border means the element
+              is visible, yellow means not visible.
+
+         ShowSpriteBorders:
+              puts a green border around a sprite's bounding box in
+              the game screen.
+
+         UseUnmanagedMpqLibrary:
+              requires that you configure scsharp with
+              enable-stormlib when building.  Supplying "true" here
+              causes all Mpq access to go through the unmanaged
+              library.  Only enable this if you're helping
+              develop/debug the managed port.  There's no compelling
+              performance reason to use the unmanaged version over the
+              managed version.
+    -->
+
+    <!--<add key="ShowElementBorders" value="true"/>-->
+    <!--<add key="ShowSpriteBorders" value="true"/>-->
+    <!--<add key="UseUnmanagedMpqLibrary" value="true"/>-->
+  </appSettings>
+</configuration>
