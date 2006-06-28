@@ -1,3 +1,21 @@
+2006-06-28  Tom Allard  <tom.allard@telenet.be>
+	* Added a NANT build (nant.build) file which:
+		- features easy, cross-platform building on Linux 
+		and Windows / Mono or MS CLR.
+		- uses the existing .sources files to determine what files
+		to build the dlls from.
+		- copies all necessary files to the build directory. (Note:
+		WIN32 SDL binaries not included, put them (SDL.dll,
+		SDL_mixer.dll and SDL_gfx.dll) in a new 'win32' subdir
+		of the sdldotnet-bin folder.
+		- contains a flag whether or not to override the existing 
+		config file in the build directory (default = bin-folder)
+		- has two main targets, the default target 'build', which 
+		builds the libraries and the executable and the 'clean'
+		target wich deletes the build directory (bin)
+	To use it:
+		1. install nant
+		2. run nant (no parameters required)
 2006-06-21  Jeffrey Stedfast  <fejj@novell.com>
 
 	* SCSharp/SCSharp.Mpq.Smk/BitStream.cs: Removed unused variables.

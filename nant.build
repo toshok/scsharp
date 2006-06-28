@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<project name="SCSharp" default="build">
+	<description>Starcraft in C#</description>
+	<!--configuration properties -->	
+	
+	<property name="overwriteConfig" value="false"/> <!-- determines wether or not the existing scsharp config file should be overwritten when build completes -->
+	
+
+	<!-- other properties -->
+	<property name="debug" value="false" overwrite="false" />
+	<property name="win32" value="${platform::is-win32()}" overwrite="true" />
+	<property name="unix" value="${platform::is-unix()}" overwrite="true" />
+	<property name="output.dir" value="bin"/>
+	<property name="input.libs" value="sdldotnet-bin"/>
+	 
+	<!-- Build code -->
+	
+	<echo message="Running on Windows" if="${win32}" />
+	<echo message="Running on Unix" if="${unix}" />	
+
+	<target name="build" description="Default build target" depends="setup,SCSharp.Smk.dll,SCSharp.UI.dll,SCSharp.dll">
+		
+		<echo message="Building SCSharp.exe"/>
+		<csc  target="exe" output="${output.dir}/scsharp.exe" debug="${debug}" >
+			<sources>
+				<include name="src/SCSharp.cs"/>
+			</sources>
+				<references>			
+				<include name="${output.dir}/SCSharp.dll"/>				
+				<include name="${output.dir}/SCSharp.Smk.dll"/>				
+				<include name="${output.dir}/SCSharp.UI.dll"/>	
+				<include name="${input.libs}/SdlDotNet.dll"/>
+				<include name="${input.libs}/Tao.Sdl.dll"/>
+			</references>
+	
+		</csc>
+			
+		<echo message="Copying necessary libraries to output directory"/>
+		
+		<copy if="${win32}" todir="${output.dir}">
+			<fileset basedir="${input.libs}/win32" >
+				<include name="*.dll"  />
+			</fileset>		
+		</copy>
+		
+		<copy todir="${output.dir}">
+			<fileset basedir="${input.libs}" >
+				<include name="*.dll"  />
+			</fileset>
+		</copy>
+		
+		<echo message="Setting up configuration files"/>
+		
+		<copy if="${unix}" todir="${output.dir}">
+			<fileset>
+				<include name="${input.libs}/Tao.Sdl.dll.config"/>
+			</fileset>
+		</copy>
+		
+		<copy if="${overwriteConfig}"  file="src/scsharp.exe.config-example"    tofile="${output.dir}/scsharp.exe.config"/>
+
+
+
+
+	</target>
+	
+	<target name="setup" description="Setup build directories">
+		<echo message="Setting up main build directories." />
+		<mkdir dir="${output.dir}"/>
+		<echo message="done." />
+	</target>
+	
+	<target name="SCSharp.Smk.dll" description="The Smacker Decoder module" depends="setup,SCSharp.dll">
+		<echo message="Building SCSharp.Smk.dll" />
+		<csc  target="library" output="${output.dir}/SCSharp.Smk.dll" debug="${debug}" >
+			<sources basedir="SCSharp">
+				<includesfile name="SCSharp/SCSharp.Smk.dll.sources"/>
+			</sources>
+			<references>			
+				<include name="${output.dir}/SCSharp.dll"/>				
+			</references>
+
+		</csc>
+		<echo message="done." />
+	</target>
+	
+	<target name="SCSharp.UI.dll" description="The SCSharp UI module" depends="setup,SCSharp.dll,SCSharp.Smk.dll">
+		<echo message="Building SCSharp.UI.dll" />
+		<csc  target="library" output="${output.dir}/SCSharp.UI.dll" debug="${debug}" >
+			<sources basedir="SCSharp">
+				<includesfile name="SCSharp/SCSharp.UI.dll.sources"/>
+			</sources>
+			<references>			
+				<include name="${output.dir}/SCSharp.dll"/>				
+				<include name="${output.dir}/SCSharp.Smk.dll"/>				
+				<include name="${input.libs}/SdlDotNet.dll"/>
+				<include name="${input.libs}/Tao.Sdl.dll"/>
+			</references>
+			
+			
+		</csc>
+		<echo message="done." />
+	</target>
+	
+	<target name="SCSharp.dll" description="The SCSharp DLL" depends="setup">
+		<echo message="Building SCSharp.dll" />
+		<csc  target="library" output="${output.dir}/SCSharp.dll" debug="${debug}" >
+			<sources basedir="SCSharp">
+				<includesfile name="SCSharp/SCSharp.dll.sources"/>
+			</sources>
+		</csc>
+		<echo message="done." />
+	</target>
+	
+<!--	<target name="package" depends="build">
+		<echo message="Building package."/>
+		<zip if="${win32}" zipfile="package.zip">
+			<fileset basedir="bin">
+				<include name="**/*" />
+			</fileset>		
+		</zip>		
+	
+		<tar if="${unix}" destfile="package.tar.gz" compression="GZip">
+			<fileset basedir="bin">
+				<include name="**/*" />
+			</fileset>		
+		</tar>
+	</target>
+	<target name="sourcepackage">
+		<zip zipfile="sourcepackage.zip">
+			<fileset>
+				<include name="SmkLib/*.cs" />
+				<include name="SmkTest/**/*" />
+				<include name="smktest.build" />
+			</fileset>		
+		</zip>		
+	
+		<tar destfile="sourcepackage.tar.bz2" compression="BZip2">
+			<fileset>
+				<include name="SmkLib/**/*" />
+				<include name="SmkTest/**/*" />
+				<include name="smktest.build" />
+			</fileset>		
+		</tar>
+	</target>-->
+	<target name="clean">
+		<echo message="Cleaning up." />
+		<delete dir="bin"/>
+		<!--<delete file="package.zip"/>
+		<delete file="package.tar.bz2"/>
+		<delete file="sourcepackage.zip"/>
+		<delete file="sourcepackage.tar.bz2"/>-->
+	</target>
+</project>
