@@ -20,15 +20,16 @@
 
 	<target name="build" description="Default build target" depends="setup,SCSharp.Smk.dll,SCSharp.UI.dll,SCSharp.dll">
 		
-		<echo message="Building SCSharp.exe"/>
-		<csc  target="exe" output="${output.dir}/scsharp.exe" debug="${debug}" >
+		<echo message="Building SCS.exe"/>
+		<csc  target="exe" output="${output.dir}/scs.exe" debug="${debug}" >
 			<sources>
 				<include name="src/SCSharp.cs"/>
 			</sources>
-				<references>			
-				<include name="${output.dir}/SCSharp.dll"/>				
-				<include name="${output.dir}/SCSharp.Smk.dll"/>				
-				<include name="${output.dir}/SCSharp.UI.dll"/>	
+			<references>
+				<include name="${output.dir}/SCSharp.dll"/>
+				<include name="${output.dir}/SCSharp.Smk.dll"/>
+				<include name="${output.dir}/SCSharp.UI.dll"/>
+				
 				<include name="${input.libs}/SdlDotNet.dll"/>
 				<include name="${input.libs}/Tao.Sdl.dll"/>
 			</references>
@@ -40,7 +41,7 @@
 		<copy if="${win32}" todir="${output.dir}">
 			<fileset basedir="${input.libs}/win32" >
 				<include name="*.dll"  />
-			</fileset>		
+			</fileset>
 		</copy>
 		
 		<copy todir="${output.dir}">
@@ -57,11 +58,7 @@
 			</fileset>
 		</copy>
 		
-		<copy if="${overwriteConfig}"  file="src/scsharp.exe.config-example"    tofile="${output.dir}/scsharp.exe.config"/>
-
-
-
-
+		<copy if="${overwriteConfig}"  file="src/scsharp.exe.config-example"    tofile="${output.dir}/scs.exe.config"/>
 	</target>
 	
 	<target name="setup" description="Setup build directories">
@@ -76,8 +73,8 @@
 			<sources basedir="SCSharp">
 				<includesfile name="SCSharp/SCSharp.Smk.dll.sources"/>
 			</sources>
-			<references>			
-				<include name="${output.dir}/SCSharp.dll"/>				
+			<references>
+				<include name="${output.dir}/SCSharp.dll"/>
 			</references>
 
 		</csc>
@@ -90,9 +87,9 @@
 			<sources basedir="SCSharp">
 				<includesfile name="SCSharp/SCSharp.UI.dll.sources"/>
 			</sources>
-			<references>			
-				<include name="${output.dir}/SCSharp.dll"/>				
-				<include name="${output.dir}/SCSharp.Smk.dll"/>				
+			<references>
+				<include name="${output.dir}/SCSharp.dll"/>
+				<include name="${output.dir}/SCSharp.Smk.dll"/>
 				<include name="${input.libs}/SdlDotNet.dll"/>
 				<include name="${input.libs}/Tao.Sdl.dll"/>
 			</references>
@@ -117,13 +114,13 @@
 		<zip if="${win32}" zipfile="package.zip">
 			<fileset basedir="bin">
 				<include name="**/*" />
-			</fileset>		
-		</zip>		
+			</fileset>
+		</zip>
 	
 		<tar if="${unix}" destfile="package.tar.gz" compression="GZip">
 			<fileset basedir="bin">
 				<include name="**/*" />
-			</fileset>		
+			</fileset>
 		</tar>
 	</target>
 	<target name="sourcepackage">
@@ -132,15 +129,15 @@
 				<include name="SmkLib/*.cs" />
 				<include name="SmkTest/**/*" />
 				<include name="smktest.build" />
-			</fileset>		
-		</zip>		
+			</fileset>
+		</zip>
 	
 		<tar destfile="sourcepackage.tar.bz2" compression="BZip2">
 			<fileset>
 				<include name="SmkLib/**/*" />
 				<include name="SmkTest/**/*" />
 				<include name="smktest.build" />
-			</fileset>		
+			</fileset>
 		</tar>
 	</target>-->
 	<target name="clean">
@@ -150,5 +147,14 @@
 		<delete file="package.tar.bz2"/>
 		<delete file="sourcepackage.zip"/>
 		<delete file="sourcepackage.tar.bz2"/>-->
+	</target>
+	<target name="cleanbuild">
+		<echo message="Cleaning up." />
+		<delete>
+			<fileset>
+				<include name="bin/*.dll" />
+				<include name="bin/*.exe" />
+			</fileset>
+		</delete>
 	</target>
 </project>
