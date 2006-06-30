@@ -1,3 +1,4 @@
+../build/Consts.cs
 SCSharp.UI/AssemblyInfo.cs
 SCSharp.UI/Builtins.cs
 SCSharp.UI/ButtonElement.cs

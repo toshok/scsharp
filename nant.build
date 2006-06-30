@@ -7,6 +7,7 @@
 	
 
 	<!-- other properties -->
+	<property name="packageVersion" value="0.0000009" />
 	<property name="debug" value="false" overwrite="false" />
 	<property name="win32" value="${platform::is-win32()}" overwrite="true" />
 	<property name="unix" value="${platform::is-unix()}" overwrite="true" />
@@ -61,6 +62,13 @@
 	<target name="setup" description="Setup build directories">
 		<echo message="Setting up main build directories." />
 		<mkdir dir="${output.dir}"/>
+		<copy file="build/Consts.cs.in" tofile="build/Consts.cs">
+			<filterchain>
+			        <replacetokens>
+			            <token key="VERSION" value="${packageVersion}" />
+			        </replacetokens>
+			</filterchain>
+		</copy>
 	</target>
 	
 	<target name="SCSharp.Smk.dll" description="The Smacker Decoder module" depends="setup,SCSharp.dll">

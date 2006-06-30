@@ -96,7 +96,7 @@ namespace SCSharp.UI
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}: {1} '{2}' : {3}", i, Elements[i].Type, Elements[i].Text, Elements[i].Flags);
 
-			Elements[VERSION_ELEMENT_INDEX].Text = "v0.0000008";
+			Elements[VERSION_ELEMENT_INDEX].Text = "v" + Consts.Version;
 
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Flags |= ElementFlags.RightAlignText | ElementFlags.CenterTextVert;
 

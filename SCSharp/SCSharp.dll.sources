@@ -1,3 +1,4 @@
+../build/Consts.cs
 SCSharp.Mpq/AssemblyInfo.cs
 SCSharp.Mpq/Bin.cs
 SCSharp.Mpq/BitStream.cs

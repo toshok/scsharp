@@ -1,3 +1,4 @@
+../build/Consts.cs
 SCSharp.Mpq.Smk/AssemblyInfo.cs
 SCSharp.Mpq.Smk/BitStream.cs
 SCSharp.Mpq.Smk/Huffmantree.cs

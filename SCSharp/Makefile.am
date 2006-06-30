@@ -2,7 +2,7 @@ MCSFLAGS= -debug -d:DEBUG
 MCS=gmcs
 
 SCSHARPDLL=SCSharp.dll
-SCSHARPDLL_REFS=-r:ICSharpCode.SharpZipLib
+SCSHARPDLL_REFS=
 
 SCSHARPSMKDLL=SCSharp.Smk.dll
 SCSHARPSMKDLL_REFS=-r:SCSharp.dll -r:../sdldotnet-bin/Tao.Sdl.dll -r:System.Drawing.dll

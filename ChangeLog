@@ -1,5 +1,35 @@
 2006-06-30  Chris Toshok  <toshok@hungry.com>
 
+	* src/scsharp.exe.sources: include ../build/Consts.cs
+
+	* SCSharp/SCSharp.dll.sources: include ../build/Consts.cs
+
+	* SCSharp/SCSharp.Smk.dll.sources: include ../build/Consts.cs
+
+	* SCSharp/SCSharp.UI.dll.sources: include ../build/Consts.cs
+
+	* SCSharp/SCSharp.UI/MainMenu.cs: use Consts.Version instead of
+	hardcoding the version.
+
+	* src/AssemblyInfo.cs: use Consts.Version
+
+	* SCSharp/SCSharp.Mpq/AssemblyInfo.cs: use Consts.Version
+
+	* SCSharp/SCSharp.Mpq.Smk/AssemblyInfo.cs: use Consts.Version
+
+	* SCSharp/SCSharp.UI/AssemblyInfo.cs: use Consts.Version
+
+	* build/Consts.cs.in: source for a generated per-assembly file.
+	
+	* nant.build: generate build/Consts.cs from build/Consts.cs.in.
+
+	* configure.ac: same.
+	
+	* SCSharp/Makefile.am (SCSHARPDLL_REFS): drop the
+	ICSharpCode.SharpZipLib dep.
+
+2006-06-30  Chris Toshok  <toshok@hungry.com>
+
 	* nant.build: use scsharp.exe instead of scs.exe, fix the
 	destination of Tao.Sdl.dll.config, and add the tools to the build.
 	Also fix dll references.
