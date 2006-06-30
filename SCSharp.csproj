@@ -36,26 +36,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
     <Reference Include="Tao.Sdl,Version=1.2.9.1,Culture=neutral,PublicKeyToken=9c7a200e36c0094e">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>sdldotnet-bin\Tao.Sdl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <Compile Include="src\AssemblyInfo.cs" />
     <None Include="ChangeLog" />
     <None Include="scsharp.exe.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
