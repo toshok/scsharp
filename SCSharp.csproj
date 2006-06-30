@@ -30,17 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SdlDotNet, Version=4.0.3.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
+    <Reference Include="SdlDotNet,Version=4.0.3.0,Culture=neutral,PublicKeyToken=26ad4f7e10c61408">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>sdldotnet-bin\SdlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tao.Sdl, Version=1.2.9.1, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
+    <Reference Include="Tao.Sdl,Version=1.2.9.1,Culture=neutral,PublicKeyToken=9c7a200e36c0094e">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>sdldotnet-bin\Tao.Sdl.dll</HintPath>
     </Reference>

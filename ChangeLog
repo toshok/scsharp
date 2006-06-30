@@ -1,3 +1,21 @@
+2006-06-30  Chris Toshok  <toshok@ximian.com>
+
+	* SCSharp.csproj: make the assembly strings work with xbuild.
+
+	* SCSharp/SCSharp.UI.dll.csproj: same.
+
+	* SCSharp/SCSharp.Smk.dll.csproj: same, and remove SDLPCMStream.cs
+
+	* Properties/AssemblyInfo.cs: remove the duplicate file contents.
+
+	* Properties/Resources.Designer.cs: same.
+
+	* SCSharp/Properties/SCSharp.UI.dll/AssemblyInfo.cs: same.
+
+	* SCSharp/Properties/SCSharp.Smk.dll/AssemblyInfo.cs: same.
+	
+	* SCSharp/Properties/SCSharp.dll/AssemblyInfo.cs: same.
+	
 2006-06-28  Tom Allard  <tom.allard@telenet.be>
 	* Added a NANT build (nant.build) file which:
 		- features easy, cross-platform building on Linux 
@@ -16,6 +34,7 @@
 	To use it:
 		1. install nant
 		2. run nant (no parameters required)
+	
 2006-06-21  Jeffrey Stedfast  <fejj@novell.com>
 
 	* SCSharp/SCSharp.Mpq.Smk/BitStream.cs: Removed unused variables.
