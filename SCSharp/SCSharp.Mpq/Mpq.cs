@@ -231,138 +231,26 @@ namespace SCSharp
 
 	public class MpqArchive : Mpq
 	{
-#if USE_STORM_DLL
-		static bool use_storm_dll;
-
-		static MpqArchive () {
-			use_storm_dll = Boolean.Parse (ConfigurationManager.AppSettings["UseUnmanagedMpqLibrary"]);
-		}
-
-		IntPtr mpqHandle;
-		string archive_path;
-#endif
-
 		MpqReader.MpqArchive mpq;
 
 		public MpqArchive (string path)
 		{
-#if USE_STORM_DLL
-			if (use_storm_dll) {
-				archive_path = path;
-				if (!Storm.SFileOpenArchive (path, 0, 0, out mpqHandle))
-					throw new Exception (String.Format ("Could not load .mpq file at {0}", path));
-			}
-			else
-#else
-				mpq = new MpqReader.MpqArchive (path);
-#endif
+			mpq = new MpqReader.MpqArchive (path);
 		}
 
 		public override Stream GetStreamForResource (string path)
 		{
-#if USE_STORM_DLL
-			if (use_storm_dll) {
-				IntPtr fileHandle;
-				uint fileSize;
-				uint numRead;
-
-				if (!Storm.SFileOpenFileEx (mpqHandle, path, 0, out fileHandle))
-					return null;
-
-				fileSize = Storm.SFileGetFileInfo (fileHandle, SFileInfo.FileSize);
-
-				byte[] buf = new byte[fileSize];
-
-				if (!Storm.SFileReadFile (fileHandle, buf, fileSize, out numRead, (IntPtr)0)) {
-					Storm.SFileCloseFile (fileHandle);
-					return null;
-				}
-
-				if (fileSize != numRead) {
-					Storm.SFileCloseFile (fileHandle);
-					return null;
-				}
-
-				Storm.SFileCloseFile (fileHandle);
-				return new MemoryStream (buf);
+			try {
+				return mpq.OpenFile (path);
 			}
-			else
-#else
-			{
-				try {
-					return mpq.OpenFile (path);
-				}
-				catch (FileNotFoundException) {
-					return null;
-				}
+			catch (FileNotFoundException) {
+				return null;
 			}
-#endif
 		}
 
 		public override void Dispose ()
 		{
-#if USE_STORM_DLL
-			if (!use_storm_dll)
-#else
-				mpq.Dispose ();
-#endif
+			mpq.Dispose ();
 		}
 	}
-
-#if USE_STORM_DLL
-	/* this should remain in sync with what's in StormLib.h */
-	enum SFileInfo {
-		ArchiveSize     =  1,      // MPQ size (value from header)
-		HashTbaleSize  =  2,      // Size of hash table, in entries
-		BlockTableSize =  3,      // Number of entries in the block table
-		BlockSize       =  4,      // Size of file block (in bytes)
-		HashTable       =  5,      // Pointer to Hash table (TMPQHash *)
-		BlockTable      =  6,      // Pointer to Block Table (TMPQBlock *)
-		NumFiles        =  7,      // Real number of files within archive
-
-		HashIndex       =  8,      // Hash index of file in MPQ
-		CodeName1        =  9,      // The first codename of the file
-		CodeName2        = 10,      // The second codename of the file
-		LocaleId         = 11,      // Locale ID of file in MPQ
-		BlockIndex       = 12,      // Index to Block Table
-		FileSize        = 13,      // Original file size
-		CompressedSize  = 14,      // Compressed file size
-		Flags            = 15,      // File flags
-		Position         = 16,      // File position within archive
-		Seed             = 17,      // File decryption seed
-		SeedUnfixed     = 18      // Decryption seed not fixed to file pos and size
-	}
-
-	static class Storm
-	{
-		[DllImport ("Storm.dll")]
-		public extern static bool SFileOpenArchive (string archiveFilename,
-							    uint priority,
-							    uint flags,
-							    out IntPtr handle);
-
-		[DllImport ("Storm.dll")]
-		public extern static bool SFileOpenFileEx (IntPtr mpqHandle,
-							   string filePath,
-							   uint searchScope,
-							   out IntPtr fileHandle);
-
-		[DllImport ("Storm.dll")]
-		public extern static bool SFileGetFileSize (IntPtr fileHandle,
-							    out uint fileSize);
-
-		[DllImport ("Storm.dll")]
-		public extern static uint SFileGetFileInfo (IntPtr fileHandle, SFileInfo info);
-
-		[DllImport ("Storm.dll")]
-		public extern static bool SFileReadFile (IntPtr fileHandle,
-							 byte[] buf,
-							 uint numberOfBytesToRead,
-							 out uint numberOfBytesRead,
-							 IntPtr unused);
-
-		[DllImport ("Storm.dll")]
-		public extern static bool SFileCloseFile (IntPtr fileHandle);
-	}
-#endif
 }

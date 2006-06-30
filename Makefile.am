@@ -1,10 +1,6 @@
 
 SUBDIRS= docs SCSharp src tools Tests 
 
-if ENABLE_STORMLIB
-SUBDIRS += StormLib
-endif
-
 EXTRA_DIST= HACKING RELEASE_README
 
 install:

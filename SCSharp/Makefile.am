@@ -1,10 +1,6 @@
 MCSFLAGS= -debug -d:DEBUG
 MCS=gmcs
 
-if ENABLE_STORMLIB
-MCSFLAGS += -d:USE_STORM_DLL
-endif
-
 SCSHARPDLL=SCSharp.dll
 SCSHARPDLL_REFS=-r:ICSharpCode.SharpZipLib
 

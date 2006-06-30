@@ -7,9 +7,6 @@ m4_ifdef([_A][M_PROG_TAR],[_A][M_SET_OPTION([tar-ustar])])
 AM_INIT_AUTOMAKE(scsharp,0.0000008)
 AM_MAINTAINER_MODE
 
-AC_ARG_ENABLE(stormlib, AC_HELP_STRING([--enable-stormlib], [Enable unmanaged StormLib code]), , enable_stormlib="no")
-AM_CONDITIONAL(ENABLE_STORMLIB, test "x$enable_stormlib" = "xyes")
-
 AC_PROG_LIBTOOL
 AC_PROG_LN_S
 AC_PROG_CXX
@@ -23,8 +20,6 @@ PKG_CHECK_MODULES(mono, mono >= $MONO_REQUIRED_VERSION, ,
 AC_OUTPUT([
 Makefile
 SCSharp/Makefile
-StormLib/Makefile
-StormLib/bzlib/Makefile
 docs/Makefile
 src/Makefile
 tools/Makefile
