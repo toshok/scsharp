@@ -43,7 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\SCSharp.UI.dll\AssemblyInfo.cs" />
+    <Compile Include="SCSharp.UI\AssemblyInfo.cs" />
     <Compile Include="SCSharp.UI\Builtins.cs" />
     <Compile Include="SCSharp.UI\ButtonElement.cs" />
     <Compile Include="SCSharp.UI\Cinematic.cs" />

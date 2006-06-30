@@ -34,7 +34,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\SCSharp.dll\AssemblyInfo.cs" />
+    <Compile Include="SCSharp.Mpq\AssemblyInfo.cs" />
     <Compile Include="SCSharp.Mpq\Bin.cs" />
     <Compile Include="SCSharp.Mpq\BitStream.cs" />
     <Compile Include="SCSharp.Mpq\Chk.cs" />

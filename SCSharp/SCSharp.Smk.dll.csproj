@@ -38,7 +38,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\SCSharp.Smk.dll\AssemblyInfo.cs" />
+    <Compile Include="SCSharp.Mpq.Smk\AssemblyInfo.cs" />
     <Compile Include="SCSharp.Mpq.Smk\BitStream.cs" />
     <Compile Include="SCSharp.Mpq.Smk\Huffmantree.cs" />
     <Compile Include="SCSharp.Mpq.Smk\Smk.cs" />
