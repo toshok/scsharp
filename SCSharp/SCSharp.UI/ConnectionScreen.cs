@@ -43,17 +43,17 @@ namespace SCSharp.UI
 		{
 		}
 
-		const int LISTBOX_ELEMENT_INDEX = 6;
-		const int TITLE_ELEMENT_INDEX = 7;
-		const int DESCRIPTION_ELEMENT_INDEX = 9;
-		const int OK_ELEMENT_INDEX = 10;
-		const int CANCEL_ELEMENT_INDEX = 11;
+		const int GATEWAY_IMAGE_ELEMENT_INDEX = 5;
+		const int GATEWAY_LABEL_ELEMENT_INDEX = 8;
+		const int GATEWAY_LIST_ELEMENT_INDEX = 9;
 
-#if INCLUDE_ALL_NETWORK_OPTIONS
+		const int LISTBOX_ELEMENT_INDEX = 7;
+		const int TITLE_ELEMENT_INDEX = 11;
+		const int DESCRIPTION_ELEMENT_INDEX = 13;
+		const int OK_ELEMENT_INDEX = 14;
+		const int CANCEL_ELEMENT_INDEX = 15;
+
 		const int num_choices = 4;
-#else
-		const int num_choices = 1;
-#endif
 		const int title_startidx = 95;
 		const int description_startidx = 99;
 
@@ -72,15 +72,10 @@ namespace SCSharp.UI
 			titles = new string[num_choices];
 			descriptions = new string[num_choices];
 
-#if INCLUDE_ALL_NETWORK_OPTIONS			
 			for (int i = 0; i < num_choices; i ++) {
 				titles[i] = GlobalResources.Instance.GluAllTbl[ title_startidx + i ];
 				descriptions[i] = GlobalResources.Instance.GluAllTbl[ description_startidx + i ];
 			}
-#else
-				titles[0] = GlobalResources.Instance.GluAllTbl[ title_startidx + 3 ];
-				descriptions[0] = GlobalResources.Instance.GluAllTbl[ description_startidx + 3 ];
-#endif
 			listbox = (ListBoxElement)Elements[LISTBOX_ELEMENT_INDEX];
 
 			foreach (string s in titles)
@@ -93,8 +88,12 @@ namespace SCSharp.UI
 
 			Elements[OK_ELEMENT_INDEX].Activate +=
 				delegate () {
-					ShowDialog (new OkDialog (this, mpq,
-								  "insert battle.net code here"));
+					if (listbox.SelectedItem == "Battle.net")
+						ShowDialog (new OkDialog (this, mpq,
+									  "insert battle.net code here"));
+					else
+						ShowDialog (new OkDialog (this, mpq,
+									  "scsharp will only support battle.net play"));
 				};
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=
@@ -105,6 +104,12 @@ namespace SCSharp.UI
 
 		void HandleSelectionChanged (int selectedIndex)
 		{
+			bool visible = (listbox.SelectedItem == "Battle.net");
+
+			Elements[GATEWAY_IMAGE_ELEMENT_INDEX].Visible =
+				Elements[GATEWAY_LABEL_ELEMENT_INDEX].Visible =
+				Elements[GATEWAY_LIST_ELEMENT_INDEX].Visible = visible;
+
 			Elements[TITLE_ELEMENT_INDEX].Text = titles[selectedIndex];
 			Elements[DESCRIPTION_ELEMENT_INDEX].Text = descriptions[selectedIndex];
 		}

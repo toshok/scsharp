@@ -88,13 +88,15 @@ namespace SCSharp.UI
 			installedMpq = new MpqContainer ();
 			playingMpq = new MpqContainer ();
 
+			Mpq scMpq = null, bwMpq = null;
+
 			if (starcraftDir != null) {
 				foreach (string path in Directory.GetFileSystemEntries (starcraftDir)) {
 					if (Path.GetFileName (path).ToLower() == "broodat.mpq") {
 						if (broodatMpq != null)
 							throw new Exception ("You have multiple broodat.mpq files in your starcraft directory.");
 						try {
-							broodatMpq = GetMpq (path);
+							bwMpq = GetMpq (path);
 							Console.WriteLine ("found BrooDat.mpq");
 						}
 						catch (Exception e) {
@@ -107,7 +109,7 @@ namespace SCSharp.UI
 						if (stardatMpq != null)
 							throw new Exception ("You have multiple stardat.mpq files in your starcraft directory.");
 						try {
-							stardatMpq = GetMpq (path);
+							scMpq = GetMpq (path);
 							Console.WriteLine ("found StarDat.mpq");
 						}
 						catch (Exception e) {
@@ -132,7 +134,7 @@ namespace SCSharp.UI
 				}
 			}
 
-			if (stardatMpq == null) {
+			if (scMpq == null) {
 				throw new Exception ("unable to locate stardat.mpq, please check your StarcraftDirectory configuration setting");
 			}
 
@@ -171,8 +173,26 @@ namespace SCSharp.UI
 			if (bwInstallExe == null)
 				throw new Exception ("unable to locate broodwar cd's install.exe, please check your BroodwarCDDirectory configuration setting");
 
-			if (patchRtMpq != null)
-				installedMpq.Add (patchRtMpq);
+			if (bwMpq != null) {
+				if (patchRtMpq != null) {
+					broodatMpq = new MpqContainer ();
+					((MpqContainer)broodatMpq).Add (patchRtMpq);
+					((MpqContainer)broodatMpq).Add (bwMpq);
+				}
+				else
+					broodatMpq = bwMpq;
+			}
+
+			if (scMpq != null) {
+				if (patchRtMpq != null) {
+					stardatMpq = new MpqContainer ();
+					((MpqContainer)stardatMpq).Add (patchRtMpq);
+					((MpqContainer)stardatMpq).Add (scMpq);
+				}
+				else
+					stardatMpq = bwMpq;
+			}
+
 			if (broodatMpq != null)
 				installedMpq.Add (broodatMpq);
 			if (bwInstallExe != null)
@@ -209,7 +229,6 @@ namespace SCSharp.UI
 				if (playingBroodWar) {
 					if (bwInstallExe == null)
 						throw new Exception ("you need the Broodwar CD to play Broodwar games.  Please check the BroodwarCDDirectory configuration setting.");
-					playingMpq.Add (patchRtMpq);
 					playingMpq.Add (bwInstallExe);
 					playingMpq.Add (broodatMpq);
 					playingMpq.Add (stardatMpq);
@@ -217,7 +236,6 @@ namespace SCSharp.UI
 				else {
 					if (scInstallExe == null)
 						throw new Exception ("you need the Starcraft CD to play original games.  Please check the StarcraftCDDirectory configuration setting.");
-					playingMpq.Add (patchRtMpq);
 					playingMpq.Add (scInstallExe);
 					playingMpq.Add (stardatMpq);
 				}

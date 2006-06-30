@@ -1,4 +1,13 @@
-2006-06-30  Chris Toshok  <toshok@ximian.com>
+2006-06-30  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/ConnectionScreen.cs: fix this for
+	patch_rt.mpq.
+
+	* SCSharp/SCSharp.UI/Game.cs: load the patch_rt.mpq propertly,
+	such that it is used for resolution before either stardat.mpq or
+	broodat.mpq
+
+2006-06-30  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp.csproj: make the assembly strings work with xbuild.
 
