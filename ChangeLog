@@ -1,5 +1,14 @@
 2006-06-30  Chris Toshok  <toshok@hungry.com>
 
+	* nant.build: change back to a fileset for the Tao.Sdl.dll.config
+	and pass flatten=true to keep the source directory from being
+	created under the dest directory.  Also, change the
+	scsharp.exe.config rule to copy the file if either 1)
+	overwriteConfig is true, or 2) the file doesn't exist in the bin/
+	directory already.
+
+2006-06-30  Chris Toshok  <toshok@hungry.com>
+
 	* src/scsharp.exe.sources: include ../build/Consts.cs
 
 	* SCSharp/SCSharp.dll.sources: include ../build/Consts.cs

@@ -54,9 +54,14 @@
 		
 		<echo message="Setting up configuration files"/>
 		
-		<copy if="${unix}" file="${input.libs}/Tao.Sdl.dll.config" tofile="${output.dir}/Tao.Sdl.dll.config" />
+		<copy if="${unix}" todir="${output.dir}" flatten="true">
+			<fileset>
+				<include name="${input.libs}/Tao.Sdl.dll.config" />
+			</fileset>
+		</copy>
 		
-		<copy if="${overwriteConfig}"  file="src/scsharp.exe.config-example"    tofile="${output.dir}/scsharp.exe.config"/>
+		<copy if="${overwriteConfig or not file::exists('${output.dir}/scsharp.exe.config')}"
+                      file="src/scsharp.exe.config-example" tofile="${output.dir}/scsharp.exe.config"/>
 	</target>
 	
 	<target name="setup" description="Setup build directories">
