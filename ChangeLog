@@ -1,5 +1,11 @@
 2006-06-30  Chris Toshok  <toshok@hungry.com>
 
+	* nant.build: use scsharp.exe instead of scs.exe, fix the
+	destination of Tao.Sdl.dll.config, and add the tools to the build.
+	Also fix dll references.
+
+2006-06-30  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/ConnectionScreen.cs: fix this for
 	patch_rt.mpq.
 

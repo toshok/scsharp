@@ -14,16 +14,16 @@
 	<property name="input.libs" value="sdldotnet-bin"/>
 	 
 	<!-- Build code -->
-	
 	<echo message="Running on Windows" if="${win32}" />
-	<echo message="Running on Unix" if="${unix}" />	
+	<echo message="Running on Unix" if="${unix}" />
+	
+	<target name="build" description="Default build target" depends="scsharp.exe,tools" />
 
-	<target name="build" description="Default build target" depends="setup,SCSharp.Smk.dll,SCSharp.UI.dll,SCSharp.dll">
-		
-		<echo message="Building SCS.exe"/>
-		<csc  target="exe" output="${output.dir}/scs.exe" debug="${debug}" >
-			<sources>
-				<include name="src/SCSharp.cs"/>
+	<target name="scsharp.exe" description="scsharp executable" depends="setup,SCSharp.Smk.dll,SCSharp.UI.dll,SCSharp.dll">
+		<echo message="Building scsharp.exe"/>
+		<csc  target="exe" output="${output.dir}/scsharp.exe" debug="${debug}" >
+			<sources basedir="src">
+				<includesfile name="src/scsharp.exe.sources"/>
 			</sources>
 			<references>
 				<include name="${output.dir}/SCSharp.dll"/>
@@ -32,6 +32,7 @@
 				
 				<include name="${input.libs}/SdlDotNet.dll"/>
 				<include name="${input.libs}/Tao.Sdl.dll"/>
+				<include name="System.Configuration.dll"/>
 			</references>
 	
 		</csc>
@@ -52,19 +53,14 @@
 		
 		<echo message="Setting up configuration files"/>
 		
-		<copy if="${unix}" todir="${output.dir}">
-			<fileset>
-				<include name="${input.libs}/Tao.Sdl.dll.config"/>
-			</fileset>
-		</copy>
+		<copy if="${unix}" file="${input.libs}/Tao.Sdl.dll.config" tofile="${output.dir}/Tao.Sdl.dll.config" />
 		
-		<copy if="${overwriteConfig}"  file="src/scsharp.exe.config-example"    tofile="${output.dir}/scs.exe.config"/>
+		<copy if="${overwriteConfig}"  file="src/scsharp.exe.config-example"    tofile="${output.dir}/scsharp.exe.config"/>
 	</target>
 	
 	<target name="setup" description="Setup build directories">
 		<echo message="Setting up main build directories." />
 		<mkdir dir="${output.dir}"/>
-		<echo message="done." />
 	</target>
 	
 	<target name="SCSharp.Smk.dll" description="The Smacker Decoder module" depends="setup,SCSharp.dll">
@@ -75,10 +71,10 @@
 			</sources>
 			<references>
 				<include name="${output.dir}/SCSharp.dll"/>
+				<include name="System.Drawing.dll"/>
 			</references>
 
 		</csc>
-		<echo message="done." />
 	</target>
 	
 	<target name="SCSharp.UI.dll" description="The SCSharp UI module" depends="setup,SCSharp.dll,SCSharp.Smk.dll">
@@ -92,11 +88,12 @@
 				<include name="${output.dir}/SCSharp.Smk.dll"/>
 				<include name="${input.libs}/SdlDotNet.dll"/>
 				<include name="${input.libs}/Tao.Sdl.dll"/>
+				<include name="System.Drawing.dll"/>
+				<include name="System.Configuration.dll"/>
 			</references>
 			
 			
 		</csc>
-		<echo message="done." />
 	</target>
 	
 	<target name="SCSharp.dll" description="The SCSharp DLL" depends="setup">
@@ -106,7 +103,18 @@
 				<includesfile name="SCSharp/SCSharp.dll.sources"/>
 			</sources>
 		</csc>
-		<echo message="done." />
+	</target>
+
+	<target name="tools" depends="setup,SCSharp.dll">
+		<csc target="exe" output="${output.dir}/lsmpq.exe" debug="${debug}" >
+			<sources> <include name="tools/lsmpq.cs" /> </sources>
+			<references> <include name="${output.dir}/SCSharp.dll"/> </references>
+		</csc>
+
+		<csc target="exe" output="${output.dir}/extract.exe" debug="${debug}" >
+			<sources> <include name="tools/extract.cs" /> </sources>
+			<references> <include name="${output.dir}/SCSharp.dll"/> </references>
+		</csc>
 	</target>
 	
 <!--	<target name="package" depends="build">
