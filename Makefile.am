@@ -1,7 +1,7 @@
 
 SUBDIRS= docs SCSharp src tools Tests 
 
-EXTRA_DIST= HACKING RELEASE_README
+EXTRA_DIST= HACKING
 
 install:
 	@echo \"make install\" doesn\'t work yet.  try again later.
@@ -22,7 +22,7 @@ release: all
 	@cp sdldotnet-bin/*.dll $(RELEASEDIR)
 	@cp sdldotnet-bin/*.dll.config $(RELEASEDIR)
 	@cp NEWS $(RELEASEDIR)/NEWS
-	@cp RELEASE_README $(RELEASEDIR)/README
+	@cp README $(RELEASEDIR)/README
 	@cp AUTHORS $(RELEASEDIR)
 	zip -r $(RELEASEDIR).zip $(RELEASEDIR)
 	rm -rf $(RELEASEDIR)
