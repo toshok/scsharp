@@ -1,4 +1,4 @@
-2006-06-30  Chris Toshok  <toshok@ximian.com>
+2006-06-30  Chris Toshok  <toshok@hungry.com>
 
 	* nant.build: add a dist and release target.  the dist target just
 	zips things up from the source tree, the release target creates a
