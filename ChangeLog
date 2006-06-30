@@ -1,3 +1,14 @@
+2006-06-30  Chris Toshok  <toshok@ximian.com>
+
+	* nant.build: add a dist and release target.  the dist target just
+	zips things up from the source tree, the release target creates a
+	new output directory and calls the build target on it.  Lastly,
+	add an if clause to the Consts.cs copy task so that it should be
+	rebuilt if nant.build is newer, but it doesn't seem to work.  bug
+	in nant?  Another bug (this time in ICSharpLib): the file
+	permissions are stripped from files we add to a .zip, so the
+	dist'ed configure file doesn't have execute permissions.
+
 2006-06-30  Chris Toshok  <toshok@hungry.com>
 
 	* nant.build: change back to a fileset for the Tao.Sdl.dll.config

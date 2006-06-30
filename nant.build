@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <project name="SCSharp" default="build">
 	<description>Starcraft in C#</description>
+
+        <property name="project.name" value="scsharp"/>
+        <property name="project.version" value="0.0000009"/>
+
 	<!--configuration properties -->	
 	
 	<property name="overwriteConfig" value="false"/> <!-- determines wether or not the existing scsharp config file should be overwritten when build completes -->
 	
 
 	<!-- other properties -->
-	<property name="packageVersion" value="0.0000009" />
 	<property name="debug" value="false" overwrite="false" />
 	<property name="win32" value="${platform::is-win32()}" overwrite="true" />
 	<property name="unix" value="${platform::is-unix()}" overwrite="true" />
@@ -18,7 +21,19 @@
 	<echo message="Running on Windows" if="${win32}" />
 	<echo message="Running on Unix" if="${unix}" />
 	
-	<target name="build" description="Default build target" depends="scsharp.exe,tools" />
+	<target name="build" description="Default build target" depends="scsharp.exe,tools">
+
+		<echo message="Setting up configuration files"/>
+
+		<copy if="${unix}" todir="${output.dir}" flatten="true">
+			<fileset>
+				<include name="${input.libs}/Tao.Sdl.dll.config" />
+			</fileset>
+		</copy>
+		
+		<copy if="${overwriteConfig or not file::exists('${output.dir}/scsharp.exe.config')}"
+                      file="src/scsharp.exe.config-example" tofile="${output.dir}/scsharp.exe.config"/>
+	</target>
 
 	<target name="scsharp.exe" description="scsharp executable" depends="setup,SCSharp.Smk.dll,SCSharp.UI.dll,SCSharp.dll">
 		<echo message="Building scsharp.exe"/>
@@ -51,26 +66,17 @@
 				<include name="*.dll"  />
 			</fileset>
 		</copy>
-		
-		<echo message="Setting up configuration files"/>
-		
-		<copy if="${unix}" todir="${output.dir}" flatten="true">
-			<fileset>
-				<include name="${input.libs}/Tao.Sdl.dll.config" />
-			</fileset>
-		</copy>
-		
-		<copy if="${overwriteConfig or not file::exists('${output.dir}/scsharp.exe.config')}"
-                      file="src/scsharp.exe.config-example" tofile="${output.dir}/scsharp.exe.config"/>
 	</target>
 	
 	<target name="setup" description="Setup build directories">
 		<echo message="Setting up main build directories." />
 		<mkdir dir="${output.dir}"/>
-		<copy file="build/Consts.cs.in" tofile="build/Consts.cs">
+
+		<copy file="build/Consts.cs.in" tofile="build/Consts.cs"
+			if="${(not file::exists('build/Consts.cs')) or (file::get-last-write-time('nant.build') > file::get-last-write-time('build/Consts.cs'))}">
 			<filterchain>
 			        <replacetokens>
-			            <token key="VERSION" value="${packageVersion}" />
+			            <token key="VERSION" value="${project.version}" />
 			        </replacetokens>
 			</filterchain>
 		</copy>
@@ -128,6 +134,64 @@
 			<sources> <include name="tools/extract.cs" /> </sources>
 			<references> <include name="${output.dir}/SCSharp.dll"/> </references>
 		</csc>
+	</target>
+
+
+	<target name="dist">
+		<property name="dist.dir" value="${project.name}-src-${project.version}"/>
+		<delete file="${dist.dir}.zip" />
+		<zip zipfile="${dist.dir}.zip">
+			<fileset prefix="${dist.dir}">
+				<exclude name="**/*.zip" />
+				<exclude name="**/*~" />
+				<exclude name="**/Makefile" />
+				<exclude name="**/*.mdb" />
+				<exclude name="**/*.exe" />
+
+				<include name="*" />
+				<exclude name="autom4te.cache" />
+				<exclude name="config.status" />
+				<exclude name="config.log" />
+				<exclude name="aclocal.m4" />
+
+				<include name="build/*" />
+				<include name="docs/*" />
+				<include name="src/*" />
+				<include name="Tests/*" />
+				<include name="tools/*" />
+				<include name="sdldotnet-bin/*" />
+				<include name="SCSharp/**" />
+
+				<exclude name="build/Consts.cs" />
+				<exclude name="SCSharp/*.dll" />
+				<exclude name="src/scsharp.exe.config" />
+				<exclude name="bin" />
+				<exclude name="release-bin" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="release">
+		<property name="release.dir" value="${project.name}-${project.version}"/>
+		<property name="output.dir" value="release-bin"/>
+
+		<delete dir="${output.dir}" />
+		<delete file="${release.dir}.zip" />
+
+		<call target="build" />
+
+		<zip zipfile="${release.dir}.zip">
+			<fileset basedir="${output.dir}" prefix="${release.dir}">
+				<include name="*" />
+			</fileset>
+			<fileset prefix="${release.dir}">
+				<include name="AUTHORS" />
+				<include name="NEWS" />
+				<include name="RELEASE_README" />
+			</fileset>
+		</zip>
+
+		<delete dir="${output.dir}" />
 	</target>
 	
 <!--	<target name="package" depends="build">
