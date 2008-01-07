@@ -1,3 +1,8 @@
+2008-01-06  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/Game.cs (Game.PlayingBroodWar): add the
+	patchrt.mpq to the playingMpq list.
+
 2006-06-30  Chris Toshok  <toshok@hungry.com>
 
 	* nant.build: add a dist and release target.  the dist target just

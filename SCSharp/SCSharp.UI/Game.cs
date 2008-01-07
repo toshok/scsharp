@@ -229,6 +229,8 @@ namespace SCSharp.UI
 				if (playingBroodWar) {
 					if (bwInstallExe == null)
 						throw new Exception ("you need the Broodwar CD to play Broodwar games.  Please check the BroodwarCDDirectory configuration setting.");
+					if (patchRtMpq != null)
+						playingMpq.Add (patchRtMpq);
 					playingMpq.Add (bwInstallExe);
 					playingMpq.Add (broodatMpq);
 					playingMpq.Add (stardatMpq);
@@ -236,6 +238,8 @@ namespace SCSharp.UI
 				else {
 					if (scInstallExe == null)
 						throw new Exception ("you need the Starcraft CD to play original games.  Please check the StarcraftCDDirectory configuration setting.");
+					if (patchRtMpq != null)
+						playingMpq.Add (patchRtMpq);
 					playingMpq.Add (scInstallExe);
 					playingMpq.Add (stardatMpq);
 				}
