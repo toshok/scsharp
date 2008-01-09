@@ -1,3 +1,9 @@
+2008-01-08  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/Game.cs: Sanitize the paths we get from the
+	.config file, replacing / and \ with Path.DirectorySeparatorChar.
+	Fixes ticket #24 (fix is based on proposed patch).
+
 2008-01-06  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/Game.cs (Game.PlayingBroodWar): add the
