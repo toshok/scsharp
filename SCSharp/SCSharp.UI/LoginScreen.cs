@@ -60,8 +60,6 @@ namespace SCSharp.UI
 		
 			for (int i = 0; i < files.Length; i ++)
 				listbox.AddItem (Path.GetFileNameWithoutExtension (files[i]));
-
-			listbox.SelectedIndex = 0;
 		}
 
 		protected override void ResourceLoader ()
@@ -71,6 +69,7 @@ namespace SCSharp.UI
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}: {1} '{2}'", i, Elements[i].Type, Elements[i].Text);
 
+			Elements[OK_ELEMENT_INDEX].Sensitive = false;
 			Elements[OK_ELEMENT_INDEX].Activate +=
 				delegate () {
 					if (listbox.SelectedIndex == -1)
@@ -101,6 +100,7 @@ namespace SCSharp.UI
 					ShowDialog (d);
 				};
 
+			Elements[DELETE_ELEMENT_INDEX].Sensitive = false;
 			Elements[DELETE_ELEMENT_INDEX].Activate +=
 				delegate () {
 					OkCancelDialog okd = new OkCancelDialog (this, mpq,
@@ -115,9 +115,15 @@ namespace SCSharp.UI
 				};
 
 			listbox = (ListBoxElement)Elements[LISTBOX_ELEMENT_INDEX];
+			listbox.SelectionChanged += delegate (int selectedIndex) {
+				Elements[OK_ELEMENT_INDEX].Sensitive = true;
+				Elements[DELETE_ELEMENT_INDEX].Sensitive = true;
+			};
 
 			spcdir = Path.Combine (Game.Instance.RootDirectory, "characters");
-
+			if (!Directory.Exists (spcdir))
+				Directory.CreateDirectory (spcdir);
+			
 			PopulateUIFromDir ();
 		}
 

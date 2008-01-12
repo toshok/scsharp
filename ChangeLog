@@ -1,5 +1,20 @@
 2008-01-12  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/LoginScreen.cs (PopulateUIFromDir): don't set
+	SelectedIndex, listbox.AddItem does it for us if need be.
+	(ResourceLoader): "Ok" and "Delete" start out insensitive, and
+	become sensitive if a listbox element is selected.  Also, create
+	the "characters" subdirectory if it doesn't exist, closing ticket
+	#15.
+
+	* SCSharp/SCSharp.UI/ListBoxElement.cs (AddItem): if cursor is -1
+	when an item is added, select the new item, and emit
+	SelectionChanged.
+	(set_SelectedIndex): validate the argument, and emit
+	SelectionChanged.
+
+2008-01-12  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/GuiUtil.cs: hack GetBitmapData to deal with
 	the shadow colors and make them partially translucent.
 

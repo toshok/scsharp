@@ -165,8 +165,18 @@ namespace SCSharp.UI
 
 		public int SelectedIndex {
 			get { return cursor; }
-			set { cursor = value;
-			      Invalidate (); }
+			set {
+				if (value < 0 || value > items.Count)
+					throw new ArgumentException ("value");
+				if (cursor != value) {
+					cursor = value;
+					
+					if (SelectionChanged != null)
+						SelectionChanged (cursor);
+
+					Invalidate ();
+				}
+			}
 		}
 
 		public string SelectedItem {
@@ -176,8 +186,12 @@ namespace SCSharp.UI
 		public void AddItem (string item)
 		{
 			items.Add (item);
-			if (cursor == -1)
+			if (cursor == -1) {
 				cursor = 0;
+
+				if (SelectionChanged != null)
+					SelectionChanged (cursor);
+			}
 			Invalidate ();
 		}
 
