@@ -84,13 +84,13 @@ namespace SCSharp.UI
 			instance = this;
 
 			starcraftDir = starcraftDir.Replace ('\\', Path.DirectorySeparatorChar)
-						   .Replace ("/", Path.DirectorySeparatorChar);
+						   .Replace ('/', Path.DirectorySeparatorChar);
 
 			scCDDir = scCDDir.Replace ('\\', Path.DirectorySeparatorChar)
-					 .Replace ("/", Path.DirectorySeparatorChar);
+					 .Replace ('/', Path.DirectorySeparatorChar);
 
 			bwCDDir = bwCDDir.Replace ('\\', Path.DirectorySeparatorChar)
-					 .Replace ("/", Path.DirectorySeparatorChar);
+					 .Replace ('/', Path.DirectorySeparatorChar);
 
 			screens = new UIScreen[(int)UIScreenType.ScreenCount];
 
