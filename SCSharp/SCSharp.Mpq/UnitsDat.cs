@@ -84,9 +84,17 @@ namespace SCSharp
 		const int destroy_score_offset = 0x45a0;
 		const int shield_offset = 0x0a8c;
 		const int hitpoint_offset = 0x0c54;
-		const int portrait_offset = 0x367c;
+#if false
+		// these are for some past revision of units.mpq
 		const int width_offset = 0x2f5c;
 		const int height_offset = 0x30ac;
+		const int portrait_offset = 0x367c;
+#else
+		// these are from the patch_rt.mpq for 1.13f
+		const int width_offset = 0x3124;
+		const int height_offset = 0x32ec;
+		const int portrait_offset = 0x3844;
+#endif
 
 		int flingyBlockId;
 		//int overlayBlockId;

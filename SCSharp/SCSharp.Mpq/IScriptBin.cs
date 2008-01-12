@@ -41,11 +41,17 @@ namespace SCSharp
 		byte[] buf;
 		Dictionary<uint,ushort> entries;
 
-		const int entry_table_offset = 0x0082e0;
-
 		public IScriptBin ()
 		{
 			entries = new Dictionary<uint,ushort>();
+		}
+
+		bool PointsToSCPE (int p)
+		{
+			return (buf[p] == 0x53
+				&& buf[p+1] == 0x43
+				&& buf[p+2] == 0x50
+				&& buf[p+3] == 0x45);
 		}
 
 		public void ReadFromStream (Stream stream)
@@ -53,16 +59,23 @@ namespace SCSharp
 			buf = new byte [stream.Length];
 			stream.Read (buf, 0, buf.Length);
 
-			int p = entry_table_offset;
+			int p = buf.Length - 8;
+			int o = Util.ReadWord (buf, p + 2);
+			Console.WriteLine ("first offset = {0:X}", o);
+			while (PointsToSCPE (Util.ReadWord (buf, p + 2)))
+				p -= 4;
 
 			Console.WriteLine ("iscript entry offsets {0:x}", p);
 			Console.WriteLine ("iscript.bin contains {0} entries",
-					   (buf.Length - p) / 4);
+					   (buf.Length - p) / 4 - 2);
 
 			while (p < buf.Length - 4) {
 				ushort images_id = Util.ReadWord (buf, p);
 				ushort offset = Util.ReadWord (buf, p+2);
 				entries[images_id] = offset;
+
+				Console.WriteLine ("id: {0}   offset: {1:X}", images_id, offset);
+
 				p += 4;
 			}
 		}

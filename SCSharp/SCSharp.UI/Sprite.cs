@@ -102,13 +102,15 @@ namespace SCSharp.UI
 
 			grp = (Grp)mpq.GetResource ("unit\\" + grp_path);
 
-			Console.WriteLine ("new sprite: unit\\{0} @ {1}x{2} (image {3})", grp_path, x, y, images_entry);
+			iscript_entry = GlobalResources.Instance.ImagesDat.IScriptIndexes [images_entry];
+			script_entry_offset = GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry);
+
+			Console.WriteLine ("new sprite: unit\\{0} @ {1}x{2} (image {3}, iscript id {4}, script_entry_offset {5:X})",
+					   grp_path, x, y, images_entry, iscript_entry, script_entry_offset);
 
 			this.buf = GlobalResources.Instance.IScriptBin.Contents;
-			iscript_entry = GlobalResources.Instance.ImagesDat.IScriptIndexes [images_entry];
 
-			script_entry_offset = GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry);
-			/* make sure the offset points to "SCEP" */
+			/* make sure the offset points to "SCPE" */
 			if (Util.ReadDWord (buf, script_entry_offset) != 0x45504353)
 				Console.WriteLine ("invalid script_entry_offset");
 
@@ -132,6 +134,10 @@ namespace SCSharp.UI
 			iscript_entry = GlobalResources.Instance.ImagesDat.IScriptIndexes [images_entry];
 
 			script_entry_offset = GlobalResources.Instance.IScriptBin.GetScriptEntryOffset (iscript_entry);
+
+			Console.WriteLine ("new dependent sprite: unit\\{0} (image {1}, iscript id {2}, script_entry_offset {3:X})",
+					   grp_path, images_entry, iscript_entry, script_entry_offset);
+
 			/* make sure the offset points to "SCEP" */
 			if (Util.ReadDWord (buf, script_entry_offset) != 0x45504353)
 				Console.WriteLine ("invalid script_entry_offset");
@@ -334,7 +340,6 @@ namespace SCSharp.UI
 				if (sprite_surface != null)
 					sprite_surface.Dispose();
 
-				// XXX
 				sprite_surface = GuiUtil.CreateSurfaceFromBitmap (grp.GetFrame (frame_num),
 										  grp.Width, grp.Height,
 										  palette,
@@ -466,8 +471,8 @@ namespace SCSharp.UI
 				barg1 = ReadByte (ref pc);
 				barg2 = ReadByte (ref pc);
 				TraceLine ("PlaceIndependentUnderlay: {0} ({1},{2})", warg1, barg1, barg2);
-				Sprite s = SpriteManager.CreateSprite (warg1, palette, x, y);
-				s.RunScript (AnimationType.Init);
+ 				Sprite s = SpriteManager.CreateSprite (warg1, palette, x, y);
+ 				s.RunScript (AnimationType.Init);
 				break;
 			case EndAnimation:
 				return false;

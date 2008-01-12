@@ -1,3 +1,24 @@
+2008-01-12  Chris Toshok  <toshok@hungry.com>
+
+	* SCSharp/SCSharp.UI/GuiUtil.cs: hack GetBitmapData to deal with
+	the shadow colors and make them partially translucent.
+
+	* SCSharp/SCSharp.UI/Sprite.cs: make some spew a little more
+	verbose.
+
+	* SCSharp/SCSharp.Mpq/UnitsDat.cs: fix the width/height/portrait
+	offsets for 1.13f.  Need to figure out what version(s) we're going
+	to support, and either hardcode these somewhere global, or if we
+	support more than one add support for switching between tables of
+	offsets.
+
+	* SCSharp/SCSharp.Mpq/IScriptBin.cs: grovel backward from the end
+	of the file looking for valid iscript offsets - those that point
+	to locations in the file that have "SCPE".  Helps deal with
+	differences in table sizes between iscript.bin file versions.
+	This fixes ticket #6, as before we were pointing to random,
+	incorrect places.
+
 2008-01-08  Chris Toshok  <toshok@hungry.com>
 
 	* SCSharp/SCSharp.UI/Game.cs: Sanitize the paths we get from the

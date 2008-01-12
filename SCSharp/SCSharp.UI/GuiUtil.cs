@@ -200,34 +200,6 @@ namespace SCSharp.UI
 			return surf;
 		}
 
-		public static byte[] GetBitmapData (byte[,] grid, ushort width, ushort height, byte[] palette, bool with_alpha)
-		{
-			byte[] buf = new byte[width * height * (3 + (with_alpha ? 1 : 0))];
-			int i = 0;
-			int x, y;
-
-			for (y = height - 1; y >= 0; y --) {
-				for (x = width - 1; x >= 0; x--) {
-					if (with_alpha)
-						i++;
-					buf[i++] = palette[ grid[y,x] * 3 + 2];
-					buf[i++] = palette[ grid[y,x] * 3 + 1];
-					buf[i++] = palette[ grid[y,x] * 3 ];
-					if (with_alpha) {
-						if (buf[i - 3] == 0
-						    && buf[i - 2] == 0
-						    && buf[i - 1] == 0) {
-							buf[i-4] = 0x00;
-						}
-						else
-							buf[i-4] = 0xff;
-					}
-				}
-			}
-
-			return buf;
-		}
-
 		public static Surface CreateSurface (byte[] data, ushort width, ushort height, int depth, int stride,
 						     int rmask, int gmask, int bmask, int amask)
 		{
@@ -269,6 +241,44 @@ namespace SCSharp.UI
 					      (int)0x0000ff00,
 					      (int)0x000000ff,
 					      (int)0x00000000);
+		}
+
+		public static byte[] GetBitmapData (byte[,] grid, ushort width, ushort height, byte[] palette, bool with_alpha)
+		{
+			byte[] buf = new byte[width * height * (3 + (with_alpha ? 1 : 0))];
+			int i = 0;
+			int x, y;
+
+			for (y = height - 1; y >= 0; y --) {
+				for (x = width - 1; x >= 0; x--) {
+					if (with_alpha)
+						i++;
+					buf[i++] = palette[ grid[y,x] * 3 + 2];
+					buf[i++] = palette[ grid[y,x] * 3 + 1];
+					buf[i++] = palette[ grid[y,x] * 3 ];
+					if (with_alpha) {
+						if (buf[i - 3] == 0
+						    && buf[i - 2] == 0
+						    && buf[i - 1] == 0) {
+							buf[i-4] = 0x00;
+						}
+						else if (buf[i - 3] == 59
+							 && buf[i - 2] == 39
+							 && buf[i - 1] == 39) {
+							buf[i - 3] = buf[i - 2] = buf[i - 1] = 0;
+							//							Console.WriteLine ("translucent shadow pixel, palette index = {0}", palette [grid[y,x]] * 3);
+							buf[i - 4] = 0xaa;
+						}
+						else {
+							//							Console.WriteLine ("pixel data RGB = {0},{1},{2}, palette index = {3}",
+							//									   buf[i-3],buf[i-2],buf[i-1], palette [grid[y,x]] * 3);
+							buf[i-4] = 0xff;
+						}
+					}
+				}
+			}
+
+			return buf;
 		}
 
 		public static byte[] GetBitmapData (byte[,] grid, ushort width, ushort height, byte[] palette, int translucent_index, int transparent_index)
