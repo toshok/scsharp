@@ -5,6 +5,11 @@ using System.Reflection;
 
 public class ListMpq {
 	public static void Main (string[] args) {
+		if (args.Length == 0) {
+			Console.WriteLine ("usage:  lsmpq.exe <mpq-file>");
+			Environment.Exit (0);
+		}
+
 		Mpq mpq = new MpqArchive (args[0]);
 
 		StreamReader sr = new StreamReader (Assembly.GetExecutingAssembly().GetManifestResourceStream ("list.txt"));
