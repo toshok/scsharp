@@ -175,13 +175,13 @@ public class DumpIScript {
 
 	string GetGrpNameFromImageId (ushort arg)
 	{
-		ushort grp_index = GlobalResources.Instance.ImagesDat.GetGrpIndex (arg);
-		return grp_index == 0 ? "NONE" : GlobalResources.Instance.ImagesTbl [ grp_index - 1];
+		uint grp_index = GlobalResources.Instance.ImagesDat.GrpIndexes [arg];
+		return grp_index == 0 ? "NONE" : GlobalResources.Instance.ImagesTbl [ (int)grp_index - 1];
 	}
 
 	string GetGrpNameFromSpriteId (ushort arg)
 	{
-		ushort image_entry = GlobalResources.Instance.SpritesDat.GetImagesDatEntry (arg);
+		ushort image_entry = GlobalResources.Instance.SpritesDat.ImagesDatEntries [arg];
 		return GetGrpNameFromImageId (image_entry);
 	}
 
@@ -275,7 +275,7 @@ public class DumpIScript {
 			case IScriptOpcode.PlaySound:
 				warg1 = ReadWord (ref pc);
 				Console.Write ("{0} ({1})", warg1 - 1,
-					       GlobalResources.Instance.SfxDataTbl[GlobalResources.Instance.SfxDataDat.GetFileIndex ((uint)(warg1 - 1))]);
+					       GlobalResources.Instance.SfxDataTbl[(int)GlobalResources.Instance.SfxDataDat.FileIndexes [warg1 - 1]]);
 				break;
 			case IScriptOpcode.PlayRandomSound:
 				barg1 = ReadByte (ref pc);
@@ -291,7 +291,7 @@ public class DumpIScript {
 				Console.Write ("{0} {1}", warg1, warg2);
 				Console.WriteLine (" [");
 				for (int i = warg1; i < warg2; i ++)
-					Console.Write (" {0}", GlobalResources.Instance.SfxDataTbl[GlobalResources.Instance.SfxDataDat.GetFileIndex ((uint)(i - 1))]);
+					Console.Write (" {0}", GlobalResources.Instance.SfxDataTbl[(int)GlobalResources.Instance.SfxDataDat.FileIndexes [i - 1]]);
 				Console.Write (" ]");
 				break;
 			case IScriptOpcode.PlaySpecificFrame:
@@ -315,7 +315,7 @@ public class DumpIScript {
 				for (int i = 0; i < barg1; i ++) {
 					warg1 = ReadWord (ref pc);
 					Console.Write (" {0}",
-						       GlobalResources.Instance.SfxDataTbl[GlobalResources.Instance.SfxDataDat.GetFileIndex ((uint)(warg1 - 1))]);
+						       GlobalResources.Instance.SfxDataTbl[(int)GlobalResources.Instance.SfxDataDat.FileIndexes [warg1 - 1]]);
 				}
 				Console.Write (" ]");
 				break;
