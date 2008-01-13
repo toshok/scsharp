@@ -5,7 +5,7 @@ using System.Reflection;
 
 public class ListMpq {
 	public static void Main (string[] args) {
-		if (args.Length == 0) {
+		if (args.Length != 1) {
 			Console.WriteLine ("usage:  lsmpq.exe <mpq-file>");
 			Environment.Exit (0);
 		}
