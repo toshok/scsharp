@@ -140,9 +140,6 @@ namespace SCSharp.UI
 				if (lower.EndsWith (".scm") || lower.EndsWith (".scx"))
 					file_listbox.AddItem (Path.GetFileName (files[i]));
 			}
-
-			file_listbox.SelectedIndex = directories.Length;
-			FileListSelectionChanged (directories.Length);
 		}
 
 		void PopulateGameTypes ()

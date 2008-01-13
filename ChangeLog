@@ -1,5 +1,10 @@
 2008-01-12  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/PlayCustomScreen.cs: fix ticket #25 - don't
+	crash when opening a map directory with no fiels.
+
+2008-01-12  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/LoginScreen.cs (PopulateUIFromDir): don't set
 	SelectedIndex, listbox.AddItem does it for us if need be.
 	(ResourceLoader): "Ok" and "Delete" start out insensitive, and
