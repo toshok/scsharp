@@ -211,14 +211,10 @@ namespace SCSharp.UI
 				delegate () {
 					if (selectedScenario == null) {
 						// the selected entry is a directory, switch to it
-						if (curdir != mapdir)
-							if (file_listbox.SelectedIndex == 0)
-								curdir = Directory.GetParent (curdir).FullName;
-							else
-								curdir = directories[file_listbox.SelectedIndex - 1];
-
+						if (curdir != mapdir && file_listbox.SelectedIndex == 0)
+							curdir = Directory.GetParent (curdir).FullName;
 						else
-								curdir = directories[file_listbox.SelectedIndex];
+							curdir = directories[file_listbox.SelectedIndex];
 
 						PopulateFileList ();
 					}

@@ -1,5 +1,11 @@
 2008-01-12  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/PlayCustomScreen.cs: apply patch from
+	chaos_jk@abv.bg.  fixed navigation in second-level (or lower) map
+	directories.
+
+2008-01-12  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/PlayCustomScreen.cs: fix ticket #25 - don't
 	crash when opening a map directory with no fiels.
 
