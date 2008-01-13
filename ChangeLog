@@ -1,5 +1,17 @@
 2008-01-12  Chris Toshok  <toshok@hungry.com>
 
+	* SCSharp/SCSharp.UI/GameScreen.cs: fix ticket #14 by checking the
+	hudElement's pcx file to see if it's transparent at X,Y before
+	looking under it at the elements on the map.
+
+	* SCSharp/SCSharp.UI/ImageElement.cs: add Pcx property so we can
+	get ahold of the pcx used to generate the surface (used in the HUD
+	code).
+
+	* SCSharp/SCSharp.UI/GuiUtil.cs: add SurfaceFromPcx.
+
+2008-01-12  Chris Toshok  <toshok@hungry.com>
+
 	* SCSharp/SCSharp.UI/PlayCustomScreen.cs: apply patch from
 	chaos_jk@abv.bg.  fixed navigation in second-level (or lower) map
 	directories.

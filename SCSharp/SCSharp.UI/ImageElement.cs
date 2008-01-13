@@ -41,6 +41,7 @@ namespace SCSharp.UI
 	public class ImageElement : UIElement
 	{
 		int translucent_index;
+		Pcx pcx;
 
 		public ImageElement (UIScreen screen, BinElement el, byte[] palette, int translucent_index)
 			: base (screen, el, palette)
@@ -56,8 +57,17 @@ namespace SCSharp.UI
 
 		protected override Surface CreateSurface ()
 		{
-			return GuiUtil.SurfaceFromStream ((Stream)Mpq.GetResource (Text),
-							  translucent_index, 0);
+			return GuiUtil.SurfaceFromPcx (Pcx);
+		}
+
+		public Pcx Pcx {
+			get {
+				if (pcx == null) {
+					pcx = new Pcx ();
+					pcx.ReadFromStream ((Stream)Mpq.GetResource (Text), translucent_index, 0);
+				}
+				return pcx;
+			}
 		}
 
 		public override ElementType Type {

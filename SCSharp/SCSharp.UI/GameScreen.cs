@@ -107,6 +107,7 @@ namespace SCSharp.UI
 
 		List<Unit> units;
 
+		ImageElement hudElement;
 		GrpElement wireframeElement;
 		MovieElement portraitElement;
 		MapRenderer mapRenderer;
@@ -251,7 +252,7 @@ namespace SCSharp.UI
 			base.ResourceLoader ();
 
 			/* create the element corresponding to the hud */
-			ImageElement hudElement = new ImageElement (this, 0, 0, 640, 480, TranslucentIndex);
+			hudElement = new ImageElement (this, 0, 0, 640, 480, TranslucentIndex);
 			hudElement.Text = String.Format (Builtins.Game_ConsolePcx, Util.RaceCharLower[(int)Game.Instance.Race]);
 			hudElement.Visible = true;
 			Elements.Add (hudElement);
@@ -401,27 +402,29 @@ namespace SCSharp.UI
 
 		void UpdateCursor ()
 		{
-			/* are we over a unit?  if so, display the mag cursor */
-			unitUnderCursor = null;
-			for (int i = 0; i < units.Count; i ++) {
-				Unit u = units[i];
-				Sprite s = u.Sprite;
+			if (mouseOverElement == null) {
+				/* are we over a unit?  if so, display the mag cursor */
+				unitUnderCursor = null;
+				for (int i = 0; i < units.Count; i ++) {
+					Unit u = units[i];
+					Sprite s = u.Sprite;
 
-				int sx, sy;
+					int sx, sy;
 
-				s.GetPosition (out sx, out sy);
+					s.GetPosition (out sx, out sy);
 
-				int cursor_x = Game.Instance.Cursor.X + topleft_x;
-				int cursor_y = Game.Instance.Cursor.Y + topleft_y;
+					int cursor_x = Game.Instance.Cursor.X + topleft_x;
+					int cursor_y = Game.Instance.Cursor.Y + topleft_y;
 
-				int half_width = u.Width / 2;
-				int half_height = u.Height / 2;
+					int half_width = u.Width / 2;
+					int half_height = u.Height / 2;
 
-				if (cursor_x < sx + half_width && cursor_x > sx - half_width
-				    && cursor_y < sy + half_height && cursor_y > sy - half_height) {
-					Game.Instance.Cursor = MagCursors[MAG_CURSOR_G];
-					unitUnderCursor = u;
-					break;
+					if (cursor_x < sx + half_width && cursor_x > sx - half_width
+					    && cursor_y < sy + half_height && cursor_y > sy - half_height) {
+						Game.Instance.Cursor = MagCursors[MAG_CURSOR_G];
+						unitUnderCursor = u;
+						break;
+					}
 				}
 			}
 		}
@@ -495,7 +498,7 @@ namespace SCSharp.UI
 			if (mouseOverElement != null)
 				base.MouseButtonDown (args);
 			else if (args.X > MINIMAP_X && args.X < MINIMAP_X + MINIMAP_WIDTH &&
-			    args.Y > MINIMAP_Y && args.Y < MINIMAP_Y + MINIMAP_HEIGHT) {
+				 args.Y > MINIMAP_Y && args.Y < MINIMAP_Y + MINIMAP_HEIGHT) {
 				RecenterFromMinimap (args.X, args.Y);
 				buttonDownInMinimap = true;
 			}
@@ -586,6 +589,21 @@ namespace SCSharp.UI
 			else {
 				base.PointerMotion (args);
 
+				// if the mouse is over one of the
+				// normal UIElements in the HUD, deal
+				// with it
+				if (mouseOverElement != null) {
+					// XXX for now, just return.
+					return;
+				}
+
+				// if the mouse is over the hud area, return
+				int hudIndex = (args.X + args.Y * hudElement.Pcx.Width) * 4;
+				if (hudElement.Pcx.RgbaData [hudIndex] == 0xff) {
+					Game.Instance.Cursor = Cursor;
+					return;
+				}
+
 				if (args.X < MOUSE_MOVE_BORDER) {
 					horiz_delta = -SCROLL_DELTA;
 				}
@@ -606,6 +624,9 @@ namespace SCSharp.UI
 					vert_delta = 0;
 				}
 
+				// we update the cursor to show the
+				// scrolling animations here, since it
+				// only happens on pointer motion.
 				if (horiz_delta < 0)
 					if (vert_delta < 0)
 						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_UL];
@@ -627,6 +648,7 @@ namespace SCSharp.UI
 						Game.Instance.Cursor = ScrollCursors[SCROLL_CURSOR_D];
 					else
 						Game.Instance.Cursor = Cursor;
+
 
 				UpdateCursor ();
 			}

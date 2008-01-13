@@ -332,11 +332,16 @@ namespace SCSharp.UI
 		}
 
 
+		public static Surface SurfaceFromPcx (Pcx pcx)
+		{
+			return CreateSurfaceFromRGBAData (pcx.RgbaData, pcx.Width, pcx.Height, pcx.Depth, pcx.Stride);
+		}
+
 		public static Surface SurfaceFromStream (Stream stream, int translucentIndex, int transparentIndex)
 		{
 			Pcx pcx = new Pcx();
 			pcx.ReadFromStream (stream, translucentIndex, transparentIndex);
-			return CreateSurfaceFromRGBAData (pcx.RgbaData, pcx.Width, pcx.Height, pcx.Depth, pcx.Stride);
+			return SurfaceFromPcx (pcx);
 		}
 
 		public static Surface SurfaceFromStream (Stream stream)
