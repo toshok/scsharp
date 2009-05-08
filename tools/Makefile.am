@@ -1,7 +1,7 @@
 MCSFLAGS= -debug
 MCS= gmcs
 
-all: extract.exe lsmpq.exe
+all: extract.exe lsmpq.exe brute.exe
 
 %.exe: %.cs
 	$(MCS) $(MCSFLAGS) -target:exe -out:$@ $< -r:../SCSharp/SCSharp.dll
