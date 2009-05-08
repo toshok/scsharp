@@ -11,7 +11,7 @@
 	
 
 	<!-- other properties -->
-	<property name="debug" value="false" overwrite="false" />
+	<property name="debug" value="true" />
 	<property name="win32" value="${platform::is-win32()}" overwrite="true" />
 	<property name="unix" value="${platform::is-unix()}" overwrite="true" />
 	<property name="output.dir" value="bin"/>
@@ -22,6 +22,20 @@
 	<echo message="Running on Unix" if="${unix}" />
 	
 	<target name="build" description="Default build target" depends="scsharp.exe,tools">
+			
+		<echo message="Copying necessary libraries to output directory"/>
+		
+		<copy if="${win32}" todir="${output.dir}">
+			<fileset basedir="${input.libs}/win32" >
+				<include name="*.dll"  />
+			</fileset>
+		</copy>
+		
+		<copy todir="${output.dir}">
+			<fileset basedir="${input.libs}" >
+				<include name="*.dll"  />
+			</fileset>
+		</copy>
 
 		<echo message="Setting up configuration files"/>
 
@@ -52,20 +66,6 @@
 			</references>
 	
 		</csc>
-			
-		<echo message="Copying necessary libraries to output directory"/>
-		
-		<copy if="${win32}" todir="${output.dir}">
-			<fileset basedir="${input.libs}/win32" >
-				<include name="*.dll"  />
-			</fileset>
-		</copy>
-		
-		<copy todir="${output.dir}">
-			<fileset basedir="${input.libs}" >
-				<include name="*.dll"  />
-			</fileset>
-		</copy>
 	</target>
 	
 	<target name="setup" description="Setup build directories">
@@ -125,6 +125,8 @@
 	</target>
 
 	<target name="tools" depends="setup,SCSharp.dll">
+		<echo message="Building tools" />
+
 		<csc target="exe" output="${output.dir}/lsmpq.exe" debug="${debug}" >
 			<sources> <include name="tools/lsmpq.cs" /> </sources>
 			<references> <include name="${output.dir}/SCSharp.dll"/> </references>
@@ -193,52 +195,12 @@
 
 		<delete dir="${output.dir}" />
 	</target>
-	
-<!--	<target name="package" depends="build">
-		<echo message="Building package."/>
-		<zip if="${win32}" zipfile="package.zip">
-			<fileset basedir="bin">
-				<include name="**/*" />
-			</fileset>
-		</zip>
-	
-		<tar if="${unix}" destfile="package.tar.gz" compression="GZip">
-			<fileset basedir="bin">
-				<include name="**/*" />
-			</fileset>
-		</tar>
-	</target>
-	<target name="sourcepackage">
-		<zip zipfile="sourcepackage.zip">
-			<fileset>
-				<include name="SmkLib/*.cs" />
-				<include name="SmkTest/**/*" />
-				<include name="smktest.build" />
-			</fileset>
-		</zip>
-	
-		<tar destfile="sourcepackage.tar.bz2" compression="BZip2">
-			<fileset>
-				<include name="SmkLib/**/*" />
-				<include name="SmkTest/**/*" />
-				<include name="smktest.build" />
-			</fileset>
-		</tar>
-	</target>-->
+
 	<target name="clean">
-		<echo message="Cleaning up." />
-		<delete dir="bin"/>
-		<!--<delete file="package.zip"/>
-		<delete file="package.tar.bz2"/>
-		<delete file="sourcepackage.zip"/>
-		<delete file="sourcepackage.tar.bz2"/>-->
-	</target>
-	<target name="cleanbuild">
-		<echo message="Cleaning up." />
 		<delete>
 			<fileset>
-				<include name="bin/*.dll" />
-				<include name="bin/*.exe" />
+				<include name="${output.dir}/*" />
+				<exclude name="${output.dir}/scsharp.exe.config" />
 			</fileset>
 		</delete>
 	</target>
