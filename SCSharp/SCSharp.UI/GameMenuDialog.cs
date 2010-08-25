@@ -234,8 +234,11 @@ namespace SCSharp.UI
 
 			Elements[QUIT_ELEMENT_INDEX].Activate +=
 				delegate () {
-					//QuitConfirmationDialog d = new QuitConfirmationDialog (this, mpq);
-					//					ShowDialog (d);
+					DismissDialog ();
+					/* XXX hack just to get things looking right */
+					parent.DismissDialog ();
+					ScoreScreen score = new ScoreScreen (mpq, false /* we always lose when we quit */);
+					Game.Instance.SwitchToScreen (score);
 				};
 
 			Elements[CANCEL_ELEMENT_INDEX].Activate +=
