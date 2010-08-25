@@ -329,7 +329,7 @@ namespace SCSharp.UI
 
 		public void RemoveFromPainter ()
 		{
-			Painter.Add (Layer.Unit, PaintSprite);
+			Painter.Remove (Layer.Unit, PaintSprite);
 		}
 
 		void DoPlayFrame (int frame_num)
