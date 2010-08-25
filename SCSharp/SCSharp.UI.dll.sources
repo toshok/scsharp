@@ -35,6 +35,7 @@ SCSharp.UI/Pcx.cs
 SCSharp.UI/Race.cs
 SCSharp.UI/RaceSelectionScreen.cs
 SCSharp.UI/ReadyRoomScreen.cs
+SCSharp.UI/ScoreScreen.cs
 SCSharp.UI/SmackerPlayer.cs
 SCSharp.UI/Sprite.cs
 SCSharp.UI/SpriteManager.cs
