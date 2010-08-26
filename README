@@ -1,6 +1,8 @@
 Things you need to do to make this work:
 
-1) You need mono version 1.1.14 or newer.
+1) You need mono version 1.1.14 or newer.  This is obviously quite
+   old.  It still runs under mono 2.6, though, so any reasonably new
+   install should work.
 
 2) Make your "Program Files\Starcraft" directory available on your
    linux box.  Either copy it or mount your windows volume.

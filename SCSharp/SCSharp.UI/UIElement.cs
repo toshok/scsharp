@@ -2,9 +2,9 @@
 // SCSharp.UI.UIElement
 //
 // Authors:
-//	Chris Toshok (toshok@hungry.com)
+//	Chris Toshok (toshok@gmail.com)
 //
-// (C) 2006 The Hungry Programmers (http://www.hungry.com/)
+// Copyright 2006-2010 Chris Toshok
 //
 
 //
@@ -113,11 +113,8 @@ namespace SCSharp.UI
 			set {
 				if (visible == value)
 					return;
-				if (visible)
-					Invalidate ();
 				visible = value;
-				if (visible)
-					Invalidate ();
+				Invalidate ();
 			}
 		}
 

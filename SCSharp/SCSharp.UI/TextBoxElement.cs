@@ -2,9 +2,9 @@
 // SCSharp.UI.TextBoxElement
 //
 // Authors:
-//	Chris Toshok (toshok@hungry.com)
+//	Chris Toshok (toshok@gmail.com)
 //
-// (C) 2006 The Hungry Programmers (http://www.hungry.com/)
+// Copyright 2006-2010 Chris Toshok
 //
 
 //

@@ -2,9 +2,9 @@
 // SCSharp.Mpq.Chk
 //
 // Authors:
-//	Chris Toshok (toshok@hungry.com)
+//	Chris Toshok (toshok@gmail.com)
 //
-// (C) 2006 The Hungry Programmers (http://www.hungry.com/)
+// Copyright 2006-2010 Chris Toshok
 //
 
 //
@@ -217,8 +217,8 @@ namespace SCSharp
 				briefingData = new TriggerData();
 				briefingData.Parse (section_data, true);
 			}
-			//else
-			//Console.WriteLine ("Unhandled Chk section type {0}, length {1}", section_name, section_data.Length);
+			else
+				Console.WriteLine ("Unhandled Chk section type {0}, length {1}", section_name, section_data.Length);
 		}
 
 		List<UnitInfo> units;

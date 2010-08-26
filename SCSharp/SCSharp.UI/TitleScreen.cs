@@ -2,9 +2,9 @@
 // SCSharp.UI.TitleScreen
 //
 // Authors:
-//	Chris Toshok (toshok@hungry.com)
+//	Chris Toshok (toshok@gmail.com)
 //
-// (C) 2006 The Hungry Programmers (http://www.hungry.com/)
+// Copyright 2006-2010 Chris Toshok
 //
 
 //
@@ -49,7 +49,7 @@ namespace SCSharp.UI
 			base.ResourceLoader ();
 			Cursor = null; /* clear out the cursor */
 
-			Elements[COPYRIGHT1_ELEMENT_INDEX].Text = "Copyright © 2006 Chris Toshok.  All rights reserved.";
+			Elements[COPYRIGHT1_ELEMENT_INDEX].Text = "Game code Copyright © 2006-2010 Chris Toshok.  All rights reserved.";
 			Elements[COPYRIGHT2_ELEMENT_INDEX].Text = "Game assets Copyright © 1998 Blizzard Entertainment. All rights reserved.";
 			Elements[COPYRIGHT3_ELEMENT_INDEX].Text = "";
 
