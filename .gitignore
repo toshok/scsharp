@@ -1,0 +1,6 @@
+Makefile
+Makefile.in
+*.dll
+*.mdb
+*.exe
+.deps
