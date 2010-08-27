@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -28,16 +29,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SdlDotNet,Version=4.0.3.0,Culture=neutral,PublicKeyToken=26ad4f7e10c61408">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\sdldotnet-bin\SdlDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tao.Sdl,Version=1.2.9.1,Culture=neutral,PublicKeyToken=9c7a200e36c0094e">
+    <Reference Include="SdlDotNet, Version=4.0.3.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdldotnet-bin\SdlDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="Tao.Sdl, Version=1.2.9.1, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sdldotnet-bin\Tao.Sdl.dll</HintPath>
     </Reference>
@@ -97,13 +98,13 @@
     <Content Include="SCSharp.UI\credits.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="SCSharp.dll.csproj">
-      <Project>{A723BC2F-13F1-4055-BBED-48DE99D6259B}</Project>
-      <Name>SCSharp.dll</Name>
-    </ProjectReference>
     <ProjectReference Include="SCSharp.Smk.dll.csproj">
       <Project>{74F6BCDE-F12B-4699-9E68-9E36621E35CE}</Project>
       <Name>SCSharp.Smk.dll</Name>
+    </ProjectReference>
+    <ProjectReference Include="SCSharp.Core.dll.csproj">
+      <Project>{A723BC2F-13F1-4055-BBED-48DE99D6259B}</Project>
+      <Name>SCSharp.Core.dll</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
