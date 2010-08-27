@@ -43,6 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\build\Consts.cs" />
     <Compile Include="SCSharp.UI\AssemblyInfo.cs" />
     <Compile Include="SCSharp.UI\Builtins.cs" />
     <Compile Include="SCSharp.UI\ButtonElement.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="SCSharp.UI\OkDialog.cs" />
     <Compile Include="SCSharp.UI\OptionsDialog.cs" />
     <Compile Include="SCSharp.UI\Painter.cs" />
-    <Compile Include="SCSharp.UI\Palette.cs" />
     <Compile Include="SCSharp.UI\Pcx.cs" />
     <Compile Include="SCSharp.UI\PlayCustomScreen.cs" />
     <Compile Include="SCSharp.UI\Race.cs" />
@@ -92,7 +92,6 @@
     <Compile Include="SCSharp.UI\UIPainter.cs" />
     <Compile Include="SCSharp.UI\UIScreen.cs" />
     <Compile Include="SCSharp.UI\Unit.cs" />
-    <Compile Include="..\build\Consts.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SCSharp.UI\credits.txt" />

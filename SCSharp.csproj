@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SCSharp</RootNamespace>
-    <AssemblyName>SCSharp</AssemblyName>
+    <AssemblyName>scsharp</AssemblyName>
     <ApplicationIcon>
     </ApplicationIcon>
   </PropertyGroup>
