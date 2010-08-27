@@ -1,0 +1,5 @@
+#!/bin/sh
+
+VERSION="0.0000009"
+
+echo "internal class Consts { public const string Version=\"$VERSION\"; }" > build/Consts.cs

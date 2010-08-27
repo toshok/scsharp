@@ -50,6 +50,7 @@
     </None>
     <None Include="scsharp.exe.config-example" />
     <Compile Include="src\scsharp.cs" />
+    <Compile Include="build\Consts.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SC.ICO" />

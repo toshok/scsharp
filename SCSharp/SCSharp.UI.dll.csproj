@@ -58,6 +58,8 @@
     <Compile Include="SCSharp.UI\GameModeDialog.cs" />
     <Compile Include="SCSharp.UI\GameScreen.cs" />
     <Compile Include="SCSharp.UI\GlobalResources.cs" />
+    <Compile Include="SCSharp.UI\GrpButtonElement.cs" />
+    <Compile Include="SCSharp.UI\GrpElement.cs" />
     <Compile Include="SCSharp.UI\GuiUtil.cs" />
     <Compile Include="SCSharp.UI\ImageElement.cs" />
     <Compile Include="SCSharp.UI\LabelElement.cs" />
@@ -78,11 +80,11 @@
     <Compile Include="SCSharp.UI\Race.cs" />
     <Compile Include="SCSharp.UI\RaceSelectionScreen.cs" />
     <Compile Include="SCSharp.UI\ReadyRoomScreen.cs" />
-    <None Include="SCSharp.UI\ScoreScreen.cs" />
+    <Compile Include="SCSharp.UI\ScoreScreen.cs" />
     <Compile Include="SCSharp.UI\SmackerPlayer.cs" />
     <Compile Include="SCSharp.UI\Sprite.cs" />
     <Compile Include="SCSharp.UI\SpriteManager.cs" />
-    <None Include="SCSharp.UI\SwooshPainter.cs" />
+    <Compile Include="SCSharp.UI\SwooshPainter.cs" />
     <Compile Include="SCSharp.UI\TextBoxElement.cs" />
     <Compile Include="SCSharp.UI\TitleScreen.cs" />
     <Compile Include="SCSharp.UI\UIDialog.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="SCSharp.UI\UIPainter.cs" />
     <Compile Include="SCSharp.UI\UIScreen.cs" />
     <Compile Include="SCSharp.UI\Unit.cs" />
+    <Compile Include="..\build\Consts.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SCSharp.UI\credits.txt" />

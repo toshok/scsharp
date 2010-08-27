@@ -43,6 +43,7 @@
     <Compile Include="SCSharp.Mpq.Smk\Huffmantree.cs" />
     <Compile Include="SCSharp.Mpq.Smk\Smk.cs" />
     <Compile Include="SCSharp.Mpq.Smk\SmkDecoder.cs" />
+    <Compile Include="..\build\Consts.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="SCSharp.dll.csproj">

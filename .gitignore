@@ -1,6 +1,4 @@
-Makefile
-Makefile.in
 *.dll
 *.mdb
 *.exe
-.deps
+build/Consts.cs

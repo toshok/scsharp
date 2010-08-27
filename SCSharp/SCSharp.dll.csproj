@@ -62,6 +62,7 @@
     <Compile Include="SCSharp.Mpq\UnitsDat.cs" />
     <Compile Include="SCSharp.Util\Palette.cs" />
     <Compile Include="SCSharp.Util\Util.cs" />
+    <Compile Include="..\build\Consts.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
