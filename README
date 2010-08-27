@@ -1,29 +1,3 @@
-Things you need to do to make this work:
 
-1) You need mono version 1.1.14 or newer.  This is obviously quite
-   old.  It still runs under mono 2.6, though, so any reasonably new
-   install should work.
-
-2) Make your "Program Files\Starcraft" directory available on your
-   linux box.  Either copy it or mount your windows volume.
-
-3) Do the same with the "install.exe" file from the Broodwars CD.
-   This release requires that file be present.  It can live on the CD,
-   or you can copy it to the local filesystem.  It must be the Broodwars
-   CD at the moment, due to the fact that the font code only works
-   with the files on the BW cd for some reason.
-
-4) Edit the scsharp.exe.config file and point it at the directories
-   from 1) and 2).
-
-5) Make sure you have the following SDL packages installed (these
-   versions should work, as well as newer ones.):
-
-	SDL-1.2.9        (http://www.libsdl.org/download-1.2.php)
-        SDL_gfx-2.0.13   (http://www.ferzkopp.net/Software/SDL_gfx-2.0/)
-	SDL_mixer-1.2.6  (http://www.libsdl.org/projects/SDL_mixer/release/)
-	SDL_image-1.2.4  (http://www.libsdl.org/projects/SDL_image/release/)
-
-7) That's it.  The following should be enough:
-
-	$ mono scsharp.exe
+For information about SCSharp (build instructions, as well as internal documentation),
+see the wiki at https://github.com/toshok/scsharp/wiki.
