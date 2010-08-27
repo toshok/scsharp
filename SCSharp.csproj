@@ -53,9 +53,10 @@
     <Compile Include="build\Consts.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SC.ICO" />
+<!--    <Content Include="SC.ICO" /> -->
     <Content Include="sdldotnet-bin\SdlDotNet.dll" />
     <Content Include="sdldotnet-bin\Tao.Sdl.dll" />
+    <Content Include="sdldotnet-bin\Tao.Sdl.dll.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="SCSharp\SCSharp.dll.csproj">
