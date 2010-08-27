@@ -101,7 +101,7 @@ namespace SCSharp.UI
 
 			if (starcraftDir != null) {
 				foreach (string path in Directory.GetFileSystemEntries (starcraftDir)) {
-					if (Path.GetFileName (path).ToLower() == "broodat.mpq") {
+					if (Path.GetFileName (path).ToLower() == "broodat.mpq" || Path.GetFileName (path).Equals ("Brood War Data")) {
 						if (broodatMpq != null)
 							throw new Exception ("You have multiple broodat.mpq files in your starcraft directory.");
 						try {
@@ -114,7 +114,7 @@ namespace SCSharp.UI
 									     e);
 						}
 					}
-					else if (Path.GetFileName (path).ToLower() == "stardat.mpq") {
+					else if (Path.GetFileName (path).ToLower() == "stardat.mpq" || Path.GetFileName (path).Equals ("Starcraft Data")) {
 						if (stardatMpq != null)
 							throw new Exception ("You have multiple stardat.mpq files in your starcraft directory.");
 						try {
@@ -127,7 +127,7 @@ namespace SCSharp.UI
 									     e);
 						}
 					}
-					else if (Path.GetFileName (path).ToLower() == "patch_rt.mpq") {
+					else if (Path.GetFileName (path).ToLower() == "patch_rt.mpq" || Path.GetFileName (path).Equals ("Starcraft Mac Patch")) {
 						if (patchRtMpq != null)
 							throw new Exception ("You have multiple patch_rt.mpq files in your starcraft directory.");
 						try {
@@ -149,7 +149,7 @@ namespace SCSharp.UI
 
 			if (scCDDir != null) {
 				foreach (string path in Directory.GetFileSystemEntries (scCDDir)) {
-					if (Path.GetFileName (path).ToLower() == "install.exe") {
+					if (Path.GetFileName (path).ToLower() == "install.exe" || Path.GetFileName (path).Equals ("Starcraft Archive")) {
 						try {
 							scInstallExe = GetMpq (path);
 							Console.WriteLine ("found SC install.exe");
@@ -165,7 +165,7 @@ namespace SCSharp.UI
 
 			if (bwCDDir != null) {
 				foreach (string path in Directory.GetFileSystemEntries (bwCDDir)) {
-					if (Path.GetFileName (path).ToLower() == "install.exe") {
+					if (Path.GetFileName (path).ToLower() == "install.exe" || Path.GetFileName (path).Equals ("Brood War Archive")) {
 						try {
 							bwInstallExe = GetMpq (path);
 							Console.WriteLine ("found BW install.exe");
