@@ -46,7 +46,7 @@ public class Driver
 		string bw_cd_dir = ConfigurationManager.AppSettings["BroodwarCDDirectory"];
 
 		/* catch this pathological condition where someone has set the cd directories to the same location. */
-		if (sc_cd_dir != null && bw_cd_dir != null && bw_cd_dir == sc_cd_dir) {
+		if (!string.IsNullOrEmpty (sc_cd_dir) && !string.IsNullOrEmpty (bw_cd_dir) && bw_cd_dir == sc_cd_dir) {
 			Console.WriteLine ("The StarcraftCDDirectory and BroodwarCDDirectory configuration settings must have unique values.");
 			return;
 		}

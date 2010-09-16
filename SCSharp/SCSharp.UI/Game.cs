@@ -140,6 +140,28 @@ namespace SCSharp.UI
 									     e);
 						}
 					}
+					else if (Path.GetFileName (path).ToLower() == "starcraft.mpq") {
+						try {
+							scInstallExe = GetMpq (path);
+							Console.WriteLine ("found starcraft.mpq");
+						}
+						catch (Exception e) {
+							throw new Exception (String.Format ("could not read mpq archive {0}",
+											    path),
+									     e);
+						}
+					}
+					else if (Path.GetFileName (path).ToLower() == "broodwar.mpq") {
+						try {
+							bwInstallExe = GetMpq (path);
+							Console.WriteLine ("found broodwar.mpq");
+						}
+						catch (Exception e) {
+							throw new Exception (String.Format ("could not read mpq archive {0}",
+											    path),
+									     e);
+						}
+					}
 				}
 			}
 
@@ -147,7 +169,7 @@ namespace SCSharp.UI
 				throw new Exception ("unable to locate stardat.mpq, please check your StarcraftDirectory configuration setting");
 			}
 
-			if (scCDDir != null) {
+			if (!string.IsNullOrEmpty (scCDDir)) {
 				foreach (string path in Directory.GetFileSystemEntries (scCDDir)) {
 					if (Path.GetFileName (path).ToLower() == "install.exe" || Path.GetFileName (path).Equals ("Starcraft Archive")) {
 						try {
@@ -163,7 +185,7 @@ namespace SCSharp.UI
 				}
 			}
 
-			if (bwCDDir != null) {
+			if (!string.IsNullOrEmpty (bwCDDir)) {
 				foreach (string path in Directory.GetFileSystemEntries (bwCDDir)) {
 					if (Path.GetFileName (path).ToLower() == "install.exe" || Path.GetFileName (path).Equals ("Brood War Archive")) {
 						try {
