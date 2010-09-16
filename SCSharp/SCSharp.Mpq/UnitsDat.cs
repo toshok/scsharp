@@ -95,6 +95,12 @@ namespace SCSharp
 		const int height_offset = 0x32ec;
 		const int portrait_offset = 0x3844;
 #endif
+		const int compaiidle_offset = 0x1290;
+		const int yessoundstart_offset = 0x2a6c;
+		const int yessoundend_offset = 0x2b40;
+
+		const int whatsoundstart_offset = 0x2534;
+		const int whatsoundend_offset = 0x26fc;
 
 		int flingyBlockId;
 		//int overlayBlockId;
@@ -107,6 +113,14 @@ namespace SCSharp
 		int portraitBlockId;
 		int widthBlockId;
 		int heightBlockId;
+
+		int yesSoundStartBlockId;
+		int yesSoundEndBlockId;
+
+		int whatSoundStartBlockId;
+		int whatSoundEndBlockId;
+
+		int compAIIdleBlockId;
 
 		public UnitsDat ()
 		{
@@ -121,6 +135,12 @@ namespace SCSharp
 			portraitBlockId = AddPlacedVariableBlock (portrait_offset, NUM_UNITS, DatVariableType.Word);
 			widthBlockId = AddPlacedVariableBlock (width_offset, NUM_UNITS, DatVariableType.Word);
 			heightBlockId = AddPlacedVariableBlock (height_offset, NUM_UNITS, DatVariableType.Word);
+			compAIIdleBlockId = AddPlacedVariableBlock (compaiidle_offset, NUM_UNITS, DatVariableType.Byte);
+			yesSoundStartBlockId = AddPlacedVariableBlock (yessoundstart_offset, 105/*Is this right?*/, DatVariableType.Word);
+			yesSoundEndBlockId = AddPlacedVariableBlock (yessoundend_offset, 105/*Is this right?*/, DatVariableType.Word);
+
+			whatSoundStartBlockId = AddPlacedVariableBlock (whatsoundstart_offset, NUM_UNITS, DatVariableType.Word);
+			whatSoundEndBlockId = AddPlacedVariableBlock (whatsoundend_offset, NUM_UNITS, DatVariableType.Word);
 		}
 
 		/* offsets from the stardat.mpq version */
@@ -163,6 +183,26 @@ namespace SCSharp
 
 		public DatCollection<ushort> Heights {
 			get { return (DatCollection<ushort>)GetCollection (heightBlockId); }
+		}
+
+		public DatCollection<byte> CompAIIdles {
+			get { return (DatCollection<byte>)GetCollection (compAIIdleBlockId); }
+		}
+
+		public DatCollection<ushort> YesSoundStarts {
+			get { return (DatCollection<ushort>)GetCollection (yesSoundStartBlockId); }
+		}
+
+		public DatCollection<ushort> YesSoundEnds {
+			get { return (DatCollection<ushort>)GetCollection (yesSoundEndBlockId); }
+		}
+
+		public DatCollection<ushort> WhatSoundStarts {
+			get { return (DatCollection<ushort>)GetCollection (whatSoundStartBlockId); }
+		}
+
+		public DatCollection<ushort> WhatSoundEnds {
+			get { return (DatCollection<ushort>)GetCollection (whatSoundEndBlockId); }
 		}
 	}
 }

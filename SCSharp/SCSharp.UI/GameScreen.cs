@@ -495,8 +495,9 @@ namespace SCSharp.UI
 
 		public override void MouseButtonDown (MouseButtonEventArgs args)
 		{
-			if (mouseOverElement != null)
+			if (mouseOverElement != null) {
 				base.MouseButtonDown (args);
+			}
 			else if (args.X > MINIMAP_X && args.X < MINIMAP_X + MINIMAP_WIDTH &&
 				 args.Y > MINIMAP_Y && args.Y < MINIMAP_Y + MINIMAP_HEIGHT) {
 				RecenterFromMinimap (args.X, args.Y);
@@ -504,8 +505,46 @@ namespace SCSharp.UI
 			}
 			else {
 				if (selectedUnit != unitUnderCursor) {
-					portraitElement.Stop ();
 
+					Console.WriteLine ("hey there, keyboard.modifierkeystate = {0}", Keyboard.ModifierKeyState);
+
+					// if we have a selected unit and we
+					// right click (or ctrl-click?), try
+					// to move there
+					if (selectedUnit != null && (Keyboard.ModifierKeyState & ModifierKeys.ShiftKeys) != 0) {
+						Console.WriteLine ("And... we're walking");
+
+						int pixel_x = args.X + topleft_x;
+						int pixel_y = args.Y + topleft_y;
+
+						// calculate the megatile
+						int megatile_x = pixel_x >> 5;
+						int megatile_y = pixel_y >> 5;
+
+						Console.WriteLine ("megatile {0},{1}", megatile_x, megatile_y);
+
+						// the mini tile
+						int minitile_x = pixel_x >> 2;
+						int minitile_y = pixel_y >> 2;
+
+						Console.WriteLine ("minitile {0},{1} ({2},{3} in the megatile)",
+								   minitile_x, minitile_y,
+								   minitile_x - megatile_x * 8,
+								   minitile_y - megatile_y * 8);
+
+						if (selectedUnit.YesSound != null) {
+							string sound_resource = String.Format ("sound\\{0}", selectedUnit.YesSound);
+							Console.WriteLine ("sound_resource = {0}", sound_resource);
+							GuiUtil.PlaySound (mpq, sound_resource);
+						}
+
+						selectedUnit.Move (mapRenderer, minitile_x, minitile_y);
+
+						return;
+					}
+					
+					portraitElement.Stop ();
+					
 					selectedUnit = unitUnderCursor;
 
 					if (selectedUnit == null) {
@@ -528,6 +567,12 @@ namespace SCSharp.UI
 							portraitElement.Player = new SmackerPlayer ((Stream)mpq.GetResource (portrait_resource), 1);
 							portraitElement.Play ();
 							portraitElement.Visible = true;
+						}
+
+						if (selectedUnit.WhatSound != null) {
+							string sound_resource = String.Format ("sound\\{0}", selectedUnit.WhatSound);
+							Console.WriteLine ("sound_resource = {0}", sound_resource);
+							GuiUtil.PlaySound (mpq, sound_resource);
 						}
 
 						/* set up the wireframe */

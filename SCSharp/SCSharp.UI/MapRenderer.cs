@@ -45,6 +45,7 @@ namespace SCSharp.UI
 		byte[] cv5;
 		byte[] vx4;
 		byte[] vr4;
+		byte[] vf4;
 		byte[] wpe;
 
 		Dictionary <int,Surface> tileCache;
@@ -81,6 +82,11 @@ namespace SCSharp.UI
 			vr4 = new byte [vr4_fs.Length];
 			vr4_fs.Read (vr4, 0, (int)vr4_fs.Length);
 			vr4_fs.Close ();
+
+			Stream vf4_fs = (Stream)mpq.GetResource (String.Format ("tileset\\{0}.vf4", Util.TilesetNames[(int)chk.Tileset]));
+			vf4 = new byte [vf4_fs.Length];
+			vf4_fs.Read (vf4, 0, (int)vf4_fs.Length);
+			vf4_fs.Close ();
 
 			Stream wpe_fs = (Stream)mpq.GetResource (String.Format ("tileset\\{0}.wpe", Util.TilesetNames[(int)chk.Tileset]));
 			wpe = new byte [wpe_fs.Length];
@@ -146,9 +152,13 @@ namespace SCSharp.UI
 
 			int minitile_x, minitile_y;
 
+			bool show_flag = true;
+			ushort flag = 0x0001; /* walkable flag */
+
 			for (minitile_y = 0; minitile_y < 4; minitile_y ++) {
 				for (minitile_x = 0; minitile_x < 4; minitile_x ++) {
 					ushort minitile_id = Util.ReadWord (vx4, megatile_id * 32 + minitile_y * 8 + minitile_x * 2);
+					ushort minitile_flags = Util.ReadWord (vf4, megatile_id * 32 + minitile_y * 8 + minitile_x * 2);
 					bool flipped = (minitile_id & 0x01) == 0x01;
 					minitile_id >>= 1;
 
@@ -159,12 +169,20 @@ namespace SCSharp.UI
 								int x = (minitile_x + 1) * 8 - pixel_x - 1;
 								int y = (minitile_y * 8) * 32 + pixel_y * 32;
 
-								byte palette_entry = vr4[minitile_id * 64 + pixel_y * 8 + pixel_x];
+								if (show_flag && (minitile_flags & flag) == flag && (pixel_x == pixel_y)) {
+									image[0 + 4 * (x + y)] = 255;
+									image[1 + 4 * (x + y)] = 255;
+									image[2 + 4 * (x + y)] = 0;
+									image[3 + 4 * (x + y)] = 0;
+								}
+								else {
+									byte palette_entry = vr4[minitile_id * 64 + pixel_y * 8 + pixel_x];
 
-								image[0 + 4 * (x + y)] = (byte)(255 - wpe[palette_entry * 4 + 3]);
-								image[1 + 4 * (x + y)] = wpe[palette_entry * 4 + 2];
-								image[2 + 4 * (x + y)] = wpe[palette_entry * 4 + 1];
-								image[3 + 4 * (x + y)] = wpe[palette_entry * 4 + 0];
+									image[0 + 4 * (x + y)] = (byte)(255 - wpe[palette_entry * 4 + 3]);
+									image[1 + 4 * (x + y)] = wpe[palette_entry * 4 + 2];
+									image[2 + 4 * (x + y)] = wpe[palette_entry * 4 + 1];
+									image[3 + 4 * (x + y)] = wpe[palette_entry * 4 + 0];
+								}
 							}
 					}
 					else {
@@ -173,12 +191,20 @@ namespace SCSharp.UI
 								int x = minitile_x * 8 + pixel_x;
 								int y = (minitile_y * 8) * 32 + pixel_y * 32;
 
-								byte palette_entry = vr4[minitile_id * 64 + pixel_y * 8 + pixel_x];
+								if (show_flag && (minitile_flags & flag) == flag && (pixel_x == pixel_y)) {
+									image[0 + 4 * (x + y)] = 255;
+									image[1 + 4 * (x + y)] = 255;
+									image[2 + 4 * (x + y)] = 0;
+									image[3 + 4 * (x + y)] = 0;
+								}
+								else {
+									byte palette_entry = vr4[minitile_id * 64 + pixel_y * 8 + pixel_x];
 
-								image[0 + 4 * (x + y)] = (byte)(255 - wpe[palette_entry * 4 + 3]);
-								image[1 + 4 * (x + y)] = wpe[palette_entry * 4 + 2];
-								image[2 + 4 * (x + y)] = wpe[palette_entry * 4 + 1];
-								image[3 + 4 * (x + y)] = wpe[palette_entry * 4 + 0];
+									image[0 + 4 * (x + y)] = (byte)(255 - wpe[palette_entry * 4 + 3]);
+									image[1 + 4 * (x + y)] = wpe[palette_entry * 4 + 2];
+									image[2 + 4 * (x + y)] = wpe[palette_entry * 4 + 1];
+									image[3 + 4 * (x + y)] = wpe[palette_entry * 4 + 0];
+								}
 							}
 						}
 					}
@@ -191,10 +217,36 @@ namespace SCSharp.UI
 			return surf;
 		}
 
+		public bool Navigable (MapPoint point)
+		{
+			// this assumes that point corresponds to a mini tile location
+			
+			// first calculate the megatile
+			int megatile_x, megatile_y;
+			megatile_x = point.X >> 3;
+			megatile_y = point.Y >> 3;
+
+			if ((megatile_x >= chk.Width || megatile_x < 0) ||
+			    (megatile_y >= chk.Height || megatile_y < 0))
+				return false;
+
+			int mapTile = chk.MapTiles[megatile_x,megatile_y];
+
+			int tile_group = mapTile >> 4; /* the tile's group in the cv5 file */
+			int tile_number = mapTile & 0x0F;    /* the megatile within the tile group */
+
+			int megatile_id = Util.ReadWord (cv5, (tile_group * 26 + 10 + tile_number) * 2);
+
+			ushort minitile_flags = Util.ReadWord (vf4, megatile_id * 32 + point.Y * 8 + point.X * 2);
+
+			// Console.WriteLine ("minitile {0},{1} is navigable?  {2}", point.X, point.Y, (minitile_flags & 0x0001) == 0x0001);
+			return (minitile_flags & 0x0001) == 0x0001;
+		}
+
 		public Surface RenderToSurface ()
 		{
 			byte[] bitmap = RenderToBitmap (mpq, chk);
-
+			
 			return GuiUtil.CreateSurfaceFromRGBAData (bitmap, (ushort)pixel_width, (ushort)pixel_height, 32, (ushort)(pixel_width * 4));
 		}
 
@@ -259,6 +311,10 @@ namespace SCSharp.UI
 			}
 
 			return image;
+		}
+
+		public Chk Chk {
+			get { return chk; }
 		}
 	}
 }

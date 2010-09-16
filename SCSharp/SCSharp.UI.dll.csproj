@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="..\build\Consts.cs" />
     <Compile Include="SCSharp.UI\AssemblyInfo.cs" />
+    <Compile Include="SCSharp.UI\AStar.cs" />
     <Compile Include="SCSharp.UI\Builtins.cs" />
     <Compile Include="SCSharp.UI\ButtonElement.cs" />
     <Compile Include="SCSharp.UI\Cinematic.cs" />
