@@ -51,6 +51,8 @@ namespace SCSharp.UI
 	{
 		static Random rng = new Random (Environment.TickCount);
 
+		Sprite dependentSprite;
+
 		ushort images_entry;
 
 		string grp_path;
@@ -66,7 +68,7 @@ namespace SCSharp.UI
 		int current_frame = -1;
 		int facing = 0;
 
-		bool trace;
+		bool trace= true;
 
 		static bool show_sprite_borders;
 
@@ -147,85 +149,93 @@ namespace SCSharp.UI
 			SetPosition (x,y);
 		}
 
-		/* IScript opcodes */
 
-		const byte PlayFrame = 0x00;
-		const byte PlayTilesetFrame = 0x01;
-		/* 0x02 = unknown */
-		const byte ShiftGraphicVert = 0x03;
-		/* 0x04 = unknown */
-		const byte Wait = 0x05;
-		const byte Wait2Rand = 0x06;
-		const byte Goto = 0x07;
-		const byte PlaceActiveOverlay = 0x08;
-		const byte PlaceActiveUnderlay = 0x09;
-		/* 0x0a = unknown */
-		const byte SwitchUnderlay = 0x0b;
-		/* 0x0c = unknown */
-		const byte PlaceOverlay = 0x0d;
-		/* 0x0e = unknown */
-		const byte PlaceIndependentOverlay = 0x0f;
-		const byte PlaceIndependentOverlayOnTop = 0x10;
-		const byte PlaceIndependentUnderlay = 0x11;
-		/* 0x12 = unknown */
-		const byte DisplayOverlayWithLO = 0x13;
-		/* 0x14 = unknown */
-		const byte DisplayIndependentOverlayWithLO = 0x15;
-		const byte EndAnimation = 0x16;
-		/* 0x17 = unknown */
-		const byte PlaySound = 0x18;
-		const byte PlayRandomSound = 0x19;
-		const byte PlayRandomSoundRange = 0x1a;
-		const byte DoDamage = 0x1b;
-		const byte AttackWithWeaponAndPlaySound = 0x1c;
-		const byte FollowFrameChange = 0x1d;
-		const byte RandomizerValueGoto = 0x1e;
-		const byte TurnCCW = 0x1f;
-		const byte TurnCW = 0x20;
-		const byte Turn1CW = 0x21;
-		const byte TurnRandom = 0x22;
-		/* 0x23 = unknown */
-		const byte Attack = 0x25;
-		const byte AttackWithAppropriateWeapon = 0x26;
-		const byte CastSpell = 0x27;
-		const byte UseWeapon = 0x28;
-		const byte MoveForward = 0x29;
-		const byte AttackLoopMarker = 0x2a;
-		/* 0x2b = unknown */
-		/* 0x2c = unknown */
-		/* 0x2d = unknown */
-		const byte BeginPlayerLockout = 0x2e;
-		const byte EndPlayerLockout = 0x2f;
-		const byte IgnoreOtherOpcodes = 0x30;
-		const byte AttackWithDirectionalProjectile = 0x31;
-		const byte Hide = 0x32;
-		const byte Unhide = 0x33;
-		const byte PlaySpecificFrame = 0x34;
-		/* 0x35 = unknown */
-		/* 0x36 = unknown */
-		/* 0x37 = unknown */
-		const byte Unknown38 = 0x38;
-		const byte IfPickedUp = 0x39;
-		const byte IfTargetInRangeGoto = 0x3a;
-		const byte IfTargetInArcGoto = 0x3b;
-		const byte Unknown3c = 0x3c;
-		const byte Unknown3d = 0x3d;
-		/* 0x3e = unknown */
-		const byte Unknown3f = 0x3f;
-		const byte Unknown40 = 0x40;
-		const byte Unknown41 = 0x41;
-		const byte Unknown42 = 0x42; /* ICE manual says this is something dealing with sprites */
+		enum IScriptOpcode {
+			playfram          = 0x00,   // short frame */
+			playframtile      = 0x01,   // short frame */
+			sethorpos         = 0x02,   // byte byte   */
+			setvertpos        = 0x03,   // byte byte */
+			setpos            = 0x04,   // byte byte, byte byte */
+			wait              = 0x05,   // byte byte */
+			waitrand          = 0x06,   // byte byte, byte byte */
+			_goto             = 0x07,   // short label */
+			imgol             = 0x08,   // short imageid, byte byte, byte byte */
+			imgul             = 0x09,   // short imageid, byte byte, byte byte */
+			imgolorig         = 0x0A,   // short imageid */
+			switchul          = 0x0B,   // short imageid */
+			__0c              = 0x0C,
+			imgoluselo        = 0x0D,   // short imageid, byte byte, byte byte */
+			imguluselo        = 0x0E,   // short imageid, byte byte, byte byte
+			sprol             = 0x0F,   //   short spriteid, byte byte, byte byte
+			highsprol         = 0x10,   //   short spriteid, byte byte, byte byte
+			lowsprul          = 0x11,   //   short spriteid, byte byte, byte byte
+			uflunstable       = 0x12,   //   short flingy
+			spruluselo        = 0x13,   //   short spriteid, byte byte, byte byte
+			sprul             = 0x14,   //   short spriteid, byte byte, byte byte
+			sproluselo        = 0x15,   //   short spriteid, byte overlayid
+			end		  = 0x16, 
+			setflipstate      = 0x17,   //   byte flipstate
+			playsnd           = 0x18,   //   short soundid
+			playsndrand       = 0x19,   //   byte sounds(, short soundid)*sounds
+			playsndbtwn       = 0x1A,   //   short soundid, short soundid
+			domissiledmg	  = 0x1B, 
+			attackmelee       = 0x1C,   //   byte sounds(, short soundid)*sounds
+			followmaingraphic = 0x1D, 
+			randcondjmp       = 0x1E,   //   byte byte, short label
+			turnccwise        = 0x1F,   //   byte byte
+			turncwise         = 0x20,   //   byte byte
+			turnlcwise	  = 0x21, 
+			turnrand          = 0x22,   //   byte byte
+			setspawnframe     = 0x23,   //   byte byte
+			sigorder          = 0x24,   //   byte signalid
+			attackwith        = 0x25,   //   byte weapon
+			attack		  = 0x26, 
+			castspell	  = 0x27, 
+			useweapon         = 0x28,   //   byte weaponid
+			move              = 0x29,   //   byte byte
+			gotorepeatattk	  = 0x2A, 
+			engframe          = 0x2B,   //   short frame
+			engset            = 0x2C,   //   short frame
+			__2d		  = 0x2D, 
+			nobrkcodestart	  = 0x2E, 
+			nobrkcodeend	  = 0x2F, 
+			ignorerest	  = 0x30, 
+			attkshiftproj     = 0x31,   //   byte byte
+			tmprmgraphicstart = 0x32, 
+			tmprmgraphicend	  = 0x33, 
+			setfldirect       = 0x34,   //   byte byte
+			call              = 0x35,   //   short label
+			_return		  = 0x36, 
+			setflspeed        = 0x37,   //   short speed
+			creategasoverlays = 0x38,   //   byte gasoverlay
+			pwrupcondjmp      = 0x39,   //   short label
+			trgtrangecondjmp  = 0x3A,   //   short short, short label
+			trgtarccondjmp    = 0x3B,   //   short short, short short, short label
+			curdirectcondjmp  = 0x3C,   //   short short, short short, short label
+			imgulnextid       = 0x3D,   //   byte byte, byte byte
+			__3e		  = 0x3E, 
+			liftoffcondjmp    = 0x3F,   //   short label
+			warpoverlay       = 0x40,   //   short frame
+			orderdone         = 0x41,   //   byte signalid
+			grdsprol          = 0x42,   //   short spriteid, byte byte, byte byte
+			__43		  = 0x43, 
+			dogrddamage	  = 0x44 
+		}
 
 		void Trace (string fmt, params object[] args)
 		{
-			if (trace)
-				Console.Write (fmt, args);
+			if (trace) {
+				string msg = string.Format (fmt, args);
+				Console.Write ("{0}: {1}", GetHashCode (), msg);
+			}
 		}
 
 		void TraceLine (string fmt, params object[] args)
 		{
-			if (trace)
-				Console.WriteLine (fmt, args);
+			if (trace) {
+				string msg = string.Format (fmt, args);
+				Console.WriteLine ("{0}: {1}", GetHashCode (), msg);
+			}
 		}
 
 		public bool Debug {
@@ -245,6 +255,8 @@ namespace SCSharp.UI
 		{
 			this.x = x;
 			this.y = y;
+			if (dependentSprite != null)
+				dependentSprite.SetPosition (x, y);
 		}
 
 		public void GetPosition (out int xo, out int yo)
@@ -264,10 +276,17 @@ namespace SCSharp.UI
 			}
 		}
 
+		public void Face (int facing)
+		{
+			this.facing = facing;
+		}
+
 		public void RunScript (ushort script_start)
 		{
 			this.script_start = script_start;
 			pc = script_start;
+			if (dependentSprite != null)
+				dependentSprite.RunScript (script_start);
 		}
 
 		public void RunScript (AnimationType animationType)
@@ -344,11 +363,15 @@ namespace SCSharp.UI
 										  grp.Width, grp.Height,
 										  palette,
 										  true);
-
-				Painter.Invalidate (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
-									      y - SpriteManager.Y - sprite_surface.Height / 2),
-								   sprite_surface.Size));
+				Invalidate ();
 			}
+		}
+
+		public void Invalidate ()
+		{
+			Painter.Invalidate (new Rectangle (new Point (x - SpriteManager.X - sprite_surface.Width / 2,
+								      y - SpriteManager.Y - sprite_surface.Height / 2),
+							   sprite_surface.Size));
 		}
 
 		int waiting;
@@ -357,7 +380,7 @@ namespace SCSharp.UI
 		{
 			ushort warg1;
 			ushort warg2;
-			//			ushort warg3;
+			ushort warg3;
 			byte barg1;
 			byte barg2;
 			//			byte barg3;
@@ -371,167 +394,344 @@ namespace SCSharp.UI
 			}
 			
 			Trace ("{0}: ", pc);
-			switch (buf[pc++]) {
-			case PlayFrame:
+			switch ((IScriptOpcode)buf[pc++]) {
+			case IScriptOpcode.playfram:
 				warg1 = ReadWord (ref pc);
-				TraceLine ("PlayFrame: {0}", warg1);
+				TraceLine ("playfram: {0}", warg1);
 				DoPlayFrame (warg1 + facing % 16);
 				break;
-			case PlayTilesetFrame:
+			case IScriptOpcode.playframtile:
 				warg1 = ReadWord (ref pc);
-				TraceLine ("PlayTilesetFrame: {0}", warg1);
+				TraceLine ("playframetile: {0}", warg1);
 				break;
-			case ShiftGraphicVert:
+			case IScriptOpcode.sethorpos:
 				barg1 = ReadByte (ref pc);
-				TraceLine ("ShiftGraphicVert: {0}", barg1);
+				TraceLine ("sethorpos: {0}", barg1);
 				break;
-			case Wait:
-				barg1 = ReadByte (ref pc);
-				TraceLine ("Wait: {0}", barg1);
-				waiting = barg1;
-				break;
-			case Wait2Rand:
+			case IScriptOpcode.setpos:
 				barg1 = ReadByte (ref pc);
 				barg2 = ReadByte (ref pc);
-				TraceLine ("Wait2: {0} {1}", barg1, barg2);
+				TraceLine ("setpos: {0} {1}", barg1, barg2);
+				break;
+			case IScriptOpcode.setvertpos:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("setvertpos: {0}", barg1);
+				break;
+			case IScriptOpcode.wait:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("wait: {0}", barg1);
+				waiting = barg1;
+				break;
+			case IScriptOpcode.waitrand:
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("waitrand: {0} {1}", barg1, barg2);
 				waiting = rng.Next(255) > 127 ? barg1 : barg2;
 				break;
-			case Goto:
+			case IScriptOpcode._goto:
 				warg1 = ReadWord (ref pc);
-				TraceLine ("Goto: {0}", warg1);
+				TraceLine ("goto: {0}", warg1);
 				pc = warg1;
 				break;
-			case PlaceActiveOverlay:
+			case IScriptOpcode.imgol:
 				warg1 = ReadWord (ref pc);
-				warg2 = ReadWord (ref pc);
-				TraceLine ("PlaceActiveOverlay: {0} {1}", warg1, warg2);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("imgol: {0} {1} {2}", warg1, barg1, barg2);
 				break;
-			case PlaceActiveUnderlay:
+			case IScriptOpcode.imgul:
 				warg1 = ReadWord (ref pc);
-				warg2 = ReadWord (ref pc);
-				TraceLine ("PlaceActiveUnderlay: {0} {1}", warg1, warg2);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("imgul: {0} {1} {2}", warg1, barg1, barg2);
 				Sprite dependent_sprite = SpriteManager.CreateSprite (this, warg1, palette);
 				dependent_sprite.RunScript (AnimationType.Init);
 				break;
-			case MoveForward:
-				barg1 = ReadByte (ref pc);
-				TraceLine ("Move forward %1 units: {0}", barg1);
+			case IScriptOpcode.imgolorig:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("imgolorig: {0}", warg1);
 				break;
-			case RandomizerValueGoto:
+			case IScriptOpcode.switchul:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("switchul: {0}", warg1);
+				break;
+			// __0c unknown
+			case IScriptOpcode.imgoluselo:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("imgoluselo: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.imguluselo:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("imguluselo: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.sprol:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("sprol: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.highsprol:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("highsprol: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.lowsprul:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("lowsprul: {0} ({1},{2})", warg1, barg1, barg2);
+ 				Sprite s = SpriteManager.CreateSprite (warg1, palette, x, y);
+ 				s.RunScript (AnimationType.Init);
+				dependentSprite = s;
+				break;
+
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("lowsprul: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.uflunstable:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("uflunstable: {0}", warg1);
+				break;
+			case IScriptOpcode.spruluselo:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("spruluselo: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.sprul:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("sprul: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.sproluselo:
+				warg1 = ReadWord (ref pc);
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("sproleuselo: {0} {1} {2}", warg1, barg1, barg2);
+				break;
+			case IScriptOpcode.end:
+				TraceLine ("end");
+				return false;
+			case IScriptOpcode.setflipstate:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("setflipstate: {0}", barg1);
+				break;
+			case IScriptOpcode.playsnd:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("playsnd: {0} ({1})", warg1 - 1, GlobalResources.Instance.SfxDataTbl[(int)GlobalResources.Instance.SfxDataDat.FileIndexes [warg1 - 1]]);
+				break;
+			case IScriptOpcode.playsndrand: {
+				barg1 = ReadByte (ref pc);
+				ushort[] wargs = new ushort[barg1];
+				for (byte b = 0; b < barg1; b ++) {
+					wargs[b] = ReadWord (ref pc);
+				}
+				Trace ("playsndrand: {0} (");
+				for (int i = 0; i < wargs.Length; i ++) {
+					Trace ("{0}", wargs[i]);
+					if (i < wargs.Length - 1)
+						Trace (", ");
+				}
+				TraceLine (")");
+				break;
+			}
+			case IScriptOpcode.playsndbtwn:
+				warg1 = ReadWord (ref pc);
+				warg2 = ReadWord (ref pc);
+				TraceLine ("playsndbtwn: {0} {1}", warg1, warg2);
+				break;
+			case IScriptOpcode.domissiledmg:
+				TraceLine ("domissiledmg: unknown args");
+				break;
+			case IScriptOpcode.attackmelee: {
+				barg1 = ReadByte (ref pc);
+				ushort[] wargs = new ushort[barg1];
+				for (byte b = 0; b < barg1; b ++) {
+					wargs[b] = ReadWord (ref pc);
+				}
+				Trace ("attackmelee: {0} (");
+				for (int i = 0; i < wargs.Length; i ++) {
+					Trace ("{0}", wargs[i]);
+					if (i < wargs.Length - 1)
+						Trace (", ");
+				}
+				TraceLine (")");
+				break;
+			}
+			case IScriptOpcode.followmaingraphic:
+				TraceLine ("followmaingraphic:");
+				if (parent_sprite != null)
+					DoPlayFrame (parent_sprite.CurrentFrame);
+				break;
+			case IScriptOpcode.randcondjmp:
 				barg1 = ReadByte (ref pc);
 				warg1 = ReadWord (ref pc);
-				TraceLine ("Randomized (with test value) goto: {0} {1}", barg1, warg1);
+				TraceLine ("randcondjmp: {0} {1}", barg1, warg1);
 				int rand = rng.Next(255);
 				if (rand > barg1) {
 					TraceLine ("+ choosing goto branch");
 					pc = warg1;
 				}
 				break;
-			case TurnRandom:
-				TraceLine ("Turn graphic number of frames in random direction (CCW or CW)");
-				if (rng.Next(255) > 127)
-					goto case TurnCCW;
-				else
-					goto case TurnCW;
-			case TurnCCW:
+			case IScriptOpcode.turnccwise:
 				barg1 = ReadByte (ref pc);
-				TraceLine ("Turn graphic number of frames CCW: {0}", barg1);
+				TraceLine ("turnccwise: {0}", barg1);
 				if (facing - barg1 < 0)
 					facing = 15 - barg1;
 				else
 					facing -= barg1;
 				break;
-			case TurnCW:
+			case IScriptOpcode.turncwise:
 				barg1 = ReadByte (ref pc);
-				TraceLine ("Turn graphic number of frames CW: {0}", barg1);
+				TraceLine ("turncwise: {0}", barg1);
 				if (facing + barg1 > 15)
 					facing = facing + barg1 - 15;
 				else
 					facing += barg1;
 				break;
-			case Turn1CW:
-				TraceLine ("Turn graphic 1 frame clockwise");
+			case IScriptOpcode.turnlcwise:
+				TraceLine ("turnlcwise: unknown args");
 				break;
-			case PlaySound:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Play sound: {0} ({1})", warg1 - 1, GlobalResources.Instance.SfxDataTbl[(int)GlobalResources.Instance.SfxDataDat.FileIndexes [warg1 - 1]]);
+			case IScriptOpcode.turnrand:
+				TraceLine ("turnrand:");
+				if (rng.Next(255) > 127)
+					goto case IScriptOpcode.turnccwise;
+				else
+					goto case IScriptOpcode.turncwise;
 				break;
-			case PlayRandomSoundRange:
-				warg1 = ReadWord (ref pc);
-				warg2 = ReadWord (ref pc);
-				TraceLine ("Play random sound in range: {0}-{1}", warg1, warg2);
-				break;
-			case PlaySpecificFrame:
+			case IScriptOpcode.setspawnframe:
 				barg1 = ReadByte (ref pc);
-				TraceLine ("PlaySpecificFrame: {0}", barg1);
+				TraceLine ("setspawnframe {0}", barg1);
+				break;
+			case IScriptOpcode.sigorder:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("sigorder {0}", barg1);
+				break;
+			case IScriptOpcode.attackwith:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("attackwith {0}", barg1);
+				break;
+			case IScriptOpcode.attack:
+				TraceLine ("attack:");
+				break;
+			case IScriptOpcode.castspell:
+				TraceLine ("castspell:");
+				break;
+			case IScriptOpcode.useweapon:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("useweapon: {0}", barg1);
+				break;
+			case IScriptOpcode.move:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("move: {0}", barg1);
+				break;
+			case IScriptOpcode.gotorepeatattk:
+				TraceLine ("gotorepeatattk");
+				break;
+			case IScriptOpcode.engframe:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("engframe: {0}", warg1);
+				break;
+			case IScriptOpcode.engset:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("engset: {0}", warg1);
+				break;
+			// __2d unknown
+			case IScriptOpcode.nobrkcodestart:
+				TraceLine ("nobrkcodestart:");
+				break;
+			case IScriptOpcode.nobrkcodeend:
+				TraceLine ("nobrkcodeend:");
+				break;
+			case IScriptOpcode.ignorerest:
+				TraceLine ("ignorerest");
+				break;
+			case IScriptOpcode.attkshiftproj:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("attkshiftproj: {0}", barg1);
+				break;
+			case IScriptOpcode.tmprmgraphicstart:
+				TraceLine ("tmprmgraphicstart:");
+				break;
+			case IScriptOpcode.tmprmgraphicend:
+				TraceLine ("tmprmgraphicend:");
+				break;
+			case IScriptOpcode.setfldirect:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("setfldirect: {0}", barg1);
 				DoPlayFrame (barg1);
 				break;
-			case PlaceIndependentUnderlay:
+			case IScriptOpcode.call:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("call: {0}", warg1);
+				break;
+			case IScriptOpcode._return:
+				TraceLine ("return:");
+				break;
+			case IScriptOpcode.setflspeed:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("setflspeed: {0}", barg1);
+				break;
+			case IScriptOpcode.creategasoverlays:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("creategasoverlays: {0}", barg1);
+				break;
+			case IScriptOpcode.pwrupcondjmp:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("pwrupcondjmp: {0}", warg1);
+				break;
+			case IScriptOpcode.trgtrangecondjmp:
+				warg1 = ReadWord (ref pc);
+				warg2 = ReadWord (ref pc);
+				TraceLine ("trgtrangecondjmp {0} {1}", warg1, warg2);
+				break;
+			case IScriptOpcode.trgtarccondjmp:
+				warg1 = ReadWord (ref pc);
+				warg2 = ReadWord (ref pc);
+				warg3 = ReadWord (ref pc);
+				TraceLine ("trgtarccondjmp {0} {1} {2}", warg1, warg2, warg3);
+				break;
+			case IScriptOpcode.curdirectcondjmp:
+				warg1 = ReadWord (ref pc);
+				warg2 = ReadWord (ref pc);
+				warg3 = ReadWord (ref pc);
+				TraceLine ("curdirectcondjmp {0} {1} {2}", warg1, warg2, warg3);
+				break;
+			case IScriptOpcode.imgulnextid:
+				barg1 = ReadByte (ref pc);
+				barg2 = ReadByte (ref pc);
+				TraceLine ("imgulnextid {0} {1}", barg1, barg2);
+				break;
+			// __3e unknown
+			case IScriptOpcode.liftoffcondjmp:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("liftoffcondjmp {0}", warg1);
+				break;
+			case IScriptOpcode.warpoverlay:
+				warg1 = ReadWord (ref pc);
+				TraceLine ("warpoverlay {0}", warg1);
+				break;
+			case IScriptOpcode.orderdone:
+				barg1 = ReadByte (ref pc);
+				TraceLine ("orderdone {0}", barg1);
+				break;
+			case IScriptOpcode.grdsprol:
 				warg1 = ReadWord (ref pc);
 				barg1 = ReadByte (ref pc);
 				barg2 = ReadByte (ref pc);
-				TraceLine ("PlaceIndependentUnderlay: {0} ({1},{2})", warg1, barg1, barg2);
- 				Sprite s = SpriteManager.CreateSprite (warg1, palette, x, y);
- 				s.RunScript (AnimationType.Init);
+				TraceLine ("grdsprol {0} {1} {2}", warg1, barg1, barg2);
 				break;
-			case EndAnimation:
-				return false;
-			case Unknown38:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Unknown 0x38 iscript opcode, arg {0}", warg1);
-				break;
-			case Unknown3c:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Unknown 0x3c iscript opcode, arg {0}", warg1);
-				break;
-			case Unknown3d:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Unknown 0x3d iscript opcode, arg {0}", warg1);
-				break;
-			case Unknown3f:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Unknown 0x3f iscript opcode, arg {0}", warg1);
-				break;
-			case Unknown40:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Unknown 0x40 iscript opcode, arg {0}", warg1);
-				break;
-			case Unknown41:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Unknown 0x41 iscript opcode, arg {0}", warg1);
-				break;
-			case Unknown42:
-				warg1 = ReadWord (ref pc);
-				TraceLine ("Unknown 0x42 iscript opcode, arg {0}", warg1);
-				break;
-			case FollowFrameChange:
-				if (parent_sprite != null)
-					DoPlayFrame (parent_sprite.CurrentFrame);
-				break;
-			case SwitchUnderlay:
-			case PlaceOverlay:
-			case PlaceIndependentOverlay:
-			case PlaceIndependentOverlayOnTop:
-			case DisplayOverlayWithLO:
-			case DisplayIndependentOverlayWithLO:
-			case PlayRandomSound:
-			case DoDamage:
-			case AttackWithWeaponAndPlaySound:
-			case Attack:
-			case AttackWithAppropriateWeapon:
-			case CastSpell:
-			case UseWeapon:
-			case AttackLoopMarker:
-			case BeginPlayerLockout:
-			case EndPlayerLockout:
-			case IgnoreOtherOpcodes:
-			case AttackWithDirectionalProjectile:
-			case Hide:
-			case Unhide:
-			case IfPickedUp:
-			case IfTargetInRangeGoto:
-			case IfTargetInArcGoto:
-				Console.WriteLine ("Unhandled iscript opcode: 0x{0:x}", buf[pc-1]);
+			// __43 unknown
+			case IScriptOpcode.dogrddamage:
+				TraceLine ("dogrddamage");
 				break;
 			default:
 				Console.WriteLine ("Unknown iscript opcode: 0x{0:x}", buf[pc-1]);
@@ -556,7 +756,7 @@ namespace SCSharp.UI
 		AirAttkToIdle,
 		SpAbility3,
 		Walking,
-		Other,
+		WalkingToIdle,
 		BurrowInit,
 		ConstrctHarvst,
 		IsWorking,
