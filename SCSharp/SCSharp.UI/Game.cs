@@ -32,7 +32,10 @@ using System;
 using System.IO;
 using System.Threading;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+using SdlDotNet.Input;
+
 using System.Drawing;
 
 using System.Text;
@@ -335,7 +338,7 @@ namespace SCSharp.UI
 		{
 			cached_cursor_x = args.X;
 			cached_cursor_y = args.Y;
-			
+
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 
@@ -347,7 +350,7 @@ namespace SCSharp.UI
 		{
 			cached_cursor_x = args.X;
 			cached_cursor_y = args.Y;
-			
+
 			if (cursor != null)
 				cursor.SetPosition (cached_cursor_x, cached_cursor_y);
 

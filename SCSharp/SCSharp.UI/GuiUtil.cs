@@ -37,7 +37,11 @@ using System.Text;
 
 using System.Drawing;
 using System.Drawing.Imaging;
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+using SdlDotNet.Input;
+using SdlDotNet.Audio;
+
 
 /* for the surface creation hack below */
 using System.Reflection;

@@ -31,7 +31,9 @@
 using System;
 using System.Collections.Generic;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+
 
 namespace SCSharp.UI
 {

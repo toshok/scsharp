@@ -34,8 +34,10 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 
-using SdlDotNet;
-using SdlDotNet.Sprites;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+using SdlDotNet.Input;
+
 using System.Drawing;
 
 namespace SCSharp.UI
@@ -140,8 +142,9 @@ namespace SCSharp.UI
 
 					if (fullscreen)
 						paintingSurface = Video.SetVideoMode (SCREEN_RES_X, SCREEN_RES_Y);
-					else
-						paintingSurface = Video.SetVideoModeWindow (SCREEN_RES_X, SCREEN_RES_Y);
+					else {
+						paintingSurface = Video.SetVideoMode (SCREEN_RES_X, SCREEN_RES_Y);
+					}
 
 					Invalidate ();
 				}
@@ -232,7 +235,7 @@ namespace SCSharp.UI
 #if !RELEASE
 			if (debug_dirty) {
 				paintingSurface.Fill (dirty, Color.Red);
-				paintingSurface.Flip ();
+				paintingSurface.Update ();
 			}
 #endif
 			paintingSurface.Fill(dirty, Color.Black);
@@ -254,7 +257,7 @@ namespace SCSharp.UI
 			}
 #endif
 
-			paintingSurface.Flip ();
+			paintingSurface.Update ();
 
 			paintingSurface.ClipRectangle = paintingSurface.Rectangle;
 			dirty = Rectangle.Empty;
@@ -285,7 +288,7 @@ namespace SCSharp.UI
 
 		public static void DrawBox (Rectangle rect, Color color)
 		{
-			paintingSurface.DrawBox (rect, color);
+// newsdl			paintingSurface.DrawBox (rect, color);
 		}
 
 		static Rectangle dirty = Rectangle.Empty;

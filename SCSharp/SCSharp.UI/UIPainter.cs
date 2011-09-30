@@ -33,7 +33,9 @@ using System.Configuration;
 using System.Collections.Generic;
 using System.IO;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+
 using System.Drawing;
 
 namespace SCSharp.UI

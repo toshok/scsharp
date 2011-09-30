@@ -29,7 +29,9 @@
 //
 
 using System;
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+
 
 using System.Drawing;
 using System.Drawing.Imaging;

@@ -34,7 +34,10 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+using SdlDotNet.Input;
+
 
 namespace SCSharp.UI
 {
@@ -207,7 +210,7 @@ namespace SCSharp.UI
 				MouseLeaveEvent ();
 		}
 
-		protected void Invalidate ()
+		protected virtual void Invalidate ()
 		{
 			if (visible)
 				Painter.Invalidate (Bounds);
@@ -235,11 +238,12 @@ namespace SCSharp.UI
 		{
 			if (!visible)
 				return;
-
-			if (Surface == null)
+			
+			Surface s = Surface;
+			if (s == null)
 				return;
 
-			Painter.Blit (Surface, new Point (X1, Y1));
+			Painter.Blit (s, new Point (X1, Y1));
 		}
 		
 		public virtual bool PointInside (int x, int y)

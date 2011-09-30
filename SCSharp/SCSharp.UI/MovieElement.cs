@@ -33,7 +33,10 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+using SdlDotNet.Input;
+
 using System.Drawing;
 
 namespace SCSharp.UI
@@ -119,12 +122,22 @@ namespace SCSharp.UI
 		SmackerPlayer player;
 		byte dim = 0;
 		bool scale;
-
+		
+		protected override void Invalidate ()
+		{
+			if (Visible)
+				Painter.Invalidate (Bounds);
+			
+			if (Surface != null)
+				Surface.Fill (Color.Transparent);
+		}
+		
 		protected override Surface CreateSurface ()
 		{
 			if (player == null || player.Surface == null)
 				return null;
-
+			
+			Console.WriteLine ("MovieElement: Creating new surface");
 			Surface surf;
 
 			surf = new Surface (player.Surface);
@@ -141,7 +154,8 @@ namespace SCSharp.UI
 				else
 					zoom = vert_zoom;
 
-				surf.Scale (zoom);
+				// FIXME: NewSDL
+				// surf.Scale (zoom);
 			}
 
 			if (dim != 0) {

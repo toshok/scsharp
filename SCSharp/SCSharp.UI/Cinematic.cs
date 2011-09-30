@@ -32,7 +32,10 @@ using System;
 using System.IO;
 using System.Threading;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+using SdlDotNet.Input;
+
 using System.Drawing;
 
 namespace SCSharp.UI
@@ -95,7 +98,8 @@ namespace SCSharp.UI
 				else
 					zoom = vert_zoom;
 
-				surf.Scale (zoom);
+				// FIXME: newSDL
+				//surf.Scale (zoom);
 			}
 
 			/* signal to the painter to redraw the screen */

@@ -34,7 +34,9 @@ http://www.stormcoast-fortress.net/cntt/tutorials/camsys/tilesetdependent/?PHPSE
 
 */
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+
 
 using System;
 using System.Configuration;

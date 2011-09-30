@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCSharpMac", "SCSharpMac\SCSharpMac.csproj", "{ADCAD873-2FCC-4DAF-B8E6-32F29DD25852}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCSharp.Core.dll", "..\SCSharp\SCSharp.Core.dll.csproj", "{A723BC2F-13F1-4055-BBED-48DE99D6259B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCSharp.Smk.dll", "..\SCSharp\SCSharp.Smk.dll.csproj", "{74F6BCDE-F12B-4699-9E68-9E36621E35CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCSharp.UI.dll", "..\SCSharp\SCSharp.UI.dll.csproj", "{705B65E8-C871-4A6B-B42E-D6D538CEA13D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCSharpMac.UI", "SCSharpMac.UI\SCSharpMac.UI.csproj", "{BFD9B785-AE9A-454A-90E8-BC2E23F146CC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{705B65E8-C871-4A6B-B42E-D6D538CEA13D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{705B65E8-C871-4A6B-B42E-D6D538CEA13D}.Debug|x86.Build.0 = Debug|Any CPU
+		{705B65E8-C871-4A6B-B42E-D6D538CEA13D}.Release|x86.ActiveCfg = Release|Any CPU
+		{705B65E8-C871-4A6B-B42E-D6D538CEA13D}.Release|x86.Build.0 = Release|Any CPU
+		{74F6BCDE-F12B-4699-9E68-9E36621E35CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{74F6BCDE-F12B-4699-9E68-9E36621E35CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{74F6BCDE-F12B-4699-9E68-9E36621E35CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{74F6BCDE-F12B-4699-9E68-9E36621E35CE}.Release|x86.Build.0 = Release|Any CPU
+		{A723BC2F-13F1-4055-BBED-48DE99D6259B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A723BC2F-13F1-4055-BBED-48DE99D6259B}.Debug|x86.Build.0 = Debug|Any CPU
+		{A723BC2F-13F1-4055-BBED-48DE99D6259B}.Release|x86.ActiveCfg = Release|Any CPU
+		{A723BC2F-13F1-4055-BBED-48DE99D6259B}.Release|x86.Build.0 = Release|Any CPU
+		{ADCAD873-2FCC-4DAF-B8E6-32F29DD25852}.Debug|x86.ActiveCfg = Debug|x86
+		{ADCAD873-2FCC-4DAF-B8E6-32F29DD25852}.Debug|x86.Build.0 = Debug|x86
+		{ADCAD873-2FCC-4DAF-B8E6-32F29DD25852}.Release|x86.ActiveCfg = Release|x86
+		{ADCAD873-2FCC-4DAF-B8E6-32F29DD25852}.Release|x86.Build.0 = Release|x86
+		{BFD9B785-AE9A-454A-90E8-BC2E23F146CC}.Debug|x86.ActiveCfg = Debug|x86
+		{BFD9B785-AE9A-454A-90E8-BC2E23F146CC}.Debug|x86.Build.0 = Debug|x86
+		{BFD9B785-AE9A-454A-90E8-BC2E23F146CC}.Release|x86.ActiveCfg = Release|x86
+		{BFD9B785-AE9A-454A-90E8-BC2E23F146CC}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SCSharpMac\SCSharpMac.csproj
+	EndGlobalSection
+EndGlobal

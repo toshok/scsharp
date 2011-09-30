@@ -31,6 +31,7 @@
 using System;
 using System.IO;
 using System.Configuration;
+using System.Runtime.InteropServices;
 
 using SCSharp.UI;
 
@@ -38,6 +39,9 @@ using SdlDotNet;
 
 public class Driver
 {
+	[DllImport("/System/Library/Frameworks/Cocoa.framework/Cocoa")]
+	public static extern void NSApplicationLoad();
+
 	public static void Main (string[] args)
 	{
 		bool fullscreen = false;
@@ -50,6 +54,11 @@ public class Driver
 			Console.WriteLine ("The StarcraftCDDirectory and BroodwarCDDirectory configuration settings must have unique values.");
 			return;
 		}
+
+		// I am a bad hacker for doing this on !OSX
+		try {
+			NSApplicationLoad ();
+		} catch (Exception e) { Console.WriteLine (e); }
 
 		Game g = new Game (ConfigurationManager.AppSettings["StarcraftDirectory"],
 				   sc_cd_dir, bw_cd_dir);

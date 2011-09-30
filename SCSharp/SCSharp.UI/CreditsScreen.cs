@@ -34,7 +34,9 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+
 using System.Drawing;
 
 namespace SCSharp.UI

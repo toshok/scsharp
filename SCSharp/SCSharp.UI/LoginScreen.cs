@@ -32,7 +32,10 @@ using System;
 using System.IO;
 using System.Threading;
 
-using SdlDotNet;
+using SdlDotNet.Core;
+using SdlDotNet.Graphics;
+using SdlDotNet.Input;
+
 using System.Drawing;
 
 namespace SCSharp.UI

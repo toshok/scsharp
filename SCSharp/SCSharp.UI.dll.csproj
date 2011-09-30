@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,6 +10,7 @@
     <AppDesignerFolder>Properties\SCSharp.UI.dll</AppDesignerFolder>
     <RootNamespace>SCSharp.UI</RootNamespace>
     <AssemblyName>SCSharp.UI</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,13 +34,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
-    <Reference Include="SdlDotNet, Version=4.0.3.0, Culture=neutral, PublicKeyToken=26ad4f7e10c61408">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Configuration" />
+    <Reference Include="SdlDotNet">
       <HintPath>..\sdldotnet-bin\SdlDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="Tao.Sdl, Version=1.2.9.1, Culture=neutral, PublicKeyToken=9c7a200e36c0094e">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Tao.Sdl">
       <HintPath>..\sdldotnet-bin\Tao.Sdl.dll</HintPath>
     </Reference>
   </ItemGroup>
