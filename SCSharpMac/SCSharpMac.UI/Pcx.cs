@@ -31,6 +31,8 @@
 using System;
 using System.IO;
 
+using SCSharp;
+
 namespace SCSharpMac.UI
 {
 	public class Pcx
@@ -90,8 +92,11 @@ namespace SCSharpMac.UI
 			Console.WriteLine ("imageData begins at {0}", imageData);
 
 			/* now read the image data */
-			data = new byte[width * height * 4];
-
+			if (with_alpha)
+				data = new byte[width * height * 4];
+			else
+				data = new byte[width * height];
+			
 			int idx = 0;
 			while (idx < data.Length) {
 				byte b = Util.ReadByte (stream);
@@ -109,26 +114,27 @@ namespace SCSharpMac.UI
 				}
 
 				for (int i = 0; i < count; i ++) {
-					if (idx + 4 > data.Length)
-						return;
-
-					/* this stuff is endian
-					 * dependent... for big endian
-					 * we need the "idx +"'s
-					 * reversed */
-					data[idx + 3] = palette [value * 3 + 0];
-					data[idx + 2] = palette [value * 3 + 1];
-					data[idx + 1] = palette [value * 3 + 2];
 					if (with_alpha) {
+						if (idx + 4 > data.Length)
+							return;
+						/* this stuff is endian
+						 * dependent... for big endian
+						 * we need the "idx +"'s
+						 * reversed */
+						data[idx + 1] = palette [value * 3 + 0];
+						data[idx + 2] = palette [value * 3 + 1];
+						data[idx + 3] = palette [value * 3 + 2];
 						if (value == translucentIndex)
 							data[idx + 0] = 0xd0;
 						else if (value == transparentIndex)
 							data[idx + 0] = 0x00;
 						else
 							data[idx + 0] = 0xff;
+						idx += 4;
 					}
-
-					idx += 4;
+					else {
+						data[idx++] = value;
+					}
 				}
 			}
 		}
@@ -140,21 +146,32 @@ namespace SCSharpMac.UI
 		ushort width;
 		ushort height;
 
-		public byte[] RgbaData {
+		public byte[] Data {
 			get { return data; }
 		}
 
-		public byte[] RgbData {
+		public byte[] RGBData {
 			get {
 				byte[] foo = new byte[width * height * 3];
 				int i = 0;
 				int j = 0;
-				while (i < data.Length) {
-					foo[j++] = data[i++];
-					foo[j++] = data[i++];
-					foo[j++] = data[i++];
-					i++;
+				if (with_alpha) {
+					while (i < data.Length) {
+						i++;
+						foo[j++] = data[i++];
+						foo[j++] = data[i++];
+						foo[j++] = data[i++];
+					}
 				}
+				else {
+					while (i < data.Length) {
+						foo[j++] = palette[data[i] * 3 + 0];
+						foo[j++] = palette[data[i] * 3 + 1];
+						foo[j++] = palette[data[i] * 3 + 2];
+						i += 3;
+					}
+				}
+				
 				return foo;
 			}
 		}

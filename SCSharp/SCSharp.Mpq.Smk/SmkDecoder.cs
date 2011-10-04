@@ -593,6 +593,29 @@ namespace SCSharp.Smk
         /// <summary>
         /// Returns the video data as RGB data
         /// </summary>
+        public byte[] ARGBData
+        {
+            get
+            {
+                byte[] result = new byte[lastFrameData.Length * 4];
+                int j = 0;
+                for (int i = 0; i < lastFrameData.Length; i++)
+                {
+                    j = i * 4;
+                    result[j + 1] = CurrentPalette[lastFrameData[i]].R;
+                    result[j + 2] = CurrentPalette[lastFrameData[i]].G;
+                    result[j + 3] = CurrentPalette[lastFrameData[i]].B;
+					
+					if (result[j + 1] != 0 || result[j + 2] != 0 || result[j + 3] != 0)
+						result[j + 0] = 255;
+                }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Returns the video data as BGRA data
+        /// </summary>
         public byte[] RGBData
         {
             get
@@ -602,32 +625,9 @@ namespace SCSharp.Smk
                 for (int i = 0; i < lastFrameData.Length; i++)
                 {
                     j = i * 3;
-                    result[j] = CurrentPalette[lastFrameData[i]].R;
+                    result[j + 0] = CurrentPalette[lastFrameData[i]].R;
                     result[j + 1] = CurrentPalette[lastFrameData[i]].G;
                     result[j + 2] = CurrentPalette[lastFrameData[i]].B;
-
-                }
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Returns the video data as BGRA data
-        /// </summary>
-        public byte[] BGRAData
-        {
-            get
-            {
-                byte[] result = new byte[lastFrameData.Length * 4];
-                int j = 0;
-                for (int i = 0; i < lastFrameData.Length; i++)
-                {
-                    j = i * 4;
-                    result[j] = CurrentPalette[lastFrameData[i]].B;
-                    result[j + 1] = CurrentPalette[lastFrameData[i]].G;
-                    result[j + 2] = CurrentPalette[lastFrameData[i]].R;
-                    if (result[j] != 0 || result[j + 1] != 0 || result[j + 2] != 0)
-                        result[j + 3] = 0xFF;
                 }
                 return result;
             }

@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BFD9B785-AE9A-454A-90E8-BC2E23F146CC}</ProjectGuid>
     <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>SCSharpMac.UI</RootNamespace>
     <AssemblyName>SCSharpMac.UI</AssemblyName>
   </PropertyGroup>
@@ -47,6 +47,29 @@
   <ItemGroup>
     <Compile Include="UIScreen.cs" />
     <Compile Include="Pcx.cs" />
+    <Compile Include="GuiUtil.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Race.cs" />
+    <Compile Include="TitleScreen.cs" />
+    <Compile Include="GlobalResources.cs" />
+    <Compile Include="Builtins.cs" />
+    <Compile Include="MainMenu.cs" />
+    <Compile Include="UIElement.cs" />
+    <Compile Include="ButtonElement.cs" />
+    <Compile Include="ImageElement.cs" />
+    <Compile Include="ComboBoxElement.cs" />
+    <Compile Include="LabelElement.cs" />
+    <Compile Include="TextBoxElement.cs" />
+    <Compile Include="DialogBoxElement.cs" />
+    <Compile Include="ListBoxElement.cs" />
+    <Compile Include="Cinematic.cs" />
+    <Compile Include="SmackerPlayer.cs" />
+    <Compile Include="CreditsScreen.cs" />
+    <Compile Include="MarkupScreen.cs" />
+    <Compile Include="OkDialog.cs" />
+    <Compile Include="UIDialog.cs" />
+    <Compile Include="MovieElement.cs" />
+    <Compile Include="CursorAnimator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SCSharp\SCSharp.Core.dll.csproj">
@@ -57,5 +80,10 @@
       <Project>{74F6BCDE-F12B-4699-9E68-9E36621E35CE}</Project>
       <Name>SCSharp.Smk.dll</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="credits.txt">
+      <LogicalName>credits.txt</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

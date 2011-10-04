@@ -1,5 +1,5 @@
 //
-// SCSharp.UI.SmackerPlayer
+// SCSharpMac.UI.SmackerPlayer
 //
 // Authors:
 //	Chris Toshok (toshok@gmail.com)
@@ -29,18 +29,22 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using SdlDotNet.Core;
-using SdlDotNet.Graphics;
+
+using MonoMac.AppKit;
+using MonoMac.CoreAnimation;
+using MonoMac.CoreGraphics;
 
 using System.Drawing;
 
 using SCSharp.Smk;
+using SCSharp;
 
-namespace SCSharp.UI
+namespace SCSharpMac.UI
 {
 	public class SmackerPlayer
 	{
@@ -58,6 +62,22 @@ namespace SCSharp.UI
 
 		AutoResetEvent waitEvent;
 
+		float timeElapsed=0;
+		CALayer layer;
+		
+		SmackerPlayerDelegate del;
+		
+		class SmackerPlayerDelegate : CALayerDelegate {
+			
+			public override void DisplayLayer (CALayer layer)
+			{
+				if (Contents != null)
+					layer.Contents = Contents;
+			}
+			
+			public CGImage Contents { get; set; }
+		}
+
 		public SmackerPlayer (Stream smk_stream) : this (smk_stream, BUFFERED_FRAMES)
 		{
 		}
@@ -68,8 +88,13 @@ namespace SCSharp.UI
 			decoder= file.Decoder;
 			this.buffered_frames = buffered_frames;
     
-
 			waitEvent = new AutoResetEvent (false);
+			
+			del = new SmackerPlayerDelegate ();
+
+			layer = CALayer.Create ();
+			layer.Bounds = new RectangleF (0, 0, Width, Height);
+			layer.Delegate = del;
 		}
 
 		public int Width {
@@ -80,38 +105,28 @@ namespace SCSharp.UI
 			get { return (int)file.Header.Height; }
 		}
 
-		float timeElapsed=0;
-		Surface surf;
 		void Events_Tick(object sender, TickEventArgs e)
 		{
-
-			//There should be an easier way to get the video data to SDL
-            
-			timeElapsed += (e.SecondsElapsed);
-			while (timeElapsed > 1.0 / file.Header.Fps && frameQueue.Count > 0)
+			timeElapsed += e.SecondsElapsed;
+			
+			while (timeElapsed > 1.0 / file.Header.Fps)
 			{
+				lock (((ICollection)frameQueue).SyncRoot) {
+					if (frameQueue.Count <= 0)
+						return;
+				}
+					
 				timeElapsed -= (float)(1.0f / file.Header.Fps);
-				byte[] rgbData = frameQueue.Dequeue();
+				byte[] argbData = frameQueue.Dequeue();
+								
+				var image = GuiUtil.CreateImage (argbData, (ushort)Width, (ushort)Height, 32, Width * 4);
+				del.Contents = image;
 
-				if (surf == null) {
-					surf = GuiUtil.CreateSurface (rgbData, (ushort)file.Header.Width, (ushort)file.Header.Height,
-								      32, (int)file.Header.Width * 4,
-								      (int)0x00ff0000,
-								      (int)0x0000ff00,
-								      (int)0x000000ff,
-								      unchecked ((int)0xff000000));
-				}
-				else {
-					surf.Lock();
-					Marshal.Copy(rgbData, 0, surf.Pixels, rgbData.Length);
-					surf.Unlock();
-					surf.Update();
-				}
-
-				EmitFrameReady ();
-
+				layer.SetNeedsDisplay ();
+			
 				if (frameQueue.Count < (buffered_frames / 2) + 1)
 					waitEvent.Set ();
+
 			}
 		}
 
@@ -124,18 +139,25 @@ namespace SCSharp.UI
 				{
 					try {
 						decoder.ReadNextFrame();
-						frameQueue.Enqueue(decoder.ARGBData);
-						if (frameQueue.Count >= buffered_frames)
+						
+						int count;
+						lock (((ICollection)frameQueue).SyncRoot) {				
+							frameQueue.Enqueue(decoder.ARGBData);
+							count = frameQueue.Count;
+						}
+						
+						if (count >= buffered_frames)
 							waitEvent.WaitOne ();
 					}
-					catch {
+					catch (Exception e) {
+						Console.WriteLine ("exception in decoder thread"); 
 						break;
 					}
 				}
 			}
 
 			firstRun = false;
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (EmitFinished)));
+			NSApplication.SharedApplication.BeginInvokeOnMainThread (EmitFinished);
 		}
 
 		public void Play ()
@@ -146,8 +168,8 @@ namespace SCSharp.UI
 			decoderThread = new Thread (DecoderThread);
 			decoderThread.IsBackground = true;
 			decoderThread.Start();
-
-			Events.Tick += Events_Tick;
+			
+			Game.Instance.Tick += Events_Tick;
 		}
 
 		public void Stop ()
@@ -158,26 +180,19 @@ namespace SCSharp.UI
 			decoderThread.Abort ();
 			decoderThread = null;
 
-			Events.Tick -= Events_Tick;
+			Game.Instance.Tick -= Events_Tick;
 		}
 
-		public Surface Surface {
-			get { return surf; }
+		public CALayer Layer {
+			get { return layer; }
 		}
 
 		public event PlayerEvent Finished;
-		public event PlayerEvent FrameReady;
 
 		void EmitFinished ()
 		{
 			if (Finished != null)
 				Finished ();
-		}
-
-		void EmitFrameReady ()
-		{
-			if (FrameReady != null)
-				FrameReady ();
 		}
 	}
 

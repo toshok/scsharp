@@ -2,10 +2,11 @@ using System;
 using System.Drawing;
 using MonoMac.Foundation;
 using MonoMac.AppKit;
+using MonoMac.CoreAnimation;
 using MonoMac.ObjCRuntime;
 
 using SCSharp;
-using SCSharp.UI;
+using SCSharpMac.UI;
 
 namespace SCSharpMac
 {
@@ -21,7 +22,7 @@ namespace SCSharpMac
 		{
 			mainWindowController = new MainWindowController ();
 			mainWindowController.Window.MakeKeyAndOrderFront (this);
-			
+				
 			string sc_dir = "/Users/toshok/src/scsharp/starcraft-data/starcraft";
 			string bw_cd_dir = "/Users/toshok/src/scsharp/starcraft-data/bw-cd";
 			string sc_cd_dir = "/Users/toshok/src/scsharp/starcraft-data/sc-cd";
@@ -34,11 +35,13 @@ namespace SCSharpMac
 				Console.WriteLine ("The StarcraftCDDirectory and BroodwarCDDirectory configuration settings must have unique values.");
                 return;
 			}
-
+			
 			Game g = new Game (sc_dir /*ConfigurationManager.AppSettings["StarcraftDirectory"]*/,
 								sc_cd_dir, bw_cd_dir);
 
-			g.Startup(false);                                                                                                                                                       			
+			mainWindowController.Window.ContentView = g;
+
+			g.Startup();                                                                                                                                                       			
 		}
 	}
 }

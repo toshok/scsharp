@@ -35,6 +35,7 @@ using System.Threading;
 using System.Collections.Generic;
 
 using MonoMac.CoreAnimation;
+using MonoMac.AppKit;
 
 using SCSharp;
 
@@ -44,7 +45,9 @@ namespace SCSharpMac.UI
 	{
 		CALayer background;
 		protected CursorAnimator Cursor;
+#if notyet
 		protected UIPainter UIPainter;
+#endif
 		protected Bin Bin;
 		protected Mpq mpq;
 		protected string prefix;
@@ -77,8 +80,8 @@ namespace SCSharpMac.UI
 				arrowgrp_path = prefix + "\\arrow.grp";
 			}
 
-			background_transparent = 0;
-			background_translucent = 254;
+			background_transparent = -1;
+			background_translucent = -1;
 		}
 
 		protected UIScreen (Mpq mpq)
@@ -86,6 +89,7 @@ namespace SCSharpMac.UI
 			this.mpq = mpq;
 		}
 
+#if notyet
 		public virtual void SwooshIn ()
 		{
 			try {
@@ -109,9 +113,12 @@ namespace SCSharpMac.UI
 				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (Events.QuitApplication)));
 			}
 		}
-
+#endif
+		
+		
 		public virtual void AddToPainter ()
 		{
+#if notyet
 			Painter.Painting += FirstPaint;
 
 			if (background != null)
@@ -119,21 +126,22 @@ namespace SCSharpMac.UI
 
 			if (UIPainter != null)
 				Painter.Add (Layer.UI, UIPainter.Paint);
-
 			if (Cursor != null)
 				Game.Instance.Cursor = Cursor;
-
 			Painter.Invalidate ();
+#endif
 		}
 
 		public virtual void RemoveFromPainter ()
 		{
+#if notyet
 			Painter.Painting -= FirstPaint;
 
 			if (background != null)
 				Painter.Remove (Layer.Background, BackgroundPainter);
 			if (UIPainter != null)
 				Painter.Remove (Layer.UI, UIPainter.Paint);
+#endif
 			if (Cursor != null)
 				Game.Instance.Cursor = null;
 		}
@@ -149,7 +157,8 @@ namespace SCSharpMac.UI
 		public CALayer Background {
 			get { return background; }
 		}
-
+		
+		// FIXME we should be using CoreAnimation's HitTest code for this..
 		UIElement XYToElement (int x, int y, bool onlyUI)
 		{
 			if (Elements == null)
@@ -173,12 +182,16 @@ namespace SCSharpMac.UI
 		protected UIElement mouseOverElement;
 		public virtual void MouseEnterElement (UIElement element)
 		{
+#if notyet
 			element.MouseEnter ();
+#endif
 		}
 
 		public virtual void MouseLeaveElement (UIElement element)
 		{
+#if notyet
 			element.MouseLeave ();
+#endif
 		}
 
 		public virtual void ActivateElement (UIElement element)
@@ -190,65 +203,74 @@ namespace SCSharpMac.UI
 			element.OnActivate ();
 		}
 
-		// SDL Event handling
-		public virtual void MouseButtonDown (MouseButtonEventArgs args)
+		public virtual void MouseButtonDown (NSEvent theEvent)
 		{
+#if notyet
 			if (args.Button != MouseButton.PrimaryButton &&
 			    args.Button != MouseButton.WheelUp &&
 			    args.Button != MouseButton.WheelDown)
 				return;
+#endif
 
 			if (mouseDownElement != null)
 				Console.WriteLine ("mouseDownElement already set in MouseButtonDown");
 
-			UIElement element = XYToElement (args.X, args.Y, true);
+			UIElement element = XYToElement ((int)theEvent.LocationInWindow.X, (int)theEvent.LocationInWindow.Y, true);
 			if (element != null && element.Visible && element.Sensitive) {
 				mouseDownElement = element;
-				if (args.Button == MouseButton.PrimaryButton)
-					mouseDownElement.MouseButtonDown (args);
+				if (theEvent.Type == NSEventType.LeftMouseDown)				
+					mouseDownElement.MouseButtonDown (theEvent);
 				else
-					mouseDownElement.MouseWheel (args);
+					mouseDownElement.MouseWheel (theEvent);
 			}
 		}
 
-		public void HandleMouseButtonDown (MouseButtonEventArgs args)
+		public void HandleMouseButtonDown (NSEvent theEvent)
 		{
+#if notyet
 			if (dialog != null)
-				dialog.HandleMouseButtonDown (args);
+				dialog.HandleMouseButtonDown (theEvent);
 			else
-				MouseButtonDown (args);
+#endif
+				MouseButtonDown (theEvent);
 		}
 
-		public virtual void MouseButtonUp (MouseButtonEventArgs args)
+		public virtual void MouseButtonUp (NSEvent theEvent)
 		{
+#if notyet
 			if (args.Button != MouseButton.PrimaryButton &&
 			    args.Button != MouseButton.WheelUp &&
 			    args.Button != MouseButton.WheelDown)
 				return;
+#endif
 
 			if (mouseDownElement != null) {
-				if (args.Button == MouseButton.PrimaryButton)
-					mouseDownElement.MouseButtonUp (args);
+				if (theEvent.Type == NSEventType.LeftMouseUp)
+					mouseDownElement.MouseButtonUp (theEvent);
 
 				mouseDownElement = null;
 			}
 		}
 
-		public void HandleMouseButtonUp (MouseButtonEventArgs args)
+		public void HandleMouseButtonUp (NSEvent theEvent)
 		{
+#if notyet
 			if (dialog != null)
-				dialog.HandleMouseButtonUp (args);
+				dialog.HandleMouseButtonUp (theEvent);
 			else
-				MouseButtonUp (args);
+#endif
+				MouseButtonUp (theEvent);
 		}
-
-		public virtual void PointerMotion (MouseMotionEventArgs args)
+		
+		public virtual void PointerMotion (NSEvent theEvent)
 		{
+			Console.WriteLine ("UIScreen.PointerMotion");
+			
 			if (mouseDownElement != null) {
-				mouseDownElement.PointerMotion (args);
+				mouseDownElement.PointerMotion (theEvent);
 			}
 			else {
-				UIElement newMouseOverElement = XYToElement (args.X, args.Y, true);
+				UIElement newMouseOverElement = XYToElement ((int)theEvent.LocationInWindow.X, (int)theEvent.LocationInWindow.Y, true);
 
 				if (newMouseOverElement != mouseOverElement) {
 					if (mouseOverElement != null)
@@ -261,32 +283,35 @@ namespace SCSharpMac.UI
 			}
 		}
 
-		public void HandlePointerMotion (MouseMotionEventArgs args)
+		public void HandlePointerMotion (NSEvent theEvent)
 		{
 			if (dialog != null)
-				dialog.HandlePointerMotion (args);
+				dialog.HandlePointerMotion (theEvent);
 			else
-				PointerMotion (args);
+				PointerMotion (theEvent);
 		}
 
-		public virtual void KeyboardUp (KeyboardEventArgs args)
+		public virtual void KeyboardUp (NSEvent theEvent)
 		{
 		}
 
-		public void HandleKeyboardUp (KeyboardEventArgs args)
+		public void HandleKeyboardUp (NSEvent theEvent)
 		{
+#if notyet
 			/* just return if the modifier keys are released */
 			if (args.Key >= Key.NumLock && args.Key <= Key.Compose)
 				return;
+#endif
 
 			if (dialog != null)
-				dialog.HandleKeyboardUp (args);
+				dialog.HandleKeyboardUp (theEvent);
 			else
-				KeyboardUp (args);
+				KeyboardUp (theEvent);
 		}
 
-		public virtual void KeyboardDown (KeyboardEventArgs args)
+		public virtual void KeyboardDown (NSEvent theEvent)
 		{
+#if notyet
 			if (Elements != null) {
 				foreach (UIElement e in Elements) {
 					if ( (args.Key == e.Hotkey)
@@ -301,20 +326,23 @@ namespace SCSharpMac.UI
 					}
 				}
 			}
+#endif
 		}
 
-		public void HandleKeyboardDown (KeyboardEventArgs args)
+		public void HandleKeyboardDown (NSEvent theEvent)
 		{
+#if notyet
 			/* just return if the modifier keys are pressed */
 			if (args.Key >= Key.NumLock && args.Key <= Key.Compose)
 				return;
+#endif
 				
 			if (dialog != null)
-				dialog.HandleKeyboardDown (args);
+				dialog.HandleKeyboardDown (theEvent);
 			else
-				KeyboardDown (args);
+				KeyboardDown (theEvent);
 		}
-
+		
 		protected virtual void ScreenDisplayed ()
 		{
 		}
@@ -325,6 +353,7 @@ namespace SCSharpMac.UI
 
 		bool loaded;
 
+#if notyet
 		protected virtual void FirstPaint (object sender, EventArgs args)
 		{
 			if (FirstPainted != null)
@@ -332,6 +361,7 @@ namespace SCSharpMac.UI
 
 			Painter.Painting -= FirstPaint;
 		}
+#endif
 
 		protected void RaiseReadyEvent ()
 		{
@@ -345,6 +375,7 @@ namespace SCSharpMac.UI
 				DoneSwooshing ();
 		}
 
+#if notyet
 		protected void BackgroundPainter (DateTime dt)
 		{
 			int background_x = (Painter.Width - background.Width) / 2;
@@ -352,6 +383,7 @@ namespace SCSharpMac.UI
 
 			Painter.Blit (background, new Point (background_x, background_y));
 		}
+#endif
 
 		int translucentIndex = 254;
 		protected int TranslucentIndex {
@@ -393,8 +425,11 @@ namespace SCSharpMac.UI
 
 			if (background_path != null) {
 				Console.WriteLine ("loading background");
-				background = GuiUtil.SurfaceFromStream ((Stream)mpq.GetResource (background_path),
-									background_translucent, background_transparent);
+					background = GuiUtil.LayerFromStream ((Stream)mpq.GetResource (background_path),
+													background_translucent, background_transparent);
+				
+				background.AnchorPoint = new PointF (0, 0);
+				AddSublayer (background);
 			}
 
 			Elements = new List<UIElement> ();
@@ -413,64 +448,66 @@ namespace SCSharpMac.UI
 					UIElement ui_el = null;
 					switch (el.type) {
 					case ElementType.DialogBox:
-						ui_el = new DialogBoxElement (this, el, fontpal.RgbData);
+						ui_el = new DialogBoxElement (this, el, fontpal.RGBData);
 						break;
 					case ElementType.Image:
-						ui_el = new ImageElement (this, el, fontpal.RgbData, translucentIndex);
+						ui_el = new ImageElement (this, el, fontpal.RGBData, translucentIndex);
 						break;
 					case ElementType.TextBox:
-						ui_el = new TextBoxElement (this, el, fontpal.RgbData);
+						ui_el = new TextBoxElement (this, el, fontpal.RGBData);
 						break;
 					case ElementType.ListBox:
-						ui_el = new ListBoxElement (this, el, fontpal.RgbData);
+						ui_el = new ListBoxElement (this, el, fontpal.RGBData);
 						break;
 					case ElementType.ComboBox:
-						ui_el = new ComboBoxElement (this, el, fontpal.RgbData);
+						ui_el = new ComboBoxElement (this, el, fontpal.RGBData);
 						break;
 					case ElementType.LabelLeftAlign:
 					case ElementType.LabelCenterAlign:
 					case ElementType.LabelRightAlign:
-						ui_el = new LabelElement (this, el, fontpal.RgbData);
+						ui_el = new LabelElement (this, el, fontpal.RGBData);
 						break;
 					case ElementType.Button:
 					case ElementType.DefaultButton:
 					case ElementType.ButtonWithoutBorder:
-						ui_el = new ButtonElement(this, el, fontpal.RgbData);
+						ui_el = new ButtonElement(this, el, fontpal.RGBData);
 						break;
 					case ElementType.Slider:
 					case ElementType.OptionButton:
 					case ElementType.CheckBox:
-						ui_el = new UIElement (this, el, fontpal.RgbData);
+						ui_el = new UIElement (this, el, fontpal.RGBData);
 						break;
 					default:
 						Console.WriteLine ("unhandled case {0}", el.type);
-						ui_el = new UIElement (this, el, fontpal.RgbData);
+						ui_el = new UIElement (this, el, fontpal.RGBData);
 						break;
 					}
 
-					Elements.Add (ui_el);
+					Elements.Add (ui_el);	
 				}
 			}
-
-			UIPainter = new UIPainter (Elements);
 		}
 
 		void LoadResources ()
 		{
 			ResourceLoader ();
-			Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (FinishedLoading)));
+			foreach (var ui_el in Elements) {
+				if (ui_el.Layer != null) {
+					ui_el.Layer.Position = new PointF (ui_el.X1, ui_el.Y1);
+					ui_el.Layer.AnchorPoint = new PointF (0, 0);
+					AddSublayer (ui_el.Layer);
+				}
+			}
+				
+			NSApplication.SharedApplication.InvokeOnMainThread (FinishedLoading);
 		}
 
 		public void Load ()
-		{
+		{			
 			if (loaded)
-				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (RaiseReadyEvent)));
+				NSApplication.SharedApplication.InvokeOnMainThread (RaiseReadyEvent);
 			else
-#if MULTI_THREADED
-				ThreadPool.QueueUserWorkItem (delegate (object state) { LoadResources (); })
-#else
-				Events.PushUserEvent (new UserEventArgs (new ReadyDelegate (LoadResources)));
-#endif
+				NSApplication.SharedApplication.InvokeOnMainThread (LoadResources);				
 		}
 
 		void FinishedLoading ()
