@@ -361,17 +361,9 @@ namespace SCSharpMac.UI
 			if (currentScreen != null)
 				currentScreen.HandleMouseButtonUp (theEvent);
 		}
-		
-		public override void MouseDragged (NSEvent theEvent)
+
+		void MouseMotionEvent (NSEvent theEvent)
 		{
-			Console.WriteLine ("MouseDragged");
-			base.MouseDragged (theEvent);
-		}
-		
-		public override void MouseMoved (NSEvent theEvent)
-		{
-			Console.WriteLine ("MouseMoved");
-			
 			cached_cursor_x = (int)theEvent.LocationInWindow.X;
 			cached_cursor_y = (int)theEvent.LocationInWindow.Y;
 			
@@ -380,6 +372,18 @@ namespace SCSharpMac.UI
 
 			if (currentScreen != null)
 				currentScreen.HandlePointerMotion (theEvent);
+		}
+		
+		public override void MouseDragged (NSEvent theEvent)
+		{
+			Console.WriteLine ("MouseDragged");
+			MouseMotionEvent (theEvent);
+		}
+		
+		public override void MouseMoved (NSEvent theEvent)
+		{
+			Console.WriteLine ("MouseMoved");
+			MouseMotionEvent (theEvent);
 		}
 		
 #if USE_TRACKING_RECTS

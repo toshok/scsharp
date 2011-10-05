@@ -73,6 +73,7 @@
     <Compile Include="GameModeDialog.cs" />
     <Compile Include="RaceSelectionScreen.cs" />
     <Compile Include="LoginScreen.cs" />
+    <Compile Include="ReadyRoomScreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SCSharp\SCSharp.Core.dll.csproj">

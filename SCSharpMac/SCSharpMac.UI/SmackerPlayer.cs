@@ -149,8 +149,7 @@ namespace SCSharpMac.UI
 						if (count >= buffered_frames)
 							waitEvent.WaitOne ();
 					}
-					catch (Exception e) {
-						Console.WriteLine ("exception in decoder thread"); 
+					catch {
 						break;
 					}
 				}

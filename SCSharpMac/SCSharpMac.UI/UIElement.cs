@@ -136,10 +136,10 @@ namespace SCSharpMac.UI
 					if (layer != null) {
 						layer.Hidden = !visible;
 					
-#if RELEASE
+//#if DEBUG_UIELEMENTS
 						layer.BorderWidth = 1;
 						layer.BorderColor = new CGColor (1, 1, 0);
-#endif
+//#endif
 					}
 				}
 
@@ -248,11 +248,11 @@ namespace SCSharpMac.UI
 		
 		public virtual bool PointInside (PointF point)
 		{
-			if (point.X >= X1 && point.X < X1 + Width &&
-			    point.Y >= Y1 && point.Y < Y1 + Height)
-				return true;
-
-			return false;
+			if (layer == null)
+				return false;
+			
+			RectangleF hitRect = new RectangleF (layer.Position, Layer.Bounds.Size);
+			return hitRect.Contains (point);
 		}
 
 		public virtual void MouseWheel (NSEvent theEvent)

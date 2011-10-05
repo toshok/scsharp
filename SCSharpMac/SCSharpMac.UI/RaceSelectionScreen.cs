@@ -185,7 +185,7 @@ namespace SCSharpMac.UI
 			AddMovieElements (THIRD_CAMPAIGN_ELEMENT_INDEX, 2, 0, 0);
 			
 			foreach (var ui_el in smkElements) {
-				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Height);
+				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1);
 				ui_el.Layer.AnchorPoint = new PointF (0, 0);
 				AddSublayer (ui_el.Layer);				
 			}			
@@ -207,7 +207,7 @@ namespace SCSharpMac.UI
 						prefix.EndsWith ("tutorial") ? "0t" : prefix.Substring (prefix.Length - 2),
 						Game.Instance.PlayingBroodWar ? "x" : "");
 
-//			Game.Instance.SwitchToScreen (new EstablishingShot (markup, prefix, mpq));
+			Game.Instance.SwitchToScreen (new EstablishingShot (markup, prefix, mpq));
 		}
 
 		SmackerPlayer diskPlayer;

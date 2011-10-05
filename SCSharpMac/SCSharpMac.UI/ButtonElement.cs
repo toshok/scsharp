@@ -65,11 +65,11 @@ namespace SCSharpMac.UI
 				text_x = 0;
 
 			if ((Flags & ElementFlags.CenterTextVert) == ElementFlags.CenterTextVert)
-				text_y = (int)((Height - text_layer.Bounds.Height) / 2);
-			else if ((Flags & ElementFlags.BottomAlignText) == ElementFlags.BottomAlignText)
+				text_y = (int)((Height - text_layer.Bounds.Height) / 2 - text_layer.Bounds.Height);
+			else if ((Flags & ElementFlags.TopAlignText) == ElementFlags.TopAlignText)
 				text_y = (int)(Height - text_layer.Bounds.Height);
 			else
-				text_y = 0;
+				text_y = (int)0;
 		}
 
 		protected override CALayer CreateLayer ()
@@ -83,7 +83,9 @@ namespace SCSharpMac.UI
 			text_layer.AnchorPoint = new PointF (0, 0);
 			text_layer.Position = new PointF (text_x, text_y);
 			layer.AddSublayer (text_layer);
-
+			text_layer.BorderWidth = 1;
+			text_layer.BorderColor = new MonoMac.CoreGraphics.CGColor (1, 0, 0, 1);
+			
 			return layer;
 		}
 
@@ -97,7 +99,8 @@ namespace SCSharpMac.UI
 
 		public override void MouseButtonUp (NSEvent theEvent)
 		{
-			PointF ui_pt = ParentScreen.ScreenToUIElement (new PointF (theEvent.LocationInWindow.X, theEvent.LocationInWindow.Y));
+			PointF ui_pt = ParentScreen.ScreenToLayer (theEvent.LocationInWindow);
+			
 			if (PointInside (ui_pt))
 				OnActivate ();
 		}

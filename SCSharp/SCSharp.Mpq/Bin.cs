@@ -62,7 +62,7 @@ namespace SCSharp
 		CenterTextHoriz   = 0x00200000,
 		RightAlignText    = 0x00400000,
 		CenterTextVert    = 0x00800000,
-		Unused01000000    = 0x01000000,
+		TopAlignText      = 0x01000000,
 		BottomAlignText   = 0x02000000,
 		NoClickSound      = 0x04000000,
 		Unused08000000    = 0x08000000,

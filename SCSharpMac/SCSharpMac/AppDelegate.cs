@@ -13,6 +13,7 @@ namespace SCSharpMac
 	public partial class AppDelegate : NSApplicationDelegate
 	{
 		MainWindowController mainWindowController;
+		Game game;
 		
 		public AppDelegate ()
 		{
@@ -36,13 +37,13 @@ namespace SCSharpMac
                 return;
 			}
 			
-			Game g = new Game (sc_dir /*ConfigurationManager.AppSettings["StarcraftDirectory"]*/,
-								sc_cd_dir, bw_cd_dir);
+			game = new Game (sc_dir /*ConfigurationManager.AppSettings["StarcraftDirectory"]*/,
+				 			 sc_cd_dir, bw_cd_dir);
 			
-			mainWindowController.Window.ContentView = g;
-			mainWindowController.Window.MakeFirstResponder (g);
+			mainWindowController.Window.ContentView = game;
+			mainWindowController.Window.MakeFirstResponder (game);
 
-			g.Startup();                                                                                                                                                       			
+			game.Startup();                                                                                                                                                       			
 		}
 	}
 }

@@ -152,19 +152,19 @@ namespace SCSharpMac.UI
 
 			smkElements = new List<UIElement>();
 
-			AddMovieElements (SINGLEPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Single.smk", "glue\\mainmenu\\SingleOn.smk", 50, 70, false);
-			AddMovieElements (MULTIPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Multi.smk", "glue\\mainmenu\\MultiOn.smk", 20, 12, true);
-			AddMovieElements (CAMPAIGNEDITOR_ELEMENT_INDEX, "glue\\mainmenu\\Editor.smk", "glue\\mainmenu\\EditorOn.smk", 20, 18, true);
+			AddMovieElements (SINGLEPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Single.smk", "glue\\mainmenu\\SingleOn.smk", 45, 66, false);
+			AddMovieElements (MULTIPLAYER_ELEMENT_INDEX, "glue\\mainmenu\\Multi.smk", "glue\\mainmenu\\MultiOn.smk", 20, 10, true);
+			AddMovieElements (CAMPAIGNEDITOR_ELEMENT_INDEX, "glue\\mainmenu\\Editor.smk", "glue\\mainmenu\\EditorOn.smk", 20, 16, true);
 			AddMovieElements (EXIT_ELEMENT_INDEX, "glue\\mainmenu\\Exit.smk", "glue\\mainmenu\\ExitOn.smk", 15, 0, true);
 			
 			foreach (var ui_el in smkElements) {
-				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Height);
+				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Layer.Bounds.Height);
 				ui_el.Layer.AnchorPoint = new PointF (0, 0);
 				AddSublayer (ui_el.Layer);				
 			}
 		}
 				
-		void AddMovieElements (int elementIndex, string normalMovie, string onMovie, ushort off_x, ushort off_y, bool on_movie_on_top)
+		void AddMovieElements (int elementIndex, string normalMovie, string onMovie, short off_x, short off_y, bool on_movie_on_top)
 		{
 			UIElement normalElement, onElement;
 
@@ -177,8 +177,8 @@ namespace SCSharpMac.UI
 						      Elements[elementIndex].Palette,
 						      onMovie);
 			
-			onElement.X1 += off_x;
-			onElement.Y1 += off_y;
+			onElement.X1 = (ushort)((short)onElement.X1 + off_x);
+			onElement.Y1 = (ushort)((short)onElement.Y1 + off_y);
 
 			if (!on_movie_on_top)
 				smkElements.Add (onElement);

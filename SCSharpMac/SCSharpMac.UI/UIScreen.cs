@@ -161,24 +161,14 @@ namespace SCSharpMac.UI
 			get { return background; }
 		}
 		
-		public PointF ScreenToUIElement (PointF point)
+		public PointF ScreenToLayer (PointF point)
 		{
-			return new PointF (point.X, Bounds.Height - point.Y);
+			return new PointF (point.X - Position.X, point.Y - Position.Y);
 		}
 		
-		public PointF UIElementToScreen (PointF point)
+		public PointF LayerToScreen (PointF point)
 		{
-			return new PointF (point.X, Bounds.Height - point.Y);
-		}
-
-		public RectangleF ScreenToUIElement (RectangleF rect)
-		{
-			return new RectangleF (rect.X, Bounds.Height - rect.Y, rect.Width, rect.Height);
-		}
-		
-		public RectangleF UIElementToScreen (RectangleF rect)
-		{
-			return new RectangleF (rect.X, Bounds.Height - rect.Y, rect.Width, rect.Height);
+			return new PointF (point.X + Position.X, point.Y + Position.Y);
 		}
 
 		
@@ -188,7 +178,7 @@ namespace SCSharpMac.UI
 			if (Elements == null)
 				return null;
 
-			PointF ui_pt = ScreenToUIElement (p);
+			PointF ui_pt = ScreenToLayer (p);
 
 			foreach (UIElement e in Elements) {
 				if (e.Type == ElementType.DialogBox)
@@ -197,7 +187,7 @@ namespace SCSharpMac.UI
 				if (onlyUI &&
 				    e.Type == ElementType.Image)
 					continue;
-
+				
 				if (e.Visible && e.PointInside (ui_pt))
 					return e;
 			}
@@ -236,8 +226,8 @@ namespace SCSharpMac.UI
 
 			if (mouseDownElement != null)
 				Console.WriteLine ("mouseDownElement already set in MouseButtonDown");
-
-			UIElement element = XYToElement (new PointF (theEvent.LocationInWindow.X, theEvent.LocationInWindow.Y), true);
+			
+			UIElement element = XYToElement (theEvent.LocationInWindow, true);
 			if (element != null && element.Visible && element.Sensitive) {
 				mouseDownElement = element;
 				if (theEvent.Type == NSEventType.LeftMouseDown)				
@@ -288,7 +278,7 @@ namespace SCSharpMac.UI
 				mouseDownElement.PointerMotion (theEvent);
 			}
 			else {
-				UIElement newMouseOverElement = XYToElement (new PointF (theEvent.LocationInWindow.X, theEvent.LocationInWindow.Y), true);
+				UIElement newMouseOverElement = XYToElement (theEvent.LocationInWindow, true);
 
 				if (newMouseOverElement != mouseOverElement) {
 					if (mouseOverElement != null)
@@ -296,8 +286,8 @@ namespace SCSharpMac.UI
 					if (newMouseOverElement != null)
 						MouseEnterElement (newMouseOverElement);
 				}
-
-				mouseOverElement = newMouseOverElement;
+				
+				mouseOverElement = newMouseOverElement;				
 			}
 		}
 
@@ -509,11 +499,13 @@ namespace SCSharpMac.UI
 		void LoadResources ()
 		{
 			ResourceLoader ();
-			foreach (var ui_el in Elements) {
-				if (ui_el.Layer != null) {
-					ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Height);
-					ui_el.Layer.AnchorPoint = new PointF (0, 0);
-					AddSublayer (ui_el.Layer);
+			if (Elements != null) {
+				foreach (var ui_el in Elements) {
+					if (ui_el.Layer != null) {
+						ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Height);
+						ui_el.Layer.AnchorPoint = new PointF (0, 0);
+						AddSublayer (ui_el.Layer);
+					}
 				}
 			}
 				

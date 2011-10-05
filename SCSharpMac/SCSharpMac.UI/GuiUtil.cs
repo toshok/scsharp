@@ -36,11 +36,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using System.Drawing;
-using System.Drawing.Imaging;
 
 using SCSharp;
 using MonoMac.CoreGraphics;
 using MonoMac.CoreAnimation;
+using MonoMac.AppKit;
 
 namespace SCSharpMac.UI
 {
@@ -89,9 +89,9 @@ namespace SCSharpMac.UI
 					else
 						buf [i + 0] = 128;
 
-					buf[i + 1] = palette[ (g.Bitmap[y,x] + offset) * 3 + 0];
-					buf[i + 2] = palette[ (g.Bitmap[y,x] + offset) * 3 + 1];
-					buf[i + 3] = palette[ (g.Bitmap[y,x] + offset) * 3 + 2];
+					buf[i + 1] = palette[ (g.Bitmap[y,x]) * 3 + offset + 0];
+					buf[i + 2] = palette[ (g.Bitmap[y,x]) * 3 + offset + 1];
+					buf[i + 3] = palette[ (g.Bitmap[y,x]) * 3 + offset + 2];
 
 					if (buf[i+1] == 252 && buf[i+2] == 0 && buf[i+3] == 252)
 						buf[i + 0] = 0;
@@ -185,7 +185,7 @@ namespace SCSharpMac.UI
 
 						CALayer gl = RenderGlyph (font, g, palette, offset);
 						gl.AnchorPoint = new PointF (0,0);
-						gl.Position = new PointF (x, y - g.YOffset);
+						gl.Position = new PointF (x, y - g.Height - g.YOffset);
 						layer.AddSublayer (gl);
 					}
 				}
@@ -355,11 +355,6 @@ namespace SCSharpMac.UI
 		}
 
 #if SDL_API
-		public static Surface SurfaceFromStream (Stream stream)
-		{
-			return GuiUtil.SurfaceFromStream (stream, -1, -1);
-		}
-
 		public static Sound SoundFromStream (Stream stream)
 		{
 			byte[] buf = GuiUtil.ReadStream (stream);

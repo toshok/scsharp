@@ -110,13 +110,38 @@ namespace SCSharpMac.UI
 					return new Size (player.Width, player.Height);
 			}
 		}
-
+		
+		void CreateDimLayer ()
+		{
+			dimLayer = CALayer.Create ();
+			dimLayer.Bounds = new RectangleF (0, 0, player.Width, player.Height);
+			dimLayer.Position = new PointF (0, 0);
+			dimLayer.AnchorPoint = new PointF (0, 0);
+		}
+		
 		public void Dim (byte dimness)
 		{
-			dim = dimness;
+			if (dim == dimness)
+				return;
+			
+			if (dim > 0) {
+				if (dimness > 0)
+					dimLayer.BackgroundColor = new CGColor (0, (float)dim / 255);
+				else
+					dimLayer.RemoveFromSuperLayer ();
+			}
+			else {
+				if (dimness > 0) {
+					if (dimLayer == null)
+						CreateDimLayer ();
+					dimLayer.BackgroundColor = new CGColor (0, (float)dim / 255);					
+					player.Layer.AddSublayer (dimLayer);
+				}
+			}
 		}
 
 		SmackerPlayer player;
+		CALayer dimLayer;
 		byte dim = 0;
 		bool scale;		
 		
@@ -141,16 +166,11 @@ namespace SCSharpMac.UI
 				player.Layer.AffineTransform = CGAffineTransform.MakeScale (zoom, zoom);
 			}
 			
-#if notyet
 			if (dim != 0) {
-				Surface dim_surf = new Surface (surf.Size);
-				dim_surf.Alpha = dim;
-				dim_surf.AlphaBlending = true;
-				dim_surf.Blit (surf);
-				surf.Dispose ();
-				surf = dim_surf;
-			}
-#endif
+				CreateDimLayer ();
+				dimLayer.BackgroundColor = new CGColor (0, (float)dim / 255);
+				player.Layer.AddSublayer (dimLayer);
+			}				
 			
 			return player.Layer;
 		}
