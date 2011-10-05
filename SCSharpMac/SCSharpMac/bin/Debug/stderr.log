@@ -1,52 +1,31 @@
-Stacktrace:
 
-  at (wrapper managed-to-native) MonoMac.AppKit.NSApplication.NSApplicationMain (int,string[]) <IL 0x0009d, 0xffffffff>
-  at MonoMac.AppKit.NSApplication.Main (string[]) [0x00000] in /Users/michael/Mono/monomac/src/AppKit/NSApplication.cs:74
-  at SCSharpMac.MainClass.Main (string[]) [0x00005] in /Users/toshok/src/scsharp/SCSharpMac/SCSharpMac/Main.cs:14
-  at (wrapper runtime-invoke) <Module>.runtime_invoke_void_object (object,intptr,intptr,intptr) <IL 0x00050, 0xffffffff>
+Unhandled Exception: System.Exception: only one active dialog is allowed
+at SCSharpMac.UI.UIScreen.ShowDialog (SCSharpMac.UI.UIDialog) <0x000e3>
+at SCSharpMac.UI.MainMenu.ShowGameModeDialog (SCSharpMac.UI.UIScreenType) <0x00112>
+at SCSharpMac.UI.MainMenu.<ResourceLoader>m__5 () <0x00027>
+at SCSharpMac.UI.UIElement.OnActivate () <0x0001f>
+at SCSharpMac.UI.ButtonElement.MouseButtonUp (MonoMac.AppKit.NSEvent) <0x000a3>
+at SCSharpMac.UI.UIScreen.MouseButtonUp (MonoMac.AppKit.NSEvent) <0x00040>
+at SCSharpMac.UI.UIScreen.HandleMouseButtonUp (MonoMac.AppKit.NSEvent) <0x00019>
+at SCSharpMac.UI.Game.MouseUp (MonoMac.AppKit.NSEvent) <0x00173>
+at (wrapper dynamic-method) object.[SCSharpMac.UI.Game.Void MouseUp(MonoMac.AppKit.NSEvent)] (MonoMac.Foundation.NSObject,MonoMac.ObjCRuntime.Selector,MonoMac.AppKit.NSEvent) <0x00033>
+at (wrapper native-to-managed) object.[SCSharpMac.UI.Game.Void MouseUp(MonoMac.AppKit.NSEvent)] (MonoMac.Foundation.NSObject,MonoMac.ObjCRuntime.Selector,MonoMac.AppKit.NSEvent) <0x000fb>
+at (wrapper managed-to-native) MonoMac.AppKit.NSApplication.NSApplicationMain (int,string[]) <0x00003>
+at MonoMac.AppKit.NSApplication.Main (string[]) <0x00017>
+at SCSharpMac.MainClass.Main (string[]) <0x00017>
 
-Native stacktrace:
-
-	0   SCSharpMac                          0x000b98e6 mono_handle_native_sigsegv + 422
-	1   SCSharpMac                          0x000048fe mono_sigsegv_signal_handler + 334
-	2   libsystem_c.dylib                   0x9719759b _sigtramp + 43
-	3   ???                                 0xffffffff 0x0 + 4294967295
-	4   AppKit                              0x93169dac -[NSCGSContext _invalidate] + 85
-	5   AppKit                              0x93169d2f -[NSCGSContext dealloc] + 35
-	6   AppKit                              0x93169d05 -[NSWindowGraphicsContext dealloc] + 71
-	7   libobjc.A.dylib                     0x9b19f54e _objc_rootRelease + 47
-	8   libobjc.A.dylib                     0x9b1a0c58 _ZN12_GLOBAL__N_119AutoreleasePoolPage3popEPv + 404
-	9   CoreFoundation                      0x95299e15 _CFAutoreleasePoolPop + 53
-	10  Foundation                          0x972d7e9a -[NSAutoreleasePool drain] + 131
-	11  Foundation                          0x9730f3af _NSAppleEventManagerGenericHandler + 300
-	12  AE                                  0x95637f1d _Z20aeDispatchAppleEventPK6AEDescPS_mPh + 202
-	13  AE                                  0x95621a4b _ZL25dispatchEventAndSendReplyPK6AEDescPS_ + 43
-	14  AE                                  0x95621938 aeProcessAppleEvent + 253
-	15  HIToolbox                           0x97750f72 AEProcessAppleEvent + 103
-	16  AppKit                              0x930a3b5b _DPSNextEvent + 1301
-	17  AppKit                              0x930a3159 -[NSApplication nextEventMatchingMask:untilDate:inMode:dequeue:] + 113
-	18  AppKit                              0x9309f4cb -[NSApplication run] + 904
-	19  AppKit                              0x93332b54 NSApplicationMain + 1054
-	20  ???                                 0x05e0befe 0x0 + 98615038
-	21  ???                                 0x05e0bcfc 0x0 + 98614524
-	22  ???                                 0x004adff8 0x0 + 4907000
-	23  ???                                 0x004ae156 0x0 + 4907350
-	24  SCSharpMac                          0x00010624 mono_jit_runtime_invoke + 164
-	25  SCSharpMac                          0x001c1032 mono_runtime_invoke + 137
-	26  SCSharpMac                          0x001c3940 mono_runtime_exec_main + 669
-	27  SCSharpMac                          0x001c2c7a mono_runtime_run_main + 843
-	28  SCSharpMac                          0x0008943d mono_main + 7773
-	29  SCSharpMac                          0x00002db5 start + 53
-	30  ???                                 0x00000001 0x0 + 1
-
-Debug info from gdb:
-
-/tmp/mono-gdb-commands.76VJ3Z:1: Error in sourced command file:
-unable to debug self
-
-=================================================================
-Got a SIGSEGV while executing native code. This usually indicates
-a fatal error in the mono runtime or one of the native libraries 
-used by your application.
-=================================================================
+[ERROR] FATAL UNHANDLED EXCEPTION: System.Exception: only one active dialog is allowed
+at SCSharpMac.UI.UIScreen.ShowDialog (SCSharpMac.UI.UIDialog) <0x000e3>
+at SCSharpMac.UI.MainMenu.ShowGameModeDialog (SCSharpMac.UI.UIScreenType) <0x00112>
+at SCSharpMac.UI.MainMenu.<ResourceLoader>m__5 () <0x00027>
+at SCSharpMac.UI.UIElement.OnActivate () <0x0001f>
+at SCSharpMac.UI.ButtonElement.MouseButtonUp (MonoMac.AppKit.NSEvent) <0x000a3>
+at SCSharpMac.UI.UIScreen.MouseButtonUp (MonoMac.AppKit.NSEvent) <0x00040>
+at SCSharpMac.UI.UIScreen.HandleMouseButtonUp (MonoMac.AppKit.NSEvent) <0x00019>
+at SCSharpMac.UI.Game.MouseUp (MonoMac.AppKit.NSEvent) <0x00173>
+at (wrapper dynamic-method) object.[SCSharpMac.UI.Game.Void MouseUp(MonoMac.AppKit.NSEvent)] (MonoMac.Foundation.NSObject,MonoMac.ObjCRuntime.Selector,MonoMac.AppKit.NSEvent) <0x00033>
+at (wrapper native-to-managed) object.[SCSharpMac.UI.Game.Void MouseUp(MonoMac.AppKit.NSEvent)] (MonoMac.Foundation.NSObject,MonoMac.ObjCRuntime.Selector,MonoMac.AppKit.NSEvent) <0x000fb>
+at (wrapper managed-to-native) MonoMac.AppKit.NSApplication.NSApplicationMain (int,string[]) <0x00003>
+at MonoMac.AppKit.NSApplication.Main (string[]) <0x00017>
+at SCSharpMac.MainClass.Main (string[]) <0x00017>
 

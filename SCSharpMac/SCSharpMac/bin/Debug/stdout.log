@@ -16,16 +16,6 @@ imageData begins at 128
 loading ui elements
 returning null stream for resource: dlgs\tile.grp
 Loading global resources
-returning null stream for resource: files\font\font8.fnt
-fonts[0] = not null
-returning null stream for resource: files\font\font10.fnt
-fonts[1] = not null
-returning null stream for resource: files\font\font14.fnt
-fonts[2] = not null
-returning null stream for resource: files\font\font16.fnt
-fonts[3] = not null
-returning null stream for resource: files\font\font16x.fnt
-fonts[4] = not null
 Flashing
 SpritesDat
 imageIndexBlockId = 0
@@ -841,7 +831,7 @@ id: 401   offset: 95F0
 id: 402   offset: 9612
 id: 403   offset: 9642
 id: 404   offset: 9664
-Flashing
+GlobalResourcesLoaded
 loading font palette
 returning null stream for resource: glue\Palmm\tFont.pcx
 imageData begins at 128
@@ -854,6 +844,16 @@ returning null stream for resource: glue\Palmm\Backgnd.pcx
 imageData begins at 128
 loading ui elements
 returning null stream for resource: rez\gluMain.bin
+returning null stream for resource: files\font\font8.fnt
+fonts[0] = not null
+returning null stream for resource: files\font\font10.fnt
+fonts[1] = not null
+returning null stream for resource: files\font\font14.fnt
+fonts[2] = not null
+returning null stream for resource: files\font\font16.fnt
+fonts[3] = not null
+returning null stream for resource: files\font\font16x.fnt
+fonts[4] = not null
 unhandled case 72
 0: DialogBox 'MainMenu' : Visible
 1: Image 'glue\mainmenu\eTail.pcx' : Visible, Transparent
@@ -879,11 +879,28 @@ returning null stream for resource: glue\mainmenu\Exit.smk
 returning null stream for resource: glue\mainmenu\ExitOn.smk
 returning null stream for resource: glue\mainmenu\eTail.pcx
 imageData begins at 128
-MovieElement: Creating new surface
-MovieElement: Creating new surface
-MovieElement: Creating new surface
-MovieElement: Creating new surface
-MovieElement: Creating new surface
-MovieElement: Creating new surface
-MovieElement: Creating new surface
-MovieElement: Creating new surface
+returning null stream for resource: glue\mainmenu\pIntro.pcx
+imageData begins at 128
+returning null stream for resource: glue\mainmenu\pCredit.pcx
+imageData begins at 128
+MouseDown
+MouseUp at 141 302
+showing SCSharpMac.UI.GameModeDialog
+loading font palette
+returning null stream for resource: glue\Palmm\tFont.pcx
+imageData begins at 128
+loading cursor palette
+returning null stream for resource: glue\Palmm\tEffect.pcx
+imageData begins at 128
+loading arrow cursor
+loading background
+imageData begins at 128
+loading ui elements
+0: Delete
+1: Original
+2: 
+3: Expansion
+4: Cancel
+MouseDown
+MouseUp at 141 302
+showing SCSharpMac.UI.GameModeDialog

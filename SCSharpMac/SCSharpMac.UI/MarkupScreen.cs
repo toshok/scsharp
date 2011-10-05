@@ -99,7 +99,7 @@ namespace SCSharpMac.UI
 					if (l.Trim() == "")
 						lineLayers.Add (null);
 					else
-						lineLayers.Add (GuiUtil.ComposeText (l, fnt, pal, 800/*Painter.SCREEN_RES_X*/ - X_OFFSET * 2, -1, 4));
+						lineLayers.Add (GuiUtil.ComposeText (l, fnt, pal, 640/*Painter.SCREEN_RES_X*/ - X_OFFSET * 2, -1, 4));
 				}
 			}
 
@@ -120,7 +120,7 @@ namespace SCSharpMac.UI
 					y = Y_OFFSET;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF ((800/*Painter.Width*/ - l.Bounds.Width) / 2, y);
+							l.Position = new PointF ((640/*Painter.Width*/ - l.Bounds.Width) / 2, y);
 							y += l.Bounds.Height;
 						}
 						else 
@@ -131,7 +131,7 @@ namespace SCSharpMac.UI
 					y = 600/*Painter.Height*/ - Y_OFFSET - fnt.LineSize * lines.Count;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF ((800/*Painter.Width*/ - l.Bounds.Width) / 2, y);
+							l.Position = new PointF ((640/*Painter.Width*/ - l.Bounds.Width) / 2, y);
 							y += l.Bounds.Height;
 						}
 						else
@@ -164,7 +164,7 @@ namespace SCSharpMac.UI
 					y = (600/*Painter.Height*/ - fnt.LineSize * lines.Count) / 2;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF (800/*Painter.Width*/ - l.Bounds.Width - X_OFFSET, y);
+							l.Position = new PointF (640/*Painter.Width*/ - l.Bounds.Width - X_OFFSET, y);
 							y += l.Bounds.Height;
 						}
 						else
@@ -175,7 +175,7 @@ namespace SCSharpMac.UI
 					y = (600/*Painter.Height*/ - fnt.LineSize * lines.Count) / 2;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF ((800/*Painter.Width*/ - l.Bounds.Width) / 2, y);
+							l.Position = new PointF ((640/*Painter.Width*/ - l.Bounds.Width) / 2, y);
 							y += l.Bounds.Height;
 						}
 						else

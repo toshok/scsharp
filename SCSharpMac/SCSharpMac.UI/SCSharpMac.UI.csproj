@@ -70,6 +70,7 @@
     <Compile Include="UIDialog.cs" />
     <Compile Include="MovieElement.cs" />
     <Compile Include="CursorAnimator.cs" />
+    <Compile Include="GameModeDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SCSharp\SCSharp.Core.dll.csproj">

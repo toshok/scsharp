@@ -165,6 +165,7 @@ namespace SCSharpMac.UI
 			text_height += font.LineSize;
 			
 			CALayer layer = CALayer.Create ();
+			layer.AnchorPoint = new PointF (0, 0);
 			layer.Bounds = new RectangleF (0, 0, text_width, text_height);
 
 			/* the draw it */
@@ -182,7 +183,7 @@ namespace SCSharpMac.UI
 						glyph_width = g.Width + g.XOffset;
 
 						CALayer gl = RenderGlyph (font, g, palette, offset);
-						gl.AnchorPoint = new PointF (0,1);
+						gl.AnchorPoint = new PointF (0,0);
 						gl.Position = new PointF (x, y - g.YOffset);
 						layer.AddSublayer (gl);
 					}
@@ -363,25 +364,29 @@ namespace SCSharpMac.UI
 			byte[] buf = GuiUtil.ReadStream (stream);
 			return Mixer.Sound (buf);
 		}
-
+#endif
+		
 		public static void PlaySound (Mpq mpq, string resourcePath)
 		{
+#if SDL_API
 			Stream stream = (Stream)mpq.GetResource (resourcePath);
 			if (stream == null)
 				return;
 			Sound s = GuiUtil.SoundFromStream (stream);
 			s.Play();
+#endif
 		}
-
+		
 		public static void PlayMusic (Mpq mpq, string resourcePath, int numLoops)
 		{
+#if SDL_API
 			Stream stream = (Stream)mpq.GetResource (resourcePath);
 			if (stream == null)
 				return;
 			Sound s = GuiUtil.SoundFromStream (stream);
 			s.Play (true);
-		}
 #endif
+		}
 	}
 }
 

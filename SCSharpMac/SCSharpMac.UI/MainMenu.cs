@@ -55,7 +55,6 @@ namespace SCSharpMac.UI
 		const int CREDITS_ELEMENT_INDEX = 9;
 		const int VERSION_ELEMENT_INDEX = 10;
 
-#if notyet
 		void ShowGameModeDialog (UIScreenType nextScreen)
 		{
 			GameModeDialog d = new GameModeDialog (this, mpq);
@@ -73,7 +72,6 @@ namespace SCSharpMac.UI
 			};
 			ShowDialog (d);
 		}
-#endif
 
 		List<UIElement> smkElements;
 
@@ -97,23 +95,17 @@ namespace SCSharpMac.UI
 			for (int i = 0; i < Elements.Count; i ++)
 				Console.WriteLine ("{0}: {1} '{2}' : {3}", i, Elements[i].Type, Elements[i].Text, Elements[i].Flags);
 			
-#if notyet
-			Elements[VERSION_ELEMENT_INDEX].Text = "v" + Consts.Version;
-#endif
+			//Elements[VERSION_ELEMENT_INDEX].Text = "v" + Consts.Version;
 
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Flags |= ElementFlags.RightAlignText | ElementFlags.CenterTextVert;
 
 			Elements[SINGLEPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
 					if (Game.Instance.IsBroodWar) {
-#if notyet
 						ShowGameModeDialog (UIScreenType.Login);
-#endif
 					}
 					else {
-#if notyet
 						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
-#endif
 						Game.Instance.SwitchToScreen (UIScreenType.Login);
 					}
 				};
@@ -121,14 +113,10 @@ namespace SCSharpMac.UI
 			Elements[MULTIPLAYER_ELEMENT_INDEX].Activate +=
 				delegate () {
 					if (Game.Instance.IsBroodWar) {
-#if notyet
 						ShowGameModeDialog (UIScreenType.Connection);
-#endif
 					}
 					else {
-#if notyet
 						GuiUtil.PlaySound (mpq, Builtins.Mousedown2Wav);
-#endif
 						Game.Instance.SwitchToScreen (UIScreenType.Connection);
 					}
 				};
@@ -170,13 +158,10 @@ namespace SCSharpMac.UI
 			AddMovieElements (EXIT_ELEMENT_INDEX, "glue\\mainmenu\\Exit.smk", "glue\\mainmenu\\ExitOn.smk", 15, 0, true);
 			
 			foreach (var ui_el in smkElements) {
-				ui_el.Layer.Position = new PointF (ui_el.X1 + 50, ui_el.Y1 + 50);
+				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1);
 				ui_el.Layer.AnchorPoint = new PointF (0, 0);
 				AddSublayer (ui_el.Layer);				
 			}
-#if notyet
-			smkPainter = new UIPainter (smkElements);
-#endif
 		}
 				
 		void AddMovieElements (int elementIndex, string normalMovie, string onMovie, ushort off_x, ushort off_y, bool on_movie_on_top)

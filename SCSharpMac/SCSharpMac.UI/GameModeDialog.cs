@@ -1,5 +1,5 @@
 //
-// SCSharpMac.UI.Cinematic
+// SCSharp.UI.GameModeDialog
 //
 // Authors:
 //	Chris Toshok (toshok@gmail.com)
@@ -41,72 +41,53 @@ using SCSharp;
 
 namespace SCSharpMac.UI
 {
-	public class Cinematic : UIScreen
+	public class GameModeDialog : UIDialog
 	{
-		SmackerPlayer player;
-		string resourcePath;
-
-		public Cinematic (Mpq mpq, string resourcePath)
-			: base (mpq, null, null)
+		public GameModeDialog (UIScreen parent, Mpq mpq)
+			: base (parent, mpq, "glue\\Palmm", Builtins.rez_GluGameModeBin)
 		{
-			this.resourcePath = resourcePath;
+			background_path = "glue\\Palmm\\retail_ex.pcx";
+			background_translucent = 42;
+			background_transparent = 0;
 		}
 
-		public override void AddToPainter ()
+		const int ORIGINAL_ELEMENT_INDEX = 1;
+		const int TITLE_ELEMENT_INDEX = 2;
+		const int EXPANSION_ELEMENT_INDEX = 3;
+		const int CANCEL_ELEMENT_INDEX = 4;
+
+		protected override void ResourceLoader ()
 		{
-			base.AddToPainter ();
+			base.ResourceLoader ();
 
-			player = new SmackerPlayer ((Stream)mpq.GetResource (resourcePath));
-
-			player.Finished += PlayerFinished;
-			player.Play ();
-
-			if (player.Width != 640/*Painter.Width*/
-		    	|| player.Height != 480/*Painter.Height*/) {
-
-				float horiz_zoom = (float)640/*Painter.Width*/ / player.Width;
-				float vert_zoom = (float)480/*Painter.Height*/ / player.Height;
-				float zoom;
-
-				if (horiz_zoom < vert_zoom)
-					zoom = horiz_zoom;
-				else
-					zoom = vert_zoom;
-				
-				AffineTransform = CGAffineTransform.MakeScale (zoom, zoom);
+			for (int i = 0; i < Elements.Count; i ++) {
+				Console.WriteLine ("{0}: {1}", i, Elements[i].Text);
 			}
 
-			player.Layer.AnchorPoint = new PointF (0, 0);
-			AddSublayer (player.Layer);
+			Elements[TITLE_ELEMENT_INDEX].Text = GlobalResources.Instance.BrooDat.GluAllTbl.Strings[172];
+
+			Elements[ORIGINAL_ELEMENT_INDEX].Activate +=
+				delegate () {
+					if (Activate != null)
+						Activate (false);
+				};
+
+			Elements[EXPANSION_ELEMENT_INDEX].Activate +=
+				delegate () {
+					if (Activate != null)
+						Activate (true);
+				};
+
+			Elements[CANCEL_ELEMENT_INDEX].Activate +=
+				delegate () {
+					if (Cancel != null)
+						Cancel ();
+				};
 		}
 
-		public override void RemoveFromPainter ()
-		{
-			player.Stop ();
-			player = null;
-
-			base.RemoveFromPainter ();
-		}
-
-		public event PlayerEvent Finished;
-
-		void PlayerFinished ()
-		{
-			var h = Finished;
-			if (h != null)
-				h ();
-		}
-
-#if notyet
-		public override void KeyboardDown (KeyboardEventArgs args)
-		{
-			if (args.Key == Key.Escape
-			    || args.Key == Key.Return
-			    || args.Key == Key.Space) {
-				player.Stop ();
-				PlayerFinished ();
-			}
-		}
-#endif
+		public event DialogEvent Cancel;
+		public event GameModeActivateDelegate Activate;
 	}
+
+	public delegate void GameModeActivateDelegate (bool expansion);
 }

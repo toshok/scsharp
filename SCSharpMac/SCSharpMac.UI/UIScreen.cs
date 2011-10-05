@@ -82,6 +82,9 @@ namespace SCSharpMac.UI
 
 			background_transparent = -1;
 			background_translucent = -1;
+			
+			Bounds = new RectangleF (0, 0, 640, 480);
+			AnchorPoint = new PointF (0, 0);
 		}
 
 		protected UIScreen (Mpq mpq)
@@ -493,7 +496,7 @@ namespace SCSharpMac.UI
 			ResourceLoader ();
 			foreach (var ui_el in Elements) {
 				if (ui_el.Layer != null) {
-					ui_el.Layer.Position = new PointF (ui_el.X1, ui_el.Y1);
+					ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1);
 					ui_el.Layer.AnchorPoint = new PointF (0, 0);
 					AddSublayer (ui_el.Layer);
 				}
@@ -523,9 +526,9 @@ namespace SCSharpMac.UI
 			if (this.dialog != null)
 				throw new Exception ("only one active dialog is allowed");
 			this.dialog = dialog;
-
-			dialog.Load ();
+			
 			dialog.Ready += delegate () { dialog.AddToPainter (); };
+			dialog.Load ();
 		}
 
 		public virtual void DismissDialog ()

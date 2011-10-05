@@ -36,6 +36,7 @@ using System.Collections.Generic;
 
 using MonoMac.AppKit;
 using MonoMac.CoreAnimation;
+using MonoMac.CoreGraphics;
 
 using SCSharp;
 
@@ -46,9 +47,7 @@ namespace SCSharpMac.UI
 	{
 		protected UIScreen parent;
 		bool dimScreen;
-#if notyet
-		Surface dimScreenSurface;
-#endif
+		CALayer dimLayer;
 
 		protected UIDialog (UIScreen parent, Mpq mpq, string prefix, string binFile)
 			: base (mpq, prefix, binFile)
@@ -56,41 +55,28 @@ namespace SCSharpMac.UI
 			this.parent = parent;
 			background_translucent = 254;
 			background_transparent = 0;
-
+			
 			dimScreen = true;
 			
-#if notyet
-			dimScreenSurface = new Surface (Painter.SCREEN_RES_X, Painter.SCREEN_RES_Y);
-			dimScreenSurface.Alpha = 100;
-			dimScreenSurface.AlphaBlending = true;
-#endif
+			dimLayer = CALayer.Create ();
+			dimLayer.Bounds = parent.Bounds;
+			dimLayer.AnchorPoint = new PointF (0, 0);
+			dimLayer.BackgroundColor = new CGColor (0, 0, 0, .7f);
 		}
 
 		public override void AddToPainter ()
 		{
-#if notyet
-			if (Background != null)
-				Painter.Add (Layer.DialogBackground, BackgroundPainter);
-
-			if (UIPainter != null)
-				Painter.Add (Layer.DialogUI, UIPainter.Paint);
-
-			Painter.Invalidate ();
-#endif
+			if (dimScreen)
+				parent.AddSublayer (dimLayer);
+			parent.AddSublayer (this);
 		}
 
 
 		public override void RemoveFromPainter ()
 		{
-#if notyet
-			if (Background != null)
-				Painter.Remove (Layer.DialogBackground, BackgroundPainter);
-
-			if (UIPainter != null)
-				Painter.Remove (Layer.DialogUI, UIPainter.Paint);
-
-			Painter.Invalidate ();
-#endif
+			RemoveFromSuperLayer ();
+			if (dimScreen)
+				dimLayer.RemoveFromSuperLayer ();
 		}
 
 		protected override void ResourceLoader ()
@@ -102,20 +88,20 @@ namespace SCSharpMac.UI
 			int si;
 
 			if (Background != null) {
-				baseX = (int)((800/*Painter.SCREEN_RES_X*/ - Background.Bounds.Width) / 2);
-				baseY = (int)((600/*Painter.SCREEN_RES_Y*/ - Background.Bounds.Height) / 2);
-				si = 0;
+				Bounds = Background.Bounds;
+				Position = new PointF ((parent.Bounds.Width - Background.Bounds.Width) / 2,
+								       parent.Bounds.Height - (parent.Bounds.Height - Background.Bounds.Height) / 2);
 			}
 			else {
-				baseX = Elements[0].X1;
-				baseY = Elements[0].Y1;
-				si = 1;
-			}
-
-			/* and add that offset to all our elements */
-			for (int i = si; i < Elements.Count; i ++) {
-				Elements[i].X1 += (ushort)baseX;
-				Elements[i].Y1 += (ushort)baseY;
+				Position = new PointF (Elements[0].X1, parent.Bounds.Height - Elements[0].Y1);
+				for (int i = 1; i < Elements.Count; i ++) {
+					var ui_el = Elements[i];
+					ui_el.X1 -= Elements[0].X1;
+					ui_el.Y1 -= Elements[0].Y1;
+				}
+				
+				Elements[0].X1 = 0;
+				Elements[0].Y1 = 0;	
 			}
 		}
 
