@@ -70,6 +70,7 @@ namespace SCSharpMac.UI
 			PageLocation location;
 			List<string> lines;
 			List<CALayer> lineLayers;
+			CALayer lineContainer;
 			CALayer newBackground;
 			Fnt fnt;
 			byte[] pal;
@@ -85,6 +86,8 @@ namespace SCSharpMac.UI
 			public MarkupPage (Stream background)
 			{
 				newBackground = GuiUtil.LayerFromStream (background, 254, 0);
+				newBackground.AnchorPoint = new PointF (0, 0);
+				newBackground.Position = new PointF (0, 0);
 			}
 
 			public void AddLine (string line)
@@ -92,35 +95,49 @@ namespace SCSharpMac.UI
 				lines.Add (line);
 			}
 
-			public void Layout ()
+			public void CreateLineLayers ()
 			{
+				lineContainer = CALayer.Create ();
+				lineContainer.AnchorPoint = new PointF (0, 0);
+				lineContainer.Bounds = new RectangleF (0, 0, 640, 480);
+				
 				lineLayers = new List<CALayer> ();
 				foreach (string l in lines) {
+					CALayer layer;
 					if (l.Trim() == "")
-						lineLayers.Add (null);
+						layer = null;
 					else
-						lineLayers.Add (GuiUtil.ComposeText (l, fnt, pal, 640/*Painter.SCREEN_RES_X*/ - X_OFFSET * 2, -1, 4));
+						layer = GuiUtil.ComposeText (l, fnt, pal, 640/*Painter.SCREEN_RES_X*/ - X_OFFSET * 2, -1, 4);
+					lineLayers.Add (layer);
+					if (layer != null)
+						lineContainer.AddSublayer (layer);
 				}
 			}
 
 			public CALayer Background {
 				get { return newBackground; } 
 			}
-
+			
+			public CALayer Lines {
+				get { return lineContainer; }
+			}
+			
 			public bool HasText {
 				get { return lines != null && lines.Count > 0; }
 			}
 
-			public void Paint ()
+			public void Layout ()
 			{
 				float y;
-
+				
+				CreateLineLayers ();
+				
 				switch (location) {
 				case PageLocation.Top:
 					y = Y_OFFSET;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF ((640/*Painter.Width*/ - l.Bounds.Width) / 2, y);
+							l.Position = new PointF ((lineContainer.Bounds.Width - l.Bounds.Width) / 2, y);
 							y += l.Bounds.Height;
 						}
 						else 
@@ -128,10 +145,10 @@ namespace SCSharpMac.UI
 					}
 					break;
 				case PageLocation.Bottom:
-					y = 600/*Painter.Height*/ - Y_OFFSET - fnt.LineSize * lines.Count;
+					y = lineContainer.Bounds.Height - Y_OFFSET - fnt.LineSize * lines.Count;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF ((640/*Painter.Width*/ - l.Bounds.Width) / 2, y);
+							l.Position = new PointF ((lineContainer.Bounds.Width - l.Bounds.Width) / 2, y);
 							y += l.Bounds.Height;
 						}
 						else
@@ -139,7 +156,7 @@ namespace SCSharpMac.UI
 					}
 					break;
 				case PageLocation.Left:
-					y = (600/*Painter.Height*/ - fnt.LineSize * lines.Count) / 2;
+					y = (lineContainer.Bounds.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
 							l.Position = new PointF (X_OFFSET, y);
@@ -150,7 +167,7 @@ namespace SCSharpMac.UI
 					}
 					break;
 				case PageLocation.LowerLeft:
-					y = 600/*Painter.Height*/ - Y_OFFSET - fnt.LineSize * lines.Count;
+					y = lineContainer.Bounds.Height - Y_OFFSET - fnt.LineSize * lines.Count;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
 							l.Position = new PointF (X_OFFSET, y);
@@ -161,10 +178,10 @@ namespace SCSharpMac.UI
 					}
 					break;
 				case PageLocation.Right:
-					y = (600/*Painter.Height*/ - fnt.LineSize * lines.Count) / 2;
+					y = (lineContainer.Bounds.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF (640/*Painter.Width*/ - l.Bounds.Width - X_OFFSET, y);
+							l.Position = new PointF (lineContainer.Bounds.Width - l.Bounds.Width - X_OFFSET, y);
 							y += l.Bounds.Height;
 						}
 						else
@@ -172,10 +189,10 @@ namespace SCSharpMac.UI
 					}
 					break;
 				case PageLocation.Center:
-					y = (600/*Painter.Height*/ - fnt.LineSize * lines.Count) / 2;
+					y = (lineContainer.Bounds.Height - fnt.LineSize * lines.Count) / 2;
 					foreach (CALayer l in lineLayers) {
 						if (l != null) {
-							l.Position = new PointF ((640/*Painter.Width*/ - l.Bounds.Width) / 2, y);
+							l.Position = new PointF ((lineContainer.Bounds.Width - l.Bounds.Width) / 2, y);
 							y += l.Bounds.Height;
 						}
 						else
@@ -261,6 +278,7 @@ namespace SCSharpMac.UI
 		}
 		
 		CALayer currentBackground;
+		CALayer currentLines;
 		IEnumerator<MarkupPage> pageEnumerator;
 
 		int millisDelay;
@@ -277,11 +295,6 @@ namespace SCSharpMac.UI
 		{
 			Game.Instance.Tick -= FlipPage;
 			base.RemoveFromPainter ();
-		}
-
-		void PaintMarkup (DateTime now)
-		{
-			pageEnumerator.Current.Paint ();
 		}
 
 		void FlipPage (object sender, TickEventArgs e)
@@ -319,11 +332,20 @@ namespace SCSharpMac.UI
 
 		void AdvanceToNextPage ()
 		{
+			if (currentLines != null)
+				currentLines.RemoveFromSuperLayer ();
 			while (pageEnumerator.MoveNext ()) {
-				if (pageEnumerator.Current.Background != null)
+				if (pageEnumerator.Current.Background != null) {
+					if (currentBackground != null)
+						currentBackground.RemoveFromSuperLayer ();
 					currentBackground = pageEnumerator.Current.Background;
-				if (pageEnumerator.Current.HasText)
+					AddSublayer (currentBackground);
+				}
+				if (pageEnumerator.Current.HasText) {
+					currentLines = pageEnumerator.Current.Lines;
+					AddSublayer (currentLines);
 					return;
+				}
 			}
 
 			Console.WriteLine ("finished!");
