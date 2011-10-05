@@ -83,8 +83,10 @@ namespace SCSharpMac.UI
 			text_layer.AnchorPoint = new PointF (0, 0);
 			text_layer.Position = new PointF (text_x, text_y);
 			layer.AddSublayer (text_layer);
+#if DEBUG_UIELEMENT_BOUNDS			
 			text_layer.BorderWidth = 1;
 			text_layer.BorderColor = new MonoMac.CoreGraphics.CGColor (1, 0, 0, 1);
+#endif
 			
 			return layer;
 		}

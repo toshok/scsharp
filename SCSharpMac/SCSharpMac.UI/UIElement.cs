@@ -136,10 +136,10 @@ namespace SCSharpMac.UI
 					if (layer != null) {
 						layer.Hidden = !visible;
 					
-//#if DEBUG_UIELEMENTS
+#if DEBUG_UIELEMENT_BOUNDS
 						layer.BorderWidth = 1;
 						layer.BorderColor = new CGColor (1, 1, 0);
-//#endif
+#endif
 					}
 				}
 
