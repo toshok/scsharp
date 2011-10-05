@@ -26,6 +26,7 @@ namespace SCSharpMac
 		// Shared initialization code
 		void Initialize ()
 		{
+			AcceptsMouseMovedEvents = true;
 		}
 		
 		#endregion

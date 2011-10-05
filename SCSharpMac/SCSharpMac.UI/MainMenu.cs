@@ -158,7 +158,7 @@ namespace SCSharpMac.UI
 			AddMovieElements (EXIT_ELEMENT_INDEX, "glue\\mainmenu\\Exit.smk", "glue\\mainmenu\\ExitOn.smk", 15, 0, true);
 			
 			foreach (var ui_el in smkElements) {
-				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1);
+				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Height);
 				ui_el.Layer.AnchorPoint = new PointF (0, 0);
 				AddSublayer (ui_el.Layer);				
 			}

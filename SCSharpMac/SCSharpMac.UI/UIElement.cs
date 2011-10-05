@@ -246,10 +246,10 @@ namespace SCSharpMac.UI
 			}
 		}
 		
-		public virtual bool PointInside (int x, int y)
+		public virtual bool PointInside (PointF point)
 		{
-			if (x >= X1 && x < X1 + Width &&
-			    y >= Y1 && y < Y1 + Height)
+			if (point.X >= X1 && point.X < X1 + Width &&
+			    point.Y >= Y1 && point.Y < Y1 + Height)
 				return true;
 
 			return false;

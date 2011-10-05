@@ -110,6 +110,10 @@ namespace SCSharpMac.UI
 			Layer = CALayer.Create();
 			Layer.BackgroundColor = new CGColor (0, 0, 0, 1);
 			
+#if USE_TRACKING_RECTS
+			AddTrackingRect (new Rectangle (0, 0, 640, 480), this, IntPtr.Zero, false);
+#endif
+			
 			WantsLayer = true;
 			
 			starcraftDir = starcraftDir.Replace ('\\', Path.DirectorySeparatorChar)
@@ -358,6 +362,12 @@ namespace SCSharpMac.UI
 				currentScreen.HandleMouseButtonUp (theEvent);
 		}
 		
+		public override void MouseDragged (NSEvent theEvent)
+		{
+			Console.WriteLine ("MouseDragged");
+			base.MouseDragged (theEvent);
+		}
+		
 		public override void MouseMoved (NSEvent theEvent)
 		{
 			Console.WriteLine ("MouseMoved");
@@ -371,6 +381,20 @@ namespace SCSharpMac.UI
 			if (currentScreen != null)
 				currentScreen.HandlePointerMotion (theEvent);
 		}
+		
+#if USE_TRACKING_RECTS
+		public override void MouseEntered (NSEvent theEvent)
+		{
+			Console.WriteLine ("MouseEntered");
+			base.MouseEntered (theEvent);
+		}
+		
+		public override void MouseExited (NSEvent theEvent)
+		{
+			Console.WriteLine ("MouseExited");
+			base.MouseExited (theEvent);
+		}
+#endif
 		
 		public override void KeyDown (NSEvent theEvent)
 		{
@@ -401,9 +425,6 @@ namespace SCSharpMac.UI
 		
 		public void Startup ()
 		{
-#if notyet			
-			Mouse.ShowCursor = false;
-#endif
 			DisplayTitle ();
 			
 			displayLink = new CVDisplayLink();
@@ -513,9 +534,7 @@ namespace SCSharpMac.UI
 					screens[index] = new MainMenu (installedMpq);
 					break;
 				case UIScreenType.Login:
-#if notyet
 					screens[index] = new LoginScreen (playingMpq);
-#endif
 					break;
 				case UIScreenType.Connection:
 #if notyet 

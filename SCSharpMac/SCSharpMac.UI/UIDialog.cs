@@ -90,7 +90,7 @@ namespace SCSharpMac.UI
 			if (Background != null) {
 				Bounds = Background.Bounds;
 				Position = new PointF ((parent.Bounds.Width - Background.Bounds.Width) / 2,
-								       parent.Bounds.Height - (parent.Bounds.Height - Background.Bounds.Height) / 2);
+								       parent.Bounds.Height - (parent.Bounds.Height - Background.Bounds.Height) / 2 - Background.Bounds.Height);
 			}
 			else {
 				Position = new PointF (Elements[0].X1, parent.Bounds.Height - Elements[0].Y1);

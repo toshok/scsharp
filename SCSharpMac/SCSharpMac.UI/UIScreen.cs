@@ -161,11 +161,34 @@ namespace SCSharpMac.UI
 			get { return background; }
 		}
 		
-		// FIXME we should be using CoreAnimation's HitTest code for this..
-		UIElement XYToElement (int x, int y, bool onlyUI)
+		public PointF ScreenToUIElement (PointF point)
 		{
+			return new PointF (point.X, Bounds.Height - point.Y);
+		}
+		
+		public PointF UIElementToScreen (PointF point)
+		{
+			return new PointF (point.X, Bounds.Height - point.Y);
+		}
+
+		public RectangleF ScreenToUIElement (RectangleF rect)
+		{
+			return new RectangleF (rect.X, Bounds.Height - rect.Y, rect.Width, rect.Height);
+		}
+		
+		public RectangleF UIElementToScreen (RectangleF rect)
+		{
+			return new RectangleF (rect.X, Bounds.Height - rect.Y, rect.Width, rect.Height);
+		}
+
+		
+		// FIXME we should be using CoreAnimation's HitTest code for this..
+		UIElement XYToElement (PointF p, bool onlyUI)
+		{			
 			if (Elements == null)
 				return null;
+
+			PointF ui_pt = ScreenToUIElement (p);
 
 			foreach (UIElement e in Elements) {
 				if (e.Type == ElementType.DialogBox)
@@ -175,7 +198,7 @@ namespace SCSharpMac.UI
 				    e.Type == ElementType.Image)
 					continue;
 
-				if (e.Visible && e.PointInside (x, y))
+				if (e.Visible && e.PointInside (ui_pt))
 					return e;
 			}
 			return null;
@@ -185,16 +208,12 @@ namespace SCSharpMac.UI
 		protected UIElement mouseOverElement;
 		public virtual void MouseEnterElement (UIElement element)
 		{
-#if notyet
 			element.MouseEnter ();
-#endif
 		}
 
 		public virtual void MouseLeaveElement (UIElement element)
 		{
-#if notyet
 			element.MouseLeave ();
-#endif
 		}
 
 		public virtual void ActivateElement (UIElement element)
@@ -218,7 +237,7 @@ namespace SCSharpMac.UI
 			if (mouseDownElement != null)
 				Console.WriteLine ("mouseDownElement already set in MouseButtonDown");
 
-			UIElement element = XYToElement ((int)theEvent.LocationInWindow.X, (int)theEvent.LocationInWindow.Y, true);
+			UIElement element = XYToElement (new PointF (theEvent.LocationInWindow.X, theEvent.LocationInWindow.Y), true);
 			if (element != null && element.Visible && element.Sensitive) {
 				mouseDownElement = element;
 				if (theEvent.Type == NSEventType.LeftMouseDown)				
@@ -230,11 +249,9 @@ namespace SCSharpMac.UI
 
 		public void HandleMouseButtonDown (NSEvent theEvent)
 		{
-#if notyet
 			if (dialog != null)
 				dialog.HandleMouseButtonDown (theEvent);
 			else
-#endif
 				MouseButtonDown (theEvent);
 		}
 
@@ -257,11 +274,9 @@ namespace SCSharpMac.UI
 
 		public void HandleMouseButtonUp (NSEvent theEvent)
 		{
-#if notyet
 			if (dialog != null)
 				dialog.HandleMouseButtonUp (theEvent);
 			else
-#endif
 				MouseButtonUp (theEvent);
 		}
 		
@@ -273,7 +288,7 @@ namespace SCSharpMac.UI
 				mouseDownElement.PointerMotion (theEvent);
 			}
 			else {
-				UIElement newMouseOverElement = XYToElement ((int)theEvent.LocationInWindow.X, (int)theEvent.LocationInWindow.Y, true);
+				UIElement newMouseOverElement = XYToElement (new PointF (theEvent.LocationInWindow.X, theEvent.LocationInWindow.Y), true);
 
 				if (newMouseOverElement != mouseOverElement) {
 					if (mouseOverElement != null)
@@ -496,7 +511,7 @@ namespace SCSharpMac.UI
 			ResourceLoader ();
 			foreach (var ui_el in Elements) {
 				if (ui_el.Layer != null) {
-					ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1);
+					ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Height);
 					ui_el.Layer.AnchorPoint = new PointF (0, 0);
 					AddSublayer (ui_el.Layer);
 				}

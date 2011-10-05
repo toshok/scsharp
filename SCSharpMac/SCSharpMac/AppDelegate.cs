@@ -38,8 +38,9 @@ namespace SCSharpMac
 			
 			Game g = new Game (sc_dir /*ConfigurationManager.AppSettings["StarcraftDirectory"]*/,
 								sc_cd_dir, bw_cd_dir);
-
+			
 			mainWindowController.Window.ContentView = g;
+			mainWindowController.Window.MakeFirstResponder (g);
 
 			g.Startup();                                                                                                                                                       			
 		}

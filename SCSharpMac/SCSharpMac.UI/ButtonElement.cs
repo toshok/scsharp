@@ -97,7 +97,8 @@ namespace SCSharpMac.UI
 
 		public override void MouseButtonUp (NSEvent theEvent)
 		{
-			if (PointInside ((int)theEvent.LocationInWindow.X, (int)theEvent.LocationInWindow.Y))
+			PointF ui_pt = ParentScreen.ScreenToUIElement (new PointF (theEvent.LocationInWindow.X, theEvent.LocationInWindow.Y));
+			if (PointInside (ui_pt))
 				OnActivate ();
 		}
 

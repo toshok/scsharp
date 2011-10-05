@@ -169,7 +169,8 @@ namespace SCSharpMac.UI
 			layer.Bounds = new RectangleF (0, 0, text_width, text_height);
 
 			/* the draw it */
-			x = y = 0;
+			x = 0;
+			y = text_height;
 			for (i = 0; i < r.Length; i ++) {
 				int glyph_width = 0;
 				Glyph g = null;
@@ -192,7 +193,7 @@ namespace SCSharpMac.UI
 				if (r[i] == 0x0a ||
 				    x + glyph_width > text_width) {
 					x = 0;
-					y += font.LineSize;
+					y -= font.LineSize;
 				}
 					
 				x += glyph_width;

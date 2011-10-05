@@ -64,7 +64,6 @@ namespace SCSharpMac.UI
 				CALayer textLayer = GuiUtil.ComposeText (Text, Font, Palette, -1, -1, Sensitive ? 4 : 24);
 				
 				textLayer.AnchorPoint = new PointF (0,0);
-				textLayer.Position = new PointF (X1, Y1);
 				
 				Width = (ushort)textLayer.Bounds.Width;
 				Height = (ushort)textLayer.Bounds.Height;

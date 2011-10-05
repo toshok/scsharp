@@ -114,7 +114,6 @@ namespace SCSharpMac.UI
 		public void Dim (byte dimness)
 		{
 			dim = dimness;
-			Invalidate ();
 		}
 
 		SmackerPlayer player;

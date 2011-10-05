@@ -63,7 +63,6 @@ namespace SCSharpMac.UI
 			CALayer layer = GuiUtil.LayerFromPcx (Pcx);
 			
 			layer.AnchorPoint = new PointF (0,0);
-			layer.Position = new Point (X1, Y1);
 			return layer;
 		}
 
