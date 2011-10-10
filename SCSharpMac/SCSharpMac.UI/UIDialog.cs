@@ -93,15 +93,15 @@ namespace SCSharpMac.UI
 								       parent.Bounds.Height - (parent.Bounds.Height - Background.Bounds.Height) / 2 - Background.Bounds.Height);
 			}
 			else {
-				Position = new PointF (Elements[0].X1, parent.Bounds.Height - Elements[0].Y1);
-				for (int i = 1; i < Elements.Count; i ++) {
-					var ui_el = Elements[i];
-					ui_el.X1 -= Elements[0].X1;
-					ui_el.Y1 -= Elements[0].Y1;
-				}
+//				Position = new PointF (Elements[0].X1, parent.Bounds.Height - Elements[0].Y1 - Elements[0].Height);
+//				for (int i = 1; i < Elements.Count; i ++) {
+//					var ui_el = Elements[i];
+//					ui_el.X1 -= Elements[0].X1;
+//					ui_el.Y1 -= Elements[0].Y1;
+// }
 				
-				Elements[0].X1 = 0;
-				Elements[0].Y1 = 0;	
+//				Elements[0].X1 = 0;
+//				Elements[0].Y1 = 0;	
 			}
 		}
 

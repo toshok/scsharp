@@ -376,13 +376,11 @@ namespace SCSharpMac.UI
 		
 		public override void MouseDragged (NSEvent theEvent)
 		{
-			Console.WriteLine ("MouseDragged");
 			MouseMotionEvent (theEvent);
 		}
 		
 		public override void MouseMoved (NSEvent theEvent)
 		{
-			Console.WriteLine ("MouseMoved");
 			MouseMotionEvent (theEvent);
 		}
 		
@@ -400,9 +398,13 @@ namespace SCSharpMac.UI
 		}
 #endif
 		
+		public override bool AcceptsFirstResponder ()
+		{
+			return true;
+		}
+		
 		public override void KeyDown (NSEvent theEvent)
 		{
-//#if !RELEASE
 #if notyet
 			if ((args.Mod & ModifierKeys.LeftControl) != 0) {
 				if (args.Key == Key.Q) {
@@ -414,7 +416,8 @@ namespace SCSharpMac.UI
 					return;
 				}
 			}
-#endif
+#endif			
+			
 			if (currentScreen != null)
 				currentScreen.HandleKeyboardDown (theEvent);
 		}
@@ -541,9 +544,7 @@ namespace SCSharpMac.UI
 					screens[index] = new LoginScreen (playingMpq);
 					break;
 				case UIScreenType.Connection:
-#if notyet 
 					screens[index] = new ConnectionScreen (playingMpq);
-#endif
 					break;
 				default:
 					throw new Exception ();

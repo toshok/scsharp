@@ -42,7 +42,7 @@ namespace SCSharpMac
 			
 			mainWindowController.Window.ContentView = game;
 			mainWindowController.Window.MakeFirstResponder (game);
-
+			
 			game.Startup();                                                                                                                                                       			
 		}
 	}

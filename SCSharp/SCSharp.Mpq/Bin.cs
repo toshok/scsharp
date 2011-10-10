@@ -101,7 +101,7 @@ namespace SCSharp
 		public ushort width;
 		public ushort height;
 
-		public byte hotkey;
+		public char hotkey;
 		public string text;
 		public uint text_offset;
 
@@ -130,7 +130,7 @@ namespace SCSharp
 				text = Encoding.ASCII.GetString (buf, (int)text_offset, (int)text_length);
 
 				if ((flags & ElementFlags.HasHotkey) == ElementFlags.HasHotkey) {
-					hotkey = Encoding.ASCII.GetBytes (new char[] {text[0]})[0];
+					hotkey = text[0];
 					text = text.Substring (1);
 				}
 			}

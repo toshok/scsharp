@@ -33,7 +33,9 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
+using MonoMac.AppKit;
 using MonoMac.CoreAnimation;
+using MonoMac.CoreGraphics;
 
 using System.Drawing;
 
@@ -53,26 +55,31 @@ namespace SCSharpMac.UI
 			value = new StringBuilder();
 		}
 		
-#if notyet
-		public void KeyboardDown (KeyboardEventArgs args)
+		public void KeyboardDown (NSEvent theEvent)
 		{
+			Console.WriteLine ("what up, my nig");
+			
 			bool changed = false;
 
-			/* navigation keys */
-			if (args.Key == Key.LeftArrow) {
-				if (cursor > 0) cursor--;
+			if ((theEvent.ModifierFlags & NSEventModifierMask.NumericPadKeyMask) == NSEventModifierMask.NumericPadKeyMask) {
+				/* navigation keys */
+				if (theEvent.Characters[0] == (char)NSKey.LeftArrow) {
+					if (cursor > 0) cursor--;
+				}
+				else if (theEvent.Characters[0] == (char)NSKey.RightArrow) {
+					if (cursor < value.Length) cursor++;
+				}
 			}
-			else if (args.Key == Key.RightArrow) {
-				if (cursor < value.Length) cursor++;
-			}
-			else if (args.Key == Key.Home) {
-				cursor = 0;
-			}
-			else if (args.Key == Key.End) {
-				cursor = value.Length;
+			else if ((theEvent.ModifierFlags & NSEventModifierMask.FunctionKeyMask) == NSEventModifierMask.FunctionKeyMask) {		
+				if (theEvent.Characters[0] == (char)NSKey.Home) {
+					cursor = 0;
+				}
+				else if (theEvent.Characters[0] == (char)NSKey.End) {
+					cursor = value.Length;
+				}
 			}
 			/* keys that modify the text */
-			else if (args.Key == Key.Backspace) {
+			else if (theEvent.Characters[0] == (char)0x7f) {
 				if (value.Length > 0) {
 					value = value.Remove (cursor-1, 1);
 					cursor--;
@@ -80,12 +87,11 @@ namespace SCSharpMac.UI
 				}
 			}
 			else {
-				char[] cs = Encoding.ASCII.GetChars (new byte[] {(byte)args.Key});
-				foreach (char c in cs) {
+				foreach (char c in theEvent.CharactersIgnoringModifiers) {
 					if (!Char.IsLetterOrDigit (c) && c != ' ')
 						continue;
 					char cc;
-					if ((args.Mod & (ModifierKeys.RightShift | ModifierKeys.LeftShift)) != 0)
+					if ((theEvent.ModifierFlags & NSEventModifierMask.AlphaShiftKeyMask) == NSEventModifierMask.AlphaShiftKeyMask)
 						cc = Char.ToUpper (c);
 					else
 						cc = c;
@@ -95,10 +101,11 @@ namespace SCSharpMac.UI
 				changed = true;
 			}
 
-			if (changed)
+			if (changed) {
 				Text = Value;
+				Layer.SetNeedsDisplay();
+			}
 		}
-#endif
 		
 		public int ValueLength {
 			get { return value.Length; }
@@ -108,13 +115,31 @@ namespace SCSharpMac.UI
 			get { return value.ToString(); }
 		}
 
-#if notyet
 		protected override CALayer CreateLayer ()
 		{
-			return GuiUtil.ComposeText (Text, Font, Palette, Width, Height,
-						    Sensitive ? 4 : 24);
+			CALayer layer = CALayer.Create ();
+
+			layer.AnchorPoint = new PointF (0, 0);
+			layer.Bounds = new RectangleF (0, 0, Width, Height);
+			
+			layer.Delegate = new TextElementLayerDelegate (this);
+			
+			return layer;
 		}
-#endif
+	}
+	
+	class TextElementLayerDelegate : CALayerDelegate {
+		TextBoxElement el;
+		
+		public TextElementLayerDelegate (TextBoxElement el)
+		{
+			this.el = el;
+		}
+		
+		public override void DrawLayer (CALayer layer, CGContext context)
+		{
+			GuiUtil.RenderTextToContext (context, new PointF (0, el.Height / 2), el.Text, el.Font, el.Palette, el.Sensitive ? 4 : 24);
+		}
 	}
 
 }

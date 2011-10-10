@@ -194,7 +194,15 @@ namespace SCSharp
 		public int MaxHeight {
 			get { return maxHeight; }
 		}
-
+		
+		public int LowIndex {
+			get { return lowIndex; }
+		}
+		
+		public int HighIndex {
+			get { return highIndex; }
+		}
+		
 		Dictionary<int,Glyph> glyphs;
 		byte highIndex;
 		byte lowIndex;

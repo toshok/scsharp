@@ -34,6 +34,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
+using MonoMac.AppKit;
+using MonoMac.CoreGraphics;
 using MonoMac.CoreAnimation;
 
 using System.Drawing;
@@ -47,8 +49,7 @@ namespace SCSharpMac.UI
 		List<string> items;
 		int cursor = -1;
 		CALayer dropdownLayer;
-		bool dropdown_visible;
-		int selected_item;
+		int dropdown_hover_index;
 
 		public ComboBoxElement (UIScreen screen, BinElement el, byte[] palette)
 			: base (screen, el, palette)
@@ -61,11 +62,19 @@ namespace SCSharpMac.UI
 			set { cursor = value;
 			      Invalidate (); }
 		}
-
+		
+		public int DropdownHoverIndex {
+			get { return dropdown_hover_index; }
+		}
+		
 		public string SelectedItem {
 			get { return items[cursor]; }
 		}
-
+		
+		public List<string> Items {
+			get { return items; }
+		}
+		
 		public void AddItem (string item)
 		{
 			AddItem (item, true);
@@ -76,7 +85,6 @@ namespace SCSharpMac.UI
 			items.Add (item);
 			if (select || cursor == -1)
 				cursor = items.IndexOf (item);
-			Invalidate ();
 		}
 
 		public void RemoveAt (int index)
@@ -84,14 +92,12 @@ namespace SCSharpMac.UI
 			items.RemoveAt (index);
 			if (items.Count == 0)
 				cursor = -1;
-			Invalidate ();
 		}
 
 		public void Clear ()
 		{
 			items.Clear ();
 			cursor = -1;
-			Invalidate ();
 		}
 
 		public bool Contains (string item)
@@ -99,104 +105,138 @@ namespace SCSharpMac.UI
 			return items.Contains (item);
 		}
 
-#if notyet
-		public override void MouseButtonDown (MouseButtonEventArgs args)
+		public override void MouseButtonDown (NSEvent theEvent)
 		{
+			Console.WriteLine ("Showing dropdown");
 			ShowDropdown();
 		}
 
-		public override void MouseButtonUp (MouseButtonEventArgs args)
+		public override void MouseButtonUp (NSEvent theEvent)
 		{
+			Console.WriteLine ("Hiding dropdown");
 			HideDropdown ();
 		}
 
-		public override void PointerMotion (MouseMotionEventArgs args)
+		public override void PointerMotion (NSEvent theEvent)
 		{
 			/* if the dropdown is visible, see if we're inside it */
-			if (!dropdown_visible)
+			if (dropdownLayer.Hidden)
 				return;
-
+			
+			PointF p = new PointF (theEvent.LocationInWindow.Y - dropdownLayer.Position.Y, theEvent.LocationInWindow.Y - dropdownLayer.Position.Y);
+			
+			Console.WriteLine ("point relative to dropdownlayer = {0}", p);
 			if (/*
 			      starcraft doesn't include this check..  should we?
-			      args.X >= X1 && args.X < X1 + dropdownSurface.Width &&
+			      p.X >= 0 && p.X < dropdownLayer.Bounds.Width &&
 			    */
-			    args.Y >= Y1 + Height && args.Y < Y1 + Height + dropdownSurface.Height) {
+			    p.Y >= 0 && p.Y < dropdownLayer.Bounds.Height) {
 
-				int new_selected_item = (args.Y - (Y1 + Height)) / Font.LineSize;
+				int new_hover_index = (int)((dropdownLayer.Bounds.Height - p.Y) / Font.LineSize);
 
-				if (selected_item != new_selected_item) {
-					selected_item = new_selected_item;
-					CreateDropdownSurface ();
-					Painter.Invalidate (new Rectangle (new Point (X1, Y1 + Height),
-									   dropdownSurface.Size));
+				Console.WriteLine ("new_hover_item = {0}", new_hover_index);
+				
+				if (dropdown_hover_index != new_hover_index) {
+					dropdown_hover_index = new_hover_index;
+					dropdownLayer.SetNeedsDisplay ();
 				}
 			}
 		}
 
-		void PaintDropdown (DateTime dt)
-		{
-			Painter.Blit (dropdownSurface, new Point (X1, Y1 + Height));
-		}
-
 		void ShowDropdown ()
 		{
-			dropdown_visible = true;
-			selected_item = cursor;
-			CreateDropdownSurface ();
-			Painter.Add (Layer.Popup, PaintDropdown);
-			Painter.Invalidate (new Rectangle (new Point (X1, Y1 + Height),
-							   dropdownSurface.Size));
+			dropdown_hover_index = cursor;
+			if (dropdownLayer == null)
+				CreateDropdownLayer ();
+			dropdownLayer.Hidden = false;
+			dropdownLayer.AnchorPoint = new PointF (0, 0);
+			dropdownLayer.Position = new PointF (X1, Layer.Position.Y - dropdownLayer.Bounds.Height);
 		}
 
 		void HideDropdown ()
 		{
-			dropdown_visible = false;
-			if (cursor != selected_item) {
-				cursor = selected_item;
+			if (dropdownLayer == null)
+				CreateDropdownLayer ();
+			dropdownLayer.Hidden = true;
+			if (cursor != dropdown_hover_index) {
+				cursor = dropdown_hover_index;
+				Invalidate ();
 				if (SelectionChanged != null)
 					SelectionChanged (cursor);
-				Invalidate ();
 			}
-			Painter.Remove (Layer.Popup, PaintDropdown);
-			Painter.Invalidate (new Rectangle (new Point (X1, Y1 + Height),
-							   dropdownSurface.Size));
 		}
 
-		protected override Surface CreateSurface ()
+		protected override CALayer CreateLayer ()
 		{
-			Surface surf = new Surface (Width, Height);
-
-			/* XXX draw the arrow (and border) */
-
-			if (cursor != -1) {
-				Surface item_surface = GuiUtil.ComposeText (items[cursor], Font, Palette, 4);
-
-				item_surface.TransparentColor = Color.Black;
-				surf.Blit (item_surface, new Point (0, 0));
-			}
-
-			return surf;
+			CALayer layer = CALayer.Create ();
+			layer.Bounds = new RectangleF (0, 0, Width, Height);
+			
+			layer.Delegate = new ComboBoxElementLayerDelegate (this);
+			
+			layer.BorderWidth = 1;
+			layer.BorderColor = new CGColor (1, 0, 0, 1);
+			
+			return layer;
 		}
 
-		void CreateDropdownSurface ()
+		void CreateDropdownLayer ()
 		{
-			dropdownSurface = new Surface (Width, items.Count * Font.LineSize);
-
-			int y = 0;
-			for (int i = 0; i < items.Count; i ++) {
-				Surface item_surface = GuiUtil.ComposeText (items[i], Font, Palette,
-									    i == selected_item ? 4 : 24);
-
-				item_surface.TransparentColor = Color.Black;
-
-				dropdownSurface.Blit (item_surface, new Point (0, y));
-				y += item_surface.Height;
-			}
+			dropdownLayer = CALayer.Create ();
+			dropdownLayer.Bounds = new RectangleF (0, 0, Width, items.Count * Font.LineSize);
+			
+			dropdownLayer.Delegate = new ComboBoxElementDropdownLayerDelegate (this);
+			
+			dropdownLayer.BackgroundColor = new CGColor (0, 0, 0, 1);
+			dropdownLayer.BorderWidth = 1;
+			dropdownLayer.BorderColor = new CGColor (1,1,0, 1);
+			dropdownLayer.SetNeedsDisplay ();
+			ParentScreen.AddSublayer (dropdownLayer);
 		}
-#endif
+
 		public event ComboBoxSelectionChanged SelectionChanged;
 	}
 
 	public delegate void ComboBoxSelectionChanged (int selectedIndex);
+	
+	class ComboBoxElementDropdownLayerDelegate : CALayerDelegate {
+		ComboBoxElement el;
+		
+		public ComboBoxElementDropdownLayerDelegate (ComboBoxElement el)
+		{
+			this.el = el;
+		}
+		
+		public override void DrawLayer (CALayer layer, CGContext context)
+		{
+			int y = 0;
+			for (int i = el.Items.Count - 1; i >=0 ; i --) {
+				GuiUtil.RenderTextToContext (context, new PointF (0, y), el.Items[i], el.Font, el.Palette,
+											 i == el.DropdownHoverIndex ? 4 : 24);
+				
+				y += (int)el.Font.LineSize;
+			}
+			
+		}
+		
+	}
+	
+	class ComboBoxElementLayerDelegate : CALayerDelegate {
+		ComboBoxElement el;
+		
+		public ComboBoxElementLayerDelegate (ComboBoxElement el)
+		{
+			this.el = el;
+		}
+		
+		public override void DrawLayer (CALayer layer, CGContext context)
+		{
+			/* XXX draw the arrow (and border) */
+
+			if (el.SelectedIndex != -1) {
+				GuiUtil.RenderTextToContext (context, new PointF (0, 0), el.SelectedItem, el.Font, el.Palette, 4);
+			}
+			
+		}
+	}
 }
 

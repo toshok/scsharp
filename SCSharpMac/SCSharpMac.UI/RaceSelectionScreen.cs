@@ -48,6 +48,8 @@ namespace SCSharpMac.UI
 			: base (mpq, "glue\\PalCs",
 				Game.Instance.PlayingBroodWar ? Builtins.rez_GluExpcmpgnBin : Builtins.rez_GluCmpgnBin)
 		{
+			background_translucent = 254;
+			background_transparent = 0;
 		}
 
 		struct RaceData {
@@ -102,8 +104,6 @@ namespace SCSharpMac.UI
 			base.RemoveFromPainter ();
 			foreach (MovieElement el in smkElements)
 				el.Stop ();
-
-			diskPlayer = null;
 		}
 
 		protected override void ResourceLoader ()
@@ -175,7 +175,7 @@ namespace SCSharpMac.UI
 
 			Elements[PLAYCUSTOM_ELEMENT_INDEX].Activate += 
 				delegate () {
-//					Game.Instance.SwitchToScreen (new PlayCustomScreen (mpq));
+					Game.Instance.SwitchToScreen (new PlayCustomScreen (mpq));
 				};
 
 			smkElements = new List<UIElement>();
@@ -185,7 +185,7 @@ namespace SCSharpMac.UI
 			AddMovieElements (THIRD_CAMPAIGN_ELEMENT_INDEX, 2, 0, 0);
 			
 			foreach (var ui_el in smkElements) {
-				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1);
+				ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Layer.Bounds.Height);
 				ui_el.Layer.AnchorPoint = new PointF (0, 0);
 				AddSublayer (ui_el.Layer);				
 			}			
@@ -210,38 +210,35 @@ namespace SCSharpMac.UI
 			Game.Instance.SwitchToScreen (new EstablishingShot (markup, prefix, mpq));
 		}
 
-		SmackerPlayer diskPlayer;
-
 		void AddMovieElements (int elementIndex, int campaign, int off_x, int off_y)
 		{
 			MovieElement normalElement, onElement, diskElement;
-
-			if (diskPlayer == null)
-				diskPlayer = new SmackerPlayer ((Stream)Mpq.GetResource (Game.Instance.PlayingBroodWar ? "glue\\Expcampaign\\disk.smk" : "glue\\campaign\\disk.smk"), 1);
-
+			ButtonElement button = (ButtonElement)Elements[elementIndex];
+			RectangleF buttonTextBounds = button.TextBounds;
+			
 			diskElement = new MovieElement (this,
-							Elements[elementIndex].BinElement,
-							Elements[elementIndex].Palette,
-							diskPlayer);
+											button.BinElement,
+											button.Palette,
+											(Game.Instance.PlayingBroodWar ? "glue\\Expcampaign\\disk.smk" : "glue\\campaign\\disk.smk"));
 
-			diskElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - diskElement.MovieSize.Width) / 2));
-			diskElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - diskElement.MovieSize.Height);
+			diskElement.X1 = (ushort)(button.X1 + (button.Width - diskElement.MovieSize.Width) / 2);
+			diskElement.Y1 = (ushort)(button.Y1 + button.Height - buttonTextBounds.Y - buttonTextBounds.Height - diskElement.MovieSize.Height);
 
 			normalElement = new MovieElement (this,
-							  Elements[elementIndex].BinElement,
-							  Elements[elementIndex].Palette,
-							  (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].normalMovie);
+											  button.BinElement,
+											  button.Palette,
+							  				  (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].normalMovie);
 
 			normalElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - normalElement.MovieSize.Width) / 2) + off_x);
-			normalElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - normalElement.MovieSize.Height + off_y);
+			normalElement.Y1 = (ushort)(button.Y1 + button.Height - buttonTextBounds.Y - buttonTextBounds.Height - normalElement.MovieSize.Height + off_y);
 
 			onElement = new MovieElement (this,
-						      Elements[elementIndex].BinElement,
-						      Elements[elementIndex].Palette,
-						      (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].onMovie);
+										  button.BinElement,
+										  button.Palette,
+						      			  (Game.Instance.PlayingBroodWar ? BroodwarCampaigns : StarcraftCampaigns)[campaign].onMovie);
 
 			onElement.X1 = (ushort)(Elements[elementIndex].X1 + ((Elements[elementIndex].Width - onElement.MovieSize.Width) / 2));
-			onElement.Y1 = (ushort)(((ButtonElement)Elements[elementIndex]).TextPosition.Y - onElement.MovieSize.Height);
+			onElement.Y1 = (ushort)(button.Y1 + button.Height - buttonTextBounds.Y - buttonTextBounds.Height - onElement.MovieSize.Height);
 
 			smkElements.Add (diskElement);
 			smkElements.Add (normalElement);

@@ -32,6 +32,7 @@ using System;
 using System.IO;
 using System.Threading;
 
+using MonoMac.AppKit;
 using MonoMac.CoreAnimation;
 using MonoMac.CoreGraphics;
 
@@ -89,7 +90,6 @@ namespace SCSharpMac.UI
 
 			Elements[NEW_ELEMENT_INDEX].Activate +=
 				delegate () {
-#if notyet				
 					EntryDialog d = new EntryDialog (this, mpq,
 									 GlobalResources.Instance.GluAllTbl.Strings[22]);
 					d.Cancel += delegate () { DismissDialog (); };
@@ -103,13 +103,11 @@ namespace SCSharpMac.UI
 						}
 					};
 					ShowDialog (d);
-#endif
 				};
 
 			Elements[DELETE_ELEMENT_INDEX].Sensitive = false;
 			Elements[DELETE_ELEMENT_INDEX].Activate +=
 				delegate () {
-#if notyet					
 					OkCancelDialog okd = new OkCancelDialog (this, mpq,
 										 GlobalResources.Instance.GluAllTbl.Strings[23]);
 					okd.Cancel += delegate () { DismissDialog (); };
@@ -119,7 +117,6 @@ namespace SCSharpMac.UI
 						listbox.RemoveAt (listbox.SelectedIndex);
 					};
 					ShowDialog (okd);
-#endif
 				};
 
 			listbox = (ListBoxElement)Elements[LISTBOX_ELEMENT_INDEX];
@@ -135,15 +132,14 @@ namespace SCSharpMac.UI
 			PopulateUIFromDir ();
 		}
 
-#if notyet
-		public override void KeyboardDown (KeyboardEventArgs args)
+		public override void KeyboardDown (NSEvent theEvent)
 		{
-			if (args.Key == Key.DownArrow
-			    || args.Key == Key.UpArrow) {
-				listbox.KeyboardDown (args);
-			}
+			if ((theEvent.ModifierFlags & NSEventModifierMask.NumericPadKeyMask) == NSEventModifierMask.NumericPadKeyMask &&
+				(theEvent.Characters[0] == (char)NSKey.UpArrow ||
+					theEvent.Characters[0] == (char)NSKey.DownArrow))
+				listbox.KeyboardDown (theEvent);
 			else
-				base.KeyboardDown (args);
+				base.KeyboardDown (theEvent);
 		}
 
 		void NameAlreadyExists (EntryDialog d)
@@ -152,6 +148,5 @@ namespace SCSharpMac.UI
 						     GlobalResources.Instance.GluAllTbl.Strings[24]);
 			d.ShowDialog (okd);
 		}
-#endif
 	}
 }

@@ -74,6 +74,21 @@
     <Compile Include="RaceSelectionScreen.cs" />
     <Compile Include="LoginScreen.cs" />
     <Compile Include="ReadyRoomScreen.cs" />
+    <Compile Include="PlayCustomScreen.cs" />
+    <Compile Include="EntryDialog.cs" />
+    <Compile Include="OkCancelDialog.cs" />
+    <Compile Include="GameScreen.cs" />
+    <Compile Include="Unit.cs" />
+    <Compile Include="GrpElement.cs" />
+    <Compile Include="GrpButtonElement.cs" />
+    <Compile Include="MapRenderer.cs" />
+    <Compile Include="Sprite.cs" />
+    <Compile Include="GameMenuDialog.cs" />
+    <Compile Include="SpriteManager.cs" />
+    <Compile Include="OptionsDialog.cs" />
+    <Compile Include="ScoreScreen.cs" />
+    <Compile Include="ConnectionScreen.cs" />
+    <Compile Include="AStar.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SCSharp\SCSharp.Core.dll.csproj">

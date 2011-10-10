@@ -61,6 +61,7 @@ namespace SCSharpMac.UI
 			: base (screen, el, palette)
 		{
 			Player = new SmackerPlayer ((Stream)Mpq.GetResource (resource), 1);
+			Player.FrameReady += NewFrame;
 		}
 
 		public MovieElement (UIScreen screen, BinElement el, byte[] palette, SmackerPlayer player)
@@ -83,10 +84,16 @@ namespace SCSharpMac.UI
 		public SmackerPlayer Player {
 			get { return player; }
 			set {
-				if (player != null)
+				if (player != null) {
+					player.FrameReady -= NewFrame;
 					player.Stop ();
+				}
 
 				player = value;
+				if (player != null) {
+					ScalePlayer ();
+					player.FrameReady += NewFrame;
+				}
 			}
 		}
 
@@ -126,7 +133,7 @@ namespace SCSharpMac.UI
 			
 			if (dim > 0) {
 				if (dimness > 0)
-					dimLayer.BackgroundColor = new CGColor (0, (float)dim / 255);
+					dimLayer.BackgroundColor = new CGColor (0, (float)dimness / 255);
 				else
 					dimLayer.RemoveFromSuperLayer ();
 			}
@@ -134,21 +141,34 @@ namespace SCSharpMac.UI
 				if (dimness > 0) {
 					if (dimLayer == null)
 						CreateDimLayer ();
-					dimLayer.BackgroundColor = new CGColor (0, (float)dim / 255);					
-					player.Layer.AddSublayer (dimLayer);
+					dimLayer.BackgroundColor = new CGColor (0, (float)dimness / 255);
+					if (layer != null)
+						layer.AddSublayer (dimLayer);
 				}
 			}
+			
+			dim = dimness;
 		}
-
+		
+		void NewFrame ()
+		{
+			if (layer != null)
+				layer.SetNeedsDisplay ();
+		}
+		
 		SmackerPlayer player;
+		CALayer layer;
 		CALayer dimLayer;
 		byte dim = 0;
-		bool scale;		
+		bool scale;
+		internal float playerZoom = 1.0f;
 		
-		protected override CALayer CreateLayer ()
+		void ScalePlayer ()
 		{
-			if (player == null)
-				return null;
+			if (layer == null)
+				return;
+
+			playerZoom = 1.0f;
 			
 			if (scale
 				&& (player.Width != Width
@@ -156,23 +176,51 @@ namespace SCSharpMac.UI
 
 				float horiz_zoom = (float)Width / player.Width;
 				float vert_zoom = (float)Height / player.Height;
-				float zoom;
 
 				if (horiz_zoom < vert_zoom)
-					zoom = horiz_zoom;
+					playerZoom = horiz_zoom;
 				else
-					zoom = vert_zoom;
-				
-				player.Layer.AffineTransform = CGAffineTransform.MakeScale (zoom, zoom);
+					playerZoom = vert_zoom;
 			}
+			
+			layer.AffineTransform = CGAffineTransform.MakeScale (playerZoom, playerZoom);
+		}
+		
+		protected override CALayer CreateLayer ()
+		{
+			layer = CALayer.Create ();
+			layer.Bounds = new RectangleF (0, 0, Width, Height);
+			layer.AnchorPoint = new PointF (0, 0);
+			
+			layer.Delegate = new MovieElementLayerDelegate (this);
+			
+			if (player == null)
+				return layer;
+
+			ScalePlayer ();
 			
 			if (dim != 0) {
 				CreateDimLayer ();
 				dimLayer.BackgroundColor = new CGColor (0, (float)dim / 255);
-				player.Layer.AddSublayer (dimLayer);
+				layer.AddSublayer (dimLayer);
 			}				
 			
-			return player.Layer;
+			return layer;
+		}
+	}
+	
+	class MovieElementLayerDelegate : CALayerDelegate {
+		MovieElement el;
+		
+		public MovieElementLayerDelegate (MovieElement el)
+		{
+			this.el = el;
+		}
+		
+		public override void DrawLayer (CALayer layer, CGContext context)
+		{
+			if (el.Player.CurrentFrame != null)
+				context.DrawImage (new RectangleF ( 0, el.Height - el.Player.CurrentFrame.Height * el.playerZoom, el.Player.CurrentFrame.Width, el.Player.CurrentFrame.Height), el.Player.CurrentFrame);
 		}
 	}
 

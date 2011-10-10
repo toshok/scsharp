@@ -1,5 +1,5 @@
 //
-// SCSharpMac.UI.ImageElement
+// SCSharp.UI.OkCancelDialog
 //
 // Authors:
 //	Chris Toshok (toshok@gmail.com)
@@ -33,6 +33,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
+using MonoMac.CoreGraphics;
 using MonoMac.CoreAnimation;
 
 using System.Drawing;
@@ -41,48 +42,41 @@ using SCSharp;
 
 namespace SCSharpMac.UI
 {
-	public class ImageElement : UIElement
+	public class OkCancelDialog : UIDialog
 	{
-		int translucent_index;
-		Pcx pcx;
+		string message;
 
-		public ImageElement (UIScreen screen, BinElement el, byte[] palette, int translucent_index)
-			: base (screen, el, palette)
+		public OkCancelDialog (UIScreen parent, Mpq mpq, string message)
+			: base (parent, mpq, "glue\\PalNl", Builtins.rez_GluPOkCancelBin)
 		{
-			this.translucent_index = translucent_index;
+			background_path = "glue\\PalNl\\pDPopup.pcx";
+			this.message = message;
 		}
 
-		public ImageElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height, int translucent_index)
-			: base (screen, x1, y1, width, height)
+		const int OK_ELEMENT_INDEX = 1;
+		const int MESSAGE_ELEMENT_INDEX = 2;
+		const int CANCEL_ELEMENT_INDEX = 3;
+
+		protected override void ResourceLoader ()
 		{
-			this.translucent_index = translucent_index;
+			base.ResourceLoader ();
+
+			Elements[MESSAGE_ELEMENT_INDEX].Text = message;
+
+			Elements[OK_ELEMENT_INDEX].Activate += 
+				delegate () {
+					if (Ok != null)
+						Ok ();
+				};
+
+			Elements[CANCEL_ELEMENT_INDEX].Activate += 
+				delegate () {
+					if (Cancel != null)
+						Cancel ();
+				};
 		}
 
-		protected override CALayer CreateLayer ()
-		{
-			CALayer layer = GuiUtil.LayerFromPcx (Pcx);
-			
-			layer.AnchorPoint = new PointF (0,0);
-
-			return layer;
-		}
-
-		public Pcx Pcx {
-			get {
-				if (pcx == null) {
-					pcx = new Pcx ();
-					var stream = (Stream)Mpq.GetResource (Text);
-					if (stream == null)
-						throw new Exception (string.Format ("didn't find resource at {0}", Text));
-					pcx.ReadFromStream (stream, translucent_index, 0);
-				}
-				return pcx;
-			}
-		}
-
-		public override ElementType Type {
-			get { return ElementType.Image; }
-		}
+		public event DialogEvent Ok;
+		public event DialogEvent Cancel;
 	}
-
 }

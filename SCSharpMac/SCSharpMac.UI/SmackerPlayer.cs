@@ -59,24 +59,11 @@ namespace SCSharpMac.UI
 
 		SmackerFile file;
 		SmackerDecoder decoder;
-
+		CGImage currentFrame;
+		
 		AutoResetEvent waitEvent;
 
 		float timeElapsed=0;
-		CALayer layer;
-		
-		SmackerPlayerDelegate del;
-		
-		class SmackerPlayerDelegate : CALayerDelegate {
-			
-			public override void DisplayLayer (CALayer layer)
-			{
-				if (Contents != null)
-					layer.Contents = Contents;
-			}
-			
-			public CGImage Contents { get; set; }
-		}
 
 		public SmackerPlayer (Stream smk_stream) : this (smk_stream, BUFFERED_FRAMES)
 		{
@@ -89,12 +76,6 @@ namespace SCSharpMac.UI
 			this.buffered_frames = buffered_frames;
     
 			waitEvent = new AutoResetEvent (false);
-			
-			del = new SmackerPlayerDelegate ();
-
-			layer = CALayer.Create ();
-			layer.Bounds = new RectangleF (0, 0, Width, Height);
-			layer.Delegate = del;
 		}
 
 		public int Width {
@@ -104,7 +85,11 @@ namespace SCSharpMac.UI
 		public int Height {
 			get { return (int)file.Header.Height; }
 		}
-
+		
+		public CGImage CurrentFrame {
+			get { return currentFrame; }
+		}
+		
 		void Events_Tick(object sender, TickEventArgs e)
 		{
 			timeElapsed += e.SecondsElapsed;
@@ -119,14 +104,12 @@ namespace SCSharpMac.UI
 				timeElapsed -= (float)(1.0f / file.Header.Fps);
 				byte[] argbData = frameQueue.Dequeue();
 								
-				var image = GuiUtil.CreateImage (argbData, (ushort)Width, (ushort)Height, 32, Width * 4);
-				del.Contents = image;
-
-				layer.SetNeedsDisplay ();
-			
+				currentFrame = GuiUtil.CreateImage (argbData, (ushort)Width, (ushort)Height, 32, Width * 4);
+				
+				EmitFrameReady ();
+				
 				if (frameQueue.Count < (buffered_frames / 2) + 1)
 					waitEvent.Set ();
-
 			}
 		}
 
@@ -181,19 +164,24 @@ namespace SCSharpMac.UI
 
 			Game.Instance.Tick -= Events_Tick;
 		}
-
-		public CALayer Layer {
-			get { return layer; }
-		}
-
+		
+		public event PlayerEvent FrameReady;
 		public event PlayerEvent Finished;
 
 		void EmitFinished ()
 		{
-			if (Finished != null)
-				Finished ();
+			var h = Finished;
+			if (h != null)
+				h ();
 		}
-	}
+
+		void EmitFrameReady ()
+		{
+			var h = FrameReady;
+			if (h != null)
+				h ();
+		}
+}
 
 	public delegate void PlayerEvent ();
 }

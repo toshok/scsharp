@@ -38,6 +38,7 @@ using System.Text;
 using System.Drawing;
 
 using SCSharp;
+using MonoMac.Foundation;
 using MonoMac.CoreGraphics;
 using MonoMac.CoreAnimation;
 using MonoMac.AppKit;
@@ -73,9 +74,8 @@ namespace SCSharpMac.UI
 			}
 			return fonts;
 		}
-
-
-		public static CALayer RenderGlyph (Fnt font, Glyph g, byte[] palette, int offset)
+		
+		public static void RenderGlyphToContext (CGContext context, PointF position, Glyph g, Fnt font, byte[] palette, int offset)
 		{
 			byte[] buf = new byte[g.Width * g.Height * 4];
 			int i = 0;
@@ -100,6 +100,72 @@ namespace SCSharpMac.UI
 				}
 			}
 
+			CGImage glyphImage = CreateImage (buf, (ushort)g.Width, (ushort)g.Height, 32, g.Width * 4);
+			
+			context.DrawImage (new RectangleF (position, new SizeF (g.Width, g.Height)), glyphImage);
+		}
+		
+		public static void RenderTextToContext (CGContext context, PointF position, string text, Fnt font, byte[] palette, int offset)
+		{
+			int i;
+			
+			/* create a run of text, for now ignoring any control codes in the string */
+			StringBuilder run = new StringBuilder ();
+			for (i = 0; i < text.Length; i ++) {
+				if ((text[i] == 0x0a /* allow newlines */||
+				    !Char.IsControl (text[i])) &&
+					(text[i] >= font.LowIndex && text[i] <= font.HighIndex)) {
+					run.Append (text[i]);
+				}
+			}
+
+			string rs = run.ToString ();
+			byte[] r = Encoding.ASCII.GetBytes (rs);
+
+			/* the draw it */
+			for (i = 0; i < r.Length; i ++) {
+				int glyph_width = 0;
+				Glyph g = null;
+
+				if (r[i] == 0x20)  /* space */{
+					glyph_width = font.SpaceSize;
+				}
+				else {
+					g = font[r[i]-1];
+					glyph_width = g.Width + g.XOffset;
+
+					RenderGlyphToContext (context, position, g, font, palette, offset);
+				}
+
+				position.X += glyph_width;
+			}
+		}
+			
+		public static CALayer RenderGlyph (Fnt font, Glyph g, byte[] palette, int offset)
+		{
+			byte[] buf = new byte[g.Width * g.Height * 4];
+			int i = 0;
+
+			for (int y = g.Height - 1; y >= 0; y--) {
+				for (int x = g.Width - 1; x >= 0; x--) {
+					if (g.Bitmap[y,x] == 0)
+						buf [i + 0] = 0;
+					else if (g.Bitmap[y,x] == 1)
+						buf [i + 0] = 255;
+					else
+						buf [i + 0] = 128;
+
+					buf[i + 1] = palette[ (g.Bitmap[y,x]) * 3 + offset + 0];
+					buf[i + 2] = palette[ (g.Bitmap[y,x]) * 3 + offset + 1];
+					buf[i + 3] = palette[ (g.Bitmap[y,x]) * 3 + offset + 2];
+
+					if (buf[i+1] == 252 && buf[i+2] == 0 && buf[i+3] == 252)
+						buf[i + 0] = 0;
+
+					i += 4;
+				}
+			}
+				
 			return CreateLayerFromRGBAData (buf, (ushort)g.Width, (ushort)g.Height, 32, g.Width * 4);
 		}
 
@@ -112,12 +178,9 @@ namespace SCSharpMac.UI
 		{
 			return ComposeText (text, font, palette, -1, -1, offset);
 		}
-
-		public static CALayer ComposeText (string text, Fnt font, byte[] palette, int width, int height, int offset)
+		
+		public static SizeF MeasureText (string text, Fnt font)
 		{
-			if (font == null)
-				Console.WriteLine ("aiiiieeee");
-
 			int i;
 			/* create a run of text, for now ignoring any control codes in the string */
 			StringBuilder run = new StringBuilder ();
@@ -125,6 +188,62 @@ namespace SCSharpMac.UI
 				if (text[i] == 0x0a /* allow newlines */||
 				    !Char.IsControl (text[i]))
 					run.Append (text[i]);
+
+			string rs = run.ToString ();
+			byte[] r = Encoding.ASCII.GetBytes (rs);
+
+			int x, y;
+			int text_height, text_width;
+
+			/* measure the text first, optionally wrapping at width */
+			text_width = text_height = 0;
+			x = y = 0;
+
+			for (i = 0; i < r.Length; i ++) {
+				int glyph_width = 0;
+
+				if (r[i] != 0x0a) /* newline */ {
+					if (r[i] == 0x20) /* space */
+						glyph_width = font.SpaceSize;
+					else {
+						Glyph g = font[r[i]-1];
+
+						glyph_width = g.Width + g.XOffset;
+					}
+				}
+
+				if (r[i] == 0x0a) {
+					if (x > text_width)
+						text_width = x;
+					x = 0;
+					text_height += font.LineSize;
+				}
+					
+				x += glyph_width;
+			}
+
+			if (x > text_width)
+				text_width = x;
+			text_height += font.LineSize;
+
+			return new SizeF (text_width, text_height);
+		}
+		
+		public static CALayer ComposeText (string text, Fnt font, byte[] palette, int width, int height, int offset)
+		{
+			if (font == null)
+				Console.WriteLine ("aiiiieeee");
+
+			int i;
+			
+			/* create a run of text, for now ignoring any control codes in the string */
+			StringBuilder run = new StringBuilder ();
+			if (text != null) {
+				for (i = 0; i < text.Length; i ++)
+					if (text[i] == 0x0a /* allow newlines */||
+				    	!Char.IsControl (text[i]))
+						run.Append (text[i]);
+			}
 
 			string rs = run.ToString ();
 			byte[] r = Encoding.ASCII.GetBytes (rs);
@@ -354,34 +473,29 @@ namespace SCSharpMac.UI
 			return LayerFromPcx (pcx);
 		}
 
-#if SDL_API
-		public static Sound SoundFromStream (Stream stream)
+		public static NSSound SoundFromStream (Stream stream)
 		{
 			byte[] buf = GuiUtil.ReadStream (stream);
-			return Mixer.Sound (buf);
+			return new NSSound (NSData.FromArray (buf));
 		}
-#endif
 		
 		public static void PlaySound (Mpq mpq, string resourcePath)
 		{
-#if SDL_API
 			Stream stream = (Stream)mpq.GetResource (resourcePath);
 			if (stream == null)
 				return;
-			Sound s = GuiUtil.SoundFromStream (stream);
+			NSSound s = GuiUtil.SoundFromStream (stream);
 			s.Play();
-#endif
 		}
 		
 		public static void PlayMusic (Mpq mpq, string resourcePath, int numLoops)
 		{
-#if SDL_API
 			Stream stream = (Stream)mpq.GetResource (resourcePath);
 			if (stream == null)
 				return;
-			Sound s = GuiUtil.SoundFromStream (stream);
-			s.Play (true);
-#endif
+			NSSound s = GuiUtil.SoundFromStream (stream);
+			s.Loops = true;;
+			s.Play ();
 		}
 	}
 }

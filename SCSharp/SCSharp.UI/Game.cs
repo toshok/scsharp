@@ -482,7 +482,7 @@ namespace SCSharp.UI
 		{
 			SwitchToScreen (UIScreenType.MainMenu);
 		}
-
+		
 		void TitleScreenReady ()
 		{
 			Console.WriteLine ("Loading global resources");

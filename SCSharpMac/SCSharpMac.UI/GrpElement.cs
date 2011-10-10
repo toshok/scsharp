@@ -1,5 +1,5 @@
 //
-// SCSharpMac.UI.ImageElement
+// SCSharp.UI.GrpElement
 //
 // Authors:
 //	Chris Toshok (toshok@gmail.com)
@@ -33,6 +33,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
+using MonoMac.AppKit;
+using MonoMac.CoreGraphics;
 using MonoMac.CoreAnimation;
 
 using System.Drawing;
@@ -41,47 +43,31 @@ using SCSharp;
 
 namespace SCSharpMac.UI
 {
-	public class ImageElement : UIElement
+	public class GrpElement : UIElement
 	{
-		int translucent_index;
-		Pcx pcx;
+		Grp grp;
+		int frame;
 
-		public ImageElement (UIScreen screen, BinElement el, byte[] palette, int translucent_index)
-			: base (screen, el, palette)
+		public GrpElement (UIScreen screen, Grp grp, byte[] palette, ushort x, ushort y)
+			: base (screen, x, y, grp.Width, grp.Height)
 		{
-			this.translucent_index = translucent_index;
-		}
-
-		public ImageElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height, int translucent_index)
-			: base (screen, x1, y1, width, height)
-		{
-			this.translucent_index = translucent_index;
+			this.Palette = palette;
+			this.grp = grp;
+			this.frame = 0;
 		}
 
 		protected override CALayer CreateLayer ()
 		{
-			CALayer layer = GuiUtil.LayerFromPcx (Pcx);
-			
-			layer.AnchorPoint = new PointF (0,0);
-
-			return layer;
+			return GuiUtil.CreateLayerFromBitmap (grp.GetFrame (frame),
+								grp.Width, grp.Height,
+								Palette,
+								true);
 		}
 
-		public Pcx Pcx {
-			get {
-				if (pcx == null) {
-					pcx = new Pcx ();
-					var stream = (Stream)Mpq.GetResource (Text);
-					if (stream == null)
-						throw new Exception (string.Format ("didn't find resource at {0}", Text));
-					pcx.ReadFromStream (stream, translucent_index, 0);
-				}
-				return pcx;
-			}
-		}
-
-		public override ElementType Type {
-			get { return ElementType.Image; }
+		public int Frame {
+			get { return frame; }
+			set { frame = value;
+			      Invalidate (); }
 		}
 	}
 

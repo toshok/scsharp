@@ -45,9 +45,6 @@ namespace SCSharpMac.UI
 	{
 		CALayer background;
 		protected CursorAnimator Cursor;
-#if notyet
-		protected UIPainter UIPainter;
-#endif
 		protected Bin Bin;
 		protected Mpq mpq;
 		protected string prefix;
@@ -90,6 +87,9 @@ namespace SCSharpMac.UI
 		protected UIScreen (Mpq mpq)
 		{
 			this.mpq = mpq;
+			
+			Bounds = new RectangleF (0, 0, 640, 480);
+			AnchorPoint = new PointF (0, 0);
 		}
 
 #if notyet
@@ -122,29 +122,13 @@ namespace SCSharpMac.UI
 		public virtual void AddToPainter ()
 		{
 #if notyet
-			Painter.Painting += FirstPaint;
-
-			if (background != null)
-				Painter.Add (Layer.Background, BackgroundPainter);
-
-			if (UIPainter != null)
-				Painter.Add (Layer.UI, UIPainter.Paint);
 			if (Cursor != null)
 				Game.Instance.Cursor = Cursor;
-			Painter.Invalidate ();
 #endif
 		}
 
 		public virtual void RemoveFromPainter ()
 		{
-#if notyet
-			Painter.Painting -= FirstPaint;
-
-			if (background != null)
-				Painter.Remove (Layer.Background, BackgroundPainter);
-			if (UIPainter != null)
-				Painter.Remove (Layer.UI, UIPainter.Paint);
-#endif
 			if (Cursor != null)
 				Game.Instance.Cursor = null;
 		}
@@ -272,8 +256,6 @@ namespace SCSharpMac.UI
 		
 		public virtual void PointerMotion (NSEvent theEvent)
 		{
-			Console.WriteLine ("UIScreen.PointerMotion");
-			
 			if (mouseDownElement != null) {
 				mouseDownElement.PointerMotion (theEvent);
 			}
@@ -305,12 +287,6 @@ namespace SCSharpMac.UI
 
 		public void HandleKeyboardUp (NSEvent theEvent)
 		{
-#if notyet
-			/* just return if the modifier keys are released */
-			if (args.Key >= Key.NumLock && args.Key <= Key.Compose)
-				return;
-#endif
-
 			if (dialog != null)
 				dialog.HandleKeyboardUp (theEvent);
 			else
@@ -319,32 +295,32 @@ namespace SCSharpMac.UI
 
 		public virtual void KeyboardDown (NSEvent theEvent)
 		{
-#if notyet
 			if (Elements != null) {
+				string eventChars = theEvent.CharactersIgnoringModifiers;
 				foreach (UIElement e in Elements) {
-					if ( (args.Key == e.Hotkey)
-					     ||
-					     (args.Key == Key.Return
-					      && (e.Flags & ElementFlags.DefaultButton) == ElementFlags.DefaultButton)
-					     ||
-					     (args.Key == Key.Escape
-					      && (e.Flags & ElementFlags.CancelButton) == ElementFlags.CancelButton)) {
+					/* check for the uielement's hotkey if it has one */
+					if ((e.Flags & ElementFlags.HasHotkey) == ElementFlags.HasHotkey &&
+						eventChars.Length == 1 &&
+						eventChars[0] == e.Hotkey)
+					{
+						ActivateElement (e);
+						return;
+					}
+
+					/* check for the deafult button */
+					if (((e.Flags & ElementFlags.DefaultButton) == ElementFlags.DefaultButton &&
+						eventChars[0] == 13)
+					 || ((e.Flags & ElementFlags.CancelButton) == ElementFlags.CancelButton &&
+						eventChars[0] == 27)) {
 						ActivateElement (e);
 						return;
 					}
 				}
 			}
-#endif
 		}
 
 		public void HandleKeyboardDown (NSEvent theEvent)
-		{
-#if notyet
-			/* just return if the modifier keys are pressed */
-			if (args.Key >= Key.NumLock && args.Key <= Key.Compose)
-				return;
-#endif
-				
+		{				
 			if (dialog != null)
 				dialog.HandleKeyboardDown (theEvent);
 			else
@@ -355,21 +331,10 @@ namespace SCSharpMac.UI
 		{
 		}
 
-		public event ReadyDelegate FirstPainted;
 		public event ReadyDelegate DoneSwooshing;
 		public event ReadyDelegate Ready;
 
 		bool loaded;
-
-#if notyet
-		protected virtual void FirstPaint (object sender, EventArgs args)
-		{
-			if (FirstPainted != null)
-				FirstPainted ();
-
-			Painter.Painting -= FirstPaint;
-		}
-#endif
 
 		protected void RaiseReadyEvent ()
 		{
@@ -382,16 +347,6 @@ namespace SCSharpMac.UI
 			if (DoneSwooshing != null)
 				DoneSwooshing ();
 		}
-
-#if notyet
-		protected void BackgroundPainter (DateTime dt)
-		{
-			int background_x = (Painter.Width - background.Width) / 2;
-			int background_y = (Painter.Height - background.Height) / 2;
-
-			Painter.Blit (background, new Point (background_x, background_y));
-		}
-#endif
 
 		int translucentIndex = 254;
 		protected int TranslucentIndex {
@@ -434,10 +389,11 @@ namespace SCSharpMac.UI
 			if (background_path != null) {
 				Console.WriteLine ("loading background");
 					background = GuiUtil.LayerFromStream ((Stream)mpq.GetResource (background_path),
-													background_translucent, background_transparent);
+														  background_translucent, background_transparent);
 				
 				background.AnchorPoint = new PointF (0, 0);
 				AddSublayer (background);
+				// FIXME: we should center the background (and scale it?)
 			}
 
 			Elements = new List<UIElement> ();
@@ -498,17 +454,17 @@ namespace SCSharpMac.UI
 
 		void LoadResources ()
 		{
+		
 			ResourceLoader ();
 			if (Elements != null) {
 				foreach (var ui_el in Elements) {
-					if (ui_el.Layer != null) {
+					if (ui_el.Layer != null) {				
 						ui_el.Layer.Position = new PointF (ui_el.X1, Bounds.Height - ui_el.Y1 - ui_el.Height);
 						ui_el.Layer.AnchorPoint = new PointF (0, 0);
 						AddSublayer (ui_el.Layer);
 					}
 				}
 			}
-				
 			NSApplication.SharedApplication.InvokeOnMainThread (FinishedLoading);
 		}
 

@@ -119,7 +119,7 @@ namespace SCSharpMac.UI
 			Elements[start_element_index].Activate +=
 				delegate () {
 					StopBriefing ();
-//					Game.Instance.SwitchToScreen (new GameScreen (mpq, scenario_prefix, scenario));
+					Game.Instance.SwitchToScreen (new GameScreen (mpq, scenario_prefix, scenario));
 				};
 
 			runner = new BriefingRunner (this, scenario, scenario_prefix);

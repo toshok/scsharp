@@ -308,27 +308,23 @@ namespace SCSharpMac.UI
 			AdvanceToNextPage ();
 		}
 
-#if notyet
 		public override void KeyboardDown (NSEvent theEvent)
 		{
-			switch (args.Key)
+			char c = theEvent.Characters[0];
+				
+			switch ((int)c)
 			{
-			case Key.Escape:
-				Events.Tick -= FlipPage;
+			case 27 /*Escape*/:
+				Game.Instance.Tick -= FlipPage;
 				MarkupFinished ();
 				break;
-			case Key.Space:
-			case Key.Return:
+			case 32 /*Space*/:
+			case 13 /*Return*/:
 				totalElapsed = 0;
 				AdvanceToNextPage ();
 				break;
 			}
 		}
-
-		public override void KeyboardUp (NSEvent theEvent)
-		{
-		}
-#endif
 
 		void AdvanceToNextPage ()
 		{
@@ -348,7 +344,6 @@ namespace SCSharpMac.UI
 				}
 			}
 
-			Console.WriteLine ("finished!");
             Game.Instance.Tick -= FlipPage;
 			MarkupFinished ();
 		}

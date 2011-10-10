@@ -198,9 +198,7 @@ namespace SCSharpMac.UI
 			set { height = value; }
 		}
 
-#if notyet
-		public Key Hotkey { get { return (Key)el.hotkey; } }
-#endif
+		public char Hotkey { get { return el.hotkey; } }
 
 		public event ElementEvent Activate;
 		public void OnActivate ()

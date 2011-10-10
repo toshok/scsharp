@@ -1,5 +1,5 @@
 //
-// SCSharpMac.UI.ImageElement
+// SCSharp.UI.GrpButtonElement
 //
 // Authors:
 //	Chris Toshok (toshok@gmail.com)
@@ -33,6 +33,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
+using MonoMac.AppKit;
+using MonoMac.CoreGraphics;
 using MonoMac.CoreAnimation;
 
 using System.Drawing;
@@ -41,47 +43,23 @@ using SCSharp;
 
 namespace SCSharpMac.UI
 {
-	public class ImageElement : UIElement
+	public class GrpButtonElement : GrpElement
 	{
-		int translucent_index;
-		Pcx pcx;
-
-		public ImageElement (UIScreen screen, BinElement el, byte[] palette, int translucent_index)
-			: base (screen, el, palette)
+		public GrpButtonElement (UIScreen screen, Grp grp, byte[] palette, ushort x, ushort y)
+			: base (screen, grp, palette, x, y)
 		{
-			this.translucent_index = translucent_index;
 		}
 
-		public ImageElement (UIScreen screen, ushort x1, ushort y1, ushort width, ushort height, int translucent_index)
-			: base (screen, x1, y1, width, height)
+		public override void MouseButtonDown (NSEvent theEvent)
 		{
-			this.translucent_index = translucent_index;
 		}
 
-		protected override CALayer CreateLayer ()
+		public override void MouseButtonUp (NSEvent theEvent)
 		{
-			CALayer layer = GuiUtil.LayerFromPcx (Pcx);
+			PointF ui_pt = ParentScreen.ScreenToLayer (theEvent.LocationInWindow);
 			
-			layer.AnchorPoint = new PointF (0,0);
-
-			return layer;
-		}
-
-		public Pcx Pcx {
-			get {
-				if (pcx == null) {
-					pcx = new Pcx ();
-					var stream = (Stream)Mpq.GetResource (Text);
-					if (stream == null)
-						throw new Exception (string.Format ("didn't find resource at {0}", Text));
-					pcx.ReadFromStream (stream, translucent_index, 0);
-				}
-				return pcx;
-			}
-		}
-
-		public override ElementType Type {
-			get { return ElementType.Image; }
+			if (PointInside (ui_pt))
+				OnActivate ();
 		}
 	}
 

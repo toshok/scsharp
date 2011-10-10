@@ -34,6 +34,7 @@ using System.Text;
 using System.Threading;
 
 using MonoMac.CoreAnimation;
+using MonoMac.CoreGraphics;
 using MonoMac.AppKit;
 
 using System.Drawing;
@@ -48,51 +49,61 @@ namespace SCSharpMac.UI
 			: base (screen, el, palette)
 		{
 		}
-
-		CALayer text_layer;
-		int text_x, text_y;
-
-		void CalculateTextPosition ()
+		
+		RectangleF text_bounds;
+		
+		void CalculateTextBounds ()
 		{
-			if (text_layer == null)
-				text_layer = GuiUtil.ComposeText (Text, Font, Palette, -1, -1, Sensitive ? 4 : 24);
+			int text_x, text_y;
 
+			SizeF text_size = GuiUtil.MeasureText (Text, Font);
+				
 			if ((Flags & ElementFlags.CenterTextHoriz) == ElementFlags.CenterTextHoriz)
-				text_x = (int)((Width - text_layer.Bounds.Width) / 2);
+				text_x = (int)((Width - text_size.Width) / 2);
 			else if ((Flags & ElementFlags.RightAlignText) == ElementFlags.RightAlignText)
-				text_x = (int)(Width - text_layer.Bounds.Width);
+				text_x = (int)(Width - text_size.Width);
 			else
 				text_x = 0;
 
 			if ((Flags & ElementFlags.CenterTextVert) == ElementFlags.CenterTextVert)
-				text_y = (int)((Height - text_layer.Bounds.Height) / 2 - text_layer.Bounds.Height);
+				text_y = (int)((Height - text_size.Height) / 2 - text_size.Height);
 			else if ((Flags & ElementFlags.TopAlignText) == ElementFlags.TopAlignText)
-				text_y = (int)(Height - text_layer.Bounds.Height);
+				text_y = (int)(Height - text_size.Height);
 			else
-				text_y = (int)0;
+				text_y = 0;
+			
+			text_bounds = new RectangleF (new PointF (text_x, text_y), text_size);
 		}
 
 		protected override CALayer CreateLayer ()
 		{
 			CALayer layer = CALayer.Create ();
 			layer.Bounds = new RectangleF (0, 0, Width, Height);
-
-			text_layer = null;
-			CalculateTextPosition ();
 			
-			text_layer.AnchorPoint = new PointF (0, 0);
-			text_layer.Position = new PointF (text_x, text_y);
-			layer.AddSublayer (text_layer);
+			layer.Delegate = new ButtonLayerDelegate (this);
+			
+			CalculateTextBounds ();
+			
 #if DEBUG_UIELEMENT_BOUNDS			
 			text_layer.BorderWidth = 1;
 			text_layer.BorderColor = new MonoMac.CoreGraphics.CGColor (1, 0, 0, 1);
 #endif
 			
+			layer.SetNeedsDisplayInRect (text_bounds);
+
 			return layer;
 		}
-
-		public Point TextPosition {
-			get { CalculateTextPosition (); return new Point (text_x, text_y); }
+		
+		public RectangleF TextBounds {
+			get {
+				CalculateTextBounds ();
+				return text_bounds;
+			}
+				
+		}
+		
+		public PointF TextPosition {
+			get { CalculateTextBounds (); return text_bounds.Location; }
 		}
 		
 		public override void MouseButtonDown (NSEvent theEvent)
@@ -109,15 +120,26 @@ namespace SCSharpMac.UI
 
 		public override void MouseEnter ()
 		{
-#if notyet
 			if (Sensitive && (Flags & ElementFlags.RespondToMouse) == ElementFlags.RespondToMouse) {
 				/* highlight the text */
 				GuiUtil.PlaySound (Mpq, Builtins.MouseoverWav);
 			}
-#endif
 			base.MouseEnter ();
 		}
 	}
-
+	
+	class ButtonLayerDelegate : CALayerDelegate {
+		ButtonElement el;
+		
+		public ButtonLayerDelegate (ButtonElement el)
+		{
+			this.el = el;
+		}
+		
+		public override void DrawLayer (CALayer layer, CGContext context)
+		{
+			GuiUtil.RenderTextToContext (context, el.TextPosition, el.Text, el.Font, el.Palette, el.Sensitive ? 4 : 24);
+		}
+	}
 }
 

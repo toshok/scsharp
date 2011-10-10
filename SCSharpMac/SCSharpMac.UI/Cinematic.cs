@@ -44,6 +44,8 @@ namespace SCSharpMac.UI
 	public class Cinematic : UIScreen
 	{
 		SmackerPlayer player;
+		MovieElement movieElement;
+		
 		string resourcePath;
 
 		public Cinematic (Mpq mpq, string resourcePath)
@@ -51,15 +53,27 @@ namespace SCSharpMac.UI
 		{
 			this.resourcePath = resourcePath;
 		}
-
+		
+		protected override void ResourceLoader ()
+		{
+			base.ResourceLoader ();
+			
+			movieElement = new MovieElement (this, 0, 0, (int)Bounds.Width, (int)Bounds.Height, true);
+			
+			this.Elements.Add (movieElement);
+		}
+		
 		public override void AddToPainter ()
 		{
 			base.AddToPainter ();
 
 			player = new SmackerPlayer ((Stream)mpq.GetResource (resourcePath));
-
+			
 			player.Finished += PlayerFinished;
-			player.Play ();
+			
+			movieElement.Player = player;
+			
+			movieElement.Play ();
 
 			if (player.Width != 640/*Painter.Width*/
 		    	|| player.Height != 480/*Painter.Height*/) {
@@ -76,8 +90,8 @@ namespace SCSharpMac.UI
 				AffineTransform = CGAffineTransform.MakeScale (zoom, zoom);
 			}
 
-			player.Layer.AnchorPoint = new PointF (0, 0);
-			AddSublayer (player.Layer);
+			movieElement.Layer.AnchorPoint = new PointF (0, 0);
+			AddSublayer (movieElement.Layer);
 		}
 
 		public override void RemoveFromPainter ()

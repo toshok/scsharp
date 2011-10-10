@@ -71,25 +71,25 @@ namespace SCSharpMac.UI
 				return textLayer;
 			}
 			else {
-				return null;
-#if notyet
 				/* this is wrong */
-				Surface surf = new Surface (Width, Height);
+				CALayer layer = CALayer.Create ();
+				layer.Bounds = new RectangleF (0, 0, Width, Height);
 
-				Surface textSurf = GuiUtil.ComposeText (Text, Font, Palette, Width, Height,
-									Sensitive ? 4 : 24);
+				CALayer textLayer = GuiUtil.ComposeText (Text, Font, Palette, Width, Height,
+														 Sensitive ? 4 : 24);
 
-				int x = 0;
+				float x = 0;
 				if (Type == ElementType.LabelRightAlign)
-					x += Width - textSurf.Width;
+					x += Width - textLayer.Bounds.Width;
 				else if (Type == ElementType.LabelCenterAlign)
-					x += (Width - textSurf.Width) / 2;
-
-				surf.Blit (textSurf, new Point (x, 0));
-
-				surf.TransparentColor = Color.Black /* XXX */;
-				return surf;
-#endif
+					x += (Width - textLayer.Bounds.Width) / 2;
+				
+				textLayer.AnchorPoint = new PointF (0, 0);
+				textLayer.Position = new PointF (x, 0);
+				
+				layer.AddSublayer (textLayer);
+				
+				return layer;
 			}
 		}
 	}

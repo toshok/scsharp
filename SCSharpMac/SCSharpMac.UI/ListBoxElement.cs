@@ -34,6 +34,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
+using MonoMac.AppKit;
+using MonoMac.CoreGraphics;
 using MonoMac.CoreAnimation;
 
 using System.Drawing;
@@ -59,13 +61,12 @@ namespace SCSharpMac.UI
 			first_visible = 0;
 		}
 
-#if notyet
-		public void KeyboardDown (KeyboardEventArgs args)
+		public void KeyboardDown (NSEvent theEvent)
 		{
 			bool selection_changed = false;
 
 			/* navigation keys */
-			if (args.Key == Key.UpArrow) {
+			if (theEvent.CharactersIgnoringModifiers[0] == (char)NSKey.UpArrow) {
 				if (cursor > 0) {
 					cursor--;
 					selection_changed = true;
@@ -74,7 +75,7 @@ namespace SCSharpMac.UI
 						first_visible = cursor;
 				}
 			}
-			else if (args.Key == Key.DownArrow) {
+			else if (theEvent.CharactersIgnoringModifiers[0] == (char)NSKey.DownArrow) {
 				if (cursor < items.Count - 1) {
 					cursor++;
 					selection_changed = true;
@@ -90,10 +91,11 @@ namespace SCSharpMac.UI
 					SelectionChanged (cursor);
 			}
 		}
-
+		
 		bool selecting;
 		int selectionIndex;
-
+		
+#if notyet
 		public override void MouseWheel (MouseButtonEventArgs args)
 		{
 			bool need_redraw = false;
@@ -167,7 +169,11 @@ namespace SCSharpMac.UI
 			get { return selectable; }
 			set { selectable = value; }
 		}
-
+		
+		public bool Selecting {
+			get { return selecting; }
+		}
+		
 		public int SelectedIndex {
 			get { return cursor; }
 			set {
@@ -183,11 +189,27 @@ namespace SCSharpMac.UI
 				}
 			}
 		}
-
+		
+		public int SelectionIndex {
+			get { return selectionIndex; }
+		}
+		
 		public string SelectedItem {
 			get { return items[cursor]; }
 		}
-
+		
+		public List<string> Items {
+			get { return items; }			
+		}
+		
+		public int FirstVisible {
+			get { return first_visible; }
+		}
+		
+		public int NumVisible {
+			get { return num_visible; }
+		}
+		
 		public void AddItem (string item)
 		{
 			items.Add (item);
@@ -222,33 +244,51 @@ namespace SCSharpMac.UI
 
 		protected override CALayer CreateLayer ()
 		{
-#if notyet
-			Surface surf = new Surface (Width, Height);
-
-			int y = 0;
-			for (int i = first_visible; i < first_visible + num_visible; i ++) {
-				if (i >= items.Count)
-					break;
-				Surface item_surface = GuiUtil.ComposeText (items[i], Font, Palette,
-									    (!selectable ||
-									     (!selecting && cursor == i) ||
-									     (selecting && selectionIndex == i)) ? 4 : 24);
-
-				surf.Blit (item_surface, new Point (0, y));
-				y += item_surface.Height;
-			}
-
-			surf.TransparentColor = Color.Black; /* XXX */
-
-			return surf;
-#else
-			return null;
-#endif
+			CALayer layer = CALayer.Create ();
+			
+			layer.Bounds = new RectangleF (0, 0, Width, Height);
+			layer.AnchorPoint = new PointF (0,0);
+			layer.Delegate = new ListBoxElementLayerDelegate (this);			
+			
+			layer.BorderColor = new CGColor (0, 1, 0, 1);
+			layer.BorderWidth = 1;
+			
+			layer.SetNeedsDisplay ();
+			
+			return layer;
 		}
 
 		public event ListBoxSelectionChanged SelectionChanged;
 	}
 
 	public delegate void ListBoxSelectionChanged (int selectedIndex);
+	
+	class ListBoxElementLayerDelegate : CALayerDelegate {
+		ListBoxElement el;
+		
+		public ListBoxElementLayerDelegate (ListBoxElement el)
+		{
+			this.el = el;
+		}
+		
+		public override void DrawLayer (CALayer layer, CGContext context)
+		{
+			if (el.Items != null) {
+				int y = el.Bounds.Height - el.Font.LineSize;
+				for (int i = el.FirstVisible; i < el.FirstVisible + el.NumVisible; i ++) {
+					if (i >= el.Items.Count)
+						return;
+					GuiUtil.RenderTextToContext (context, new PointF (0, y),
+												el.Items[i], el.Font, el.Palette, 4);
+#if notyet
+												(!el.Selectable ||
+									     		(!el.Selecting && el.SelectedIndex == i) ||
+									     		(el.Selecting && el.SelectionIndex == i)) ? 4 : 24);
+#endif
+					y -= el.Font.LineSize;
+				}
+			}
+		}
+	}
 }
 
