@@ -1,5 +1,0 @@
-
-internal class Consts
-{
-	public const string Version = "@VERSION@";
-}
