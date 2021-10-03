@@ -219,13 +219,7 @@ namespace SCSharp.UI
 								      stride,
 								      rmask, gmask, bmask, amask);
 
-			surf = (Surface)Activator.CreateInstance (typeof (Surface),
-								  BindingFlags.NonPublic | BindingFlags.Instance,
-								  null,
-								  new object[] {handle},
-								  null);
-
-			return surf;
+			return new Surface(handle);
 		}
 
 		public static Surface CreateSurfaceFromRGBAData (byte[] data, ushort width, ushort height, int depth, int stride)
