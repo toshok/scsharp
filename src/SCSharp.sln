@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSharp.Mpq", "SCSharp.Mpq\SCSharp.Mpq.csproj", "{D8889BC0-E173-4821-850D-CA24F4B84A62}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSharp.UI", "SCSharp.UI\SCSharp.UI.csproj", "{0B2EC91A-D2C0-41FD-BBD0-EBC6C9ACE14F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSharp.Util", "SCSharp.Util\SCSharp.Util.csproj", "{0EFA40FB-5574-4C75-9868-6DD2F2EC36F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCSharp.Mpq.Smk", "SCSharp.Mpq.Smk\SCSharp.Mpq.Smk.csproj", "{95395BF0-80E8-41AA-9948-85E71AECB901}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8889BC0-E173-4821-850D-CA24F4B84A62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8889BC0-E173-4821-850D-CA24F4B84A62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8889BC0-E173-4821-850D-CA24F4B84A62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8889BC0-E173-4821-850D-CA24F4B84A62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B2EC91A-D2C0-41FD-BBD0-EBC6C9ACE14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B2EC91A-D2C0-41FD-BBD0-EBC6C9ACE14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B2EC91A-D2C0-41FD-BBD0-EBC6C9ACE14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B2EC91A-D2C0-41FD-BBD0-EBC6C9ACE14F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EFA40FB-5574-4C75-9868-6DD2F2EC36F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EFA40FB-5574-4C75-9868-6DD2F2EC36F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EFA40FB-5574-4C75-9868-6DD2F2EC36F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EFA40FB-5574-4C75-9868-6DD2F2EC36F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95395BF0-80E8-41AA-9948-85E71AECB901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95395BF0-80E8-41AA-9948-85E71AECB901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95395BF0-80E8-41AA-9948-85E71AECB901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95395BF0-80E8-41AA-9948-85E71AECB901}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4F358F3-E656-464A-93D6-9A8AD689CA81}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SCSharp.csproj
+	EndGlobalSection
+EndGlobal
