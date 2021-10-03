@@ -45,7 +45,7 @@ using SdlDotNet.Audio;
 
 /* for the surface creation hack below */
 using System.Reflection;
-using ReTao.Sdl;
+using SdlDotNet;
 
 namespace SCSharp.UI
 {
